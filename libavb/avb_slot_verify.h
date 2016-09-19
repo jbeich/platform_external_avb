@@ -44,6 +44,7 @@ extern "C" {
  */
 typedef enum {
   AVB_SLOT_VERIFY_RESULT_OK,
+  AVB_SLOT_VERIFY_RESULT_WARN_DISABLE,
   AVB_SLOT_VERIFY_RESULT_ERROR_OOM,
   AVB_SLOT_VERIFY_RESULT_ERROR_IO,
   AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
@@ -154,7 +155,8 @@ void avb_slot_verify_data_free(AvbSlotVerifyData* data);
  * of the metadata is invalid or inconsistent.
  */
 AvbSlotVerifyResult avb_slot_verify(AvbOps* ops, const char* ab_suffix,
-                                    AvbSlotVerifyData** out_data);
+                                    AvbSlotVerifyData** out_data,
+                                    bool allow_disable);
 
 #ifdef __cplusplus
 }

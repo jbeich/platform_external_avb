@@ -157,7 +157,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     AvbOps* ops, const char* ab_suffix, int rollback_index_slot,
     const char* partition_name, size_t partition_name_len,
     const uint8_t* expected_public_key, size_t expected_public_key_length,
-    AvbSlotVerifyData* slot_data, AvbAlgorithmType* out_algorithm_type) {
+    AvbSlotVerifyData* slot_data, AvbAlgorithmType* out_algorithm_type,
+    bool allow_disable) {
   char full_partition_name[PART_NAME_MAX_SIZE];
   AvbSlotVerifyResult ret;
   AvbIOResult io_ret;
@@ -256,9 +257,15 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   /* Check if the image is properly signed and get the public key used
    * to sign the image.
    */
-  vbmeta_ret =
-      avb_vbmeta_image_verify(vbmeta_buf, vbmeta_num_read, &pk_data, &pk_len);
-  if (vbmeta_ret != AVB_VBMETA_VERIFY_RESULT_OK) {
+  vbmeta_ret = avb_vbmeta_image_verify(vbmeta_buf, vbmeta_num_read, &pk_data,
+                                       &pk_len, allow_disable);
+
+  if (vbmeta_ret == AVB_VBMETA_VERIFY_RESULT_DISABLE) {
+    avb_debugv(full_partition_name, ": Verity disabled in vbmeta image.\n",
+               NULL);
+    ret = AVB_SLOT_VERIFY_RESULT_WARN_DISABLE;
+    goto out;
+  } else if (vbmeta_ret != AVB_VBMETA_VERIFY_RESULT_OK) {
     avb_errorv(full_partition_name, ": Error verifying vbmeta image.\n", NULL);
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION;
     goto out;
@@ -371,7 +378,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
             ops, ab_suffix, chain_desc.rollback_index_slot,
             (const char*)chain_partition_name, chain_desc.partition_name_len,
             chain_public_key, chain_desc.public_key_len, slot_data,
-            NULL /* out_algorithm_type */);
+            NULL /* out_algorithm_type */, allow_disable);
         if (sub_ret != AVB_SLOT_VERIFY_RESULT_OK) {
           ret = sub_ret;
           goto out;
@@ -611,7 +618,8 @@ static int cmdline_append_hex(AvbSlotVerifyData* slot_data, const char* key,
 }
 
 AvbSlotVerifyResult avb_slot_verify(AvbOps* ops, const char* ab_suffix,
-                                    AvbSlotVerifyData** out_data) {
+                                    AvbSlotVerifyData** out_data,
+                                    bool allow_disable) {
   AvbSlotVerifyResult ret;
   AvbSlotVerifyData* slot_data = NULL;
   AvbAlgorithmType algorithm_type = AVB_ALGORITHM_TYPE_NONE;
@@ -626,10 +634,11 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops, const char* ab_suffix,
     goto fail;
   }
 
-  ret = load_and_verify_vbmeta(
-      ops, ab_suffix, 0 /* rollback_index_slot */, "vbmeta",
-      avb_strlen("vbmeta"), NULL /* expected_public_key */,
-      0 /* expected_public_key_length */, slot_data, &algorithm_type);
+  ret = load_and_verify_vbmeta(ops, ab_suffix, 0 /* rollback_index_slot */,
+                               "vbmeta", avb_strlen("vbmeta"),
+                               NULL /* expected_public_key */,
+                               0 /* expected_public_key_length */, slot_data,
+                               &algorithm_type, allow_disable);
 
   /* If things check out, mangle the kernel command-line as needed. */
   if (ret == AVB_SLOT_VERIFY_RESULT_OK) {
@@ -754,6 +763,9 @@ const char* avb_slot_verify_result_to_string(AvbSlotVerifyResult result) {
   switch (result) {
     case AVB_SLOT_VERIFY_RESULT_OK:
       ret = "OK";
+      break;
+    case AVB_SLOT_VERIFY_RESULT_WARN_DISABLE:
+      ret = "WARN_ISABLE";
       break;
     case AVB_SLOT_VERIFY_RESULT_ERROR_OOM:
       ret = "ERROR_OOM";

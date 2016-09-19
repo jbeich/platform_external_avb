@@ -43,6 +43,7 @@ extern "C" {
 
 /* Magic for the vbmeta image header. */
 #define AVB_MAGIC "AVB0"
+#define AVB_DISABLE "VOFF"
 #define AVB_MAGIC_LEN 4
 
 /* The current MAJOR and MINOR versions used - keep in sync with avbtool. */
@@ -188,6 +189,7 @@ typedef enum {
   AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
   AVB_VBMETA_VERIFY_RESULT_HASH_MISMATCH,
   AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH,
+  AVB_VBMETA_VERIFY_RESULT_DISABLE,
 } AvbVBMetaVerifyResult;
 
 /* Checks that vbmeta image at |data| of size |length| is a valid
@@ -231,7 +233,8 @@ typedef enum {
  */
 AvbVBMetaVerifyResult avb_vbmeta_image_verify(
     const uint8_t* data, size_t length, const uint8_t** out_public_key_data,
-    size_t* out_public_key_length) AVB_ATTR_WARN_UNUSED_RESULT;
+    size_t* out_public_key_length,
+    bool allow_disable) AVB_ATTR_WARN_UNUSED_RESULT;
 
 #ifdef __cplusplus
 }

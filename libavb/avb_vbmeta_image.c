@@ -362,7 +362,7 @@ static AvbAlgorithmData algorithm_data[_AVB_ALGORITHM_NUM_TYPES] = {
 
 AvbVBMetaVerifyResult avb_vbmeta_image_verify(
     const uint8_t* data, size_t length, const uint8_t** out_public_key_data,
-    size_t* out_public_key_length) {
+    size_t* out_public_key_length, bool allow_disable) {
   AvbVBMetaVerifyResult ret;
   AvbVBMetaImageHeader h;
   uint8_t* computed_hash;
@@ -380,7 +380,10 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
   if (out_public_key_length != NULL) *out_public_key_length = 0;
 
   /* Ensure magic is correct. */
-  if (avb_safe_memcmp(data, AVB_MAGIC, AVB_MAGIC_LEN) != 0) {
+  if (allow_disable && avb_safe_memcmp(data, AVB_DISABLE, AVB_MAGIC_LEN) == 0) {
+    ret = AVB_VBMETA_VERIFY_RESULT_DISABLE;
+    goto out;
+  } else if (avb_safe_memcmp(data, AVB_MAGIC, AVB_MAGIC_LEN) != 0) {
     avb_error("Magic is incorrect.\n");
     goto out;
   }

@@ -64,7 +64,8 @@ bool avb_descriptor_foreach(const uint8_t* image_data, size_t image_size,
   }
 
   /* Ensure magic is correct. */
-  if (avb_memcmp(image_data, AVB_MAGIC, AVB_MAGIC_LEN) != 0) {
+  if (avb_memcmp(image_data, AVB_MAGIC, AVB_MAGIC_LEN) != 0 &&
+      avb_memcmp(image_data, AVB_DISABLE, AVB_MAGIC_LEN) != 0) {
     avb_error("Magic is incorrect.\n");
     goto out;
   }
