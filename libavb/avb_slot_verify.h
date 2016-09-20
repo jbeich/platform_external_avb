@@ -59,6 +59,9 @@ typedef enum {
  * All data pointed to by this struct will be freed when the
  * avb_slot_verify_data_free() function is called.
  *
+ * The |ab_suffix| field is the copy of the of |ab_suffix| field
+ * passed to avb_slot_verify(). It is the A/B suffix of the slot.
+ *
  * The image loaded and verified from the boot partition of the slot
  * is accessible via the |boot_data| and is of length |boot_size|
  * bytes. Note that this is strictly less than the partition size -
@@ -94,6 +97,7 @@ typedef enum {
  *   the digest of the vbmeta image.
  */
 typedef struct {
+  char* ab_suffix;
   uint8_t* boot_data;
   size_t boot_size;
   uint8_t* vbmeta_data;
