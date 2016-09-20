@@ -86,6 +86,23 @@ class BaseAvbToolTest : public ::testing::Test {
                                vbmeta_image_.size()));
   }
 
+  /* Generate a file with name |file_name| of size |image_size| with
+   * known content (0x00 0x01 0x02 .. 0xff 0x00 0x01 ..).
+   */
+  base::FilePath GenerateImage(const std::string file_name, size_t image_size) {
+    std::vector<uint8_t> image;
+    image.resize(image_size);
+    for (size_t n = 0; n < image_size; n++) {
+      image[n] = uint8_t(n);
+    }
+    base::FilePath image_path = testdir_.Append(file_name);
+    EXPECT_EQ(image_size,
+              static_cast<const size_t>(base::WriteFile(
+                  image_path, reinterpret_cast<const char*>(image.data()),
+                  image.size())));
+    return image_path;
+  }
+
   /* Returns the output of 'avbtool info_image' for a given image. */
   std::string InfoImage(const base::FilePath& image_path) {
     base::FilePath tmp_path = testdir_.Append("info_output.txt");
