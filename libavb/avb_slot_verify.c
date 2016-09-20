@@ -633,6 +633,13 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops, const char* ab_suffix,
 
   /* If things check out, mangle the kernel command-line as needed. */
   if (ret == AVB_SLOT_VERIFY_RESULT_OK) {
+    /* Fill in |ab_suffix| field. */
+    slot_data->ab_suffix = avb_strdup(ab_suffix);
+    if (slot_data->ab_suffix == NULL) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto fail;
+    }
+
     /* Substitute $(ANDROID_SYSTEM_PARTUUID) and friends. */
     if (slot_data->cmdline != NULL) {
       char* new_cmdline = sub_cmdline(ops, slot_data->cmdline, ab_suffix);
@@ -729,6 +736,9 @@ fail:
 }
 
 void avb_slot_verify_data_free(AvbSlotVerifyData* data) {
+  if (data->ab_suffix != NULL) {
+    avb_free(data->ab_suffix);
+  }
   if (data->boot_data != NULL) {
     avb_free(data->boot_data);
   }

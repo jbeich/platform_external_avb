@@ -31,6 +31,7 @@
  */
 
 #define AVB_INSIDE_LIBAVB_H
+#include "avb_ab_flow.h"
 #include "avb_chain_partition_descriptor.h"
 #include "avb_crypto.h"
 #include "avb_descriptor.h"
