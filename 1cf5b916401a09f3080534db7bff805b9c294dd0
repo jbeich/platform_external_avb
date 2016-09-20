@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f041877a_1d671352",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-20T22:11:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0cc8355_bb5073fc",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 8
+      },
+      "revId": "1cf5b916401a09f3080534db7bff805b9c294dd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0cc8355_bb18732b",
         "filename": "libavb/avb_ab_flow.h",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2016-09-20T20:27:15Z",
       "side": 1,
       "message": "Why is this four when two slots are hard coded in avb_ab_flow.c?",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 52,
+        "endChar": 26
+      },
+      "revId": "1cf5b916401a09f3080534db7bff805b9c294dd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f041877a_3d62cf41",
+        "filename": "libavb/avb_ab_flow.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-20T22:11:22Z",
+      "side": 1,
+      "message": "Yeah, I agree that\u0027s confusing ... the thinking was that we\u0027d leave support for up to four slots in the on-disk format and then just bump the on-disk version number for if we want to support more than two. Thinking more about it, that doesn\u0027t really make sense. I\u0027ll hard-code two everywhere for now...",
+      "parentUuid": "d0cc8355_bb18732b",
       "range": {
         "startLine": 52,
         "startChar": 8,
