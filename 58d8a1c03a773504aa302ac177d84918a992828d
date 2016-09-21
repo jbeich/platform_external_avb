@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b06aaf2b_e3b452ee",
+        "filename": "README",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-09-21T22:17:46Z",
+      "side": 1,
+      "message": "This eventually won\u0027t be true...",
+      "range": {
+        "startLine": 38,
+        "startChar": 46,
+        "endLine": 38,
+        "endChar": 62
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b06aaf2b_86548c1c",
+        "filename": "README",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-09-21T22:17:46Z",
+      "side": 1,
+      "message": "optional: Future plans include",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b06aaf2b_262f58b1",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2523,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-09-21T22:17:46Z",
+      "side": 1,
+      "message": "Give a bit more information?",
+      "range": {
+        "startLine": 2523,
+        "startChar": 34,
+        "endLine": 2523,
+        "endChar": 46
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b06aaf2b_46345401",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2527,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-09-21T22:17:46Z",
+      "side": 1,
+      "message": "Describe the format?",
+      "range": {
+        "startLine": 2527,
+        "startChar": 28,
+        "endLine": 2527,
+        "endChar": 32
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b06aaf2b_265bd826",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2528,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-09-21T22:17:46Z",
+      "side": 1,
+      "message": "Describe how the priority value works? Why are 15/14 good defaults for example.",
+      "range": {
+        "startLine": 2528,
+        "startChar": 37,
+        "endLine": 2528,
+        "endChar": 39
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b06aaf2b_acb6c7d4",
+        "filename": "libavb/avb_ab_flow.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-09-21T22:17:46Z",
+      "side": 1,
+      "message": "Higher number \u003d higher priority? Or the other way around?",
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
