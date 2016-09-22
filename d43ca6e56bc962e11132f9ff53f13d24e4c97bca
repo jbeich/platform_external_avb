@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f000a787_485d9fe3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-09-22T21:45:58Z",
+      "side": 1,
+      "message": "how about priority field and successful field? (leave it as is?)\n\nIn default state, will it try to boot from A slot?",
+      "range": {
+        "startLine": 19,
+        "startChar": 20,
+        "endLine": 19,
+        "endChar": 33
+      },
+      "revId": "d43ca6e56bc962e11132f9ff53f13d24e4c97bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f000a787_0ec68f92",
+        "filename": "libavb/avb_ab_flow.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-09-22T21:45:58Z",
+      "side": 1,
+      "message": "nit: How about set A_slot to 2 and B_slot to 1?\n\nSo later updates can just increment it for the new slot.\n\nAnyway, it\u0027s just implementation detail.\nCurrent implementation only uses AVB_AB_MAX_PRIORITY and AVB_AB_MAX_PRIORITY - 1; In this case we can probably just have a active_slot \u003d 0 or 1.",
+      "range": {
+        "startLine": 68,
+        "startChar": 28,
+        "endLine": 68,
+        "endChar": 47
+      },
+      "revId": "d43ca6e56bc962e11132f9ff53f13d24e4c97bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30615fbc_57ab8c76",
+        "filename": "libavb/avb_ab_flow.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 141,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-09-22T21:45:58Z",
+      "side": 1,
+      "message": "why need to set it unbootable here?\n\ni.e. cannot quite understand why priority and successful needs to be clear here. (it\u0027s ok to set tries_remaining to 0 if successful_boot is already 1 though).",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 141,
+        "endChar": 5
+      },
+      "revId": "d43ca6e56bc962e11132f9ff53f13d24e4c97bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30615fbc_17e3d4ca",
+        "filename": "libavb/avb_ab_flow.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-09-22T21:45:58Z",
+      "side": 1,
+      "message": "Same here, it seem unclear to me why need to reset the three fields to 0 here.",
+      "range": {
+        "startLine": 159,
+        "startChar": 25,
+        "endLine": 159,
+        "endChar": 50
+      },
+      "revId": "d43ca6e56bc962e11132f9ff53f13d24e4c97bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f000a787_6824db20",
+        "filename": "libavb/avb_ab_flow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-09-22T21:45:58Z",
+      "side": 1,
+      "message": "highest?",
+      "range": {
+        "startLine": 62,
+        "startChar": 15,
+        "endLine": 62,
+        "endChar": 21
+      },
+      "revId": "d43ca6e56bc962e11132f9ff53f13d24e4c97bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f000a787_2e8cabe0",
+        "filename": "libavb/avb_ab_flow.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-09-22T21:45:58Z",
+      "side": 1,
+      "message": "will be saved?",
+      "range": {
+        "startLine": 155,
+        "startChar": 54,
+        "endLine": 155,
+        "endChar": 64
+      },
+      "revId": "d43ca6e56bc962e11132f9ff53f13d24e4c97bca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
