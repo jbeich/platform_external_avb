@@ -93,6 +93,30 @@
       "revId": "1cf5b916401a09f3080534db7bff805b9c294dd0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f000a787_68e3bbca",
+        "filename": "libavb/avb_ab_flow.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-09-22T21:45:58Z",
+      "side": 1,
+      "message": "For a given partition, two slots should probably be enough.\nHave you experienced more than 2 slots might be required for a given partition?",
+      "parentUuid": "f041877a_3d62cf41",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 52,
+        "endChar": 26
+      },
+      "revId": "1cf5b916401a09f3080534db7bff805b9c294dd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
