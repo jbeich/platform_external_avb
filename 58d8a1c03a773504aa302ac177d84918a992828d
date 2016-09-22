@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f000a787_25be0e1d",
+        "filename": "README",
+        "patchSetId": 4
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-22T15:22:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b06aaf2b_e3b452ee",
+      "range": {
+        "startLine": 38,
+        "startChar": 46,
+        "endLine": 38,
+        "endChar": 62
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b06aaf2b_86548c1c",
         "filename": "README",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2016-09-21T22:17:46Z",
       "side": 1,
       "message": "optional: Future plans include",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f000a787_05bb122d",
+        "filename": "README",
+        "patchSetId": 4
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-22T15:22:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b06aaf2b_86548c1c",
       "range": {
         "startLine": 46,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "f000a787_e588f67d",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2523,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-22T15:22:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b06aaf2b_262f58b1",
+      "range": {
+        "startLine": 2523,
+        "startChar": 34,
+        "endLine": 2523,
+        "endChar": 46
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b06aaf2b_46345401",
         "filename": "avbtool",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2016-09-21T22:17:46Z",
       "side": 1,
       "message": "Describe the format?",
+      "range": {
+        "startLine": 2527,
+        "startChar": 28,
+        "endLine": 2527,
+        "endChar": 32
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f000a787_c58dfa8b",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2527,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-22T15:22:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b06aaf2b_46345401",
       "range": {
         "startLine": 2527,
         "startChar": 28,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "f000a787_a582fe59",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2528,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-22T15:22:35Z",
+      "side": 1,
+      "message": "I\u0027ve adding something about this in the README file - I think that\u0027s a better place that --help output!",
+      "parentUuid": "b06aaf2b_265bd826",
+      "range": {
+        "startLine": 2528,
+        "startChar": 37,
+        "endLine": 2528,
+        "endChar": 39
+      },
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b06aaf2b_acb6c7d4",
         "filename": "libavb/avb_ab_flow.h",
         "patchSetId": 4
@@ -128,6 +248,24 @@
       "writtenOn": "2016-09-21T22:17:46Z",
       "side": 1,
       "message": "Higher number \u003d higher priority? Or the other way around?",
+      "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f000a787_8587026a",
+        "filename": "libavb/avb_ab_flow.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-22T15:22:35Z",
+      "side": 1,
+      "message": "I\u0027ve clarified this.",
+      "parentUuid": "b06aaf2b_acb6c7d4",
       "revId": "58d8a1c03a773504aa302ac177d84918a992828d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
