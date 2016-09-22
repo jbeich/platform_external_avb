@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "30615fbc_ba8dad8c",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 2531,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-09-22T22:26:11Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 2531,
+        "startChar": 45,
+        "endLine": 2531,
+        "endChar": 50
+      },
+      "revId": "2fa082971173807e7e7daa579f6b5bf400125212",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30615fbc_3a9a7dbe",
+        "filename": "libavb/avb_ab_flow.h",
+        "patchSetId": 8
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-09-22T22:26:11Z",
+      "side": 1,
+      "message": "both lowest? also, maybe include this bit of information in the README?",
+      "range": {
+        "startLine": 61,
+        "startChar": 20,
+        "endLine": 62,
+        "endChar": 21
+      },
+      "revId": "2fa082971173807e7e7daa579f6b5bf400125212",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
