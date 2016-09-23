@@ -117,6 +117,30 @@
       "revId": "1cf5b916401a09f3080534db7bff805b9c294dd0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9034cbbf_6a8ef732",
+        "filename": "libavb/avb_ab_flow.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-09-23T20:27:25Z",
+      "side": 1,
+      "message": "Yes, just for regular updates (boot, system) it would be useful to have at least three slots (_a, _b, and _c).\n\nWhy? Because with only two slots you lose redundancy when as soon as you start the update... on ChromeOS this is a real problem because we stream the update payload (and support resuming an update in the middle)... so you can be in the situtation where you only have a single valid slot for a long time (until the update completes).\n\nOn current Android this is less of a concern but only because the entire update payload is downloaded in advance before starting the update process. This might change in the future especially as /system/update_engine (from ChromeOS) is used.\n\nSo, yes, there is real value in having at least three slots... but also, obviously, a real cost (moar disk space needed!). For now we support only two slots in AVB but we can easily change this in the future.",
+      "parentUuid": "f000a787_68e3bbca",
+      "range": {
+        "startLine": 52,
+        "startChar": 8,
+        "endLine": 52,
+        "endChar": 26
+      },
+      "revId": "1cf5b916401a09f3080534db7bff805b9c294dd0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
