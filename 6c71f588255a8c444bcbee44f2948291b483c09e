@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "4219a90d_f77d4073",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2155,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-04T22:21:04Z",
+      "side": 1,
+      "message": "Yeah, rounding up is actually not needed - I\u0027ll remove it. Will add constants.",
+      "parentUuid": "c2f75908_5e0ab180",
+      "revId": "6c71f588255a8c444bcbee44f2948291b483c09e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2f75908_9e68b91a",
         "filename": "avbtool",
         "patchSetId": 2
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "4219a90d_9772c4a2",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-04T22:21:04Z",
+      "side": 1,
+      "message": "The above is for \u0027add_hash_footer\u0027 so there is no tree.",
+      "parentUuid": "c2f75908_9e68b91a",
+      "revId": "6c71f588255a8c444bcbee44f2948291b483c09e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c2f75908_fe6d7d28",
         "filename": "avbtool",
         "patchSetId": 2
@@ -47,6 +83,30 @@
       "writtenOn": "2016-10-04T21:57:06Z",
       "side": 1,
       "message": "nit: not necessary (we\u0027d have already returned above)",
+      "range": {
+        "startLine": 2179,
+        "startChar": 13,
+        "endLine": 2179,
+        "endChar": 32
+      },
+      "revId": "6c71f588255a8c444bcbee44f2948291b483c09e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4219a90d_b777c891",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2179,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-04T22:21:04Z",
+      "side": 1,
+      "message": "Nice catch - fixing.",
+      "parentUuid": "c2f75908_fe6d7d28",
       "range": {
         "startLine": 2179,
         "startChar": 13,
