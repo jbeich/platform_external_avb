@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c2f75908_5e0ab180",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2155,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-10-04T21:57:06Z",
+      "side": 1,
+      "message": "These are calculated above without the round_to_multiple, should they be the same? Also the constants should be defined just once somewhere.",
+      "revId": "6c71f588255a8c444bcbee44f2948291b483c09e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2f75908_9e68b91a",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2156,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-10-04T21:57:06Z",
+      "side": 1,
+      "message": "Above this calculation doesn\u0027t use max_tree_size. Why the difference?",
+      "revId": "6c71f588255a8c444bcbee44f2948291b483c09e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c2f75908_fe6d7d28",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2179,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-10-04T21:57:06Z",
+      "side": 1,
+      "message": "nit: not necessary (we\u0027d have already returned above)",
+      "range": {
+        "startLine": 2179,
+        "startChar": 13,
+        "endLine": 2179,
+        "endChar": 32
+      },
+      "revId": "6c71f588255a8c444bcbee44f2948291b483c09e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
