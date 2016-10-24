@@ -53,7 +53,7 @@ include $(BUILD_PREBUILT)
 include $(CLEAR_VARS)
 LOCAL_MODULE := libavb
 LOCAL_MODULE_HOST_OS := linux
-LOCAL_EXPORT_C_INDLUDE_DIRS := $(LOCAL_PATH)/libavb
+LOCAL_EXPORT_C_INCLUDE_DIRS := $(LOCAL_PATH)/libavb
 LOCAL_CLANG := true
 LOCAL_CFLAGS := $(avb_common_cflags) -DAVB_ENABLE_DEBUG -DAVB_COMPILATION
 LOCAL_LDFLAGS := $(avb_common_ldflags)
@@ -76,7 +76,7 @@ LOCAL_SRC_FILES := \
     libavb/avb_sysdeps_posix.c \
     libavb/avb_util.c \
     libavb/avb_vbmeta_image.c
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)
 
 # Build for the host (for unit tests).
 include $(CLEAR_VARS)
