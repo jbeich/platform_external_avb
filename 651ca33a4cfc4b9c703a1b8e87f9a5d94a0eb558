@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "01a974f7_8f9999c9",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1753,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-26T15:38:11Z",
+      "side": 1,
+      "message": "It\u0027s the number of optional args. I\u0027ll add a comment.",
+      "parentUuid": "e16c60ba_7388a0ab",
+      "range": {
+        "startLine": 1753,
+        "startChar": 13,
+        "endLine": 1753,
+        "endChar": 14
+      },
+      "revId": "651ca33a4cfc4b9c703a1b8e87f9a5d94a0eb558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e16c60ba_338e28ba",
         "filename": "test/avb_util_unittest.cc",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-10-26T04:59:27Z",
       "side": 1,
       "message": "nit: should be 44 now?",
+      "range": {
+        "startLine": 207,
+        "startChar": 20,
+        "endLine": 207,
+        "endChar": 22
+      },
+      "revId": "651ca33a4cfc4b9c703a1b8e87f9a5d94a0eb558",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01a974f7_ef8e5d7b",
+        "filename": "test/avb_util_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-26T15:38:11Z",
+      "side": 1,
+      "message": "Yup, nice catch. Fixing.",
+      "parentUuid": "e16c60ba_338e28ba",
       "range": {
         "startLine": 207,
         "startChar": 20,
