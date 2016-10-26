@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "01c254c7_64556a0e",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-26T16:15:56Z",
+      "side": 1,
+      "message": "Thanks for looking... FWIW, it works fine without specifying use_fec_from_device. In fact it doesn\u0027t actually work with use_fec_from_device, here\u0027s the output:\n\n [    1.166400] device-mapper: init: attempting early device configuration.\n [    1.167447] device-mapper: init: adding target \u00270 2063896 verity 1 PARTUUID\u003dd2d1d40a-8a5c-4c40-8a46-d7564d4e9b2b PARTUUID\u003dd2d1d40a-8a5c-4c40-8a46-d7564d4e9b2b 4096 4096 257987 257987 sha1 f0deae53e915ce58475da47979142922a0d236cb 489906ee52082a304104e4dcd34013d2b3f9062e 9 ignore_zero_blocks use_fec_from_device PARTUUID\u003dd2d1d40a-8a5c-4c40-8a46-d7564d4e9b2b fec_roots 2 fec_blocks 2056 fec_start 260020\u0027\n [    1.172065] tsc: Refined TSC clocksource calibration: 2793.249 MHz\n [    1.172818] clocksource: tsc: mask: 0xffffffffffffffff max_cycles: 0x28435759590, max_idle_ns: 440795343271 ns\n [    1.174103] device-mapper: table: 253:0: verity: Invalid fec_blocks\n [    1.174811] device-mapper: init: starting dm-0 (vroot) failed\n\nwhen booting the kernel. Surely if use_fec_from_device if not specified it should just assume it\u0027s the same device, no? (I haven\u0027t read through dm-verity-fec.c yet).\n\nAs for ignore_zero_blocks, I can add that, sure. Can you elaborate on when this is supposed to happen?",
+      "parentUuid": "211bd82a_788cdd17",
+      "range": {
+        "startLine": 1752,
+        "startChar": 0,
+        "endLine": 1752,
+        "endChar": 28
+      },
+      "revId": "a6ed8221b9cecf59207eeec5d3c50d5c6b9a5a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "211bd82a_58892106",
         "filename": "test/avbtool_unittest.cc",
         "patchSetId": 3
