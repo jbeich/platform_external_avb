@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "211bd82a_982f39bd",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2016-10-26T17:01:38Z",
+      "side": 1,
+      "message": "You actually need to specify use_fec_from_device to enable FEC. You are getting the error because fec_blocks should be the number of blocks covered by error correction, not the size of the FEC metadata. See also:\n\nhttps://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-verity-fec.h#n41\nhttps://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/drivers/md/dm-verity-fec.c#n685\n\n\u003e Can you elaborate on when this is supposed to happen?\n\nIt\u0027s not supposed to happen, but it does. First, ext4 prefetches blocks that are outside the area marked as used and on some devices we fail to reliably clear these blocks (b/20881595). Furthermore, even fastboot flash won\u0027t clear unused blocks on some devices due to unrelated issues (b/32288104).",
+      "parentUuid": "01c254c7_64556a0e",
+      "range": {
+        "startLine": 1752,
+        "startChar": 0,
+        "endLine": 1752,
+        "endChar": 28
+      },
+      "revId": "a6ed8221b9cecf59207eeec5d3c50d5c6b9a5a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "211bd82a_58892106",
         "filename": "test/avbtool_unittest.cc",
         "patchSetId": 3
