@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "211bd82a_9b2f33bd",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2016-10-26T20:20:44Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be updated to match the change to avbtool?",
+      "range": {
+        "startLine": 824,
+        "startChar": 16,
+        "endLine": 824,
+        "endChar": 56
+      },
+      "revId": "cbfd9824735aa9e890ce68e04f44306682e65b71",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
