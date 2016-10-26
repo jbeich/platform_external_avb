@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "211bd82a_788cdd17",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2016-10-26T16:00:16Z",
+      "side": 1,
+      "message": "You also need to specify the FEC device in dm-verity arguments. Also, it would be prudent to use ignore_zero_blocks even if FEC is not used, in case we end up reading blocks that are unused by the file system, but don\u0027t actually contain zeros (which happens more often than one would like).",
+      "range": {
+        "startLine": 1752,
+        "startChar": 0,
+        "endLine": 1752,
+        "endChar": 28
+      },
+      "revId": "a6ed8221b9cecf59207eeec5d3c50d5c6b9a5a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "211bd82a_58892106",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2016-10-26T16:00:16Z",
+      "side": 1,
+      "message": "use_fec_from_device \u003cdevice\u003e",
+      "range": {
+        "startLine": 824,
+        "startChar": 16,
+        "endLine": 824,
+        "endChar": 56
+      },
+      "revId": "a6ed8221b9cecf59207eeec5d3c50d5c6b9a5a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
