@@ -121,6 +121,30 @@
     },
     {
       "key": {
+        "uuid": "01c254c7_e4d4ba08",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-26T20:44:23Z",
+      "side": 1,
+      "message": "Cool. So I used hexdump(1) on system.img on my Goobuntu system to find the payload for /system/etc/hosts (just searched for ipv6-localhost which is pretty unique) and gathered that offset 969105456 is in the middle of that file. Modified the underlying block device and, hey presto, FEC kicked in and saved the day. Woot!\n\n # echo 3 \u003e /proc/sys/vm/drop_caches\n [ 1625.189847] sh (1226): drop_caches: 3\n\n # ls -l /dev/block/pci/pci0000\\:00/0000\\:00\\:01.1/by-name/\n total 0\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 EFI -\u003e /dev/block/sda1\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 boot_a -\u003e /dev/block/sda4\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 boot_b -\u003e /dev/block/sda5\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 misc -\u003e /dev/block/sda8\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 system_a -\u003e /dev/block/sda6\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 system_b -\u003e /dev/block/sda7\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 userdata -\u003e /dev/block/sda9\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 vbmeta_a -\u003e /dev/block/sda2\n lrwxrwxrwx 1 root root 15 2016-10-26 20:02 vbmeta_b -\u003e /dev/block/sda3\n\n # dd if\u003d/dev/zero of\u003d/dev/block/sda6 bs\u003d1 count\u003d1 seek\u003d969105456\n 1+0 records in\n 1+0 records out\n 1 bytes transferred in 0.001 secs (1000 bytes/sec)\n\n # cat /sys/devices/virtual/block/dm-0/fec/corrected\n 0\n\n # cat /system/etc/hosts\n [ 1726.281896] device-mapper: verity-fec: 8:6: FEC 647168: corrected 1 errors\n 127.0.0.1       localhost\n ::1             ip6-localhost\n\n # cat /sys/devices/virtual/block/dm-0/fec/corrected\n 1",
+      "parentUuid": "211bd82a_5b5d9b5b",
+      "range": {
+        "startLine": 1752,
+        "startChar": 0,
+        "endLine": 1752,
+        "endChar": 28
+      },
+      "revId": "a6ed8221b9cecf59207eeec5d3c50d5c6b9a5a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "211bd82a_58892106",
         "filename": "test/avbtool_unittest.cc",
         "patchSetId": 3
@@ -132,6 +156,30 @@
       "writtenOn": "2016-10-26T16:00:16Z",
       "side": 1,
       "message": "use_fec_from_device \u003cdevice\u003e",
+      "range": {
+        "startLine": 824,
+        "startChar": 16,
+        "endLine": 824,
+        "endChar": 56
+      },
+      "revId": "a6ed8221b9cecf59207eeec5d3c50d5c6b9a5a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "01c254c7_44e66efd",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-26T20:44:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "211bd82a_58892106",
       "range": {
         "startLine": 824,
         "startChar": 16,
