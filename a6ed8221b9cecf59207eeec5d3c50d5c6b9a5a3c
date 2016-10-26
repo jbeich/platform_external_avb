@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "211bd82a_5b5d9b5b",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2016-10-26T20:20:44Z",
+      "side": 1,
+      "message": "\u003e is there a way to actually tell that FEC is being used?\n\nAndroid kernels create a sysfs entry for FEC, which provides a simple counter of corrected reads:\nhttps://android.googlesource.com/kernel/common/+/android-3.18/drivers/md/dm-verity-fec.c#673\n\nIf the file exists, FEC is set up for the device.\n\n\u003e I guess that\u0027s enough evidence for now that FEC is being used?\n\nYes. I think dm-verity successfully creating the device with FEC parameters should be sufficient even.\n\n\u003e I will write an integration test that flips a bit\n\nOr better yet, change every byte of one or more 4k blocks.",
+      "parentUuid": "01a974f7_b2b95826",
+      "range": {
+        "startLine": 1752,
+        "startChar": 0,
+        "endLine": 1752,
+        "endChar": 28
+      },
+      "revId": "a6ed8221b9cecf59207eeec5d3c50d5c6b9a5a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "211bd82a_58892106",
         "filename": "test/avbtool_unittest.cc",
         "patchSetId": 3
