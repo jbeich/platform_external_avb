@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "01a974f7_b2b95826",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1752,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-26T20:04:37Z",
+      "side": 1,
+      "message": "OK, I see. So in the case that the FEC data immediately follows the data that it\u0027s protecting, fec_blocks and fec_start will be the same. I made that change and the device now boots with this cmdline:\n\n [    1.231486] device-mapper: init: attempting early device configuration.\n [    1.232716] device-mapper: init: adding target \u00270 2063896 verity 1 PARTUUID\u003dd2d1d40a-8a5c-4c40-8a46-d7564d4e9b2b PARTUUID\u003dd2d1d40a-8a5c-4c40-8a46-d7564d4e9b2b 4096 4096 257987 257987 sha1 6bc402f53c24b46254907da946043e27bbb7b2c7 4bc18ed5cbc1b2cfac97b826be9636cf0726bdae 9 ignore_zero_blocks use_fec_from_device PARTUUID\u003dd2d1d40a-8a5c-4c40-8a46-d7564d4e9b2b fec_roots 2 fec_blocks 260020 fec_start 260020\u0027\n [    1.238198] device-mapper: verity-fec: Woot, FEC has been set up!\n [    1.239482] device-mapper: init: dm-0 is ready\n [    1.269342] EXT4-fs (dm-0): mounted filesystem with ordered data mode. Opts: (null)\n\nRelated - is there a way to actually tell that FEC is being used? (Can\u0027t seem to find the usual device-mapper userspace ... I guess if I had that, I could just run dmsetup.)\n\nThe \"Woot, FEC has been set up!\" line is a DMWARN() line that I inserted at the end of verity_fec_ctr(). I guess that\u0027s enough evidence for now that FEC is being used?\n\n(And by \"for now\" I mean that for b/31264079 I will write an integration test that flips a bit and then verifies that dm-verity-fec properly corrects it.)\n\n\u003e (stuff about ignore_zero_blocks)\n\nInteresting, I\u0027ll read those bugs. Thanks!",
+      "parentUuid": "211bd82a_982f39bd",
+      "range": {
+        "startLine": 1752,
+        "startChar": 0,
+        "endLine": 1752,
+        "endChar": 28
+      },
+      "revId": "a6ed8221b9cecf59207eeec5d3c50d5c6b9a5a3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "211bd82a_58892106",
         "filename": "test/avbtool_unittest.cc",
         "patchSetId": 3
