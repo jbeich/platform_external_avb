@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e16c60ba_562f12e8",
+        "filename": "Android.mk",
+        "patchSetId": 1
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-10-27T09:56:07Z",
+      "side": 1,
+      "message": "Need to move libavb to LOCAL_STATIC_LIBRARIES. Otherwise it will have build error.",
+      "range": {
+        "startLine": 159,
+        "startChar": 26,
+        "endLine": 159,
+        "endChar": 32
+      },
+      "revId": "03952f426d32f57611bd3dfdadd4bfbbeb989505",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
