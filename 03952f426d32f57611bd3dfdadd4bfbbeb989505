@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "01c254c7_a70f6451",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-10-27T14:52:24Z",
+      "side": 1,
+      "message": "Did you run the unit tests [1]? If so, please add a \"Test: Unit tests pass\" to indicate this! (Ideally we\u0027d have TreeHugger run these tests but it\u0027s not set up to do that just yet.)\n\n[1] :\n $ test/image_handler_unittest.py \u0026\u0026 test/libavb_host_symbols_test \u0026\u0026 ../../out/host/linux-x86/nativetest64/libavb_host_unittest/libavb_host_unittest",
+      "revId": "03952f426d32f57611bd3dfdadd4bfbbeb989505",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e16c60ba_562f12e8",
         "filename": "Android.mk",
         "patchSetId": 1
