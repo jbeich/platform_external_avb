@@ -22,6 +22,30 @@
       "revId": "b430d843753a13298a9ca79f3691677e3d9af5b7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0a2cc7b_f6dda1cd",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1934,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-11-15T19:25:41Z",
+      "side": 1,
+      "message": "I would think it\u0027d be closed when the temporary object returned by open() is deleted?",
+      "parentUuid": "d0a2cc7b_dbe8cec5",
+      "range": {
+        "startLine": 1934,
+        "startChar": 18,
+        "endLine": 1934,
+        "endChar": 22
+      },
+      "revId": "b430d843753a13298a9ca79f3691677e3d9af5b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
