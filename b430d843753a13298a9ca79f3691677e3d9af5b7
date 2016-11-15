@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0a2cc7b_dbe8cec5",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1934,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-11-15T19:14:32Z",
+      "side": 1,
+      "message": "nit: consider using \u0027with\u0027 clause so file is closed after reading",
+      "range": {
+        "startLine": 1934,
+        "startChar": 18,
+        "endLine": 1934,
+        "endChar": 22
+      },
+      "revId": "b430d843753a13298a9ca79f3691677e3d9af5b7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
