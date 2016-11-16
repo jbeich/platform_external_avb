@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d0a2cc7b_3e39cb93",
+        "filename": "libavb_ab/avb_ab_flow.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1077068
+      },
+      "writtenOn": "2016-11-16T20:51:52Z",
+      "side": 1,
+      "message": "This AB library still depends on AVB for the slot_verify part, not just the ops. This is the part of the A/B selection flow that doesn\u0027t match what already exists in Android A/B and just adds a dependency in libavb from the A/B selection algorithm.",
+      "range": {
+        "startLine": 223,
+        "startChar": 22,
+        "endLine": 223,
+        "endChar": 37
+      },
+      "revId": "baf59e232e48d0111e4b38f74c60c89e6f8f0b14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0a2cc7b_ea5da399",
+        "filename": "libavb_ab/avb_ab_flow.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1077068
+      },
+      "writtenOn": "2016-11-16T20:51:52Z",
+      "side": 1,
+      "message": "If you don\u0027t use A/B from avb or you don\u0027t use A/B at all (remember that A/B is not required), what flow in libavb is supposed to call this?",
+      "range": {
+        "startLine": 291,
+        "startChar": 16,
+        "endLine": 291,
+        "endChar": 42
+      },
+      "revId": "baf59e232e48d0111e4b38f74c60c89e6f8f0b14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
