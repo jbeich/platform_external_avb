@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d0a2cc7b_6a6773cf",
+        "filename": "libavb_ab/avb_ab_flow.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 223,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-11-16T21:34:30Z",
+      "side": 1,
+      "message": "Yes, libavb_ab depends on libavb. It is not intended to be a standalone A/B implementation.\n\n(And, for the record, we might change the A/B selection algorithm in libavb_ab so it works better with Android A/B.)",
+      "parentUuid": "d0a2cc7b_3e39cb93",
+      "range": {
+        "startLine": 223,
+        "startChar": 22,
+        "endLine": 223,
+        "endChar": 37
+      },
+      "revId": "baf59e232e48d0111e4b38f74c60c89e6f8f0b14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d0a2cc7b_ea5da399",
         "filename": "libavb_ab/avb_ab_flow.c",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2016-11-16T20:51:52Z",
       "side": 1,
       "message": "If you don\u0027t use A/B from avb or you don\u0027t use A/B at all (remember that A/B is not required), what flow in libavb is supposed to call this?",
+      "range": {
+        "startLine": 291,
+        "startChar": 16,
+        "endLine": 291,
+        "endChar": 42
+      },
+      "revId": "baf59e232e48d0111e4b38f74c60c89e6f8f0b14",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0a2cc7b_8aef4fce",
+        "filename": "libavb_ab/avb_ab_flow.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-11-16T21:34:30Z",
+      "side": 1,
+      "message": "If you don\u0027t use A/B (or you don\u0027t use libavb_ab), then you\u0027d be using avb_slot_verify() which in libavb (not libavb_ab).\n\nSo the code (the device bootloader I guess) that calls avb_slot_verify() should use the write_rollback_index() op to set the stored_rollback_indexes[n] to values that makes sense for the device. This depends on whether the device in question is using A/B and if so, _how_ it is implementing A/B. AvbSlotVerifyResult helpfully exports the rollback_index values in the verified slot so this shouldn\u0027t be too hard.",
+      "parentUuid": "d0a2cc7b_ea5da399",
       "range": {
         "startLine": 291,
         "startChar": 16,
