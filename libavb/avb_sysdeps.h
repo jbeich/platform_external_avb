@@ -55,7 +55,11 @@ extern "C" {
  *
  * Change this to match your architecture - must be a power of two.
  */
+#ifdef __LP64__
 #define AVB_WORD_ALIGNMENT_SIZE 8
+#else
+#define AVB_WORD_ALIGNMENT_SIZE 4
+#endif
 
 /* Compare |n| bytes in |src1| and |src2|.
  *
