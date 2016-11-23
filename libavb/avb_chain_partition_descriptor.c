@@ -40,14 +40,9 @@ bool avb_chain_partition_descriptor_validate_and_byteswap(
     return false;
   }
 
-  dest->rollback_index_slot = avb_be32toh(dest->rollback_index_slot);
+  dest->rollback_index_location = avb_be32toh(dest->rollback_index_location);
   dest->partition_name_len = avb_be32toh(dest->partition_name_len);
   dest->public_key_len = avb_be32toh(dest->public_key_len);
-
-  if (dest->rollback_index_slot < 1) {
-    avb_error("Invalid rollback index slot value.\n");
-    return false;
-  }
 
   /* Check that partition_name and public_key are fully contained. */
   expected_size = sizeof(AvbChainPartitionDescriptor) - sizeof(AvbDescriptor);

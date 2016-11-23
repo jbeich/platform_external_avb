@@ -584,6 +584,7 @@ void avb_vbmeta_image_header_to_host_byte_order(const AvbVBMetaImageHeader* src,
   dest->descriptors_size = avb_be64toh(dest->descriptors_size);
 
   dest->rollback_index = avb_be64toh(dest->rollback_index);
+  dest->rollback_index_location = avb_be32toh(dest->rollback_index_location);
   dest->flags = avb_be32toh(dest->flags);
 }
 

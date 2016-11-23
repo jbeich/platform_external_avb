@@ -256,6 +256,63 @@ TEST_F(AvbSlotVerifyTest, RollbackIndex) {
   avb_slot_verify_data_free(slot_data);
 }
 
+TEST_F(AvbSlotVerifyTest, RollbackIndexNonstandardLocation) {
+  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 42,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "--rollback_index_location 2");
+
+  EXPECT_EQ(
+      "VBMeta image version:     1.0\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     576 bytes\n"
+      "Auxiliary Block:          576 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           42\n"
+      "Rollback Index Location:  2\n"
+      "Flags:                    0\n"
+      "Descriptors:\n"
+      "    (none)\n",
+      InfoImage(vbmeta_image_path_));
+
+  ops_.set_expected_public_key(
+      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+
+  AvbSlotVerifyData* slot_data = NULL;
+  const char* requested_partitions[] = {"boot", NULL};
+
+  // First try with 42 as the stored rollback index - this should
+  // succeed since the image rollback index is 42 (as set above).
+  //
+  // Note how rollback index location 0 and 1 has values 1000 which
+  // far exceed 42. This is to demonstrate rollback index location 2
+  // is used.
+  ops_.set_stored_rollback_indexes({1000, 1000, 42});
+  EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
+            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
+                            false /* allow_verification_error */, &slot_data));
+  EXPECT_NE(nullptr, slot_data);
+  EXPECT_EQ(uint32_t(0), slot_data->rollback_indexes[0]);
+  EXPECT_EQ(uint32_t(0), slot_data->rollback_indexes[1]);
+  EXPECT_EQ(uint32_t(42), slot_data->rollback_indexes[2]);
+  avb_slot_verify_data_free(slot_data);
+
+  // Then try with 43 for the stored rollback index - this should fail
+  // because the image has rollback index 42 which is less than 43.
+  ops_.set_stored_rollback_indexes({1000, 1000, 43});
+  EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX,
+            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
+                            false /* allow_verification_error */, &slot_data));
+  EXPECT_EQ(nullptr, slot_data);
+  EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX,
+            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
+                            true /* allow_verification_error */, &slot_data));
+  EXPECT_NE(nullptr, slot_data);
+  EXPECT_EQ(uint32_t(0), slot_data->rollback_indexes[0]);
+  EXPECT_EQ(uint32_t(0), slot_data->rollback_indexes[1]);
+  EXPECT_EQ(uint32_t(42), slot_data->rollback_indexes[2]);
+  avb_slot_verify_data_free(slot_data);
+}
+
 TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
   const size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
@@ -287,6 +344,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "Auxiliary Block:          896 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           4\n"
+      "Rollback Index Location:  0\n"
       "Flags:                    0\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
@@ -357,7 +415,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "aca82b8c227721a389e89643c7e8ced39b3c587337bc9c10539c09a50026121f",
       std::string(slot_data->cmdline));
   EXPECT_EQ(4UL, slot_data->rollback_indexes[0]);
-  for (size_t n = 1; n < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_SLOTS; n++) {
+  for (size_t n = 1; n < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS; n++) {
     EXPECT_EQ(0UL, slot_data->rollback_indexes[n]);
   }
   avb_slot_verify_data_free(slot_data);
@@ -455,12 +513,14 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "Auxiliary Block:          1728 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           11\n"
+      "Rollback Index Location:  0\n"
       "Flags:                    0\n"
       "Descriptors:\n"
       "    Chain Partition descriptor:\n"
-      "      Partition Name:        boot\n"
-      "      Rollback Index Slot:   1\n"
-      "      Public key (sha1):     2597c218aae470a130f61162feaae70afd97f011\n"
+      "      Partition Name:          boot\n"
+      "      Rollback Index Location: 1\n"
+      "      Public key (sha1):       "
+      "2597c218aae470a130f61162feaae70afd97f011\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
@@ -479,6 +539,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "Auxiliary Block:          1280 bytes\n"
       "Algorithm:                SHA256_RSA4096\n"
       "Rollback Index:           12\n"
+      "Rollback Index Location:  0\n"
       "Flags:                    0\n"
       "Descriptors:\n"
       "    Hash descriptor:\n"
@@ -563,7 +624,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       std::string(slot_data->cmdline));
   EXPECT_EQ(11UL, slot_data->rollback_indexes[0]);
   EXPECT_EQ(12UL, slot_data->rollback_indexes[1]);
-  for (size_t n = 2; n < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_SLOTS; n++) {
+  for (size_t n = 2; n < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS; n++) {
     EXPECT_EQ(0UL, slot_data->rollback_indexes[n]);
   }
   avb_slot_verify_data_free(slot_data);
@@ -729,8 +790,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 
-  // Check failure if there is no rollback index slot 1 - in that case
-  // we expect an I/O error since ops->read_rollback_index() will
+  // Check failure if there is no rollback index location 1 - in that
+  // case we expect an I/O error since ops->read_rollback_index() will
   // fail.
   ops_.set_stored_rollback_indexes({0});
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_IO,
@@ -778,12 +839,14 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "Auxiliary Block:          1728 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           11\n"
+      "Rollback Index Location:  0\n"
       "Flags:                    0\n"
       "Descriptors:\n"
       "    Chain Partition descriptor:\n"
-      "      Partition Name:        boot\n"
-      "      Rollback Index Slot:   1\n"
-      "      Public key (sha1):     2597c218aae470a130f61162feaae70afd97f011\n"
+      "      Partition Name:          boot\n"
+      "      Rollback Index Location: 1\n"
+      "      Public key (sha1):       "
+      "2597c218aae470a130f61162feaae70afd97f011\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
@@ -831,7 +894,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       std::string(slot_data->cmdline));
   EXPECT_EQ(11UL, slot_data->rollback_indexes[0]);
   EXPECT_EQ(12UL, slot_data->rollback_indexes[1]);
-  for (size_t n = 2; n < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_SLOTS; n++) {
+  for (size_t n = 2; n < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS; n++) {
     EXPECT_EQ(0UL, slot_data->rollback_indexes[n]);
   }
   avb_slot_verify_data_free(slot_data);
@@ -875,6 +938,7 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
       "Auxiliary Block:          896 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           4\n"
+      "Rollback Index Location:  0\n"
       "Flags:                    0\n"
       "Descriptors:\n"
       "    Hash descriptor:\n"
@@ -1003,6 +1067,7 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
           "Auxiliary Block:          960 bytes\n"
           "Algorithm:                SHA256_RSA2048\n"
           "Rollback Index:           4\n"
+          "Rollback Index Location:  0\n"
           "Flags:                    %d\n"
           "Descriptors:\n"
           "    Kernel Cmdline descriptor:\n"
@@ -1055,7 +1120,7 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
         "androidboot.slot_suffix=_a androidboot.vbmeta.device_state=locked "
         "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1792 "
         "androidboot.vbmeta.digest="
-        "b574b9765f17fc98a90dda0f1e277bacbbd5f01c1e9a3c9a507252085df8a580",
+        "a8b03ce7718bfc77a3b3764e26f1d1a923a720d4bc1bb4caefa1a6f75a29ed1c",
         std::string(slot_data->cmdline));
   }
   avb_slot_verify_data_free(slot_data);
