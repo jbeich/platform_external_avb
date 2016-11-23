@@ -470,6 +470,8 @@ TEST_F(VerifyTest, VBMetaHeaderByteswap) {
   n64++;
   h.rollback_index = htobe64(n64);
   n64++;
+  h.rollback_index_location = htobe32(n32);
+  n32++;
   h.flags = htobe32(n32);
   n32++;
 
@@ -510,12 +512,14 @@ TEST_F(VerifyTest, VBMetaHeaderByteswap) {
   n64++;
   EXPECT_EQ(n64, s.rollback_index);
   n64++;
+  EXPECT_EQ(n32, s.rollback_index_location);
+  n32++;
   EXPECT_EQ(n32, s.flags);
   n32++;
 
   // If new fields are added, the following will fail. This is to
   // remind that byteswapping code (in avb_util.c) and unittests for
   // this should be updated.
-  static_assert(offsetof(AvbVBMetaImageHeader, reserved) == 124,
+  static_assert(offsetof(AvbVBMetaImageHeader, reserved) == 128,
                 "Remember to unittest byteswapping of newly added fields");
 }

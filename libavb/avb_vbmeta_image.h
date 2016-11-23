@@ -163,15 +163,22 @@ typedef struct AvbVBMetaImageHeader {
    */
   uint64_t rollback_index;
 
-  /* 120: Flags from the AvbVBMetaImageFlags enumeration. This must be
+  /* 120: The rollback_index location to use for storing the rollback
+   * index. This must be set to zero if the vbmeta image is not a
+   * top-level image (the location is derived from the chain partition
+   * descriptor).
+   */
+  uint32_t rollback_index_location;
+
+  /* 124: Flags from the AvbVBMetaImageFlags enumeration. This must be
    * set to zero if the vbmeta image is not a top-level image.
    */
   uint32_t flags;
 
-  /* 124: Padding to ensure struct is size AVB_VBMETA_IMAGE_HEADER_SIZE
+  /* 128: Padding to ensure struct is size AVB_VBMETA_IMAGE_HEADER_SIZE
    * bytes. This must be set to zeroes.
    */
-  uint8_t reserved[132];
+  uint8_t reserved[128];
 } AVB_ATTR_PACKED AvbVBMetaImageHeader;
 
 /* Copies |src| to |dest|, byte-swapping fields in the process.

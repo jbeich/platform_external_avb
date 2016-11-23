@@ -1289,7 +1289,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
   See the |AvbChainPartitionDescriptor| C struct for more information.
 
   Attributes:
-    rollback_index_slot: The rollback index slot to use.
+    rollback_index_location: The rollback index location to use.
     partition_name: Partition name.
     public_key: Bytes for the public key.
   """
@@ -1298,7 +1298,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
   RESERVED = 64
   SIZE = 28 + RESERVED
   FORMAT_STRING = ('!QQ'  # tag, num_bytes_following (descriptor header)
-                   'L'  # rollback_index_slot
+                   'L'  # rollback_index_location
                    'L'  # partition_name_size (bytes)
                    'L' +  # public_key_size (bytes)
                    str(RESERVED) + 's')  # reserved
@@ -1316,7 +1316,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
     assert struct.calcsize(self.FORMAT_STRING) == self.SIZE
 
     if data:
-      (tag, num_bytes_following, self.rollback_index_slot, partition_name_len,
+      (tag, num_bytes_following, self.rollback_index_location, partition_name_len,
        public_key_len, _) = struct.unpack(self.FORMAT_STRING, data[0:self.SIZE])
       expected_size = round_to_multiple(
           self.SIZE - 16 + partition_name_len + public_key_len, 8)
@@ -1332,7 +1332,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
       self.public_key = data[(self.SIZE + o):(self.SIZE + o + public_key_len)]
 
     else:
-      self.rollback_index_slot = 0
+      self.rollback_index_location = 0
       self.partition_name = ''
       self.public_key = bytearray()
 
@@ -1343,12 +1343,12 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
       o: The object to write the output to.
     """
     o.write('    Chain Partition descriptor:\n')
-    o.write('      Partition Name:        {}\n'.format(self.partition_name))
-    o.write('      Rollback Index Slot:   {}\n'.format(
-        self.rollback_index_slot))
+    o.write('      Partition Name:          {}\n'.format(self.partition_name))
+    o.write('      Rollback Index Location: {}\n'.format(
+        self.rollback_index_location))
     # Just show the SHA1 of the key, for size reasons.
     hexdig = hashlib.sha1(self.public_key).hexdigest()
-    o.write('      Public key (sha1):     {}\n'.format(hexdig))
+    o.write('      Public key (sha1):       {}\n'.format(hexdig))
 
   def encode(self):
     """Serializes the descriptor.
@@ -1362,7 +1362,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
     nbf_with_padding = round_to_multiple(num_bytes_following, 8)
     padding_size = nbf_with_padding - num_bytes_following
     desc = struct.pack(self.FORMAT_STRING, self.TAG, nbf_with_padding,
-                       self.rollback_index_slot, len(encoded_name),
+                       self.rollback_index_location, len(encoded_name),
                        len(self.public_key), self.RESERVED*'\0')
     padding = struct.pack(str(padding_size) + 'x')
     ret = desc + encoded_name + self.public_key + padding
@@ -1471,7 +1471,7 @@ class AvbVBMetaHeader(object):
   SIZE = 256
 
   # Keep in sync with |reserved| field of |AvbVBMetaImageHeader|.
-  RESERVED = 132
+  RESERVED = 128
 
   # Keep in sync with |AvbVBMetaImageHeader|.
   FORMAT_STRING = ('!4s2L'  # magic, 2 x version
@@ -1483,6 +1483,7 @@ class AvbVBMetaHeader(object):
                    '2Q'  # offset, size (public key metadata)
                    '2Q'  # offset, size (descriptors)
                    'Q'  # rollback_index
+                   'L'  # rollback_index_location
                    'L' +  # flags
                    str(RESERVED) + 'x')  # padding for reserved bytes
 
@@ -1505,7 +1506,7 @@ class AvbVBMetaHeader(object):
        self.public_key_size, self.public_key_metadata_offset,
        self.public_key_metadata_size, self.descriptors_offset,
        self.descriptors_size,
-       self.rollback_index,
+       self.rollback_index, self.rollback_index_location,
        self.flags) = struct.unpack(self.FORMAT_STRING, data)
       # Nuke NUL-bytes at the end of the string.
       if self.magic != 'AVB0':
@@ -1528,6 +1529,7 @@ class AvbVBMetaHeader(object):
       self.descriptors_offset = 0
       self.descriptors_size = 0
       self.rollback_index = 0
+      self.rollback_index_location = 0
       self.flags = 0
 
   def save(self, output):
@@ -1544,7 +1546,7 @@ class AvbVBMetaHeader(object):
         self.public_key_offset, self.public_key_size,
         self.public_key_metadata_offset, self.public_key_metadata_size,
         self.descriptors_offset, self.descriptors_size, self.rollback_index,
-        self.flags))
+        self.rollback_index_location, self.flags))
 
   def encode(self):
     """Serializes the header (256) to a bytearray().
@@ -1560,7 +1562,8 @@ class AvbVBMetaHeader(object):
                        self.signature_size, self.public_key_offset,
                        self.public_key_size, self.public_key_metadata_offset,
                        self.public_key_metadata_size, self.descriptors_offset,
-                       self.descriptors_size, self.rollback_index, self.flags)
+                       self.descriptors_size, self.rollback_index,
+                       self.rollback_index_location, self.flags)
 
 
 class Avb(object):
@@ -1687,6 +1690,8 @@ class Avb(object):
         header.auxiliary_data_block_size))
     o.write('Algorithm:                {}\n'.format(alg_name))
     o.write('Rollback Index:           {}\n'.format(header.rollback_index))
+    o.write('Rollback Index Location:  {}\n'.format(
+        header.rollback_index_location))
     o.write('Flags:                    {}\n'.format(header.flags))
 
     # Print descriptors.
@@ -1810,7 +1815,8 @@ class Avb(object):
 
   def make_vbmeta_image(self, output, chain_partitions, algorithm_name,
                         key_path, public_key_metadata_path, rollback_index,
-                        flags, props, props_from_file, kernel_cmdlines,
+                        rollback_index_location, flags, props, props_from_file,
+                        kernel_cmdlines,
                         generate_dm_verity_cmdline_from_hashtree,
                         include_descriptors_from_image):
     """Implements the 'make_vbmeta_image' command.
@@ -1822,6 +1828,7 @@ class Avb(object):
       key_path: Path to key to use or None.
       public_key_metadata_path: Path to public key metadata or None.
       rollback_index: The rollback index to use.
+      rollback_index_location: The rollback index location to use.
       flags: Flags value to use in the image.
       props: Properties to insert (list of strings of the form 'key:value').
       props_from_file: Properties to insert (list of strings 'key:<path>').
@@ -1843,17 +1850,15 @@ class Avb(object):
           raise AvbError('Malformed chained partition "{}".'.format(cp))
         desc = AvbChainPartitionDescriptor()
         desc.partition_name = cp_tokens[0]
-        desc.rollback_index_slot = int(cp_tokens[1])
-        if desc.rollback_index_slot < 1:
-          raise AvbError('Rollback index slot must be 1 or larger.')
+        desc.rollback_index_location = int(cp_tokens[1])
         file_path = cp_tokens[2]
         desc.public_key = open(file_path, 'rb').read()
         descriptors.append(desc)
 
     vbmeta_blob = self._generate_vbmeta_blob(
         algorithm_name, key_path, public_key_metadata_path, descriptors,
-        rollback_index, flags, props, props_from_file, kernel_cmdlines,
-        generate_dm_verity_cmdline_from_hashtree,
+        rollback_index, rollback_index_location, flags, props, props_from_file,
+        kernel_cmdlines, generate_dm_verity_cmdline_from_hashtree,
         include_descriptors_from_image)
 
     # Write entire vbmeta blob (header, authentication, auxiliary).
@@ -1862,8 +1867,8 @@ class Avb(object):
 
   def _generate_vbmeta_blob(self, algorithm_name, key_path,
                             public_key_metadata_path, descriptors,
-                            rollback_index, flags, props, props_from_file,
-                            kernel_cmdlines,
+                            rollback_index, rollback_index_location, flags,
+                            props, props_from_file, kernel_cmdlines,
                             generate_dm_verity_cmdline_from_hashtree,
                             include_descriptors_from_image):
     """Generates a VBMeta blob.
@@ -1882,6 +1887,7 @@ class Avb(object):
       public_key_metadata_path: Path to public key metadata or None.
       descriptors: A list of descriptors to insert or None.
       rollback_index: The rollback index to use.
+      rollback_index_location: The rollback index location to use.
       flags: Flags to use in the image.
       props: Properties to insert (List of strings of the form 'key:value').
       props_from_file: Properties to insert (List of strings 'key:<path>').
@@ -2000,6 +2006,7 @@ class Avb(object):
     h.signature_size = alg.signature_num_bytes
 
     h.rollback_index = rollback_index
+    h.rollback_index_location = rollback_index_location
     h.flags = flags
 
     # Generate Header data block.
@@ -2150,13 +2157,16 @@ class Avb(object):
       h_desc.salt = salt
       h_desc.digest = digest
 
-      # Flags are only allowed on top-level vbmeta struct.
+      # Flags and rollback index location are only allowed on
+      # top-level vbmeta struct.
       flags = 0
+      rollback_index_location = 0
 
       # Generate the VBMeta footer.
       vbmeta_blob = self._generate_vbmeta_blob(
           algorithm_name, key_path, public_key_metadata_path, [h_desc],
-          rollback_index, flags, props, props_from_file, kernel_cmdlines,
+          rollback_index, rollback_index_location, flags, props,
+          props_from_file, kernel_cmdlines,
           generate_dm_verity_cmdline_from_hashtree,
           include_descriptors_from_image)
 
@@ -2363,14 +2373,17 @@ class Avb(object):
         ht_desc.fec_offset = fec_offset
         ht_desc.fec_size = len(fec_data)
 
-      # Flags are only allowed on top-level vbmeta struct.
+      # Flags and rollback index location are only allowed on
+      # top-level vbmeta struct.
       flags = 0
+      rollback_index_location = 0
 
       # Generate the VBMeta footer and add padding as needed.
       vbmeta_offset = tree_offset + len_hashtree_and_fec
       vbmeta_blob = self._generate_vbmeta_blob(
           algorithm_name, key_path, public_key_metadata_path, [ht_desc],
-          rollback_index, flags, props, props_from_file, kernel_cmdlines,
+          rollback_index, rollback_index_location, flags, props,
+          props_from_file, kernel_cmdlines,
           generate_dm_verity_cmdline_from_hashtree,
           include_descriptors_from_image)
       padding_needed = (round_to_multiple(len(vbmeta_blob), image.block_size) -
@@ -2648,6 +2661,10 @@ class AvbTool(object):
                             help='VBMeta flags',
                             type=parse_number,
                             default=0)
+    sub_parser.add_argument('--rollback_index_location',
+                            help='Rollback Index Location',
+                            type=parse_number,
+                            default=0)
     sub_parser.set_defaults(func=self.make_vbmeta_image)
 
     sub_parser = subparsers.add_parser('add_hash_footer',
@@ -2768,7 +2785,8 @@ class AvbTool(object):
     self.avb.make_vbmeta_image(args.output, args.chain_partition,
                                args.algorithm, args.key,
                                args.public_key_metadata, args.rollback_index,
-                               args.flags, args.prop, args.prop_from_file,
+                               args.rollback_index_location, args.flags,
+                               args.prop, args.prop_from_file,
                                args.kernel_cmdline,
                                args.generate_dm_verity_cmdline_from_hashtree,
                                args.include_descriptors_from_image)
