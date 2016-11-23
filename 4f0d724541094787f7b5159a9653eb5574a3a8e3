@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "700040b3_b8c95915",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-11-23T17:04:56Z",
+      "side": 1,
+      "message": "nit: how about \"honor USE_ONLY_IF_HASHTREE_DISABLED\" or \"skip USE_ONLY_IF_HASHTREE_NOT_DISABLED\", because it sets apply_cmdline to false (Same for below).",
+      "range": {
+        "startLine": 530,
+        "startChar": 37,
+        "endLine": 530,
+        "endChar": 76
+      },
+      "revId": "4f0d724541094787f7b5159a9653eb5574a3a8e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
