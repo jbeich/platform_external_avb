@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed30d7ea_ac3ca3f2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-11-25T08:22:47Z",
+      "side": 1,
+      "message": "May I know what is the \"1 vroot none ro 1,0 2080496\" used for?\n\nLooks like the dm-verity param starts from \"verity 1 PARTUUID\u003d.....\" (https://gitlab.com/cryptsetup/cryptsetup/wikis/DMVerity#mapping-table-for-verity-target).\n\nThanks,",
+      "range": {
+        "startLine": 16,
+        "startChar": 234,
+        "endLine": 16,
+        "endChar": 262
+      },
+      "revId": "d5d7adf198ca523b30436092a1ea581f43e14633",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
