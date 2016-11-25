@@ -22,6 +22,30 @@
       "revId": "d5d7adf198ca523b30436092a1ea581f43e14633",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "502fbc70_b06dbee3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-11-25T20:15:54Z",
+      "side": 1,
+      "message": "See init/do_mounts_dm.c for the format.\n\nhttps://android.googlesource.com/platform/hardware/bsp/kernel/common/v4.4/+/master/init/do_mounts_dm.c",
+      "parentUuid": "ed30d7ea_ac3ca3f2",
+      "range": {
+        "startLine": 16,
+        "startChar": 234,
+        "endLine": 16,
+        "endChar": 262
+      },
+      "revId": "d5d7adf198ca523b30436092a1ea581f43e14633",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
