@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed30d7ea_0c90579c",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-11-25T12:49:20Z",
+      "side": 1,
+      "message": "How about remove \u0027rollback_index_location\u0027 from chain partition descriptor and always use the one from vbmeta.\n\nThen we can remove rollback_index_location from the function (load_and_verify_vbmeta) parameter and just use:\n  \n  - rollback_index_location \u003d vbmeta_header.rollback_index_location;",
+      "range": {
+        "startLine": 355,
+        "startChar": 0,
+        "endLine": 370,
+        "endChar": 3
+      },
+      "revId": "1e7d2800442ba1d8f4b31288ebf6d812ec0de3c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
