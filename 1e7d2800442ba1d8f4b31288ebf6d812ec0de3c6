@@ -22,6 +22,30 @@
       "revId": "1e7d2800442ba1d8f4b31288ebf6d812ec0de3c6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "502fbc70_f07736af",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-11-25T20:22:20Z",
+      "side": 1,
+      "message": "I considered doing this but I don\u0027t want the entity to whom authority is delegated to, to control the rollback index location ... for example if they accidentally put in the wrong number then they screw it up both for themselves and - worse - also the entity who had the rollback index location that they accidentally used. With the way it\u0027s currently done this problem cannot happen. Which I think is a good thing - e.g. delegate as little power as possible (but still enough to get the job done).",
+      "parentUuid": "ed30d7ea_0c90579c",
+      "range": {
+        "startLine": 355,
+        "startChar": 0,
+        "endLine": 370,
+        "endChar": 3
+      },
+      "revId": "1e7d2800442ba1d8f4b31288ebf6d812ec0de3c6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
