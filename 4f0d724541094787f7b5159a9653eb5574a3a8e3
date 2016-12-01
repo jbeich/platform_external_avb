@@ -22,6 +22,30 @@
       "revId": "4f0d724541094787f7b5159a9653eb5574a3a8e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "502fbc70_6738d331",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 530,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-01T18:21:32Z",
+      "side": 1,
+      "message": "Sorry, I missed this code-review comment! I\u0027ve replaced this and the C comment below with a C comment for the top-level block. I hope it\u0027s more clear this way.",
+      "parentUuid": "700040b3_b8c95915",
+      "range": {
+        "startLine": 530,
+        "startChar": 37,
+        "endLine": 530,
+        "endChar": 76
+      },
+      "revId": "4f0d724541094787f7b5159a9653eb5574a3a8e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
