@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ed4a9797_bc638132",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-12-01T10:23:51Z",
+      "side": 1,
+      "message": "Just to clarify, the plan is for fs_mgr to use avb_slot_verify() to verify all vbmeta structs (including main vbmeta + other partitions).\n\nThere are some concerns about using that on the main vbmeta, because load_and_verify_vbmeta() will:\n - Verify HASH descriptor, which is unnecessary.\n - Process KERNEL CMDLINE descriptor, which is unnecessary as well because we already boot up kernel and cannot change /proc/cmdline\n\nDo you think this is an issue?",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 15
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed4a9797_dc6acd02",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-12-01T10:23:51Z",
+      "side": 1,
+      "message": "Does this main sense for non-vbmeta partitions?\n\nMore specifically, avb_slot_verify() just updates androidboot.vbmeta.{hash_alg, size, digest} before we compare that with calc_digest_of_vbmeta_images(). This seems unnecessary to me.\n\nps: androidboot.vbmeta.{hash_alg, size, digest} here resides in slot_data instead of /proc/cmdline because we already boot into kernel.\n\n  ...\n  if (!avb_slot_verify(ops, \u0026verify_data) !\u003d VERIFY_RESULT_OK-ish)\n  goto fail;\n  if (calc_digest_of_vbmeta_images(verify_data) !\u003d androidboot.vbmeta.digest)\n  goto fail;\n  ...\n\nHowever, comparing /proc/cmdlind: androidboot.vbmeta.{hash_alg, size, digest} for the main vbmeta makes sense to me. As the value is updated by the bootloader in previous stage for us to make sure /vbmeta can be trusted.",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 17,
+        "endChar": 62
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed4a9797_3c99310c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-12-01T10:23:51Z",
+      "side": 1,
+      "message": "Does fs_mgr need to check rollback_indexes?\nI was under the impression that only bootloader checks this but not fs_mgr. \n\nAnd bootloader might not want to expose the rollback_indexes info to Android.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 23
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed4a9797_3c46519c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-12-01T10:23:51Z",
+      "side": 1,
+      "message": "Did you mean that we just hook no-ops for the two ops, as both are not required for non-vbmeta partitions.",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 49
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed4a9797_bc8c21c7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-12-01T10:23:51Z",
+      "side": 1,
+      "message": "is this validate_vbmeta_public_key()?",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 21
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
