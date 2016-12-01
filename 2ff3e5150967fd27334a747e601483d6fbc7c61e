@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "502fbc70_2ccfa06e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-01T14:39:07Z",
+      "side": 1,
+      "message": "Nope, not an issue at all - the CPU needed for this is very small.",
+      "parentUuid": "ed4a9797_bc638132",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 15
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed4a9797_dc6acd02",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "502fbc70_8cb6ccd9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-01T14:39:07Z",
+      "side": 1,
+      "message": "I\u0027m not sure I understand the question.\n\nThe reason that all vbmeta structs - not just the one from the vbmeta partition - are included the androidboot.vbmeta.digest is that this way we can reason about all of them and not just the one in the \u0027vbmeta\u0027 partition.",
+      "parentUuid": "ed4a9797_dc6acd02",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 17,
+        "endChar": 62
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed4a9797_3c99310c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2016-12-01T10:23:51Z",
       "side": 1,
       "message": "Does fs_mgr need to check rollback_indexes?\nI was under the impression that only bootloader checks this but not fs_mgr. \n\nAnd bootloader might not want to expose the rollback_indexes info to Android.",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 23
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "502fbc70_acc39043",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-01T14:39:07Z",
+      "side": 1,
+      "message": "By relying on the androidboot.vbmeta.digest value we achieve that\n\n- fs_mgr does not need to check rollback indexes.\n- fs_mgr does not need to check the public key used to sign the root vbmeta struct\n\nSame holds for any other userspace app.\n\nAnd, yes, a key deciding factor for this is that we\n\n- don\u0027t want to expose to Android the stored_rollback_indexes[] values\n- don\u0027t want to expose to Android the public key used for root vbmeta struct",
+      "parentUuid": "ed4a9797_3c99310c",
       "range": {
         "startLine": 22,
         "startChar": 0,
@@ -105,6 +177,30 @@
       "writtenOn": "2016-12-01T10:23:51Z",
       "side": 1,
       "message": "is this validate_vbmeta_public_key()?",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 21
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "502fbc70_ccc0c439",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-01T14:39:07Z",
+      "side": 1,
+      "message": "Yes, for both validate_vbmeta_public_key() (which is what I meant - new CL with fix coming up) and read_rollback_index() just hook ops that respectively return \u0027true\u0027 and 0.",
+      "parentUuid": "ed4a9797_bc8c21c7",
       "range": {
         "startLine": 24,
         "startChar": 0,
