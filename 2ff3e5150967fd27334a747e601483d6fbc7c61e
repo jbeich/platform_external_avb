@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "ed4a9797_5cfcfdfc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-12-01T17:01:36Z",
+      "side": 1,
+      "message": "OK, sounds good.\nI agree that sticking to libavb library for security verificatio is better.",
+      "parentUuid": "502fbc70_2ccfa06e",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 15
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed4a9797_dc6acd02",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -96,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "ed637725_a8106314",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-12-01T17:01:36Z",
+      "side": 1,
+      "message": "Sorry, I misunderstood it before. Please ignore my previous comment.",
+      "parentUuid": "502fbc70_8cb6ccd9",
+      "range": {
+        "startLine": 17,
+        "startChar": 19,
+        "endLine": 17,
+        "endChar": 62
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ed4a9797_3c99310c",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -131,6 +179,30 @@
       "side": 1,
       "message": "By relying on the androidboot.vbmeta.digest value we achieve that\n\n- fs_mgr does not need to check rollback indexes.\n- fs_mgr does not need to check the public key used to sign the root vbmeta struct\n\nSame holds for any other userspace app.\n\nAnd, yes, a key deciding factor for this is that we\n\n- don\u0027t want to expose to Android the stored_rollback_indexes[] values\n- don\u0027t want to expose to Android the public key used for root vbmeta struct",
       "parentUuid": "ed4a9797_3c99310c",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 22,
+        "endChar": 23
+      },
+      "revId": "2ff3e5150967fd27334a747e601483d6fbc7c61e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ed637725_081eb726",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2016-12-01T17:01:36Z",
+      "side": 1,
+      "message": "Noted, this is a good design.",
+      "parentUuid": "502fbc70_acc39043",
       "range": {
         "startLine": 22,
         "startChar": 0,
