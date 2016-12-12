@@ -88,6 +88,17 @@ typedef enum {
   _AVB_ALGORITHM_NUM_TYPES
 } AvbAlgorithmType;
 
+/* Holds algorithm-specific data. The |padding| is needed by avb_rsa_verify. */
+typedef struct {
+  const uint8_t* padding;
+  size_t padding_len;
+  size_t hash_len;
+} AvbAlgorithmData;
+
+/* Provides algorithm-specific data for a given |algorithm|. */
+const AvbAlgorithmData* avb_get_algorithm_data(AvbAlgorithmType algorithm)
+    AVB_ATTR_WARN_UNUSED_RESULT;
+
 /* The header for a serialized RSA public key.
  *
  * The size of the key is given by |key_num_bits|, for example 2048
