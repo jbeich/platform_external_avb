@@ -45,6 +45,8 @@
     EXPECT_EQ(WEXITSTATUS(rc), expected_exit_status);                      \
   } while (0);
 
+namespace avb {
+
 /* Base-class used for unit test. */
 class BaseAvbToolTest : public ::testing::Test {
  public:
@@ -149,5 +151,7 @@ class BaseAvbToolTest : public ::testing::Test {
   /* Contents of the image generated with GenerateVBMetaImage(). */
   std::vector<uint8_t> vbmeta_image_;
 };
+
+}  // namespace avb
 
 #endif /* AVB_UNITTEST_UTIL_H_ */

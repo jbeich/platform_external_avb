@@ -178,6 +178,9 @@ struct AvbOps {
                                                const char* partition,
                                                char* guid_buf,
                                                size_t guid_buf_size);
+
+  /* Optional context data. Ignored by AVB. */
+  void* context;
 };
 
 #ifdef __cplusplus
