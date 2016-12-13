@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd41532d_71b27030",
+        "filename": "test/fake_avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-13T16:56:40Z",
+      "side": 0,
+      "message": "I think we need to add this back. The sole reason this struct exists is so we don\u0027t have to litter the AvbOps interface with \u0027context\u0027 or \u0027userdata\u0027 pointers.",
+      "revId": "cc9b4d80d00dc0936bf88c8f716924f829363c30",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

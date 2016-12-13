@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd41532d_31b8e80e",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-13T16:56:40Z",
+      "side": 1,
+      "message": "This can be moved into struct FakeAvbOpsC, right? I would strongly prefer to not have this here since with undefined membership like that, it\u0027s just going to end with multiple separate pieces of code trying to use it for their own purpose. Let\u0027s keep this interface clean.",
+      "revId": "5d4c41fffaf5e9a7efd075e7548e6145260e769d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
