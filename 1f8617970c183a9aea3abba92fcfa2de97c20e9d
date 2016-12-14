@@ -46,6 +46,30 @@
       "revId": "1f8617970c183a9aea3abba92fcfa2de97c20e9d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a3a3354_21804e49",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-14T21:05:58Z",
+      "side": 1,
+      "message": "Btw, the other option is to add this feature (I can see how it *could* be useful in some ways) and just discourage its use. But that kinda sits wrong with me. I\u0027d rather just not add this feature... thoughts?",
+      "parentUuid": "9a3a3354_6186566a",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 56
+      },
+      "revId": "1f8617970c183a9aea3abba92fcfa2de97c20e9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
