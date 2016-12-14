@@ -94,6 +94,30 @@
       "revId": "1f8617970c183a9aea3abba92fcfa2de97c20e9d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7a89ff76_90db9409",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-14T22:28:50Z",
+      "side": 1,
+      "message": "I agree. New patch set uploaded.",
+      "parentUuid": "da910b63_1410b5fd",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 56
+      },
+      "revId": "1f8617970c183a9aea3abba92fcfa2de97c20e9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
