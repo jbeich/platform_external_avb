@@ -22,6 +22,30 @@
       "revId": "1f8617970c183a9aea3abba92fcfa2de97c20e9d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9a3a3354_6186566a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-14T21:03:45Z",
+      "side": 1,
+      "message": "If one were to use this feature (e.g. different rollback locations for different channels) then one would obviously need to ensure that all channels are kept up to date.\n\nBut, you are right that if all the device has ever seen is the stable channel it would indeed be possible to install any image ever produced for the beta channel. Which would be very bad!\n\nSo we should probably not do this and just require that devices go through the LOCKED-\u003eUNLOCKED-\u003eLOCKED dance instead. Or arrange that the builds are made in such a way that their rollback indexes are in sync. Do you agree this is acceptable?\n\nI\u0027ll update the CL so it\u0027s just the \"rollback index slot\" -\u003e \"rollback index location\" rename bits.",
+      "parentUuid": "da910b63_a03de080",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 56
+      },
+      "revId": "1f8617970c183a9aea3abba92fcfa2de97c20e9d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
