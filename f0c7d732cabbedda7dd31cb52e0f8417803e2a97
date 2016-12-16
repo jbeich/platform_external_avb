@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa440f3c_6c99bb63",
+        "filename": "README",
+        "patchSetId": 3
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T19:24:47Z",
+      "side": 1,
+      "message": "Also need a blank line here (code and paragraphs are always separated by blanks).",
+      "revId": "f0c7d732cabbedda7dd31cb52e0f8417803e2a97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa440f3c_8f689966",
+        "filename": "README",
+        "patchSetId": 3
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T19:24:47Z",
+      "side": 1,
+      "message": "It\u0027s a little weird to start with describing the helper. Would like to move this down to the end of the \"-- USAGE\" section (just before the \"-- BUILD SYSTEM INTEGRATION NOTES\" section).",
+      "revId": "f0c7d732cabbedda7dd31cb52e0f8417803e2a97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
