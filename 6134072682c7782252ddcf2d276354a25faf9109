@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa440f3c_2cb5f314",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 52,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T18:06:04Z",
+      "side": 1,
+      "message": "Please also remove this stray \";\" as part of the CL!",
+      "range": {
+        "startLine": 52,
+        "startChar": 55,
+        "endLine": 52,
+        "endChar": 56
+      },
+      "revId": "6134072682c7782252ddcf2d276354a25faf9109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa440f3c_0cb8370e",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T18:06:04Z",
+      "side": 1,
+      "message": "Actually I would prefer this to always be 8 since that value will work for both 32- and 64-bit. Any chance you can update the CL to\n\n - change the name to be AVB_ALIGNMENT_SIZE\n - remove the \"Change this to match your architecture - must be a power of two.\" of the comment\n - s/word-alignment/alignment/ in the comment\n - rename avb_assert_word_aligned to avb_assert_aligned",
+      "revId": "6134072682c7782252ddcf2d276354a25faf9109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
