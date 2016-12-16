@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa440f3c_4cc5df48",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T19:16:09Z",
+      "side": 1,
+      "message": "*signed",
+      "range": {
+        "startLine": 184,
+        "startChar": 8,
+        "endLine": 184,
+        "endChar": 14
+      },
+      "revId": "d768cd803ba4b043e6653a236d5539000fdb0803",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa440f3c_2cb893c5",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T19:16:09Z",
+      "side": 1,
+      "message": "We\u0027re actually passing SHA256_RSA2048 as $1 here,right?\n\nNit: blank line between paragraph and invocation",
+      "range": {
+        "startLine": 189,
+        "startChar": 29,
+        "endLine": 189,
+        "endChar": 36
+      },
+      "revId": "d768cd803ba4b043e6653a236d5539000fdb0803",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa440f3c_acb2c3df",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2037,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T19:16:09Z",
+      "side": 1,
+      "message": "This means we\u0027ll pass e.g. SHA512_RSA8192 instead of just RSA8192 ... this might not be a bad thing, actually, since the signing helper will need to know the hashing in case it needs to remove the padding from data received from STDIN (in case the HW-based signer needs to add its own padding). So I think this is fine but README needs updating (per the other comment).",
+      "range": {
+        "startLine": 2037,
+        "startChar": 31,
+        "endLine": 2037,
+        "endChar": 45
+      },
+      "revId": "d768cd803ba4b043e6653a236d5539000fdb0803",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
