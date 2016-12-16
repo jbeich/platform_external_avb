@@ -39,6 +39,24 @@
       "revId": "6134072682c7782252ddcf2d276354a25faf9109",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a7a2769_f01660bf",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1096483
+      },
+      "writtenOn": "2016-12-16T19:37:04Z",
+      "side": 1,
+      "message": "Actually AVB_ALIGNMENT_SIZE \u003d 8 does not work for our 32bit bootloader because the bootloader allocate buffer (via avb_alloc) which has  4byte alignment but avb_assert_word_aligned checks 8byte alignment. As result avb_assert is fired.\n\nNote: I added building 32bit version of libavb localy and use it in our bootloader.\n\nMore thoughts:\n - It is not good idea include avb_sysdeps.c by default, because a bootloader, for example, may not have everything. better to have libavb and libavb_posix versions of library\n - better to build both 64bit and 32bit versions, because a lot of bootloaders on devices are built in 32bit mode.\n - also there is a pain between clang and gcc compatibility and I do not know how to solve this. For now I just made local modification in Android.mk to build 32bit version of libavb using gcc instead of clang",
+      "parentUuid": "fa440f3c_0cb8370e",
+      "revId": "6134072682c7782252ddcf2d276354a25faf9109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
