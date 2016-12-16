@@ -75,6 +75,24 @@
       "revId": "6134072682c7782252ddcf2d276354a25faf9109",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa440f3c_efe03db3",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T20:16:31Z",
+      "side": 1,
+      "message": "I\u0027ve got a fix for AvbSlotVerifyTest.CorruptedImage (it wasn\u0027t fixed with your changes). Stay tuned.",
+      "parentUuid": "fa440f3c_4f9eb13e",
+      "revId": "6134072682c7782252ddcf2d276354a25faf9109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
