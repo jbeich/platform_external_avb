@@ -57,6 +57,24 @@
       "revId": "6134072682c7782252ddcf2d276354a25faf9109",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fa440f3c_4f9eb13e",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-16T19:52:12Z",
+      "side": 1,
+      "message": "Right. OK, I think I got confused and thought that AVB_WORD_ALIGNMENT_SIZE had to do with on-disk formats. Sorry about that. So I guess this CL is fine.\n\nMaybe add a comment to avb_alloc() to say that the returned pointer is guaranteed to be aligned to AVB_WORD_ALIGNMENT_SIZE?\n\nAs for 32-bit vs. 64-bit the build system actually produces both versions of the unit test program:\n\n out/host/linux-x86/nativetest64/libavb_host_unittest/libavb_host_unittest\n out/host/linux-x86/nativetest/libavb_host_unittest/libavb_host_unittest\n\nHowever, I\u0027ve only been running one of them (the 64-bit version) and I see it fails on 32-bit ... but only one test: AvbSlotVerifyTest.CorruptedImage\n\nDoes this test pass with your changes? If not, I\u0027ll look into fixing it!",
+      "parentUuid": "3a7a2769_f01660bf",
+      "revId": "6134072682c7782252ddcf2d276354a25faf9109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
