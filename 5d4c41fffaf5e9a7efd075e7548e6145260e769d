@@ -16,6 +16,24 @@
       "revId": "5d4c41fffaf5e9a7efd075e7548e6145260e769d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3a7a2769_e06dab74",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2016-12-17T00:51:00Z",
+      "side": 1,
+      "message": "The problem is that FakeAvbOpsC can support a linear line of structs that all build on each other, like AvbOps-\u003eAvbABOps-\u003eAvbOtherStuffOps but if you want OtherStuff to be independent of AB, then FakeAvbOpsC no longer works well because different ops that call each other have different assumptions about what they can cast the ops pointer to.\n\nHowever, ultimately this is just a reverse lookup which I can solve another way.",
+      "parentUuid": "cd41532d_31b8e80e",
+      "revId": "5d4c41fffaf5e9a7efd075e7548e6145260e769d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
