@@ -111,6 +111,24 @@
       "revId": "6134072682c7782252ddcf2d276354a25faf9109",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "97c12e20_ac4b6b74",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1096483
+      },
+      "writtenOn": "2016-12-19T23:53:14Z",
+      "side": 1,
+      "message": "done.",
+      "parentUuid": "17c45e28_0dddd1fb",
+      "revId": "6134072682c7782252ddcf2d276354a25faf9109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
