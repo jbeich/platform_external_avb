@@ -93,6 +93,24 @@
       "revId": "6134072682c7782252ddcf2d276354a25faf9109",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c45e28_0dddd1fb",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2016-12-19T22:09:53Z",
+      "side": 1,
+      "message": "Ping about an updated CL? Thanks!",
+      "parentUuid": "fa440f3c_efe03db3",
+      "revId": "6134072682c7782252ddcf2d276354a25faf9109",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
