@@ -38,23 +38,17 @@ namespace avb {
 class FakeAvbOpsDelegate {
  public:
   virtual ~FakeAvbOpsDelegate() {}
-  virtual AvbIOResult read_from_partition(const char* partition,
-                                          int64_t offset,
-                                          size_t num_bytes,
-                                          void* buffer,
+  virtual AvbIOResult read_from_partition(const char* partition, int64_t offset,
+                                          size_t num_bytes, void* buffer,
                                           size_t* out_num_read) = 0;
 
-  virtual AvbIOResult write_to_partition(const char* partition,
-                                         int64_t offset,
+  virtual AvbIOResult write_to_partition(const char* partition, int64_t offset,
                                          size_t num_bytes,
                                          const void* buffer) = 0;
 
   virtual AvbIOResult validate_vbmeta_public_key(
-      AvbOps* ops,
-      const uint8_t* public_key_data,
-      size_t public_key_length,
-      const uint8_t* public_key_metadata,
-      size_t public_key_metadata_length,
+      AvbOps* ops, const uint8_t* public_key_data, size_t public_key_length,
+      const uint8_t* public_key_metadata, size_t public_key_metadata_length,
       bool* out_key_is_trusted) = 0;
 
   virtual AvbIOResult read_rollback_index(AvbOps* ops,
@@ -92,14 +86,10 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   AvbABOps* avb_ab_ops() { return &avb_ab_ops_; }
 
-  FakeAvbOpsDelegate* delegate() {
-    return delegate_;
-  }
+  FakeAvbOpsDelegate* delegate() { return delegate_; }
 
   // Does not take ownership of |delegate|.
-  void set_delegate(FakeAvbOpsDelegate* delegate) {
-    delegate_ = delegate;
-  }
+  void set_delegate(FakeAvbOpsDelegate* delegate) { delegate_ = delegate; }
 
   void set_partition_dir(const base::FilePath& partition_dir) {
     partition_dir_ = partition_dir;

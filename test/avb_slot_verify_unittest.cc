@@ -184,11 +184,11 @@ TEST_F(AvbSlotVerifyTest, CorruptedImage) {
   // data is at the end and this data is signed, this will change the
   // value of the computed hash.
   uint8_t corrupt_data[4] = {0xff, 0xff, 0xff, 0xff};
-  EXPECT_EQ(AVB_IO_RESULT_OK,
-            ops_.avb_ops()->write_to_partition(
-                ops_.avb_ops(), "vbmeta_a",
-                -4,  // offset from end
-                sizeof corrupt_data, corrupt_data));
+  EXPECT_EQ(
+      AVB_IO_RESULT_OK,
+      ops_.avb_ops()->write_to_partition(ops_.avb_ops(), "vbmeta_a",
+                                         -4,  // offset from end
+                                         sizeof corrupt_data, corrupt_data));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};

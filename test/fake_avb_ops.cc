@@ -189,8 +189,7 @@ AvbIOResult FakeAvbOps::get_unique_guid_for_partition(AvbOps* ops,
 
 static AvbIOResult my_ops_read_from_partition(AvbOps* ops,
                                               const char* partition,
-                                              int64_t offset,
-                                              size_t num_bytes,
+                                              int64_t offset, size_t num_bytes,
                                               void* buffer,
                                               size_t* out_num_read) {
   return FakeAvbOps::GetInstanceFromAvbOps(ops)
@@ -198,31 +197,22 @@ static AvbIOResult my_ops_read_from_partition(AvbOps* ops,
       ->read_from_partition(partition, offset, num_bytes, buffer, out_num_read);
 }
 
-static AvbIOResult my_ops_write_to_partition(AvbOps* ops,
-                                             const char* partition,
-                                             int64_t offset,
-                                             size_t num_bytes,
+static AvbIOResult my_ops_write_to_partition(AvbOps* ops, const char* partition,
+                                             int64_t offset, size_t num_bytes,
                                              const void* buffer) {
-  return FakeAvbOps::GetInstanceFromAvbOps(ops)
-      ->delegate()
-      ->write_to_partition(partition, offset, num_bytes, buffer);
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)->delegate()->write_to_partition(
+      partition, offset, num_bytes, buffer);
 }
 
 static AvbIOResult my_ops_validate_vbmeta_public_key(
-    AvbOps* ops,
-    const uint8_t* public_key_data,
-    size_t public_key_length,
-    const uint8_t* public_key_metadata,
-    size_t public_key_metadata_length,
+    AvbOps* ops, const uint8_t* public_key_data, size_t public_key_length,
+    const uint8_t* public_key_metadata, size_t public_key_metadata_length,
     bool* out_key_is_trusted) {
   return FakeAvbOps::GetInstanceFromAvbOps(ops)
       ->delegate()
-      ->validate_vbmeta_public_key(ops,
-                                   public_key_data,
-                                   public_key_length,
-                                   public_key_metadata,
-                                   public_key_metadata_length,
-                                   out_key_is_trusted);
+      ->validate_vbmeta_public_key(
+          ops, public_key_data, public_key_length, public_key_metadata,
+          public_key_metadata_length, out_key_is_trusted);
 }
 
 static AvbIOResult my_ops_read_rollback_index(AvbOps* ops,
@@ -266,13 +256,11 @@ FakeAvbOps::FakeAvbOps() {
 
   avb_ops_.read_from_partition = my_ops_read_from_partition;
   avb_ops_.write_to_partition = my_ops_write_to_partition;
-  avb_ops_.validate_vbmeta_public_key =
-      my_ops_validate_vbmeta_public_key;
+  avb_ops_.validate_vbmeta_public_key = my_ops_validate_vbmeta_public_key;
   avb_ops_.read_rollback_index = my_ops_read_rollback_index;
   avb_ops_.write_rollback_index = my_ops_write_rollback_index;
   avb_ops_.read_is_device_unlocked = my_ops_read_is_device_unlocked;
-  avb_ops_.get_unique_guid_for_partition =
-      my_ops_get_unique_guid_for_partition;
+  avb_ops_.get_unique_guid_for_partition = my_ops_get_unique_guid_for_partition;
 
   // Just use the built-in A/B metadata read/write routines.
   avb_ab_ops_.ops = avb_ops_;

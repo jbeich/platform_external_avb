@@ -1113,7 +1113,8 @@ TEST_F(AvbToolTest, ChainedPartition) {
 
 TEST_F(AvbToolTest, SigningHelperBasic) {
   base::FilePath vbmeta_path = testdir_.Append("vbmeta.bin");
-  base::FilePath signing_helper_test_path = testdir_.Append("signing_helper_test");
+  base::FilePath signing_helper_test_path =
+      testdir_.Append("signing_helper_test");
   EXPECT_COMMAND(
       0,
       "SIGNING_HELPER_TEST=\"%s\" ./avbtool make_vbmeta_image "
