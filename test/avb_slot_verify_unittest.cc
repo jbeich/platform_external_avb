@@ -35,7 +35,8 @@ namespace avb {
 
 class AvbSlotVerifyTest : public BaseAvbToolTest {
  public:
-  AvbSlotVerifyTest() {}
+  AvbSlotVerifyTest() {
+  }
 
   virtual void SetUp() override {
     BaseAvbToolTest::SetUp();
@@ -50,7 +51,9 @@ class AvbSlotVerifyTest : public BaseAvbToolTest {
 };
 
 TEST_F(AvbSlotVerifyTest, Basic) {
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"));
 
   ops_.set_expected_public_key(
@@ -59,8 +62,11 @@ TEST_F(AvbSlotVerifyTest, Basic) {
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   EXPECT_EQ(
       "androidboot.slot_suffix=_a androidboot.vbmeta.device_state=locked "
@@ -72,7 +78,9 @@ TEST_F(AvbSlotVerifyTest, Basic) {
 }
 
 TEST_F(AvbSlotVerifyTest, BasicSha512) {
-  GenerateVBMetaImage("vbmeta_a.img", "SHA512_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA512_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"));
 
   ops_.set_expected_public_key(
@@ -81,8 +89,11 @@ TEST_F(AvbSlotVerifyTest, BasicSha512) {
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   EXPECT_EQ(
       "androidboot.slot_suffix=_a androidboot.vbmeta.device_state=locked "
@@ -95,7 +106,9 @@ TEST_F(AvbSlotVerifyTest, BasicSha512) {
 }
 
 TEST_F(AvbSlotVerifyTest, BasicUnlocked) {
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"));
 
   ops_.set_expected_public_key(
@@ -106,8 +119,11 @@ TEST_F(AvbSlotVerifyTest, BasicUnlocked) {
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   EXPECT_EQ(
       "androidboot.slot_suffix=_a androidboot.vbmeta.device_state=unlocked "
@@ -119,7 +135,9 @@ TEST_F(AvbSlotVerifyTest, BasicUnlocked) {
 }
 
 TEST_F(AvbSlotVerifyTest, SlotDataIsCorrect) {
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"));
 
   ops_.set_expected_public_key(
@@ -128,25 +146,36 @@ TEST_F(AvbSlotVerifyTest, SlotDataIsCorrect) {
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 }
 
 TEST_F(AvbSlotVerifyTest, WrongPublicKey) {
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            true /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            true /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 }
@@ -155,8 +184,11 @@ TEST_F(AvbSlotVerifyTest, NoImage) {
   const char* requested_partitions[] = {"boot", NULL};
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_IO,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
 }
 
@@ -166,18 +198,26 @@ TEST_F(AvbSlotVerifyTest, UnsignedVBMeta) {
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            true /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            true /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 }
 
 TEST_F(AvbSlotVerifyTest, CorruptedImage) {
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"));
 
   // Corrupt four bytes of data in the end of the image. Since the aux
@@ -185,26 +225,35 @@ TEST_F(AvbSlotVerifyTest, CorruptedImage) {
   // value of the computed hash.
   uint8_t corrupt_data[4] = {0xff, 0xff, 0xff, 0xff};
   EXPECT_EQ(AVB_IO_RESULT_OK,
-            ops_.avb_ops()->write_to_partition(
-                ops_.avb_ops(), "vbmeta_a",
-                -4,  // offset from end
-                sizeof corrupt_data, corrupt_data));
+            ops_.avb_ops()->write_to_partition(ops_.avb_ops(),
+                                               "vbmeta_a",
+                                               -4,  // offset from end
+                                               sizeof corrupt_data,
+                                               corrupt_data));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            true /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            true /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 }
 
 TEST_F(AvbSlotVerifyTest, CorruptedMetadata) {
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"));
 
   // Corrupt four bytes of data in the beginning of the image. Unlike
@@ -213,22 +262,28 @@ TEST_F(AvbSlotVerifyTest, CorruptedMetadata) {
   // even if the device is unlocked. Specifically no AvbSlotVerifyData
   // is returned.
   uint8_t corrupt_data[4] = {0xff, 0xff, 0xff, 0xff};
-  EXPECT_EQ(
-      AVB_IO_RESULT_OK,
-      ops_.avb_ops()->write_to_partition(ops_.avb_ops(), "vbmeta_a",
-                                         0,  // offset: beginning
-                                         sizeof corrupt_data, corrupt_data));
+  EXPECT_EQ(AVB_IO_RESULT_OK,
+            ops_.avb_ops()->write_to_partition(ops_.avb_ops(),
+                                               "vbmeta_a",
+                                               0,  // offset: beginning
+                                               sizeof corrupt_data,
+                                               corrupt_data));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
 }
 
 TEST_F(AvbSlotVerifyTest, RollbackIndex) {
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 42,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      42,
                       base::FilePath("test/data/testkey_rsa2048.pem"));
 
   ops_.set_expected_public_key(
@@ -241,8 +296,11 @@ TEST_F(AvbSlotVerifyTest, RollbackIndex) {
   // succeed since the image rollback index is 42 (as set above).
   ops_.set_stored_rollback_indexes({{0, 42}});
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 
@@ -250,12 +308,18 @@ TEST_F(AvbSlotVerifyTest, RollbackIndex) {
   // because the image has rollback index 42 which is less than 43.
   ops_.set_stored_rollback_indexes({{0, 43}});
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            true /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            true /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 }
@@ -274,10 +338,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       " --partition_size %zd"
       " --kernel_cmdline 'cmdline in hash footer $(ANDROID_SYSTEM_PARTUUID)'"
       " --salt deadbeef",
-      boot_path.value().c_str(), boot_partition_size);
+      boot_path.value().c_str(),
+      boot_partition_size);
 
   GenerateVBMetaImage(
-      "vbmeta_a.img", "SHA256_RSA2048", 4,
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      4,
       base::FilePath("test/data/testkey_rsa2048.pem"),
       base::StringPrintf(
           "--include_descriptors_from_image %s"
@@ -316,8 +383,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
                  boot_path.value().c_str());
 
   // With no footer, 'avbtool info_image' should fail (exit status 1).
-  EXPECT_COMMAND(1, "./avbtool info_image --image %s",
-                 boot_path.value().c_str());
+  EXPECT_COMMAND(
+      1, "./avbtool info_image --image %s", boot_path.value().c_str());
 
   ops_.set_expected_public_key(
       PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
@@ -325,8 +392,11 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
 
   // Now verify the slot data. The vbmeta data should match our
@@ -334,9 +404,10 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
   EXPECT_EQ(size_t(1), slot_data->num_vbmeta_images);
   EXPECT_EQ("vbmeta", std::string(slot_data->vbmeta_images[0].partition_name));
   EXPECT_EQ(slot_data->vbmeta_images[0].vbmeta_size, vbmeta_image_.size());
-  EXPECT_EQ(
-      0, memcmp(vbmeta_image_.data(), slot_data->vbmeta_images[0].vbmeta_data,
-                slot_data->vbmeta_images[0].vbmeta_size));
+  EXPECT_EQ(0,
+            memcmp(vbmeta_image_.data(),
+                   slot_data->vbmeta_images[0].vbmeta_data,
+                   slot_data->vbmeta_images[0].vbmeta_size));
 
   // The boot image data should match what is generated above with
   // GenerateImage().
@@ -379,9 +450,12 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
                  " --partition_name boot"
                  " --partition_size %zd"
                  " --salt deadbeef",
-                 boot_path.value().c_str(), boot_partition_size);
+                 boot_path.value().c_str(),
+                 boot_partition_size);
 
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       base::StringPrintf("--include_descriptors_from_image %s",
                                          boot_path.value().c_str()));
@@ -397,26 +471,36 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
   // So far, so good.
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 
   // Now corrupt boot_a.img and expect verification error.
   uint8_t corrupt_data[4] = {0xff, 0xff, 0xff, 0xff};
-  EXPECT_EQ(
-      AVB_IO_RESULT_OK,
-      ops_.avb_ops()->write_to_partition(ops_.avb_ops(), "boot_a",
-                                         1024 * 1024,  // offset: 1 MiB
-                                         sizeof corrupt_data, corrupt_data));
+  EXPECT_EQ(AVB_IO_RESULT_OK,
+            ops_.avb_ops()->write_to_partition(ops_.avb_ops(),
+                                               "boot_a",
+                                               1024 * 1024,  // offset: 1 MiB
+                                               sizeof corrupt_data,
+                                               corrupt_data));
 
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            true /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            true /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 }
@@ -437,7 +521,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
                  " --algorithm SHA256_RSA4096"
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef",
-                 boot_path.value().c_str(), boot_partition_size);
+                 boot_path.value().c_str(),
+                 boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
   EXPECT_COMMAND(
@@ -447,7 +532,9 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       pk_path.value().c_str());
 
   GenerateVBMetaImage(
-      "vbmeta_a.img", "SHA256_RSA2048", 11,
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      11,
       base::FilePath("test/data/testkey_rsa2048.pem"),
       base::StringPrintf("--chain_partition boot:1:%s"
                          " --kernel_cmdline 'cmdline2 in vbmeta'",
@@ -504,8 +591,11 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
 
   // Now verify the slot data. We should have two vbmeta
@@ -514,24 +604,28 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
   EXPECT_EQ(size_t(2), slot_data->num_vbmeta_images);
   EXPECT_EQ("vbmeta", std::string(slot_data->vbmeta_images[0].partition_name));
   EXPECT_EQ(slot_data->vbmeta_images[0].vbmeta_size, vbmeta_image_.size());
-  EXPECT_EQ(
-      0, memcmp(vbmeta_image_.data(), slot_data->vbmeta_images[0].vbmeta_data,
-                slot_data->vbmeta_images[0].vbmeta_size));
+  EXPECT_EQ(0,
+            memcmp(vbmeta_image_.data(),
+                   slot_data->vbmeta_images[0].vbmeta_data,
+                   slot_data->vbmeta_images[0].vbmeta_size));
   // And for the second vbmeta struct we check that the descriptors
   // match the info_image output from above.
   EXPECT_EQ("boot", std::string(slot_data->vbmeta_images[1].partition_name));
   const AvbDescriptor** descriptors =
       avb_descriptor_get_all(slot_data->vbmeta_images[1].vbmeta_data,
-                             slot_data->vbmeta_images[1].vbmeta_size, NULL);
+                             slot_data->vbmeta_images[1].vbmeta_size,
+                             NULL);
   EXPECT_NE(nullptr, descriptors);
   AvbHashDescriptor hash_desc;
-  EXPECT_EQ(true, avb_hash_descriptor_validate_and_byteswap(
-                      ((AvbHashDescriptor*)descriptors[0]), &hash_desc));
+  EXPECT_EQ(true,
+            avb_hash_descriptor_validate_and_byteswap(
+                ((AvbHashDescriptor*)descriptors[0]), &hash_desc));
   const uint8_t* desc_end = reinterpret_cast<const uint8_t*>(descriptors[0]) +
                             sizeof(AvbHashDescriptor);
   uint64_t o = 0;
-  EXPECT_EQ("boot", std::string(reinterpret_cast<const char*>(desc_end + o),
-                                hash_desc.partition_name_len));
+  EXPECT_EQ("boot",
+            std::string(reinterpret_cast<const char*>(desc_end + o),
+                        hash_desc.partition_name_len));
   o += hash_desc.partition_name_len;
   EXPECT_EQ("deadbeef", mem_to_hexstring(desc_end + o, hash_desc.salt_len));
   o += hash_desc.salt_len;
@@ -589,7 +683,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
                  " --algorithm SHA256_RSA4096"
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef",
-                 boot_path.value().c_str(), boot_partition_size);
+                 boot_path.value().c_str(),
+                 boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
   EXPECT_COMMAND(
@@ -598,7 +693,9 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       base::StringPrintf("--chain_partition boot:1:%s",
                                          pk_path.value().c_str()));
@@ -608,26 +705,36 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 
   // Now corrupt boot_a.img and expect verification error.
   uint8_t corrupt_data[4] = {0xff, 0xff, 0xff, 0xff};
-  EXPECT_EQ(
-      AVB_IO_RESULT_OK,
-      ops_.avb_ops()->write_to_partition(ops_.avb_ops(), "boot_a",
-                                         1024 * 1024,  // offset: 1 MiB
-                                         sizeof corrupt_data, corrupt_data));
+  EXPECT_EQ(AVB_IO_RESULT_OK,
+            ops_.avb_ops()->write_to_partition(ops_.avb_ops(),
+                                               "boot_a",
+                                               1024 * 1024,  // offset: 1 MiB
+                                               sizeof corrupt_data,
+                                               corrupt_data));
 
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            true /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            true /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 }
@@ -651,7 +758,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
                  " --algorithm SHA256_RSA8192"
                  " --key test/data/testkey_rsa8192.pem"
                  " --salt deadbeef",
-                 boot_path.value().c_str(), boot_partition_size);
+                 boot_path.value().c_str(),
+                 boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
   EXPECT_COMMAND(
@@ -660,7 +768,9 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 0,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       base::StringPrintf("--chain_partition boot:1:%s",
                                          pk_path.value().c_str()));
@@ -670,12 +780,18 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            true /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            true /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 }
@@ -694,7 +810,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
                  " --algorithm SHA256_RSA4096"
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef",
-                 boot_path.value().c_str(), boot_partition_size);
+                 boot_path.value().c_str(),
+                 boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
   EXPECT_COMMAND(
@@ -703,7 +820,9 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img", "SHA256_RSA2048", 110,
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      110,
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       base::StringPrintf("--chain_partition boot:1:%s",
                                          pk_path.value().c_str()));
@@ -717,8 +836,11 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
   // so it should work if the stored rollback indexes are 0 and 0.
   ops_.set_stored_rollback_indexes({{0, 0}, {1, 0}});
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 
@@ -727,12 +849,18 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
   // where we test rollback index checks for the vbmeta partition).
   ops_.set_stored_rollback_indexes({{0, 0}, {1, 20}});
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            true /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            true /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   avb_slot_verify_data_free(slot_data);
 
@@ -741,8 +869,11 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
   // fail.
   ops_.set_stored_rollback_indexes({{0, 0}});
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_IO,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_EQ(nullptr, slot_data);
 }
 
@@ -762,7 +893,8 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
                  " --algorithm SHA256_RSA4096"
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef",
-                 boot_path.value().c_str(), boot_partition_size);
+                 boot_path.value().c_str(),
+                 boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
   EXPECT_COMMAND(
@@ -772,7 +904,9 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       pk_path.value().c_str());
 
   GenerateVBMetaImage(
-      "vbmeta.img", "SHA256_RSA2048", 11,
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      11,
       base::FilePath("test/data/testkey_rsa2048.pem"),
       base::StringPrintf("--chain_partition boot:1:%s"
                          " --kernel_cmdline 'cmdline2 in vbmeta'",
@@ -802,8 +936,11 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
 
   // Now verify the slot data. The first vbmeta data should match our
@@ -812,9 +949,10 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
   EXPECT_EQ(size_t(2), slot_data->num_vbmeta_images);
   EXPECT_EQ("vbmeta", std::string(slot_data->vbmeta_images[0].partition_name));
   EXPECT_EQ(slot_data->vbmeta_images[0].vbmeta_size, vbmeta_image_.size());
-  EXPECT_EQ(
-      0, memcmp(vbmeta_image_.data(), slot_data->vbmeta_images[0].vbmeta_data,
-                slot_data->vbmeta_images[0].vbmeta_size));
+  EXPECT_EQ(0,
+            memcmp(vbmeta_image_.data(),
+                   slot_data->vbmeta_images[0].vbmeta_data,
+                   slot_data->vbmeta_images[0].vbmeta_size));
   EXPECT_EQ("boot", std::string(slot_data->vbmeta_images[1].partition_name));
 
   // The boot image data should match what is generated above with
@@ -859,7 +997,8 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
                  " --partition_name foo"
                  " --partition_size %zd"
                  " --salt deadbeef",
-                 foo_path.value().c_str(), foo_partition_size);
+                 foo_path.value().c_str(),
+                 foo_partition_size);
 
   EXPECT_COMMAND(0,
                  "./avbtool add_hash_footer"
@@ -867,14 +1006,17 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
                  " --partition_name bar"
                  " --partition_size %zd"
                  " --salt deadbeef",
-                 bar_path.value().c_str(), bar_partition_size);
+                 bar_path.value().c_str(),
+                 bar_partition_size);
 
-  GenerateVBMetaImage(
-      "vbmeta_a.img", "SHA256_RSA2048", 4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
-      base::StringPrintf("--include_descriptors_from_image %s"
-                         " --include_descriptors_from_image %s",
-                         foo_path.value().c_str(), bar_path.value().c_str()));
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      4,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--include_descriptors_from_image %s"
+                                         " --include_descriptors_from_image %s",
+                                         foo_path.value().c_str(),
+                                         bar_path.value().c_str()));
 
   EXPECT_EQ(
       "VBMeta image version:     1.0\n"
@@ -907,8 +1049,11 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"foo", "bar", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
 
   // Now verify the slot data. The vbmeta data should match our
@@ -916,9 +1061,10 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
   EXPECT_EQ(size_t(1), slot_data->num_vbmeta_images);
   EXPECT_EQ("vbmeta", std::string(slot_data->vbmeta_images[0].partition_name));
   EXPECT_EQ(slot_data->vbmeta_images[0].vbmeta_size, vbmeta_image_.size());
-  EXPECT_EQ(
-      0, memcmp(vbmeta_image_.data(), slot_data->vbmeta_images[0].vbmeta_data,
-                slot_data->vbmeta_images[0].vbmeta_size));
+  EXPECT_EQ(0,
+            memcmp(vbmeta_image_.data(),
+                   slot_data->vbmeta_images[0].vbmeta_data,
+                   slot_data->vbmeta_images[0].vbmeta_size));
 
   // The 'foo' and 'bar' image data should match what is generated
   // above with GenerateImage().
@@ -941,7 +1087,9 @@ TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
   base::FilePath md_path = GenerateImage("md.bin", 1536);
 
   GenerateVBMetaImage(
-      "vbmeta_a.img", "SHA256_RSA2048", 0,
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
       base::FilePath("test/data/testkey_rsa2048.pem"),
       base::StringPrintf("--public_key_metadata %s", md_path.value().c_str()));
 
@@ -955,8 +1103,11 @@ TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   EXPECT_EQ(
       "androidboot.slot_suffix=_a androidboot.vbmeta.device_state=locked "
@@ -975,24 +1126,29 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
   // Generate a 1028 KiB file with known content.
   std::vector<uint8_t> rootfs;
   rootfs.resize(rootfs_size);
-  for (size_t n = 0; n < rootfs_size; n++) rootfs[n] = uint8_t(n);
+  for (size_t n = 0; n < rootfs_size; n++)
+    rootfs[n] = uint8_t(n);
   base::FilePath rootfs_path = testdir_.Append("rootfs.bin");
   EXPECT_EQ(rootfs_size,
-            static_cast<const size_t>(base::WriteFile(
-                rootfs_path, reinterpret_cast<const char*>(rootfs.data()),
-                rootfs.size())));
+            static_cast<const size_t>(
+                base::WriteFile(rootfs_path,
+                                reinterpret_cast<const char*>(rootfs.data()),
+                                rootfs.size())));
 
   EXPECT_COMMAND(0,
                  "./avbtool add_hashtree_footer --salt d00df00d --image %s "
                  "--partition_size %d --partition_name foobar "
                  "--algorithm SHA256_RSA2048 "
                  "--key test/data/testkey_rsa2048.pem",
-                 rootfs_path.value().c_str(), (int)partition_size);
+                 rootfs_path.value().c_str(),
+                 (int)partition_size);
 
   // Check that we correctly generate dm-verity kernel cmdline
   // snippets, if requested.
   GenerateVBMetaImage(
-      "vbmeta_a.img", "SHA256_RSA2048", 4,
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      4,
       base::FilePath("test/data/testkey_rsa2048.pem"),
       base::StringPrintf("--generate_dm_verity_cmdline_from_hashtree %s "
                          "--kernel_cmdline should_be_in_both=1 "
@@ -1040,8 +1196,11 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
-            avb_slot_verify(ops_.avb_ops(), requested_partitions, "_a",
-                            false /* allow_verification_error */, &slot_data));
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            false /* allow_verification_error */,
+                            &slot_data));
   EXPECT_NE(nullptr, slot_data);
   if (hashtree_verification_on) {
     EXPECT_EQ(
