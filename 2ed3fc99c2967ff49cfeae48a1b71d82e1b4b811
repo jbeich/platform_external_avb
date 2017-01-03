@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "176b7e00_620c911e",
+        "filename": "libavb/avb_rsa.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-01-03T21:55:08Z",
+      "side": 1,
+      "message": "I much prefer this sort of statement to be on a single line, to avoid a bad merge resulting in another \u0027goto fail\u0027 bug. Consider adding:\n\n AllowShortIfStatementsOnASingleLine: true",
+      "revId": "2ed3fc99c2967ff49cfeae48a1b71d82e1b4b811",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
