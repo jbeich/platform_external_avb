@@ -34,6 +34,24 @@
       "revId": "2ed3fc99c2967ff49cfeae48a1b71d82e1b4b811",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c45e28_00dd8bc9",
+        "filename": "libavb/avb_rsa.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-01-04T18:33:21Z",
+      "side": 1,
+      "message": "FWIW, I too prefer\n\n if (...) {\n   ...\n }\n\nbut unfortunately there\u0027s no way to make clang-format enforce that (I think because add braces subtly change the semantics because scoping). However\n\n AllowShortIfStatementsOnASingleLine: true\n\nis actually a great way to identify when this isn\u0027t done so the next patchset will have this option as well as manually adding braces!",
+      "parentUuid": "17961e08_e6b3d499",
+      "revId": "2ed3fc99c2967ff49cfeae48a1b71d82e1b4b811",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
