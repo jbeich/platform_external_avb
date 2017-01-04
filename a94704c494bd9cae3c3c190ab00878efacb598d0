@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b79b927b_6c2777e4",
+        "filename": ".clang-format",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-01-04T23:07:19Z",
+      "side": 1,
+      "message": "optional: I like \"Inline\" better here, b/c I don\u0027t like:\n\n MyConstructor() {\n }",
+      "revId": "a94704c494bd9cae3c3c190ab00878efacb598d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
