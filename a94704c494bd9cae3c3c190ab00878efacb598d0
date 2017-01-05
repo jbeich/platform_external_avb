@@ -16,6 +16,24 @@
       "revId": "a94704c494bd9cae3c3c190ab00878efacb598d0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17c45e28_9b4c8ee4",
+        "filename": ".clang-format",
+        "patchSetId": 3
+      },
+      "lineNbr": 18,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-01-05T16:29:02Z",
+      "side": 1,
+      "message": "That\u0027s fine but Inline will also format\n\n Bar* foo() {\n   return \u0026baz_;\n }\n\nas\n\n Bar* foo() { return \u0026baz_; }\n\nwhich I\u0027m not a big fan of. The value \"Empty\" should make us both happy so going for that! I\u0027ll take a +2 too if you have one :-)",
+      "parentUuid": "b79b927b_6c2777e4",
+      "revId": "a94704c494bd9cae3c3c190ab00878efacb598d0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
