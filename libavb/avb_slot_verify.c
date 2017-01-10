@@ -892,6 +892,14 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
       goto fail;
     }
 
+    /* Add androidboot.vbmeta.device option. */
+    if (!cmdline_append_option(slot_data,
+                               "androidboot.vbmeta.device",
+                               "PARTUUID=$(ANDROID_VBMETA_PARTUUID)")) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto fail;
+    }
+
     /* Substitute $(ANDROID_SYSTEM_PARTUUID) and friends. */
     if (slot_data->cmdline != NULL) {
       char* new_cmdline = sub_cmdline(ops, slot_data->cmdline, ab_suffix);
