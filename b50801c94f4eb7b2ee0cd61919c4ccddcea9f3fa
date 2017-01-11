@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37cc02f9_a6a486f1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-01-11T03:09:56Z",
+      "side": 1,
+      "message": "nit: in avbtool this is generate_dm_verity_cmdline_from_hashtree, but in README it\u0027s generate_dm_verity_cmdline_from_footer.\n\nMaybe just use _hashtree and update the README?",
+      "range": {
+        "startLine": 9,
+        "startChar": 23,
+        "endLine": 9,
+        "endChar": 61
+      },
+      "revId": "b50801c94f4eb7b2ee0cd61919c4ccddcea9f3fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
