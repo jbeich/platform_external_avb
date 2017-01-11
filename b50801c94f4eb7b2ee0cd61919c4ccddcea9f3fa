@@ -22,6 +22,30 @@
       "revId": "b50801c94f4eb7b2ee0cd61919c4ccddcea9f3fa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3777a248_42cec246",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-01-11T15:54:32Z",
+      "side": 1,
+      "message": "I\u0027ll update the commit message. I\u0027m actually planning to renaming --generate_dm_verity_cmdline_from_hashtree to --setup_rootfs_from_kernel since that\u0027s a lot more accurate (especially in the light of the DISABLE_HASHTREE flag). I\u0027ll do that in a separate CL.",
+      "parentUuid": "37cc02f9_a6a486f1",
+      "range": {
+        "startLine": 9,
+        "startChar": 23,
+        "endLine": 9,
+        "endChar": 61
+      },
+      "revId": "b50801c94f4eb7b2ee0cd61919c4ccddcea9f3fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
