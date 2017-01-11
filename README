@@ -105,6 +105,11 @@ metadata is also provided.
 
    Contains unit tests for abvtool, libavb, and libavb_ab.
 
+ examples/uefi/
+
+   Contains the source-code for a UEFI-based boot-loader utilizing
+   libavb/ and libavb_ab/.
+
 -- AUDIENCE AND PORTABILITY NOTES
 
 This code is intended to be used in bootloaders in devices running
