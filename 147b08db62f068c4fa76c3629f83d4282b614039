@@ -1,0 +1,8 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Verified+1: Jocelyn Bohr <bohr@google.com>
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Submitted-by: Jocelyn Bohr <bohr@google.com>
+Submitted-at: Mon, 23 Jan 2017 21:16:54 +0000
+Reviewed-on: https://android-review.googlesource.com/325798
+Project: platform/external/avb
+Branch: refs/heads/master
