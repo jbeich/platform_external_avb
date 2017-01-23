@@ -16,6 +16,24 @@
       "revId": "147b08db62f068c4fa76c3629f83d4282b614039",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "885bce3e_89af79d2",
+        "filename": "test/data/testkey_rsa2048_public.pem",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1125188
+      },
+      "writtenOn": "2017-01-23T17:56:00Z",
+      "side": 1,
+      "message": "Good catch. I put a CL up on internal nyc-iot-dev, and I will cherry pick it to AOSP and submit with this stack of CLs.",
+      "parentUuid": "88558e3b_abf061e4",
+      "revId": "147b08db62f068c4fa76c3629f83d4282b614039",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
