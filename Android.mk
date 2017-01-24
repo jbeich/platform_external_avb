@@ -171,7 +171,7 @@ LOCAL_CLANG := true
 LOCAL_CFLAGS := $(avb_common_cflags) -DAVB_COMPILATION
 LOCAL_LDFLAGS := $(avb_common_ldflags)
 LOCAL_SHARED_LIBRARIES := libcutils
-LOCAL_STATIC_LIBRARIES := libfs_mgr libavb
+LOCAL_STATIC_LIBRARIES := libbase libfs_mgr libavb
 LOCAL_POST_INSTALL_CMD := \
 	$(hide) mkdir -p $(TARGET_OUT_SHARED_LIBRARIES)/hw && \
 	ln -sf bootctrl.avb.so $(TARGET_OUT_SHARED_LIBRARIES)/hw/bootctrl.default.so
