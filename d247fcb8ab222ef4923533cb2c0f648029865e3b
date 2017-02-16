@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e641a8f_458c61a0",
+        "filename": "README",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-16T20:56:26Z",
+      "side": 1,
+      "message": "optional: I\u0027d prefer positive logic. E.g. --append_vbmeta_image which is true by default.",
+      "range": {
+        "startLine": 231,
+        "startChar": 45,
+        "endLine": 231,
+        "endChar": 71
+      },
+      "revId": "d247fcb8ab222ef4923533cb2c0f648029865e3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
