@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c4641c66_8e140f56",
+        "filename": "libavb/avb_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 343,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-16T20:52:26Z",
+      "side": 1,
+      "message": "nit: AVB_ prefix? Otherwise, you\u0027re competing with all headers included to be the first to define this.",
+      "range": {
+        "startLine": 343,
+        "startChar": 8,
+        "endLine": 343,
+        "endChar": 31
+      },
+      "revId": "19c38437eb77101ac30b29135cca58fbc684eace",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "52c45508_74290fef",
+        "filename": "libavb/avb_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 358,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-16T20:52:26Z",
+      "side": 1,
+      "message": "overflow possible here? enforce max per-string length?",
+      "range": {
+        "startLine": 358,
+        "startChar": 4,
+        "endLine": 358,
+        "endChar": 16
+      },
+      "revId": "19c38437eb77101ac30b29135cca58fbc684eace",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9e4c91b4_95f7d612",
+        "filename": "libavb/avb_util.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-16T20:52:26Z",
+      "side": 1,
+      "message": "nit: concatenating",
+      "range": {
+        "startLine": 204,
+        "startChar": 3,
+        "endLine": 204,
+        "endChar": 14
+      },
+      "revId": "19c38437eb77101ac30b29135cca58fbc684eace",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d0306ef4_38900c8b",
+        "filename": "libavb_ab/avb_ab_flow.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-16T20:52:26Z",
+      "side": 1,
+      "message": "nit: bad sentence",
+      "range": {
+        "startLine": 193,
+        "startChar": 28,
+        "endLine": 193,
+        "endChar": 57
+      },
+      "revId": "19c38437eb77101ac30b29135cca58fbc684eace",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
