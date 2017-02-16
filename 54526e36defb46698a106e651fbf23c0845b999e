@@ -46,6 +46,30 @@
       "revId": "54526e36defb46698a106e651fbf23c0845b999e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "05304128_fb896739",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-16T20:36:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0d9b5724_64a64cdf",
+      "range": {
+        "startLine": 789,
+        "startChar": 8,
+        "endLine": 789,
+        "endChar": 18
+      },
+      "revId": "54526e36defb46698a106e651fbf23c0845b999e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
