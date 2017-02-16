@@ -22,6 +22,30 @@
       "revId": "d247fcb8ab222ef4923533cb2c0f648029865e3b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "eff90c0b_72a53507",
+        "filename": "README",
+        "patchSetId": 1
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-16T21:26:16Z",
+      "side": 1,
+      "message": "That would turn it into an option with a true/false value instead of being an option with no value. I think I prefer it the way it is right now.",
+      "parentUuid": "0e641a8f_458c61a0",
+      "range": {
+        "startLine": 231,
+        "startChar": 45,
+        "endLine": 231,
+        "endChar": 71
+      },
+      "revId": "d247fcb8ab222ef4923533cb2c0f648029865e3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
