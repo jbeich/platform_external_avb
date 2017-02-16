@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8dfa7f9a_6dc6afde",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 789,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-16T20:32:16Z",
+      "side": 1,
+      "message": "nit: AVB_ prefix on all #defines? And, for clarity, UINT64_MAX_DIGITS?",
+      "range": {
+        "startLine": 789,
+        "startChar": 8,
+        "endLine": 789,
+        "endChar": 18
+      },
+      "revId": "54526e36defb46698a106e651fbf23c0845b999e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
