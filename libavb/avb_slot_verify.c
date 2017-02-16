@@ -786,12 +786,13 @@ static int cmdline_append_option(AvbSlotVerifyData* slot_data,
   return 1;
 }
 
-static int cmdline_append_uint64_base10(AvbSlotVerifyData* slot_data,
-                                        const char* key,
-                                        uint64_t value) {
-  const int MAX_DIGITS = 32;
+#define MAX_DIGITS 32
+
+/* Writes |value| to |digits| in base 10 followed by a NUL byte.
+ * Returns number of characters written excluding the NUL byte.
+ */
+static size_t uint64_to_base10(uint64_t value, char digits[MAX_DIGITS]) {
   char rev_digits[MAX_DIGITS];
-  char digits[MAX_DIGITS];
   size_t n, num_digits;
 
   for (num_digits = 0; num_digits < MAX_DIGITS - 1;) {
@@ -806,7 +807,33 @@ static int cmdline_append_uint64_base10(AvbSlotVerifyData* slot_data,
     digits[n] = rev_digits[num_digits - 1 - n];
   }
   digits[n] = '\0';
+  return n;
+}
 
+static int cmdline_append_version(AvbSlotVerifyData* slot_data,
+                                  const char* key,
+                                  uint64_t major_version,
+                                  uint64_t minor_version) {
+  char major_digits[MAX_DIGITS];
+  char minor_digits[MAX_DIGITS];
+  char combined[MAX_DIGITS * 2 + 1];
+  size_t num_major_digits, num_minor_digits;
+
+  num_major_digits = uint64_to_base10(major_version, major_digits);
+  num_minor_digits = uint64_to_base10(minor_version, minor_digits);
+  avb_memcpy(combined, major_digits, num_major_digits);
+  combined[num_major_digits] = '.';
+  avb_memcpy(combined + num_major_digits + 1, minor_digits, num_minor_digits);
+  combined[num_major_digits + 1 + num_minor_digits] = '\0';
+
+  return cmdline_append_option(slot_data, key, combined);
+}
+
+static int cmdline_append_uint64_base10(AvbSlotVerifyData* slot_data,
+                                        const char* key,
+                                        uint64_t value) {
+  char digits[MAX_DIGITS];
+  uint64_to_base10(value, digits);
   return cmdline_append_option(slot_data, key, digits);
 }
 
@@ -896,6 +923,15 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
     if (!cmdline_append_option(slot_data,
                                "androidboot.vbmeta.device",
                                "PARTUUID=$(ANDROID_VBMETA_PARTUUID)")) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto fail;
+    }
+
+    /* Add androidboot.vbmeta.version option. */
+    if (!cmdline_append_version(slot_data,
+                                "androidboot.vbmeta.version",
+                                AVB_MAJOR_VERSION,
+                                AVB_MINOR_VERSION)) {
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
       goto fail;
     }
