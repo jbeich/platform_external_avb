@@ -1,0 +1,9 @@
+Verified+1: David Zeuthen <zeuthen@google.com>
+Autosubmit+1: David Zeuthen <zeuthen@google.com>
+Presubmit-Ready+1: David Zeuthen <zeuthen@google.com>
+Code-Review+2: Sami Tolvanen <samitolvanen@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Thu, 16 Feb 2017 21:03:59 +0000
+Reviewed-on: https://android-review.googlesource.com/340543
+Project: platform/external/avb
+Branch: refs/heads/master
