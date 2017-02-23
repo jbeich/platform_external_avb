@@ -137,6 +137,52 @@
       "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4bf2d32_f9fe7c98",
+        "filename": "libavb/avb_version.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-23T17:53:50Z",
+      "side": 1,
+      "message": "nit: put on newline for readability? (or maybe this is clang-format...)",
+      "range": {
+        "startLine": 32,
+        "startChar": 46,
+        "endLine": 32,
+        "endChar": 49
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "11d4f066_d135ccac",
+        "filename": "libavb/avb_version.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-23T17:53:50Z",
+      "side": 1,
+      "message": "I\u0027m not sure what this means -- that it\u0027s already been released in the past? Or the current build a release candidate? Should this be surrounded by #ifndef so it can be set by build config?",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
