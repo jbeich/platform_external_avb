@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "78e57c9b_f657e393",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T19:10:06Z",
+      "side": 1,
+      "message": "I was thinking things like this would go in the |release_string| in the vbmeta struct... maybe what you\u0027re asking for is a --append_to_release_string option that the build system can set?\n\nThis way you\u0027d e.g. set BOARD_AVB_APPEND_TO_RELEASE_STRING so it includes the date and git sha1 and then |release_string| baked into vbmeta would be \"avbtool 1.0.1 (unreleased) - edison Git-0145abde\" ...",
+      "parentUuid": "48d597dd_9f52a048",
+      "range": {
+        "startLine": 171,
+        "startChar": 44,
+        "endLine": 172,
+        "endChar": 26
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1c01799_416205c1",
         "filename": "README",
         "patchSetId": 2
@@ -94,6 +118,30 @@
     },
     {
       "key": {
+        "uuid": "359c2872_143e2134",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1473,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T19:10:06Z",
+      "side": 1,
+      "message": "Right, bumps in footer versions would imply bumps in AVB versions (both for major and minor). And, yeah, I don\u0027t think we\u0027re ever going to change the footer format, the versioning is there just in case.",
+      "parentUuid": "112cc679_a26b0512",
+      "range": {
+        "startLine": 1472,
+        "startChar": 0,
+        "endLine": 1473,
+        "endChar": 26
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7615b76a_b4a95720",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 2
@@ -105,6 +153,30 @@
       "writtenOn": "2017-02-23T13:53:42Z",
       "side": 1,
       "message": "nit: vbmeta.version might be a bit confused. \n\nHow about change it to:\n androidboot.vbmeta.avb_version",
+      "range": {
+        "startLine": 943,
+        "startChar": 33,
+        "endLine": 943,
+        "endChar": 59
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3ea75fbf_3df79bd4",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 943,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T19:10:06Z",
+      "side": 1,
+      "message": "SGTM, will do.",
+      "parentUuid": "7615b76a_b4a95720",
       "range": {
         "startLine": 943,
         "startChar": 33,
@@ -140,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "e75d7bee_11054948",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T19:10:06Z",
+      "side": 1,
+      "message": "avb_version_string() is free-form text and could contain \"(unreleased)\" or even the git sha1. We need this in a machine-readable format without any whitespace (that would need to be escaped).",
+      "parentUuid": "173cca83_63873aa3",
+      "range": {
+        "startLine": 944,
+        "startChar": 32,
+        "endLine": 945,
+        "endChar": 49
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4bf2d32_f9fe7c98",
         "filename": "libavb/avb_version.c",
         "patchSetId": 2
@@ -163,6 +259,30 @@
     },
     {
       "key": {
+        "uuid": "e8d4e14a_ac3959fd",
+        "filename": "libavb/avb_version.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T19:10:06Z",
+      "side": 1,
+      "message": "It\u0027s all clang-format! I\u0027ll try to clean it up so it\u0027s nicer but...",
+      "parentUuid": "a4bf2d32_f9fe7c98",
+      "range": {
+        "startLine": 32,
+        "startChar": 46,
+        "endLine": 32,
+        "endChar": 49
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11d4f066_d135ccac",
         "filename": "libavb/avb_version.h",
         "patchSetId": 2
@@ -174,6 +294,30 @@
       "writtenOn": "2017-02-23T17:53:50Z",
       "side": 1,
       "message": "I\u0027m not sure what this means -- that it\u0027s already been released in the past? Or the current build a release candidate? Should this be surrounded by #ifndef so it can be set by build config?",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c77c3cf6_c4a9c9d4",
+        "filename": "libavb/avb_version.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T19:10:06Z",
+      "side": 1,
+      "message": "Nope! :-)\n\nThe idea is that the release process will be like this:\n\n - set AVB_RELEASED to 1 in avb_version.h and avbtool\n - run unit tests, etc.\n - (maybe) update a NEWS file with release notes\n - Land CL with commit message \"Released X.Y.Z\"\n - (maybe) tag the git tree with avb-X.Y.Z\n - run git-archive to produce a zip file with name avb-X.Y.Z.zip, sign this, upload somewhere for distribution\n - set AVB_RELEASED to 0 in avb_version.h and avbtool\n - bump AVB_VERSION_SUB (set it to Z+1) in avb_version.h and avbtool\n - Land CL with commit message \"Post-release version bump to X.Y.Z+1\"\n\nThis way AVB users can either use the released avb-X.Y.Z.zip file or if using the git tree,  they can check out the \"Release X.Y.Z\" commit or the avb-X.Y.Z tag.\n\nIf you\u0027re drinking directly from the firehose you\u0027ll get AVB_RELEASED set to 0 and the only difference here is that the |release_string| field will be \"1.0.1 (unreleased)\" instead of \"1.0.0\".\n\nThis is the same release process most open source projects use.... it\u0027s pretty vanilla, garden-variety etc. :-)\n\nThe plan is that a future CL will include these instructions in the README file.",
+      "parentUuid": "11d4f066_d135ccac",
       "range": {
         "startLine": 44,
         "startChar": 8,
