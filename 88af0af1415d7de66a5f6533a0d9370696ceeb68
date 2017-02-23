@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "653e5f80_0a6dc66b",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T20:03:58Z",
+      "side": 1,
+      "message": "PS4 has the --append_to_release_string option along with unit tests etc.",
+      "parentUuid": "78e57c9b_f657e393",
+      "range": {
+        "startLine": 171,
+        "startChar": 44,
+        "endLine": 172,
+        "endChar": 26
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c1c01799_416205c1",
         "filename": "README",
         "patchSetId": 2
