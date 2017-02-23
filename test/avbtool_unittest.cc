@@ -57,16 +57,18 @@ TEST_F(AvbToolTest, AvbVersionInSync) {
   std::string printed_version;
   ASSERT_TRUE(base::ReadFileToString(path, &printed_version));
   base::TrimWhitespaceASCII(printed_version, base::TRIM_ALL, &printed_version);
-  std::string expected_version =
-      base::StringPrintf("%d.%d", AVB_MAJOR_VERSION, AVB_MINOR_VERSION);
-  EXPECT_EQ(printed_version, expected_version);
+  // See comments in libavb/avb_version.c and avbtool's get_release_string()
+  // about being in sync.
+  EXPECT_EQ(printed_version,
+            std::string("avbtool ") + std::string(avb_version_string()));
 }
 
 TEST_F(AvbToolTest, ExtractPublicKey) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "--internal_release_string \"\"");
 
   std::string key_data =
       PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem"));
@@ -97,7 +99,8 @@ TEST_F(AvbToolTest, CheckDescriptors) {
                       "--prop large_hexnumber:0xfedcba9876543210 "
                       "--prop larger_than_uint64:0xfedcba98765432101 "
                       "--prop almost_a_number:423x "
-                      "--prop_from_file blob:test/data/small_blob.bin ");
+                      "--prop_from_file blob:test/data/small_blob.bin "
+                      "--internal_release_string \"\"");
 
   AvbVBMetaImageHeader h;
   avb_vbmeta_image_header_to_host_byte_order(
@@ -194,7 +197,8 @@ TEST_F(AvbToolTest, CheckRollbackIndex) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       rollback_index,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "--internal_release_string \"\"");
 
   AvbVBMetaImageHeader h;
   avb_vbmeta_image_header_to_host_byte_order(
@@ -207,7 +211,8 @@ TEST_F(AvbToolTest, CheckPubkeyReturned) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "--internal_release_string \"\"");
 
   const uint8_t* pubkey = NULL;
   size_t pubkey_length = 0;
@@ -243,16 +248,18 @@ TEST_F(AvbToolTest, Info) {
                       "--prop larger_than_uint64:0xfedcba98765432101 "
                       "--prop almost_a_number:423x "
                       "--prop_from_file blob:test/data/small_blob.bin "
-                      "--prop_from_file large_blob:test/data/large_blob.bin");
+                      "--prop_from_file large_blob:test/data/large_blob.bin "
+                      "--internal_release_string \"\"");
 
   ASSERT_EQ(
-      "VBMeta image version:     1.0\n"
+      "Minimum libavb version:   1.0\n"
       "Header Block:             256 bytes\n"
       "Authentication Block:     320 bytes\n"
       "Auxiliary Block:          3200 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           0\n"
       "Flags:                    0\n"
+      "Release String:           ''\n"
       "Descriptors:\n"
       "    Prop: foo -> 'brillo'\n"
       "    Prop: bar -> 'chromeos'\n"
@@ -321,7 +328,8 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                    "--partition_size %d --partition_name foobar "
                    "--algorithm SHA256_RSA2048 "
                    "--key test/data/testkey_rsa2048.pem "
-                   "--output_vbmeta %s",
+                   "--output_vbmeta %s "
+                   "--internal_release_string \"\"",
                    rootfs_path.value().c_str(),
                    (int)partition_size,
                    ext_vbmeta_path.value().c_str());
@@ -332,13 +340,14 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                                  "VBMeta offset:            1052672\n"
                                  "VBMeta size:              1280 bytes\n"
                                  "--\n"
-                                 "VBMeta image version:     1.0%s\n"
+                                 "Minimum libavb version:   1.0%s\n"
                                  "Header Block:             256 bytes\n"
                                  "Authentication Block:     320 bytes\n"
                                  "Auxiliary Block:          704 bytes\n"
                                  "Algorithm:                SHA256_RSA2048\n"
                                  "Rollback Index:           0\n"
                                  "Flags:                    0\n"
+                                 "Release String:           ''\n"
                                  "Descriptors:\n"
                                  "    Hash descriptor:\n"
                                  "      Image Size:            1052672 bytes\n"
@@ -352,13 +361,14 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
               InfoImage(rootfs_path));
 
     ASSERT_EQ(
-        "VBMeta image version:     1.0\n"
+        "Minimum libavb version:   1.0\n"
         "Header Block:             256 bytes\n"
         "Authentication Block:     320 bytes\n"
         "Auxiliary Block:          704 bytes\n"
         "Algorithm:                SHA256_RSA2048\n"
         "Rollback Index:           0\n"
         "Flags:                    0\n"
+        "Release String:           ''\n"
         "Descriptors:\n"
         "    Hash descriptor:\n"
         "      Image Size:            1052672 bytes\n"
@@ -407,8 +417,8 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
   EXPECT_EQ(
       std::string(reinterpret_cast<const char*>(f.magic), AVB_FOOTER_MAGIC_LEN),
       AVB_FOOTER_MAGIC);
-  EXPECT_EQ(AVB_FOOTER_MAJOR_VERSION, (int)f.version_major);
-  EXPECT_EQ(AVB_FOOTER_MINOR_VERSION, (int)f.version_minor);
+  EXPECT_EQ(AVB_FOOTER_VERSION_MAJOR, (int)f.version_major);
+  EXPECT_EQ(AVB_FOOTER_VERSION_MINOR, (int)f.version_minor);
   EXPECT_EQ(1052672UL, f.original_image_size);
   EXPECT_EQ(1052672UL, f.vbmeta_offset);
   EXPECT_EQ(1280UL, f.vbmeta_size);
@@ -463,7 +473,8 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                  "--partition_size %d --partition_name foobar "
                  "--algorithm SHA256_RSA2048 "
                  "--key test/data/testkey_rsa2048.pem "
-                 "--output_vbmeta %s_2nd_run --do_not_append_vbmeta_image",
+                 "--output_vbmeta %s_2nd_run --do_not_append_vbmeta_image "
+                 "--internal_release_string \"\"",
                  rootfs_path.value().c_str(),
                  (int)partition_size,
                  ext_vbmeta_path.value().c_str());
@@ -520,7 +531,8 @@ TEST_F(AvbToolTest, AddHashFooterSparseWithHoleAtTheEnd) {
                  "--hash_algorithm sha256 --image %s "
                  "--partition_size %d --partition_name foobar "
                  "--algorithm SHA256_RSA2048 "
-                 "--key test/data/testkey_rsa2048.pem",
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\"",
                  partition_path.value().c_str(),
                  (int)partition_size);
 
@@ -537,13 +549,14 @@ TEST_F(AvbToolTest, AddHashFooterSparseWithHoleAtTheEnd) {
       "VBMeta offset:            10354688\n"
       "VBMeta size:              1280 bytes\n"
       "--\n"
-      "VBMeta image version:     1.0 (Sparse)\n"
+      "Minimum libavb version:   1.0 (Sparse)\n"
       "Header Block:             256 bytes\n"
       "Authentication Block:     320 bytes\n"
       "Auxiliary Block:          704 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           0\n"
       "Flags:                    0\n"
+      "Release String:           ''\n"
       "Descriptors:\n"
       "    Hash descriptor:\n"
       "      Image Size:            10354688 bytes\n"
@@ -599,7 +612,8 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                    "--partition_size %d --partition_name foobar "
                    "--algorithm SHA256_RSA2048 "
                    "--key test/data/testkey_rsa2048.pem "
-                   "--output_vbmeta_image %s",
+                   "--output_vbmeta_image %s "
+                   "--internal_release_string \"\"",
                    rootfs_path.value().c_str(),
                    (int)partition_size,
                    ext_vbmeta_path.value().c_str());
@@ -610,13 +624,14 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                                  "VBMeta offset:            1069056\n"
                                  "VBMeta size:              1344 bytes\n"
                                  "--\n"
-                                 "VBMeta image version:     1.0%s\n"
+                                 "Minimum libavb version:   1.0%s\n"
                                  "Header Block:             256 bytes\n"
                                  "Authentication Block:     320 bytes\n"
                                  "Auxiliary Block:          768 bytes\n"
                                  "Algorithm:                SHA256_RSA2048\n"
                                  "Rollback Index:           0\n"
                                  "Flags:                    0\n"
+                                 "Release String:           ''\n"
                                  "Descriptors:\n"
                                  "    Hashtree descriptor:\n"
                                  "      Version of dm-verity:  1\n"
@@ -637,13 +652,14 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
               InfoImage(rootfs_path));
 
     ASSERT_EQ(
-        "VBMeta image version:     1.0\n"
+        "Minimum libavb version:   1.0\n"
         "Header Block:             256 bytes\n"
         "Authentication Block:     320 bytes\n"
         "Auxiliary Block:          768 bytes\n"
         "Algorithm:                SHA256_RSA2048\n"
         "Rollback Index:           0\n"
         "Flags:                    0\n"
+        "Release String:           ''\n"
         "Descriptors:\n"
         "    Hashtree descriptor:\n"
         "      Version of dm-verity:  1\n"
@@ -708,8 +724,8 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   EXPECT_EQ(
       std::string(reinterpret_cast<const char*>(f.magic), AVB_FOOTER_MAGIC_LEN),
       AVB_FOOTER_MAGIC);
-  EXPECT_EQ(AVB_FOOTER_MAJOR_VERSION, (int)f.version_major);
-  EXPECT_EQ(AVB_FOOTER_MINOR_VERSION, (int)f.version_minor);
+  EXPECT_EQ(AVB_FOOTER_VERSION_MAJOR, (int)f.version_major);
+  EXPECT_EQ(AVB_FOOTER_VERSION_MINOR, (int)f.version_minor);
   EXPECT_EQ(1052672UL, f.original_image_size);
   EXPECT_EQ(1069056UL, f.vbmeta_offset);
   EXPECT_EQ(1344UL, f.vbmeta_size);
@@ -763,18 +779,20 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                  "--output %s "
                  "--setup_rootfs_from_kernel %s "
                  "--algorithm SHA256_RSA2048 "
-                 "--key test/data/testkey_rsa2048.pem",
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\"",
                  vbmeta_dmv_path.value().c_str(),
                  rootfs_path.value().c_str());
 
   ASSERT_EQ(
-      "VBMeta image version:     1.0\n"
+      "Minimum libavb version:   1.0\n"
       "Header Block:             256 bytes\n"
       "Authentication Block:     320 bytes\n"
       "Auxiliary Block:          896 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           0\n"
       "Flags:                    0\n"
+      "Release String:           ''\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 1\n"
@@ -808,7 +826,8 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                  "--partition_size %d --partition_name foobar "
                  "--algorithm SHA256_RSA2048 "
                  "--key test/data/testkey_rsa2048.pem "
-                 "--output_vbmeta %s_2nd_run --do_not_append_vbmeta_image",
+                 "--output_vbmeta %s_2nd_run --do_not_append_vbmeta_image "
+                 "--internal_release_string \"\"",
                  rootfs_path.value().c_str(),
                  (int)partition_size,
                  ext_vbmeta_path.value().c_str());
@@ -864,7 +883,8 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                    "--partition_size %d --partition_name foobar "
                    "--generate_fec "
                    "--algorithm SHA256_RSA2048 "
-                   "--key test/data/testkey_rsa2048.pem",
+                   "--key test/data/testkey_rsa2048.pem "
+                   "--internal_release_string \"\"",
                    rootfs_path.value().c_str(),
                    (int)partition_size);
 
@@ -874,13 +894,14 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                                  "VBMeta offset:            1085440\n"
                                  "VBMeta size:              1344 bytes\n"
                                  "--\n"
-                                 "VBMeta image version:     1.0%s\n"
+                                 "Minimum libavb version:   1.0%s\n"
                                  "Header Block:             256 bytes\n"
                                  "Authentication Block:     320 bytes\n"
                                  "Auxiliary Block:          768 bytes\n"
                                  "Algorithm:                SHA256_RSA2048\n"
                                  "Rollback Index:           0\n"
                                  "Flags:                    0\n"
+                                 "Release String:           ''\n"
                                  "Descriptors:\n"
                                  "    Hashtree descriptor:\n"
                                  "      Version of dm-verity:  1\n"
@@ -929,8 +950,8 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
   EXPECT_EQ(
       std::string(reinterpret_cast<const char*>(f.magic), AVB_FOOTER_MAGIC_LEN),
       AVB_FOOTER_MAGIC);
-  EXPECT_EQ(AVB_FOOTER_MAJOR_VERSION, (int)f.version_major);
-  EXPECT_EQ(AVB_FOOTER_MINOR_VERSION, (int)f.version_minor);
+  EXPECT_EQ(AVB_FOOTER_VERSION_MAJOR, (int)f.version_major);
+  EXPECT_EQ(AVB_FOOTER_VERSION_MINOR, (int)f.version_minor);
   EXPECT_EQ(1052672UL, f.original_image_size);
   EXPECT_EQ(1085440UL, f.vbmeta_offset);
   EXPECT_EQ(1344UL, f.vbmeta_size);
@@ -986,18 +1007,20 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                  "--output %s "
                  "--setup_rootfs_from_kernel %s "
                  "--algorithm SHA256_RSA2048 "
-                 "--key test/data/testkey_rsa2048.pem",
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\"",
                  vbmeta_dmv_path.value().c_str(),
                  rootfs_path.value().c_str());
 
   ASSERT_EQ(
-      "VBMeta image version:     1.0\n"
+      "Minimum libavb version:   1.0\n"
       "Header Block:             256 bytes\n"
       "Authentication Block:     320 bytes\n"
       "Auxiliary Block:          960 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           0\n"
       "Flags:                    0\n"
+      "Release String:           ''\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 1\n"
@@ -1061,7 +1084,8 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSize) {
                  " --partition_size %zd"
                  " --salt deadbeef"
                  " --algorithm SHA512_RSA4096 "
-                 " --key test/data/testkey_rsa4096.pem",
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --internal_release_string \"\"",
                  system_path.value().c_str(),
                  partition_size);
 }
@@ -1096,7 +1120,8 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithFEC) {
                  " --salt deadbeef"
                  " --generate_fec "
                  " --algorithm SHA512_RSA4096 "
-                 " --key test/data/testkey_rsa4096.pem",
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --internal_release_string \"\"",
                  system_path.value().c_str(),
                  partition_size);
 }
@@ -1111,17 +1136,19 @@ TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
                  "--kernel_cmdline 'foo bar baz' "
                  "--kernel_cmdline 'second cmdline' "
                  "--algorithm SHA256_RSA2048 "
-                 "--key test/data/testkey_rsa2048.pem",
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\"",
                  vbmeta_path.value().c_str());
 
   ASSERT_EQ(
-      "VBMeta image version:     1.0\n"
+      "Minimum libavb version:   1.0\n"
       "Header Block:             256 bytes\n"
       "Authentication Block:     320 bytes\n"
       "Auxiliary Block:          640 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           0\n"
       "Flags:                    0\n"
+      "Release String:           ''\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
@@ -1182,14 +1209,16 @@ TEST_F(AvbToolTest, IncludeDescriptor) {
                  "./avbtool make_vbmeta_image "
                  "--output %s "
                  "--kernel_cmdline 'something' "
-                 "--prop name:value ",
+                 "--prop name:value "
+                 "--internal_release_string \"\"",
                  vbmeta1_path.value().c_str());
 
   EXPECT_COMMAND(0,
                  "./avbtool make_vbmeta_image "
                  "--output %s "
                  "--prop name2:value2 "
-                 "--prop name3:value3 ",
+                 "--prop name3:value3 "
+                 "--internal_release_string \"\"",
                  vbmeta2_path.value().c_str());
 
   EXPECT_COMMAND(0,
@@ -1197,19 +1226,21 @@ TEST_F(AvbToolTest, IncludeDescriptor) {
                  "--output %s "
                  "--prop name4:value4 "
                  "--include_descriptors_from_image %s "
-                 "--include_descriptors_from_image %s ",
+                 "--include_descriptors_from_image %s "
+                 "--internal_release_string \"\"",
                  vbmeta3_path.value().c_str(),
                  vbmeta1_path.value().c_str(),
                  vbmeta2_path.value().c_str());
 
   ASSERT_EQ(
-      "VBMeta image version:     1.0\n"
+      "Minimum libavb version:   1.0\n"
       "Header Block:             256 bytes\n"
       "Authentication Block:     0 bytes\n"
       "Auxiliary Block:          256 bytes\n"
       "Algorithm:                NONE\n"
       "Rollback Index:           0\n"
       "Flags:                    0\n"
+      "Release String:           ''\n"
       "Descriptors:\n"
       "    Prop: name4 -> 'value4'\n"
       "    Prop: name -> 'value'\n"
@@ -1237,18 +1268,20 @@ TEST_F(AvbToolTest, ChainedPartition) {
       "./avbtool make_vbmeta_image "
       "--output %s "
       "--chain_partition system:1:%s "
-      "--algorithm SHA256_RSA2048 --key test/data/testkey_rsa2048.pem",
+      "--algorithm SHA256_RSA2048 --key test/data/testkey_rsa2048.pem "
+      "--internal_release_string \"\"",
       vbmeta_path.value().c_str(),
       pk_path.value().c_str());
 
   ASSERT_EQ(
-      "VBMeta image version:     1.0\n"
+      "Minimum libavb version:   1.0\n"
       "Header Block:             256 bytes\n"
       "Authentication Block:     320 bytes\n"
       "Auxiliary Block:          1152 bytes\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           0\n"
       "Flags:                    0\n"
+      "Release String:           ''\n"
       "Descriptors:\n"
       "    Chain Partition descriptor:\n"
       "      Partition Name:          system\n"
@@ -1308,7 +1341,8 @@ TEST_F(AvbToolTest, SigningHelperBasic) {
       "SIGNING_HELPER_TEST=\"%s\" ./avbtool make_vbmeta_image "
       "--output %s "
       "--algorithm SHA256_RSA2048 --key test/data/testkey_rsa2048.pem "
-      "--signing_helper test/avbtool_signing_helper_test.py",
+      "--signing_helper test/avbtool_signing_helper_test.py "
+      "--internal_release_string \"\"",
       signing_helper_test_path.value().c_str(),
       vbmeta_path.value().c_str());
 
@@ -1325,7 +1359,8 @@ TEST_F(AvbToolTest, SigningHelperReturnError) {
       "./avbtool make_vbmeta_image "
       "--output %s "
       "--algorithm SHA256_RSA2048 --key test/data/testkey_rsa2048.pem "
-      "--signing_helper test/avbtool_signing_helper_test.py",
+      "--signing_helper test/avbtool_signing_helper_test.py "
+      "--internal_release_string \"\"",
       vbmeta_path.value().c_str());
 }
 
