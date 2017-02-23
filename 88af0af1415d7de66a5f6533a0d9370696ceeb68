@@ -25,6 +25,52 @@
     },
     {
       "key": {
+        "uuid": "48d597dd_9f52a048",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-23T17:39:31Z",
+      "side": 1,
+      "message": "Any use for a fourth \u0027build version\u0027? This might be convenient for build infra and identifying artifacts.",
+      "range": {
+        "startLine": 171,
+        "startChar": 44,
+        "endLine": 172,
+        "endChar": 26
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c1c01799_416205c1",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 206,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-23T17:39:31Z",
+      "side": 1,
+      "message": "How would one know details of the last release? Is this tracked somewhere? Release notes in tree?",
+      "range": {
+        "startLine": 206,
+        "startChar": 55,
+        "endLine": 206,
+        "endChar": 67
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "112cc679_a26b0512",
         "filename": "avbtool",
         "patchSetId": 2
