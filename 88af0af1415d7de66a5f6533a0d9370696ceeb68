@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e11ef5a2_030c80c3",
+        "filename": "README",
+        "patchSetId": 2
+      },
+      "lineNbr": 166,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-02-23T13:53:42Z",
+      "side": 1,
+      "message": "this is nice :)",
+      "range": {
+        "startLine": 161,
+        "startChar": 1,
+        "endLine": 166,
+        "endChar": 28
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "112cc679_a26b0512",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1473,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-02-23T13:53:42Z",
+      "side": 1,
+      "message": "Presumably footer should be rarely changed.\nEven if it\u0027s changed, AVB_VERSION_MAJOR probably needs to be bumped as well? (so we can catch this).",
+      "range": {
+        "startLine": 1472,
+        "startChar": 0,
+        "endLine": 1473,
+        "endChar": 26
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7615b76a_b4a95720",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 943,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-02-23T13:53:42Z",
+      "side": 1,
+      "message": "nit: vbmeta.version might be a bit confused. \n\nHow about change it to:\n androidboot.vbmeta.avb_version",
+      "range": {
+        "startLine": 943,
+        "startChar": 33,
+        "endLine": 943,
+        "endChar": 59
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "173cca83_63873aa3",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-02-23T13:53:42Z",
+      "side": 1,
+      "message": "nit: How about just append the string: avb_version_string() ?\n\nAlthough sub version and release string won\u0027t affect compatibility. But it seems no harm to include them together. In case someday we need the info.",
+      "range": {
+        "startLine": 944,
+        "startChar": 32,
+        "endLine": 945,
+        "endChar": 49
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
