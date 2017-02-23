@@ -189,6 +189,30 @@
     },
     {
       "key": {
+        "uuid": "131f5220_5d4324d7",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 943,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T19:20:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3ea75fbf_3df79bd4",
+      "range": {
+        "startLine": 943,
+        "startChar": 33,
+        "endLine": 943,
+        "endChar": 59
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "173cca83_63873aa3",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 2
@@ -271,6 +295,30 @@
       "side": 1,
       "message": "It\u0027s all clang-format! I\u0027ll try to clean it up so it\u0027s nicer but...",
       "parentUuid": "a4bf2d32_f9fe7c98",
+      "range": {
+        "startLine": 32,
+        "startChar": 46,
+        "endLine": 32,
+        "endChar": 49
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "17905817_464892e4",
+        "filename": "libavb/avb_version.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-23T19:20:26Z",
+      "side": 1,
+      "message": "Didn\u0027t work.. oh well.",
+      "parentUuid": "e8d4e14a_ac3959fd",
       "range": {
         "startLine": 32,
         "startChar": 46,
