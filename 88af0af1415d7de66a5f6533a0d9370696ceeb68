@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "10c1c32e_754d8be0",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 945,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-02-24T02:56:56Z",
+      "side": 1,
+      "message": "OK, understood.\nI agree it makes more sense to just keep MAJOR.MINOR here.",
+      "parentUuid": "e75d7bee_11054948",
+      "range": {
+        "startLine": 944,
+        "startChar": 32,
+        "endLine": 945,
+        "endChar": 49
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a4bf2d32_f9fe7c98",
         "filename": "libavb/avb_version.c",
         "patchSetId": 2
@@ -390,6 +414,30 @@
       "side": 1,
       "message": "Nope! :-)\n\nThe idea is that the release process will be like this:\n\n - set AVB_RELEASED to 1 in avb_version.h and avbtool\n - run unit tests, etc.\n - (maybe) update a NEWS file with release notes\n - Land CL with commit message \"Released X.Y.Z\"\n - (maybe) tag the git tree with avb-X.Y.Z\n - run git-archive to produce a zip file with name avb-X.Y.Z.zip, sign this, upload somewhere for distribution\n - set AVB_RELEASED to 0 in avb_version.h and avbtool\n - bump AVB_VERSION_SUB (set it to Z+1) in avb_version.h and avbtool\n - Land CL with commit message \"Post-release version bump to X.Y.Z+1\"\n\nThis way AVB users can either use the released avb-X.Y.Z.zip file or if using the git tree,  they can check out the \"Release X.Y.Z\" commit or the avb-X.Y.Z tag.\n\nIf you\u0027re drinking directly from the firehose you\u0027ll get AVB_RELEASED set to 0 and the only difference here is that the |release_string| field will be \"1.0.1 (unreleased)\" instead of \"1.0.0\".\n\nThis is the same release process most open source projects use.... it\u0027s pretty vanilla, garden-variety etc. :-)\n\nThe plan is that a future CL will include these instructions in the README file.",
       "parentUuid": "11d4f066_d135ccac",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1949a941_fdc4eb6d",
+        "filename": "libavb/avb_version.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-02-24T02:56:56Z",
+      "side": 1,
+      "message": "Yup, I was also curious about how to manage AVB_VERSION_RELEASED before. Thanks for the info.\n\nBTW, Adding a NEWS file to track the release changes LGTM.",
+      "parentUuid": "c77c3cf6_c4a9c9d4",
       "range": {
         "startLine": 44,
         "startChar": 8,
