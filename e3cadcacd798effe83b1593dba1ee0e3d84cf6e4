@@ -22,6 +22,30 @@
       "revId": "e3cadcacd798effe83b1593dba1ee0e3d84cf6e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "683fdffd_8e6fa5c7",
+        "filename": "README",
+        "patchSetId": 10
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-27T19:23:43Z",
+      "side": 1,
+      "message": "Good idea. I\u0027ll look into making the build system in build/ do this by default.",
+      "parentUuid": "441e1d57_9556866f",
+      "range": {
+        "startLine": 182,
+        "startChar": 11,
+        "endLine": 182,
+        "endChar": 49
+      },
+      "revId": "e3cadcacd798effe83b1593dba1ee0e3d84cf6e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
