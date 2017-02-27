@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "441e1d57_9556866f",
+        "filename": "README",
+        "patchSetId": 10
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-02-27T11:46:09Z",
+      "side": 1,
+      "message": "Adding a git hash is a good idea (and maybe the branch name? so it\u0027s easier to know which branch to checkout before searching the git hash). Here is an example from Chrome OS EC (firmware): https://www.chromium.org/chromium-os/ec-development#TOC-EC-Version-Strings\n\nBTW, not sure do we want to have the same cadence of creating new branches as Android dessert releases (Marshmallow, Nougat), or using a separate branch strategy for libavb (e.g., Marshmallow uses libavb branch 1.0, Nougat uses libavb branch 1.1, etc).",
+      "range": {
+        "startLine": 182,
+        "startChar": 11,
+        "endLine": 182,
+        "endChar": 49
+      },
+      "revId": "e3cadcacd798effe83b1593dba1ee0e3d84cf6e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}

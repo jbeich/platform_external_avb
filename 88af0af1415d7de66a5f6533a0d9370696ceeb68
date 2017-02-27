@@ -471,6 +471,30 @@
       "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b22dd478_f1e5c96e",
+        "filename": "libavb/avb_version.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-02-27T11:46:09Z",
+      "side": 1,
+      "message": "Agree, need to think more about it.\n\nMaybe we should consider that master branch is always unreleased. And create a released branch for a release version and set the version_released to 1 in that branch.",
+      "parentUuid": "4c6dd896_4370dc92",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
