@@ -495,6 +495,30 @@
       "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f2b2bbc4_9cea191f",
+        "filename": "libavb/avb_version.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-02-27T19:23:43Z",
+      "side": 1,
+      "message": "SGTM.",
+      "parentUuid": "b22dd478_f1e5c96e",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 28
+      },
+      "revId": "88af0af1415d7de66a5f6533a0d9370696ceeb68",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
