@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f59bc2e1_5232bbb9",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2865,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-28T02:02:02Z",
+      "side": 1,
+      "message": "Any way to enforce / warn?",
+      "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d8ab450d_9c9b432a",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-28T02:02:02Z",
+      "side": 1,
+      "message": "Looks like this can infinite recurse if \"boot\" doesn\u0027t exist. Check for is_vbmeta_partition instead of is_main_vbmeta (or maybe both)? Or you could put this fallback logic in avb_slot_verify since chained levels shouldn\u0027t be using it.",
+      "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da985262_c0f5aefc",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-28T02:02:02Z",
+      "side": 1,
+      "message": "nit: comma after the comment",
+      "range": {
+        "startLine": 352,
+        "startChar": 36,
+        "endLine": 352,
+        "endChar": 37
+      },
+      "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
