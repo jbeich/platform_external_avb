@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "448005d6_3d2bfb7b",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2558,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-28T04:07:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3938b3c9_a8405b2f",
+      "range": {
+        "startLine": 2558,
+        "startChar": 44,
+        "endLine": 2558,
+        "endChar": 49
+      },
+      "revId": "9f343990ce785d00d274da9ae86cfde502733566",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4afacc09_32a180a8",
         "filename": "test/avb_atx_generate_test_data",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2017-02-27T19:59:51Z",
       "side": 1,
       "message": "Wouldn\u0027t this make the test non-deterministic? Or is this used to generated test data which has been checked in?",
+      "revId": "9f343990ce785d00d274da9ae86cfde502733566",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "03ef35e2_5696d520",
+        "filename": "test/avb_atx_generate_test_data",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-02-28T04:07:19Z",
+      "side": 1,
+      "message": "Should be fine, as long as it\u0027s consistent with everything that follows.\n\nYes, the outputs of this are checked in. This serves as a record of how it was generated and as a convenience for regeneration if something changes. Added this to the file documentation above.",
+      "parentUuid": "4afacc09_32a180a8",
       "revId": "9f343990ce785d00d274da9ae86cfde502733566",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
