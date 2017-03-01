@@ -117,6 +117,24 @@
       "revId": "9f343990ce785d00d274da9ae86cfde502733566",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c4dc6a60_6639d084",
+        "filename": "test/avb_atx_generate_test_data",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-01T22:16:51Z",
+      "side": 1,
+      "message": "OK, fair enough.",
+      "parentUuid": "172dbb39_37601ed1",
+      "revId": "9f343990ce785d00d274da9ae86cfde502733566",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
