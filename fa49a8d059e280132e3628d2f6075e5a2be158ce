@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f521d9cb_a515c30a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-01T20:27:15Z",
+      "side": 1,
+      "message": "Yup, right now I\u0027m using it on a device which lacks vbmeta{_a, _b} partitions.",
+      "parentUuid": "f147c1e6_0056422c",
+      "range": {
+        "startLine": 15,
+        "startChar": 3,
+        "endLine": 15,
+        "endChar": 65
+      },
+      "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f59bc2e1_5232bbb9",
         "filename": "avbtool",
         "patchSetId": 1
@@ -36,6 +60,24 @@
       "writtenOn": "2017-02-28T02:02:02Z",
       "side": 1,
       "message": "Any way to enforce / warn?",
+      "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "16c18441_b732041d",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2865,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-01T20:27:15Z",
+      "side": 1,
+      "message": "We do check for it in libavb. Next PS will have tests\n\n AvbSlotVerifyTest.ChainedPartitionEnforceFlagsZero\n AvbSlotVerifyTest.ChainedPartitionEnforceNoChainPartitions\n\nto ensure these checks work.",
+      "parentUuid": "f59bc2e1_5232bbb9",
       "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -59,6 +101,24 @@
     },
     {
       "key": {
+        "uuid": "95a35f55_df3d8eb7",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 344,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-01T20:27:15Z",
+      "side": 1,
+      "message": "Nice catch, fixed.",
+      "parentUuid": "d8ab450d_9c9b432a",
+      "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "da985262_c0f5aefc",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 1
@@ -70,6 +130,30 @@
       "writtenOn": "2017-02-28T02:02:02Z",
       "side": 1,
       "message": "nit: comma after the comment",
+      "range": {
+        "startLine": 352,
+        "startChar": 36,
+        "endLine": 352,
+        "endChar": 37
+      },
+      "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f03135b_486a22f4",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 352,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-01T20:27:15Z",
+      "side": 1,
+      "message": "Fixed here and where I copy-pasted from.",
+      "parentUuid": "da985262_c0f5aefc",
       "range": {
         "startLine": 352,
         "startChar": 36,
