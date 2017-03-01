@@ -81,6 +81,24 @@
       "revId": "9f343990ce785d00d274da9ae86cfde502733566",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5cf0473f_c964dfac",
+        "filename": "test/avb_atx_generate_test_data",
+        "patchSetId": 1
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-01T19:48:26Z",
+      "side": 1,
+      "message": "OK. Generally not a fan of checking in data that can be computed at runtime but I agree it makes sense for at least atx_product_id.bin and testkey_atx_*.pem ... any chance the .bin files can be avoided and we can compute them at test time?",
+      "parentUuid": "03ef35e2_5696d520",
+      "revId": "9f343990ce785d00d274da9ae86cfde502733566",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
