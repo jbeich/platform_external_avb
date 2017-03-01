@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "f147c1e6_0056422c",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-03-01T08:57:57Z",
+      "side": 1,
+      "message": "yup, this is important.\nI\u0027ve heard some partner wanted to apply avb for all devices (including N-\u003eO upgrade). So this change is useful to them.\n\nIt\u0027s also easier for us to test this on marlin or sailfish.",
+      "range": {
+        "startLine": 15,
+        "startChar": 3,
+        "endLine": 15,
+        "endChar": 65
+      },
+      "revId": "fa49a8d059e280132e3628d2f6075e5a2be158ce",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f59bc2e1_5232bbb9",
         "filename": "avbtool",
         "patchSetId": 1
