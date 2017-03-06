@@ -69,6 +69,30 @@
       "revId": "e3cadcacd798effe83b1593dba1ee0e3d84cf6e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c1c1e05_0356b4ed",
+        "filename": "libavb/avb_vbmeta_image.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-06T16:02:31Z",
+      "side": 1,
+      "message": "No it can\u0027t. I\u0027ll reply to the email too.",
+      "parentUuid": "81236498_1b7abf75",
+      "range": {
+        "startLine": 74,
+        "startChar": 39,
+        "endLine": 74,
+        "endChar": 41
+      },
+      "revId": "e3cadcacd798effe83b1593dba1ee0e3d84cf6e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
