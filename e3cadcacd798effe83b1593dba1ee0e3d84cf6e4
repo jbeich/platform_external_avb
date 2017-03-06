@@ -46,6 +46,29 @@
       "revId": "e3cadcacd798effe83b1593dba1ee0e3d84cf6e4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "81236498_1b7abf75",
+        "filename": "libavb/avb_vbmeta_image.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-03-06T05:35:12Z",
+      "side": 1,
+      "message": "Sorry, just came to think of it, this should probably be \u0027\u003e\u0027. (e.g., libavb 2.3 can parse vbmeta 1.1)\n\nI\u0027ll send an e-mail to discuss this offline.",
+      "range": {
+        "startLine": 74,
+        "startChar": 39,
+        "endLine": 74,
+        "endChar": 41
+      },
+      "revId": "e3cadcacd798effe83b1593dba1ee0e3d84cf6e4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
