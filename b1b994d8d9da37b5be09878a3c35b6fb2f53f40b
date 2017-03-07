@@ -22,6 +22,30 @@
       "revId": "b1b994d8d9da37b5be09878a3c35b6fb2f53f40b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "517800e1_0f58e670",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1449,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-07T20:07:13Z",
+      "side": 1,
+      "message": "Re array: Yeah, I thought about that but it would mess up the EXPECT_EQ() below against |vbmeta_image_| which has the type std:vector\u003cuint8_t\u003e. EXPECT_EQ() is very picky about types...\n\nRe 1152: thought about that too but since it\u0027s part of a string above using a constant would lead me to use that constant in the string and then it would look weird because then I would wanted to use constants for the other numbers too and then everything is unreadable....",
+      "parentUuid": "8bdaf75d_7412c644",
+      "range": {
+        "startLine": 1448,
+        "startChar": 0,
+        "endLine": 1449,
+        "endChar": 29
+      },
+      "revId": "b1b994d8d9da37b5be09878a3c35b6fb2f53f40b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
