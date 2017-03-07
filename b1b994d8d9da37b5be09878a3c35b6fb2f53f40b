@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8bdaf75d_7412c644",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1449,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-03-07T06:30:05Z",
+      "side": 1,
+      "message": "nit: maybe can consider using array next time.\n\n std::array\u003cuint8_t,1152\u003e loaded_vbmeta;\n\nAlso it might be good to define a const for 1152?",
+      "range": {
+        "startLine": 1448,
+        "startChar": 0,
+        "endLine": 1449,
+        "endChar": 29
+      },
+      "revId": "b1b994d8d9da37b5be09878a3c35b6fb2f53f40b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
