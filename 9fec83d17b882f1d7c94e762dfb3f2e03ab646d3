@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5aeedd5_c53fa5f5",
+        "filename": "test/avb_sysdeps_posix_testing.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 2,
+      "author": {
+        "id": 1022354
+      },
+      "writtenOn": "2017-03-08T19:19:48Z",
+      "side": 1,
+      "message": "2017",
+      "range": {
+        "startLine": 2,
+        "startChar": 17,
+        "endLine": 2,
+        "endChar": 21
+      },
+      "revId": "9fec83d17b882f1d7c94e762dfb3f2e03ab646d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "7d8a31e5_9ccb9eae",
+        "filename": "test/avb_sysdeps_posix_testing.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1022354
+      },
+      "writtenOn": "2017-03-08T19:19:48Z",
+      "side": 1,
+      "message": "If you create a baseline class for this, then instantiate it globally, you could use the destructor (or a __attribute__((destructor)) ) to abort() if there is leaked memory _even_ if the test didn\u0027t check if all memory was freed.",
+      "range": {
+        "startLine": 108,
+        "startChar": 5,
+        "endLine": 108,
+        "endChar": 29
+      },
+      "revId": "9fec83d17b882f1d7c94e762dfb3f2e03ab646d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
