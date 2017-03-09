@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6e2c4d0c_b0540272",
+        "filename": "test/avb_unittest_util.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-09T19:02:02Z",
+      "side": 1,
+      "message": "are",
+      "range": {
+        "startLine": 53,
+        "startChar": 63,
+        "endLine": 53,
+        "endChar": 65
+      },
+      "revId": "0f7de9479afef18835cdbfe3da07811a7993504e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
