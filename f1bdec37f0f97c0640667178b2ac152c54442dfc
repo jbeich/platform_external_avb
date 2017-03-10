@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9c36e2cc_bd34e2b8",
+        "filename": "libavb/avb_util.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 268,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-10T18:01:28Z",
+      "side": 1,
+      "message": "Is this a valid assumption? Is it worth checking both?",
+      "range": {
+        "startLine": 268,
+        "startChar": 34,
+        "endLine": 268,
+        "endChar": 39
+      },
+      "revId": "f1bdec37f0f97c0640667178b2ac152c54442dfc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
