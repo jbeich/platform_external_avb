@@ -16,6 +16,24 @@
       "revId": "b0f1787002898154e617db69393bed651970bc55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "85234f94_028643d1",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-03-23T04:31:27Z",
+      "side": 1,
+      "message": "But it seems ok at the following link, no?\nhttps://android.googlesource.com/platform/external/avb/+/master/",
+      "parentUuid": "6f2679ee_991a030b",
+      "revId": "b0f1787002898154e617db69393bed651970bc55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
