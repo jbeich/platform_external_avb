@@ -34,6 +34,24 @@
       "revId": "b0f1787002898154e617db69393bed651970bc55",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "82771a98_38aa5190",
+        "filename": "README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-23T13:59:13Z",
+      "side": 1,
+      "message": "Yeah, newlines shouldn\u0027t affect rendering at all (except that two newlines means a new paragraphs) so I think it\u0027s just a pecularity/assumption in the Markdown editor Darren is using?\n\nFWIW, I\u0027ve seen the same thing with some online WYSIWYG markdown editors. Maybe they have a setting for it?",
+      "parentUuid": "85234f94_028643d1",
+      "revId": "b0f1787002898154e617db69393bed651970bc55",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
