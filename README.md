@@ -105,6 +105,9 @@ validation operation (see `avb_validate_vbmeta_public_key()` in
 * `test/`
     + Unit tests for `abvtool`, `libavb`, `libavb_ab`, and
       `libavb_atx`.
+* `tools/avbctl/`
+    + Contains the source-code for a tool that can be used to control
+      AVB at runtime.
 * `examples/uefi/`
     + Contains the source-code for a UEFI-based boot-loader utilizing
       `libavb/` and `libavb_ab/`.
