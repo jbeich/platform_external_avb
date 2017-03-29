@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1c9449dc_354f4dab",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 92,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-03-29T15:41:02Z",
+      "side": 1,
+      "message": "Not sure do we want to support appending top-level vbmeta at /boot as well?\nIt can be a separate CL though.",
+      "range": {
+        "startLine": 86,
+        "startChar": 0,
+        "endLine": 92,
+        "endChar": 47
+      },
+      "revId": "059328886de5c83fb26be5710ee4182e7a3a45ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
