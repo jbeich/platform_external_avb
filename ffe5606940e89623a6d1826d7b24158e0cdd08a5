@@ -22,6 +22,30 @@
       "revId": "ffe5606940e89623a6d1826d7b24158e0cdd08a5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "579033e3_31c247c2",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 81,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-30T14:59:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8d2dc778_e64c8239",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 81,
+        "endChar": 31
+      },
+      "revId": "ffe5606940e89623a6d1826d7b24158e0cdd08a5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
