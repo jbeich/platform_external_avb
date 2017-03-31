@@ -1,0 +1,135 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "37039718_6081fffa",
+        "filename": "libavb_user/avb_ops_user.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T00:39:41Z",
+      "side": 1,
+      "message": "nit: include this first?",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "71edb40e_ab5d59ac",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T00:39:41Z",
+      "side": 1,
+      "message": "nit: alpha-order, two sections",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "698c237f_d08354cf",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T00:39:41Z",
+      "side": 1,
+      "message": "optional nit: unnamed namespace",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 6
+      },
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2faad8ab_c9f8c724",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T00:39:41Z",
+      "side": 1,
+      "message": "nit: Please add function documentation for non-trivial functions",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cf1cf113_67090047",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T00:39:41Z",
+      "side": 1,
+      "message": "nit: declare as close as possible to first use (here and throughout)",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dd6e3f38_c275b7cf",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T00:39:41Z",
+      "side": 1,
+      "message": "nit: constants for this and \"boot\" below?",
+      "range": {
+        "startLine": 87,
+        "startChar": 32,
+        "endLine": 87,
+        "endChar": 38
+      },
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "520aa9ff_042a0cb5",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T00:39:41Z",
+      "side": 1,
+      "message": "nit: use scoper and early exit instead of |ret|?",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
