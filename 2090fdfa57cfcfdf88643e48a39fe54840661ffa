@@ -189,6 +189,24 @@
     },
     {
       "key": {
+        "uuid": "f4dd182b_ec217677",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T17:30:53Z",
+      "side": 1,
+      "message": "I disagree. I noticed this because I had to go searching for type info while reading the code. At the very least, please initialize all declarations but it\u0027s pretty clear in https://google.github.io/styleguide/cppguide.html#Local_Variables",
+      "parentUuid": "14c499ca_39ac4ecb",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dd6e3f38_c275b7cf",
         "filename": "tools/avbctl/avbctl.cc",
         "patchSetId": 7
@@ -236,6 +254,30 @@
     },
     {
       "key": {
+        "uuid": "b28e1a3f_40dbc8ee",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T17:30:53Z",
+      "side": 1,
+      "message": "Fair enough.",
+      "parentUuid": "1e1b3942_c6b133d1",
+      "range": {
+        "startLine": 87,
+        "startChar": 32,
+        "endLine": 87,
+        "endChar": 38
+      },
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "520aa9ff_042a0cb5",
         "filename": "tools/avbctl/avbctl.cc",
         "patchSetId": 7
@@ -265,6 +307,24 @@
       "side": 1,
       "message": "I would prefer not to - it would be a lot of extra boilerplate.",
       "parentUuid": "520aa9ff_042a0cb5",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5505cbc2_0f47afe3",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T17:30:53Z",
+      "side": 1,
+      "message": "ack",
+      "parentUuid": "157067cb_bad6c2df",
       "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
