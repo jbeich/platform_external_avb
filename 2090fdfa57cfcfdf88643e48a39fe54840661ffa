@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "8f352397_83acf267",
+        "filename": "libavb_user/avb_ops_user.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-31T14:24:02Z",
+      "side": 1,
+      "message": "Ah, yeah, it\u0027s a \"related header\" as per https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes - fixing.",
+      "parentUuid": "37039718_6081fffa",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "71edb40e_ab5d59ac",
         "filename": "tools/avbctl/avbctl.cc",
         "patchSetId": 7
@@ -30,6 +48,24 @@
       "writtenOn": "2017-03-31T00:39:41Z",
       "side": 1,
       "message": "nit: alpha-order, two sections",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2026dc3b_1db81d3c",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-31T14:24:02Z",
+      "side": 1,
+      "message": "OK, will follow https://google.github.io/styleguide/cppguide.html#Names_and_Order_of_Includes",
+      "parentUuid": "71edb40e_ab5d59ac",
       "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -59,6 +95,30 @@
     },
     {
       "key": {
+        "uuid": "b58ae4a4_f4d6d414",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-31T14:24:02Z",
+      "side": 1,
+      "message": "OK, I\u0027ll use an anonymous namespace instead.",
+      "parentUuid": "698c237f_d08354cf",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 40,
+        "endChar": 6
+      },
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2faad8ab_c9f8c724",
         "filename": "tools/avbctl/avbctl.cc",
         "patchSetId": 7
@@ -76,6 +136,24 @@
     },
     {
       "key": {
+        "uuid": "cc1ebc22_74227699",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-31T14:24:02Z",
+      "side": 1,
+      "message": "OK.",
+      "parentUuid": "2faad8ab_c9f8c724",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cf1cf113_67090047",
         "filename": "tools/avbctl/avbctl.cc",
         "patchSetId": 7
@@ -87,6 +165,24 @@
       "writtenOn": "2017-03-31T00:39:41Z",
       "side": 1,
       "message": "nit: declare as close as possible to first use (here and throughout)",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "14c499ca_39ac4ecb",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-31T14:24:02Z",
+      "side": 1,
+      "message": "I actually find this easier to read especially since they\u0027re getting set multiple times.",
+      "parentUuid": "cf1cf113_67090047",
       "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -116,6 +212,30 @@
     },
     {
       "key": {
+        "uuid": "1e1b3942_c6b133d1",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-31T14:24:02Z",
+      "side": 1,
+      "message": "Each is only used once so I think this would be overkill.",
+      "parentUuid": "dd6e3f38_c275b7cf",
+      "range": {
+        "startLine": 87,
+        "startChar": 32,
+        "endLine": 87,
+        "endChar": 38
+      },
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "520aa9ff_042a0cb5",
         "filename": "tools/avbctl/avbctl.cc",
         "patchSetId": 7
@@ -127,6 +247,24 @@
       "writtenOn": "2017-03-31T00:39:41Z",
       "side": 1,
       "message": "nit: use scoper and early exit instead of |ret|?",
+      "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "157067cb_bad6c2df",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 7
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-03-31T14:24:02Z",
+      "side": 1,
+      "message": "I would prefer not to - it would be a lot of extra boilerplate.",
+      "parentUuid": "520aa9ff_042a0cb5",
       "revId": "2090fdfa57cfcfdf88643e48a39fe54840661ffa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
