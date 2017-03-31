@@ -2,6 +2,52 @@
   "comments": [
     {
       "key": {
+        "uuid": "2c8bdf28_41498168",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T23:10:16Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 314,
+        "startChar": 22,
+        "endLine": 314,
+        "endChar": 30
+      },
+      "revId": "e38b44e567d075296c3cda9b1a706b37150d3738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "668c3fe7_74ea11df",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-03-31T23:10:16Z",
+      "side": 1,
+      "message": "Using -text seems brittle. Maybe use -modulus, assume the exponent, and len(modulus)*8 for the key size?",
+      "range": {
+        "startLine": 342,
+        "startChar": 51,
+        "endLine": 342,
+        "endChar": 56
+      },
+      "revId": "e38b44e567d075296c3cda9b1a706b37150d3738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc0df4a_804b2321",
         "filename": "avbtool",
         "patchSetId": 2
