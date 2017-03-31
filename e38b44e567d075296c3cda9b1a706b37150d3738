@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bc0df4a_804b2321",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1021676
+      },
+      "writtenOn": "2017-03-31T22:02:49Z",
+      "side": 1,
+      "message": "you could use line.lower() \u003d\u003d \u0027modulus:\u0027 instead of the or",
+      "range": {
+        "startLine": 348,
+        "startChar": 15,
+        "endLine": 348,
+        "endChar": 16
+      },
+      "revId": "e38b44e567d075296c3cda9b1a706b37150d3738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
