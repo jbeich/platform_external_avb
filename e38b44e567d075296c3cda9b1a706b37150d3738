@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "2233e777_e566307b",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-01T00:47:36Z",
+      "side": 1,
+      "message": "I thought about that... but figured there\u0027s enough stuff out there doing the same that this won\u0027t be a big deal. Then again, maybe you\u0027re right, -modulus is better. I\u0027ll think about it over the weekend and we can land this thing first thing Monday - thanks!",
+      "parentUuid": "668c3fe7_74ea11df",
+      "range": {
+        "startLine": 342,
+        "startChar": 51,
+        "endLine": 342,
+        "endChar": 56
+      },
+      "revId": "e38b44e567d075296c3cda9b1a706b37150d3738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc0df4a_804b2321",
         "filename": "avbtool",
         "patchSetId": 2
