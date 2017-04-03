@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "98c3aef4_3abae0cd",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-03T15:59:44Z",
+      "side": 1,
+      "message": "Nice catch, thanks.",
+      "parentUuid": "f6629a0e_1d8e592b",
+      "range": {
+        "startLine": 345,
+        "startChar": 6,
+        "endLine": 345,
+        "endChar": 8
+      },
+      "revId": "dc83d1d2a68938360f8e7ff40798f33cd152c850",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "07ef385e_d9029ed8",
         "filename": "avbtool",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2017-04-03T15:55:44Z",
       "side": 1,
       "message": "this is guaranteed by line 354",
+      "range": {
+        "startLine": 370,
+        "startChar": 21,
+        "endLine": 370,
+        "endChar": 26
+      },
+      "revId": "dc83d1d2a68938360f8e7ff40798f33cd152c850",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "acef37ab_3f0224e8",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-03T15:59:44Z",
+      "side": 1,
+      "message": "Well, yeah, right now it is. But if we were to upgrade RSAPublicKey so it supports parsing exponents (which we want to, eventually) we\u0027d still need to bail out here because the on-disk format and C code in libavb/ assumes 65537... so we\u0027d have to upgrade that as well. So I like to keep the check here to remind me to upgrade that code as well.",
+      "parentUuid": "07ef385e_d9029ed8",
       "range": {
         "startLine": 370,
         "startChar": 21,
