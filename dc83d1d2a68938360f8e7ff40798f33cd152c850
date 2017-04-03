@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f6629a0e_1d8e592b",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 345,
+      "author": {
+        "id": 1021676
+      },
+      "writtenOn": "2017-04-03T15:55:44Z",
+      "side": 1,
+      "message": "reduce indent by 2 here",
+      "range": {
+        "startLine": 345,
+        "startChar": 6,
+        "endLine": 345,
+        "endChar": 8
+      },
+      "revId": "dc83d1d2a68938360f8e7ff40798f33cd152c850",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "07ef385e_d9029ed8",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 370,
+      "author": {
+        "id": 1021676
+      },
+      "writtenOn": "2017-04-03T15:55:44Z",
+      "side": 1,
+      "message": "this is guaranteed by line 354",
+      "range": {
+        "startLine": 370,
+        "startChar": 21,
+        "endLine": 370,
+        "endChar": 26
+      },
+      "revId": "dc83d1d2a68938360f8e7ff40798f33cd152c850",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
