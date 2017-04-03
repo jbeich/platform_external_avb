@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5f4fa202_cf7f0d0c",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 314,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-03T15:51:43Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2c8bdf28_41498168",
+      "range": {
+        "startLine": 314,
+        "startChar": 22,
+        "endLine": 314,
+        "endChar": 30
+      },
+      "revId": "e38b44e567d075296c3cda9b1a706b37150d3738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "668c3fe7_74ea11df",
         "filename": "avbtool",
         "patchSetId": 2
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "02d379ba_c9f6be5d",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 342,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-03T15:51:43Z",
+      "side": 1,
+      "message": "OK, did this. WDYT?",
+      "parentUuid": "2233e777_e566307b",
+      "range": {
+        "startLine": 342,
+        "startChar": 51,
+        "endLine": 342,
+        "endChar": 56
+      },
+      "revId": "e38b44e567d075296c3cda9b1a706b37150d3738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0bc0df4a_804b2321",
         "filename": "avbtool",
         "patchSetId": 2
@@ -83,6 +131,30 @@
       "writtenOn": "2017-03-31T22:02:49Z",
       "side": 1,
       "message": "you could use line.lower() \u003d\u003d \u0027modulus:\u0027 instead of the or",
+      "range": {
+        "startLine": 348,
+        "startChar": 15,
+        "endLine": 348,
+        "endChar": 16
+      },
+      "revId": "e38b44e567d075296c3cda9b1a706b37150d3738",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "669cdf71_f58def75",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 348,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-03T15:51:43Z",
+      "side": 1,
+      "message": "Would make sense, yeah, but this line is now gone :-)",
+      "parentUuid": "0bc0df4a_804b2321",
       "range": {
         "startLine": 348,
         "startChar": 15,
