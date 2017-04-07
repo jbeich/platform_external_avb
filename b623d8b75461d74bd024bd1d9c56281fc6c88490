@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dbb97243_ba19025f",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-04-07T18:13:58Z",
+      "side": 1,
+      "message": "An",
+      "revId": "b623d8b75461d74bd024bd1d9c56281fc6c88490",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "910d3a30_ec170eaf",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 491,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-04-07T18:13:58Z",
+      "side": 1,
+      "message": "Log something in this case? User may be expecting a signed image and assume everything is fine.",
+      "revId": "b623d8b75461d74bd024bd1d9c56281fc6c88490",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
