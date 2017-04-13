@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cd74e03c_43d911e4",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-04-13T03:38:45Z",
+      "side": 1,
+      "message": "It seems new devices will have slot\u003d\"a\" instead of slot_suffix\u003d\"_a\".\n\nSee: https://android-review.googlesource.com/#/c/356349/\n\nor\n\nhttps://android-review.googlesource.com/#/c/365439/4/fs_mgr/fs_mgr_slotselect.cpp@28",
+      "range": {
+        "startLine": 123,
+        "startChar": 2,
+        "endLine": 123,
+        "endChar": 80
+      },
+      "revId": "35fac3eece3fc03d49312ef400d0dd58b39aa68d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
