@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "717f74ed_7ed88b7b",
+        "filename": "examples/uefi/main.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1077068
+      },
+      "writtenOn": "2017-04-13T22:26:39Z",
+      "side": 1,
+      "message": "I think it is \"slot\u003da\" and/or \"slot_suffix\u003d_a\". I also think you can pass both while stuff gets updated to the new style (if you want to use this with an N userspace).",
+      "range": {
+        "startLine": 88,
+        "startChar": 52,
+        "endLine": 88,
+        "endChar": 63
+      },
+      "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
