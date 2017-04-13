@@ -81,11 +81,12 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle,
           "\n",
           NULL);
       /* Pass 'skip_initramfs' since we're not booting into recovery
-       * mode. Also pass the selected slot in androidboot.slot_suffix.
+       * mode. Also pass the selected slot in androidboot.slot_suffix
+       * and remember to not include the leading underscore.
        */
       additional_cmdline = avb_strdupv("skip_initramfs ",
                                        "androidboot.slot_suffix=",
-                                       slot_data->ab_suffix,
+                                       slot_data->ab_suffix + 1,
                                        NULL);
       if (additional_cmdline == NULL) {
         avb_fatal("Error allocating additional_cmdline.\n");

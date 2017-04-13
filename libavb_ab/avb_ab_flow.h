@@ -191,7 +191,7 @@ const char* avb_ab_flow_result_to_string(AvbABFlowResult result);
  *
  * Note that androidboot.slot_suffix is not set in the |cmdline| field
  * in |AvbSlotVerifyData| - you will have to pass this command-line
- * option yourself.
+ * option yourself (remember to _not_ include the leading underscore).
  *
  * If a slot was selected and it verified then AVB_AB_FLOW_RESULT_OK
  * is returned.
