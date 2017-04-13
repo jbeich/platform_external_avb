@@ -22,6 +22,30 @@
       "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fd3aa672_c2a1dcf3",
+        "filename": "examples/uefi/main.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1045980
+      },
+      "writtenOn": "2017-04-13T22:53:33Z",
+      "side": 1,
+      "message": "Yes. Things that ask for suffix always include the underscore. Things that ask for the slot do not. We\u0027re transitioning to just having slot, and deprecating the old one, but that\u0027s in progress.",
+      "parentUuid": "717f74ed_7ed88b7b",
+      "range": {
+        "startLine": 88,
+        "startChar": 52,
+        "endLine": 88,
+        "endChar": 63
+      },
+      "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
