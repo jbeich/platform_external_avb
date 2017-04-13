@@ -22,6 +22,30 @@
       "revId": "35fac3eece3fc03d49312ef400d0dd58b39aa68d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e2edc4fe_7ff9ddac",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-13T10:52:09Z",
+      "side": 1,
+      "message": "OK, this is news to me. +enh and +flupo for some questions.\n\nSo, basically, partitions are still named \u0027boot_a\u0027, \u0027boot_b\u0027 but androidboot.slot_suffix will be either \u0027a\u0027 or \u0027b\u0027, not \u0027_a\u0027 or \u0027_b\u0027? Any word on what the Boot Control getSuffix() will return? \u0027_a\u0027 or \u0027a\u0027?\n\nIf the Boot Control getSuffix() will still return \u0027_a\u0027 (instead of \u0027a\u0027) I guess we\u0027ll just switch back to using that instead of relying on androidboot.slot_suffix (sorry Sen).\n\nFor the record, we should also point out everywhere in libavb (e.g. avb_slot_verify()) where we take a slot_suffix that we expect the full suffix, _including_ the underscore. We\u0027ll also need to fix libavb_ab so it conforms to this stuff. I\u0027ll prepare a CLs for this.\n\nBtw, would you happen to know _why_ are we doing such a breaking change? What\u0027s the gain? It\u0027s a bit disruptive but I guess it\u0027s too late to complain...",
+      "parentUuid": "cd74e03c_43d911e4",
+      "range": {
+        "startLine": 123,
+        "startChar": 2,
+        "endLine": 123,
+        "endChar": 80
+      },
+      "revId": "35fac3eece3fc03d49312ef400d0dd58b39aa68d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
