@@ -70,6 +70,30 @@
       "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f79367e5_82df9e98",
+        "filename": "examples/uefi/main.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-04-14T05:50:57Z",
+      "side": 1,
+      "message": "Yup, it should be \"slot\u003da\" and/or \"slot_suffix\u003d_a\".\n\nSorry, maybe I provided the incorrect reference CL. It has several changes during that transition.\n\nHere is the latest change from flugo:\nhttps://android-review.googlesource.com/#/c/356517/\n\nHere is the latest from me:\nhttps://android-review.googlesource.com/#/c/365439/\n\nBtw, I also felt that switching from \"slot_suffix\" to \"slot\" seems not a big deal. Any benefit from the switch?",
+      "parentUuid": "0f91fd70_2ce062c3",
+      "range": {
+        "startLine": 88,
+        "startChar": 52,
+        "endLine": 88,
+        "endChar": 63
+      },
+      "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
