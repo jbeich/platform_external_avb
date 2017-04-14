@@ -94,6 +94,30 @@
       "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29fe5094_c83ac9b1",
+        "filename": "examples/uefi/main.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-14T12:06:24Z",
+      "side": 1,
+      "message": "\u003e Yup, it should be \"slot\u003da\" and/or \"slot_suffix\u003d_a\".\n\u003e Sorry, maybe I provided the incorrect reference CL. It has several changes during that transition.\n\nOK, thanks for clearing that up - so there\u0027s no breaking change here. I\u0027ll probably still check both in avbctl (including manually prepending the underscore if missing).",
+      "parentUuid": "f79367e5_82df9e98",
+      "range": {
+        "startLine": 88,
+        "startChar": 52,
+        "endLine": 88,
+        "endChar": 63
+      },
+      "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
