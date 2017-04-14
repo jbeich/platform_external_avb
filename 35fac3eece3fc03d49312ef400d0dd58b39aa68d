@@ -46,6 +46,30 @@
       "revId": "35fac3eece3fc03d49312ef400d0dd58b39aa68d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "10f2a923_c7ca37a8",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-04-14T05:14:12Z",
+      "side": 1,
+      "message": "re: but androidboot.slot_suffix will be either \u0027a\u0027 or \u0027b\u0027, not \u0027_a\u0027 or \u0027_b\u0027?\n --\u003e Nope. From flupo\u0027s change, it\u0027s:\n     androidboot.slot will be \u0027a\u0027 or \u0027b\u0027 OR\n     androidboot.slot_suffix will be \u0027_a\u0027 or \u0027_b\u0027.\n\nSo this is probably not a breaking change.",
+      "parentUuid": "e2edc4fe_7ff9ddac",
+      "range": {
+        "startLine": 123,
+        "startChar": 2,
+        "endLine": 123,
+        "endChar": 80
+      },
+      "revId": "35fac3eece3fc03d49312ef400d0dd58b39aa68d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
