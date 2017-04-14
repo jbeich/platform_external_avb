@@ -46,6 +46,30 @@
       "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0f91fd70_2ce062c3",
+        "filename": "examples/uefi/main.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-14T04:59:16Z",
+      "side": 1,
+      "message": "Actually https://android-review.googlesource.com/#/c/356349/ says that androidboot.slot_suffix will be _changed_ so it\u0027s set to \u0027a\u0027 instead of \u0027_a\u0027 ... First I\u0027ve heard of androidboot.slot is this comment.\n\nSo... does all this mean that you\u0027re going to mandate that the bootloader should set androidboot.slot instead of androidboot.slot_suffix? Or should it set both?\n\nEither way, looks like userspace will now have to play games like this just to be on the safe side:\n\n  std::string ab_suffix \u003d android::base::GetProperty(\"ro.boot.slot_suffix\", \"\");\n  if (ab_suffix \u003d\u003d \"\") {\n    ab_suffix \u003d android::base::GetProperty(\"ro.boot.slot\", \"\");\n  }\n  if (ab_suffix.size() \u003e 0 \u0026\u0026 ab_suffix[0] !\u003d \u0027_\u0027) {\n    ab_suffix \u003d std::string(\"_\") + ab_suffix;\n  }\n\nBtw, I\u0027m also not sure \u0027deprecating\u0027 is the right word for what\u0027s going on here... changing the semantics of androidboot.slot_suffix is an outright _breaking change_ meaning we\u0027ll have to prepare userspace in advance of updating the bootloader to expect both formats. Pretty risky if you ask me...\n\nFWIW, I don\u0027t have a horse in this race (this UEFI bootloader is a toy and the only other place I use slot_suffix is in avbctl and that\u0027s easy to update with the hack above) so I\u0027m happy to change it however you want.... thing is... it\u0027s just not clear to me what\u0027s going on and I have a bad feeling that bootloader vendors are going to be even more confused and we\u0027ll end up with some setting androidboot.slot, some setting androidboot.slot_suffix and another 50% chance of whether the value set for either has a leading underscore.\n\nThanks,\nDavid",
+      "parentUuid": "fd3aa672_c2a1dcf3",
+      "range": {
+        "startLine": 88,
+        "startChar": 52,
+        "endLine": 88,
+        "endChar": 63
+      },
+      "revId": "279764a8f0f6e2196914aa76b27570c60c001b04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
