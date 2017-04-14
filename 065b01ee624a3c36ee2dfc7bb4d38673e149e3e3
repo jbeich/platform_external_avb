@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "246cd63d_1530dd8b",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-04-14T05:14:12Z",
+      "side": 1,
+      "message": "slot_suffix always has the _\n\nOnly ro.boot.slot has \u0027a\u0027 or \u0027b\u0027.",
+      "range": {
+        "startLine": 126,
+        "startChar": 62,
+        "endLine": 126,
+        "endChar": 73
+      },
+      "revId": "065b01ee624a3c36ee2dfc7bb4d38673e149e3e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
