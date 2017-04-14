@@ -22,6 +22,30 @@
       "revId": "065b01ee624a3c36ee2dfc7bb4d38673e149e3e3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "367cf4fa_17f63f67",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-14T15:18:51Z",
+      "side": 1,
+      "message": "I\u0027ll check both androidboot.slot and androidboot.slot_suffix.",
+      "parentUuid": "246cd63d_1530dd8b",
+      "range": {
+        "startLine": 126,
+        "startChar": 62,
+        "endLine": 126,
+        "endChar": 73
+      },
+      "revId": "065b01ee624a3c36ee2dfc7bb4d38673e149e3e3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
