@@ -70,6 +70,30 @@
       "revId": "35fac3eece3fc03d49312ef400d0dd58b39aa68d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "090aff53_bed60025",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-14T15:18:51Z",
+      "side": 1,
+      "message": "OK, will update the CL for this.",
+      "parentUuid": "10f2a923_c7ca37a8",
+      "range": {
+        "startLine": 123,
+        "startChar": 2,
+        "endLine": 123,
+        "endChar": 80
+      },
+      "revId": "35fac3eece3fc03d49312ef400d0dd58b39aa68d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
