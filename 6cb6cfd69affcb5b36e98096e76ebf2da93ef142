@@ -22,6 +22,30 @@
       "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "158b44f0_cd7e62b5",
+        "filename": "libavb_user/avb_user_verity.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-16T22:34:39Z",
+      "side": 1,
+      "message": "\u003e Just for discussion, should we also do the same in fs_mgr?\n\nBy \"do the same\" do you mean that we shouldn\u0027t make fs_mgr do any validation, verification and byteswapping. If so, I think the answer is \"no\" and here\u0027s why: fs_mgr indeed needs to verify the vbmeta blobs against the value androidboot.vbmeta.digest simply because it\u0027s using the information to set up filesystems.\n\nFor setting/getting HASHTREE_DISABLED, the same requirements do not apply and we\u0027re also only interested in the top-level vbmeta header, not all the vbmeta structs.\n\nOr maybe you meant something else?",
+      "parentUuid": "95b14592_ff9d786e",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
