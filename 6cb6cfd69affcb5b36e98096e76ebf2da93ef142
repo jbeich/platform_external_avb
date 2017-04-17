@@ -118,6 +118,30 @@
       "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5982a540_a0e54b85",
+        "filename": "libavb_user/avb_user_verity.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-17T17:12:01Z",
+      "side": 1,
+      "message": "The only reason it\u0027s done this way here (instead of just getting the top-level vbmeta struct via avb_slot_verify()) is because AvbSlotVerifyData (which is returned by avb_slot_verify() doesn\u0027t return the offset of where the top-level vbmeta partition is stored (this is needed to write the vbmeta top-level header after modifying it).\n\nSince fs_mgr doesn\u0027t have a need to write anything, you can just use avb_slot_verify() and you are guaranteed what AvbSlotVerifyData.vbmeta_images[0] is the top-level vbmeta header. So this is where you look in |flags| to determine if HASHTREE_DISABLED is set.\n\nI\u0027m still not sure what you are proposing to change in fs_mgr? (maybe continue the conversation in a CL for fs_mgr with what you\u0027re proposing to change.)",
+      "parentUuid": "bebe3a63_f072d169",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
