@@ -70,6 +70,30 @@
       "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "83a78623_53884abc",
+        "filename": "libavb_user/avb_user_verity.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-04-17T15:48:04Z",
+      "side": 1,
+      "message": "I don\u0027t think there\u0027s anything inherently wrong with that... but I\u0027m curious why you think it\u0027s needed? [1]\n\n[1] : In the LOCKED case we\u0027re sure to verify (otherwise we wouldn\u0027t get past the bootloader), in the UNLOCKED case we\u0027ll accept verification errors anyway",
+      "parentUuid": "d4d237da_031210d6",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
