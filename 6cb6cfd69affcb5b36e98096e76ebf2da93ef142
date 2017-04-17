@@ -94,6 +94,30 @@
       "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bebe3a63_f072d169",
+        "filename": "libavb_user/avb_user_verity.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-04-17T16:32:58Z",
+      "side": 1,
+      "message": "Oh, it\u0027s just because previously I thought the only libavb API I could use in fs_mgr is avb_slot_verify(). And shouldn\u0027t reinvent the wheel to write something like load_top_level_vbmeta_header().",
+      "parentUuid": "83a78623_53884abc",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
