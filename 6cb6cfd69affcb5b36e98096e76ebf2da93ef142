@@ -46,6 +46,30 @@
       "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d4d237da_031210d6",
+        "filename": "libavb_user/avb_user_verity.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-04-17T00:14:11Z",
+      "side": 1,
+      "message": "Sorry for not being clear. \n\nFor \"do the same\", I meant No validation, no verification *only when* the device is unlocked and fs_mgr is trying to get HASHTREE_DISABLED. In this case, fs_mgr is only interested in the top-level vbmeta_header as well.\n\nFor normal case (mount filesystem with dm-verity), fs_mgr surly needs to do the verification.\n\nI will change fs_mgr to ignore verification for getting HASHTREE_DISABLED. LMK if any further concern.",
+      "parentUuid": "158b44f0_cd7e62b5",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
