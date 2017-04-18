@@ -166,6 +166,30 @@
       "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "380298d4_174ca618",
+        "filename": "libavb_user/avb_user_verity.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-04-18T03:03:06Z",
+      "side": 1,
+      "message": "Please ignore the above comment for b/36029318\n\nYup, you\u0027re right. In any case I\u0027m guaranteed to get AvbSlotVerifyData.vbmeta_images[0] to determine HASHTREE_DISABLED.\n\nMy proposal change for fs_mgr is to skip verifying AvbSlotVerifyData.vbmeta_images[] against androidboot.vbmeta.digest when the device is unlocked (sorry, I\u0027m a bit confused about my previous thoughts).\n\nIn Treble VTS, the AOSP system.img will be flashed onto devices having different BOARD_SYSTEMIMAGE_PARTITION_SIZE. When key delegation is used for /system, androidboot.vbmeta.digest will be missing because result_should_continue() is false (INVALID_METADATA).\nhttps://android.googlesource.com/platform/external/avb/+/master/libavb/avb_slot_verify.c#977\n\nLet\u0027s move the further discussion the the up-coming CL in fs_mgr.",
+      "parentUuid": "961208b4_8c275329",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
