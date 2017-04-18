@@ -142,6 +142,30 @@
       "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "961208b4_8c275329",
+        "filename": "libavb_user/avb_user_verity.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-04-18T01:43:03Z",
+      "side": 1,
+      "message": "OK, let\u0027s discuss it separately in b/36029318.",
+      "parentUuid": "5982a540_a0e54b85",
+      "range": {
+        "startLine": 33,
+        "startChar": 36,
+        "endLine": 34,
+        "endChar": 29
+      },
+      "revId": "6cb6cfd69affcb5b36e98096e76ebf2da93ef142",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
