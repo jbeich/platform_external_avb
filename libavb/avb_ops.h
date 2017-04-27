@@ -205,6 +205,16 @@ struct AvbOps {
                                                const char* partition,
                                                char* guid_buf,
                                                size_t guid_buf_size);
+
+  /* Gets the size of a partition with the name in |partition|
+   * (NUL-terminated UTF-8 string). Returns the value in
+   * |out_size_num_bytes|.
+   *
+   * Returns AVB_IO_RESULT_OK on success, otherwise an error code.
+   */
+  AvbIOResult (*get_size_of_partition)(AvbOps* ops,
+                                       const char* partition,
+                                       uint64_t* out_size_num_bytes);
 };
 
 #ifdef __cplusplus
