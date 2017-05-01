@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4f611b61_2d16f386",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-01T16:30:50Z",
+      "side": 1,
+      "message": "Nope... just a bit conversational. I\u0027ll add an extra period so it\u0027s more clear!",
+      "parentUuid": "17e37056_9de23016",
+      "range": {
+        "startLine": 16,
+        "startChar": 6,
+        "endLine": 16,
+        "endChar": 9
+      },
+      "revId": "e14f8dc7bb21c547ab3c0959996b966b07573059",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "31ffd712_cfc06c59",
         "filename": "/COMMIT_MSG",
         "patchSetId": 3
@@ -36,6 +60,30 @@
       "writtenOn": "2017-05-01T16:17:26Z",
       "side": 1,
       "message": "and?",
+      "range": {
+        "startLine": 25,
+        "startChar": 40,
+        "endLine": 25,
+        "endChar": 43
+      },
+      "revId": "e14f8dc7bb21c547ab3c0959996b966b07573059",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f12c2383_f9b327a8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-01T16:30:50Z",
+      "side": 1,
+      "message": "No, I meant to say \"Because XYZ, then ABC\" ... I\u0027ll rephrase it and add a comma.",
+      "parentUuid": "31ffd712_cfc06c59",
       "range": {
         "startLine": 25,
         "startChar": 40,
