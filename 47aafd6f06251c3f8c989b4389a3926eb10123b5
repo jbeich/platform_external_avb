@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "56a54d3f_71605f1a",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "Good catch, I\u0027ll replace it by \"was signed by `key1` (using `key1_pub` stored\"",
+      "parentUuid": "b74f2587_1c3af2dc",
+      "range": {
+        "startLine": 75,
+        "startChar": 26,
+        "endLine": 75,
+        "endChar": 50
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c28f9f18_cef75c4a",
         "filename": "README.md",
         "patchSetId": 15
@@ -36,6 +60,30 @@
       "writtenOn": "2017-05-03T13:49:24Z",
       "side": 1,
       "message": "implementation",
+      "range": {
+        "startLine": 160,
+        "startChar": 31,
+        "endLine": 160,
+        "endChar": 44
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e60bed9d_2f4448bc",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c28f9f18_cef75c4a",
       "range": {
         "startLine": 160,
         "startChar": 31,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "2e8ed53b_bb1dd853",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 185,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ed228eb3_e1882529",
+      "range": {
+        "startLine": 185,
+        "startChar": 9,
+        "endLine": 185,
+        "endChar": 25
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0ec7751f_b40f0a1a",
         "filename": "README.md",
         "patchSetId": 15
@@ -82,6 +154,30 @@
       "writtenOn": "2017-05-03T13:49:24Z",
       "side": 1,
       "message": "Thanks for adding this!",
+      "range": {
+        "startLine": 450,
+        "startChar": 14,
+        "endLine": 450,
+        "endChar": 49
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a6dc33c3_449885f9",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 450,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "Sure, np!",
+      "parentUuid": "0ec7751f_b40f0a1a",
       "range": {
         "startLine": 450,
         "startChar": 14,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "a8d726f3_18bb67ca",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 478,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1d1078a9_144a89c4",
+      "range": {
+        "startLine": 478,
+        "startChar": 26,
+        "endLine": 478,
+        "endChar": 35
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fabaa8e9_29efbea3",
         "filename": "README.md",
         "patchSetId": 15
@@ -128,6 +248,30 @@
       "writtenOn": "2017-05-03T13:49:24Z",
       "side": 1,
       "message": "removing tab or space.",
+      "range": {
+        "startLine": 559,
+        "startChar": 0,
+        "endLine": 559,
+        "endChar": 4
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6db68e40_1ab0d251",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 559,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "Going to use ```c++ for this to avoid the indenting ... plus that should enable syntax highlighting.",
+      "parentUuid": "fabaa8e9_29efbea3",
       "range": {
         "startLine": 559,
         "startChar": 0,
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "aabed8d1_9dcd6a32",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 564,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "same",
+      "parentUuid": "aa433bb0_734c4300",
+      "range": {
+        "startLine": 564,
+        "startChar": 0,
+        "endLine": 564,
+        "endChar": 4
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8e696e9d_8d7d39e8",
         "filename": "README.md",
         "patchSetId": 15
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "4c07e569_c4a44718",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 653,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8e696e9d_8d7d39e8",
+      "range": {
+        "startLine": 653,
+        "startChar": 36,
+        "endLine": 653,
+        "endChar": 46
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8df8c39a_55a9c132",
         "filename": "README.md",
         "patchSetId": 15
@@ -197,6 +389,30 @@
       "writtenOn": "2017-05-03T13:49:24Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 654,
+        "startChar": 37,
+        "endLine": 654,
+        "endChar": 47
+      },
+      "revId": "47aafd6f06251c3f8c989b4389a3926eb10123b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a1c30601_73004766",
+        "filename": "README.md",
+        "patchSetId": 15
+      },
+      "lineNbr": 654,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-04T15:05:27Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8df8c39a_55a9c132",
       "range": {
         "startLine": 654,
         "startChar": 37,
