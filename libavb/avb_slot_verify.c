@@ -949,13 +949,18 @@ static int cmdline_append_hex(AvbSlotVerifyData* slot_data,
 AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                     const char* const* requested_partitions,
                                     const char* ab_suffix,
-                                    bool allow_verification_error,
+                                    AvbSlotVerifyFlags flags,
+                                    AvbHashtreeErrorMode hashtree_error_mode,
                                     AvbSlotVerifyData** out_data) {
   AvbSlotVerifyResult ret;
   AvbSlotVerifyData* slot_data = NULL;
   AvbAlgorithmType algorithm_type = AVB_ALGORITHM_TYPE_NONE;
   AvbIOResult io_ret;
   bool using_boot_for_vbmeta = false;
+  AvbVBMetaImageHeader toplevel_vbmeta;
+  const char* verity_mode;
+  bool allow_verification_error =
+      (flags & AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR);
 
   /* Fail early if we're missing the AvbOps needed for slot verification.
    *
@@ -1012,6 +1017,11 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                0);
     using_boot_for_vbmeta = true;
   }
+
+  /* Byteswap top-level vbmeta header since we'll need it below. */
+  avb_vbmeta_image_header_to_host_byte_order(
+      (const AvbVBMetaImageHeader*)slot_data->vbmeta_images[0].vbmeta_data,
+      &toplevel_vbmeta);
 
   /* If things check out, mangle the kernel command-line as needed. */
   if (result_should_continue(ret)) {
@@ -1128,6 +1138,33 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
       case _AVB_ALGORITHM_NUM_TYPES:
         avb_assert_not_reached();
         break;
+    }
+
+    /* Set androidboot.veritymode and androidboot.vbmeta.invalidate_on_error */
+    if (toplevel_vbmeta.flags & AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED) {
+      verity_mode = "disabled";
+    } else {
+      switch (hashtree_error_mode) {
+        case AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE:
+          if (!cmdline_append_option(
+                  slot_data, "androidboot.vbmeta.invalidate_on_error", "yes")) {
+            ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+            goto fail;
+          }
+          verity_mode = "enforcing";
+          break;
+        case AVB_HASHTREE_ERROR_MODE_RESTART:
+          verity_mode = "enforcing";
+          break;
+        case AVB_HASHTREE_ERROR_MODE_EIO:
+          verity_mode = "eio";
+          break;
+      }
+    }
+    if (!cmdline_append_option(
+            slot_data, "androidboot.veritymode", verity_mode)) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto fail;
     }
 
     if (out_data != NULL) {
