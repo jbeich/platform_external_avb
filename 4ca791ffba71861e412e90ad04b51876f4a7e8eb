@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "34f80376_fafbc8ea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-05-11T10:46:06Z",
+      "side": 1,
+      "message": "mode?",
+      "range": {
+        "startLine": 49,
+        "startChar": 59,
+        "endLine": 49,
+        "endChar": 63
+      },
+      "revId": "4ca791ffba71861e412e90ad04b51876f4a7e8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a5f2e826_5992e811",
+        "filename": "README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-05-11T10:46:06Z",
+      "side": 1,
+      "message": "maybe only allow this when UNLOCKED?",
+      "range": {
+        "startLine": 677,
+        "startChar": 15,
+        "endLine": 677,
+        "endChar": 49
+      },
+      "revId": "4ca791ffba71861e412e90ad04b51876f4a7e8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "da7160ae_fac19377",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-05-11T10:46:06Z",
+      "side": 1,
+      "message": "Just came to think of it.\n\nWhy not let bootloader (BL) invalidate the slot given most A/B selections are done there? (including some related counters below). e.g., previously when I modified init and caused the device won\u0027t boot, the bootloader will switch to another slot after around 10 reboots.\n\nOr maybe libavb can provide a function for BL to do this: libavb-\u003einvalidate_toplevel_vbmeta() -\u003e avb_ops-\u003ewrite_to_partition.\n\nThen in kernel we just need to maintain \u0027dm-verity-target.c\u0027 without need to use \u0027dm-verity-avb.c\u0027.\n\n$ fastboot getvar all\n(bootloader) current-slot:a\n(bootloader) has-slot:boot:yes\n(bootloader) slot-retry-count:b:0\n(bootloader) slot-unbootable:b:yes\n(bootloader) slot-successful:b:no\n(bootloader) slot-retry-count:a:2\n(bootloader) slot-unbootable:a:no\n(bootloader) slot-successful:a:no\n(bootloader) slot-suffixes:_a,_b,",
+      "range": {
+        "startLine": 59,
+        "startChar": 61,
+        "endLine": 60,
+        "endChar": 35
+      },
+      "revId": "4ca791ffba71861e412e90ad04b51876f4a7e8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "985b27c7_308c869a",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-05-11T10:46:06Z",
+      "side": 1,
+      "message": "Oh, I see. Got your point. Please ignore my previous comment about moving the invalidate to bootloader then.",
+      "range": {
+        "startLine": 233,
+        "startChar": 10,
+        "endLine": 233,
+        "endChar": 64
+      },
+      "revId": "4ca791ffba71861e412e90ad04b51876f4a7e8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
