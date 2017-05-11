@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "22667ce3_699881e9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 7
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-11T13:55:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "34f80376_fafbc8ea",
+      "range": {
+        "startLine": 49,
+        "startChar": 59,
+        "endLine": 49,
+        "endChar": 63
+      },
+      "revId": "4ca791ffba71861e412e90ad04b51876f4a7e8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a5f2e826_5992e811",
         "filename": "README.md",
         "patchSetId": 7
@@ -36,6 +60,30 @@
       "writtenOn": "2017-05-11T10:46:06Z",
       "side": 1,
       "message": "maybe only allow this when UNLOCKED?",
+      "range": {
+        "startLine": 677,
+        "startChar": 15,
+        "endLine": 677,
+        "endChar": 49
+      },
+      "revId": "4ca791ffba71861e412e90ad04b51876f4a7e8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c13b228a_8b4cd224",
+        "filename": "README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 677,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-11T13:55:53Z",
+      "side": 1,
+      "message": "Yeah, I was debating this but figured it would be too restrictive. Thinking more about it I\u0027ve changed my mind. I\u0027ll add checks in avb_slot_verify() to error out if this happens.",
+      "parentUuid": "a5f2e826_5992e811",
       "range": {
         "startLine": 677,
         "startChar": 15,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "12b9b25a_578aa261",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-11T13:55:53Z",
+      "side": 1,
+      "message": "Ignored as per below :-)",
+      "parentUuid": "da7160ae_fac19377",
+      "range": {
+        "startLine": 59,
+        "startChar": 61,
+        "endLine": 60,
+        "endChar": 35
+      },
+      "revId": "4ca791ffba71861e412e90ad04b51876f4a7e8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "985b27c7_308c869a",
         "filename": "libavb/avb_slot_verify.h",
         "patchSetId": 7
@@ -82,6 +154,30 @@
       "writtenOn": "2017-05-11T10:46:06Z",
       "side": 1,
       "message": "Oh, I see. Got your point. Please ignore my previous comment about moving the invalidate to bootloader then.",
+      "range": {
+        "startLine": 233,
+        "startChar": 10,
+        "endLine": 233,
+        "endChar": 64
+      },
+      "revId": "4ca791ffba71861e412e90ad04b51876f4a7e8eb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c7fe2bd8_f648ba4a",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-11T13:55:53Z",
+      "side": 1,
+      "message": "Right. We really want the boot loader to do as little as possible (and manage as little state as possible) given it has extreme privilege and runs before the HLOS.",
+      "parentUuid": "985b27c7_308c869a",
       "range": {
         "startLine": 233,
         "startChar": 10,
