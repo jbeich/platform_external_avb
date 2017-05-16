@@ -16,6 +16,24 @@
       "revId": "3344c4e7b34c07fe3188edb494c080aa3ebfcc60",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8205d8f6_ca0dd822",
+        "filename": "Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-16T21:08:20Z",
+      "side": 1,
+      "message": "That\u0027s fine.",
+      "parentUuid": "6f2f6493_600baab6",
+      "revId": "3344c4e7b34c07fe3188edb494c080aa3ebfcc60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
