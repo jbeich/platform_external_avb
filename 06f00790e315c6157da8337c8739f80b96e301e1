@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e1ab2705_78d0aaa8",
+        "filename": "Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-05-16T19:42:14Z",
+      "side": 1,
+      "message": "cc_prebuilt_binary can probably work, but I haven\u0027t tested it myself (and there aren\u0027t any users in the tree yet):\n\n  cc_prebuilt_binary {\n      name: \"avbtool\",\n      srcs: [\"avbtool\"],\n      required: [\"fec\"],\n      device_supported: false,\n  }",
+      "range": {
+        "startLine": 44,
+        "startChar": 0,
+        "endLine": 50,
+        "endChar": 25
+      },
+      "revId": "06f00790e315c6157da8337c8739f80b96e301e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9242fc6b_e2d50193",
+        "filename": "Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2017-05-16T19:42:14Z",
+      "side": 1,
+      "message": "This shouldn\u0027t happen -- we should install bootctrl.avb and set the ro.hardware.bootctrl property properly",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 77
+      },
+      "revId": "06f00790e315c6157da8337c8739f80b96e301e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
