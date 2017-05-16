@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6f2f6493_600baab6",
+        "filename": "Android.bp",
+        "patchSetId": 6
+      },
+      "lineNbr": 204,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-05-16T21:00:08Z",
+      "side": 1,
+      "message": "This means it also gets -DAVB_ENABLE_DEBUG which it didn\u0027t have before.  Is that a problem?",
+      "revId": "3344c4e7b34c07fe3188edb494c080aa3ebfcc60",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
