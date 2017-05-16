@@ -93,6 +93,30 @@
       "revId": "06f00790e315c6157da8337c8739f80b96e301e1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f8ca769_17ce99e8",
+        "filename": "Android.mk",
+        "patchSetId": 3
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-05-16T20:41:45Z",
+      "side": 1,
+      "message": "Can we just remove these symlinks now then?  I can convert the rest of this (already did it) and we can fully move to the Android.bp.",
+      "parentUuid": "378fa6f2_5afb953a",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 77
+      },
+      "revId": "06f00790e315c6157da8337c8739f80b96e301e1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }

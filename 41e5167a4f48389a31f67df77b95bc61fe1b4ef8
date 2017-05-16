@@ -137,6 +137,30 @@
       "revId": "41e5167a4f48389a31f67df77b95bc61fe1b4ef8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "976ae65f_d397e051",
+        "filename": "Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-05-16T20:41:45Z",
+      "side": 1,
+      "message": "Could we drop this in the meantime?  The Android.mk isn\u0027t well-formed so it never gets copied to out there either.",
+      "parentUuid": "64c96d54_5c04d7ac",
+      "range": {
+        "startLine": 191,
+        "startChar": 11,
+        "endLine": 191,
+        "endChar": 35
+      },
+      "revId": "41e5167a4f48389a31f67df77b95bc61fe1b4ef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
