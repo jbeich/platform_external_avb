@@ -161,6 +161,30 @@
       "revId": "41e5167a4f48389a31f67df77b95bc61fe1b4ef8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae146619_b0b1cce9",
+        "filename": "Android.bp",
+        "patchSetId": 5
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-16T20:59:20Z",
+      "side": 1,
+      "message": "Fine to drop this for now since we\u0027re only running it manually at this point.",
+      "parentUuid": "976ae65f_d397e051",
+      "range": {
+        "startLine": 191,
+        "startChar": 11,
+        "endLine": 191,
+        "endChar": 35
+      },
+      "revId": "41e5167a4f48389a31f67df77b95bc61fe1b4ef8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
