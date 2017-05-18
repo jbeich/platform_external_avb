@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68ada0e5_2ed904ea",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2042,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-05-18T06:45:52Z",
+      "side": 1,
+      "message": "nit: maybe _generate_cmdline_descriptors_from_hashtree_descriptor",
+      "range": {
+        "startLine": 2042,
+        "startChar": 6,
+        "endLine": 2042,
+        "endChar": 54
+      },
+      "revId": "73f2afadf9ecc1b08968952606ced50b0e8b6515",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
