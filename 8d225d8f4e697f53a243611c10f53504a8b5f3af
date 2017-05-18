@@ -1,0 +1,9 @@
+Verified+1: Tom Cherry <tomcherry@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+1: David Zeuthen <zeuthen@google.com>
+Code-Review+2: Dan Willemsen <dwillemsen@google.com>
+Submitted-by: Tom Cherry <tomcherry@google.com>
+Submitted-at: Thu, 18 May 2017 20:17:58 +0000
+Reviewed-on: https://android-review.googlesource.com/396703
+Project: platform/external/avb
+Branch: refs/heads/master
