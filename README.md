@@ -463,6 +463,29 @@ specify additional options passed to `avbtool add_hash_footer` for
 `dtbo.img`. Typical options to be used here include `--hash_algorithm`
 and `--salt`.
 
+The variable `BOARD_AVB_VBMETA_VERSION` should be set to
+`minimum libavb version` of system.img:
+
+    $ avbtool info_image --print_minimum_libavb_version --image $OUT/system.img
+    1.0
+
+    BOARD_AVB_VBMETA_VERSION := 1.0
+
+If this is not set, the default value will be `avbtool version`:
+
+    $ avbtool version
+    avbtool 1.2.3
+
+    BOARD_AVB_VBMETA_VERSION defaults to 1.2
+
+BOARD_AVB_VBMETA_VERSION is used to perform compatibility match in
+project Treble. It will be checked against the following two
+system properties on a live device to ensure the device can parse
+vbmeta on the new system image prior to system-only OTA:
+
+* `ro.boot.vbmeta.avb_version`: the libavb version in bootloader
+* `ro.boot.avb_version`: the libavb version in Android OS (init/fs_mgr)
+
 Build system variables (such as `PRODUCT_SUPPORTS_VERITY_FEC`) used
 for previous version of Verified Boot in Android are not used in AVB.
 

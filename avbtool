@@ -1898,12 +1898,13 @@ class Avb(object):
     misc_image.seek(self.AB_MISC_METADATA_OFFSET)
     misc_image.write(ab_data)
 
-  def info_image(self, image_filename, output):
+  def info_image(self, image_filename, output, print_minimum_libavb_version):
     """Implements the 'info_image' command.
 
     Arguments:
       image_filename: Image file to get information from (file object).
       output: Output file to write human-readable information to (file object).
+      print_minimum_libavb_version: only prints the minimum libavb version.
     """
 
     image = ImageHandler(image_filename)
@@ -1911,6 +1912,11 @@ class Avb(object):
     o = output
 
     (footer, header, descriptors, image_size) = self._parse_image(image)
+
+    if print_minimum_libavb_version:
+      o.write('{}.{}\n'.format(header.required_libavb_version_major,
+                               header.required_libavb_version_minor))
+      return
 
     if footer:
       o.write('Footer version:           {}.{}\n'.format(footer.version_major,
@@ -3398,6 +3404,10 @@ class AvbTool(object):
                             help='Write info to file',
                             type=argparse.FileType('wt'),
                             default=sys.stdout)
+    sub_parser.add_argument('--print_minimum_libavb_version',
+                            help=('Only print the minimum required libavb ',
+                                  'version to parse the image'),
+                            action='store_true')
     sub_parser.set_defaults(func=self.info_image)
 
     sub_parser = subparsers.add_parser(
@@ -3587,7 +3597,9 @@ class AvbTool(object):
 
   def info_image(self, args):
     """Implements the 'info_image' sub-command."""
-    self.avb.info_image(args.image.name, args.output)
+    self.avb.info_image(args.image.name,
+                        args.output,
+                        args.print_minimum_libavb_version)
 
   def verify_image(self, args):
     """Implements the 'verify_image' sub-command."""
