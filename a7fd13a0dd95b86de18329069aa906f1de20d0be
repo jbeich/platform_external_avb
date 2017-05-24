@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "19e83fe1_ce143aa0",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-24T15:37:12Z",
+      "side": 1,
+      "message": "But... but... why should I ever set BOARD_AVB_VBMETA_VERSION? Surely the build system can figure this out itself from building system.img and set it?\n\nAlso, if you say it should be set to this... why is the default the current version of avbtool which is likely to be higher than minimum libavb version?\n\nMaybe give a use-case of when someone would want to set it manually?",
+      "revId": "a7fd13a0dd95b86de18329069aa906f1de20d0be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3899dc7a_57bbc9b1",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 479,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-24T15:37:12Z",
+      "side": 1,
+      "message": "I would just say: If not set, the default value will be major and minor version numbers of avbtool as returned by `avbtool version`.",
+      "range": {
+        "startLine": 474,
+        "startChar": 0,
+        "endLine": 479,
+        "endChar": 44
+      },
+      "revId": "a7fd13a0dd95b86de18329069aa906f1de20d0be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
