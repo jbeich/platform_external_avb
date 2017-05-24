@@ -39,6 +39,29 @@
       "revId": "a7fd13a0dd95b86de18329069aa906f1de20d0be",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "548778b0_1e4df98f",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1907,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-24T16:34:22Z",
+      "side": 1,
+      "message": "Nit: capitalize.",
+      "range": {
+        "startLine": 1907,
+        "startChar": 36,
+        "endLine": 1907,
+        "endChar": 37
+      },
+      "revId": "a7fd13a0dd95b86de18329069aa906f1de20d0be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
