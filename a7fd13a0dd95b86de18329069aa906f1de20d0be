@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "0ca46f27_450250de",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-05-25T02:17:18Z",
+      "side": 1,
+      "message": "Oh, the point is *the build system can figure this out itself*. Basically we need to include the minimum libavb version of system.img into a .xml file inside system.img itself. So this becomes a *chicken/egg problem*, unless we can get the minimum libavb version of system.img *before*  system.img generation. \n\ne.g.,\nis it possible to have (we don\u0027t need partition_name or partition_size here, because just need to know the min required version):\n\n  avbtool add_hash_footer signing_args additional_args \\\n     --print_minimum_libavb_version\n\nIt seems feasible to me but I\u0027m not quite sure what\u0027s the better way to do it.\n\nIf it works, we don\u0027t need to add BOARD_AVB_VBMETA_VERSION.\nInstead, we can just pass the result of the above command to the HOST-EXECUTABLE assemble_vintf to include it in the .xml: \n\nhttps://googleplex-android-review.git.corp.google.com/#/c/2286259/1/target/board/Android.mk",
+      "parentUuid": "19e83fe1_ce143aa0",
+      "revId": "a7fd13a0dd95b86de18329069aa906f1de20d0be",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3899dc7a_57bbc9b1",
         "filename": "README.md",
         "patchSetId": 1
