@@ -22,6 +22,30 @@
       "revId": "5dfb4e9999d934228c1bf47114255d58c528b5b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d826b1ae_68eae749",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-05-31T14:10:27Z",
+      "side": 1,
+      "message": "No need to specify algorithm, we convert my_key.pem to an AVB keyblob and compare that byte for byte with the embedded keyblob.",
+      "parentUuid": "cdebd26c_e0193524",
+      "range": {
+        "startLine": 430,
+        "startChar": 9,
+        "endLine": 430,
+        "endChar": 27
+      },
+      "revId": "5dfb4e9999d934228c1bf47114255d58c528b5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
