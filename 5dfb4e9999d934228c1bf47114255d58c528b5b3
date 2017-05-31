@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cdebd26c_e0193524",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-05-31T10:01:51Z",
+      "side": 1,
+      "message": "do we need to specify --algorithm? Or we can just trust the algorithm from vbmeta struct?",
+      "range": {
+        "startLine": 430,
+        "startChar": 9,
+        "endLine": 430,
+        "endChar": 27
+      },
+      "revId": "5dfb4e9999d934228c1bf47114255d58c528b5b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
