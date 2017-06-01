@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "325ad71c_49bc37cb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-01T02:55:12Z",
+      "side": 1,
+      "message": "Yup, agree.\nFor now let\u0027s keep it \"1.0\" but we might need to think about how to do it later.",
+      "range": {
+        "startLine": 16,
+        "startChar": 20,
+        "endLine": 16,
+        "endChar": 36
+      },
+      "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "41eeb79c_3c18e3fb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-01T02:55:12Z",
+      "side": 1,
+      "message": "nit: s/he/they (Singular they)\n\nJust learned this recently:\nhttps://chromium.googlesource.com/chromium/src/+/master/styleguide/gender_neutral_code.md",
+      "range": {
+        "startLine": 19,
+        "startChar": 48,
+        "endLine": 19,
+        "endChar": 50
+      },
+      "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
