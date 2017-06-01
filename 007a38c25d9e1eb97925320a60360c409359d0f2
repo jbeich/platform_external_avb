@@ -48,6 +48,29 @@
     },
     {
       "key": {
+        "uuid": "7acf75e0_3fdc6d84",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-01T07:46:31Z",
+      "side": 1,
+      "message": "nit: except --partition_name, --partition_size, --image and --output\n\nI just tested and looks like --partition_size is the only required option. But it shouldn\u0027t be needed, no?",
+      "range": {
+        "startLine": 19,
+        "startChar": 14,
+        "endLine": 19,
+        "endChar": 41
+      },
+      "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d84eaf2_60ff1e42",
         "filename": "README.md",
         "patchSetId": 1
