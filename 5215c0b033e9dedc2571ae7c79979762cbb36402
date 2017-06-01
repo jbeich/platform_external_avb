@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cb9c0463_e4258a20",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3557,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-01T16:51:53Z",
+      "side": 1,
+      "message": "Oh, actually need to remove this as well.\n\nOtherwise, it still requires --partition_size.\n\nBut this seems a bit hack, maybe the client side can just specify --partition_size as well.",
+      "range": {
+        "startLine": 3557,
+        "startChar": 28,
+        "endLine": 3557,
+        "endChar": 41
+      },
+      "revId": "5215c0b033e9dedc2571ae7c79979762cbb36402",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
