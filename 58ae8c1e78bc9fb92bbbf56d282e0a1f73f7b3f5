@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4437e0a6_5822021a",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2957,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-01T16:12:03Z",
+      "side": 1,
+      "message": "Hi,\nCan we move this to the beginning of the function. \nSo we don\u0027t need to specify --partition_size.\n\nSee the client usage here:\nhttps://googleplex-android-review.git.corp.google.com/#/c/2286259/2/target/board/Android.mk",
+      "range": {
+        "startLine": 2952,
+        "startChar": 1,
+        "endLine": 2957,
+        "endChar": 12
+      },
+      "revId": "58ae8c1e78bc9fb92bbbf56d282e0a1f73f7b3f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
