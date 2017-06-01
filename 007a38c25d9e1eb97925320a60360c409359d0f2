@@ -45,6 +45,29 @@
       "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9d84eaf2_60ff1e42",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-01T07:34:57Z",
+      "side": 1,
+      "message": "partition_size is not needed?",
+      "range": {
+        "startLine": 381,
+        "startChar": 32,
+        "endLine": 381,
+        "endChar": 66
+      },
+      "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
