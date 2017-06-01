@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "100b636f_99b76751",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-01T14:16:49Z",
+      "side": 1,
+      "message": "Roger that.",
+      "parentUuid": "325ad71c_49bc37cb",
+      "range": {
+        "startLine": 16,
+        "startChar": 20,
+        "endLine": 16,
+        "endChar": 36
+      },
+      "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "41eeb79c_3c18e3fb",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -71,6 +95,54 @@
     },
     {
       "key": {
+        "uuid": "7014d28a_a3165c3f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-01T14:16:49Z",
+      "side": 1,
+      "message": "OK.",
+      "parentUuid": "41eeb79c_3c18e3fb",
+      "range": {
+        "startLine": 19,
+        "startChar": 48,
+        "endLine": 19,
+        "endChar": 50
+      },
+      "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "30602785_c08009cc",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 19,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-01T14:16:49Z",
+      "side": 1,
+      "message": "*Any* option you\u0027d pass to the run without --calc_max_image_size / --print_required_libavb_version must be passed.... for example for --calc_max_image_size the type of hashtree you pick - sha1 or sha256 - influences how much room it will take and thus the max image size returned varies.",
+      "parentUuid": "7acf75e0_3fdc6d84",
+      "range": {
+        "startLine": 19,
+        "startChar": 14,
+        "endLine": 19,
+        "endChar": 41
+      },
+      "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9d84eaf2_60ff1e42",
         "filename": "README.md",
         "patchSetId": 1
@@ -82,6 +154,30 @@
       "writtenOn": "2017-06-01T07:34:57Z",
       "side": 1,
       "message": "partition_size is not needed?",
+      "range": {
+        "startLine": 381,
+        "startChar": 32,
+        "endLine": 381,
+        "endChar": 66
+      },
+      "revId": "007a38c25d9e1eb97925320a60360c409359d0f2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2eb5c8dc_2a864bd7",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 381,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-01T14:16:49Z",
+      "side": 1,
+      "message": "Right, copy/paste bug here. I\u0027ll update with something \"normal\" for make_vbmeta_image.",
+      "parentUuid": "9d84eaf2_60ff1e42",
       "range": {
         "startLine": 381,
         "startChar": 32,
