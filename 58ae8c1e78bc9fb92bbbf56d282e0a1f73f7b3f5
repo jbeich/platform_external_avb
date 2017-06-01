@@ -22,6 +22,30 @@
       "revId": "58ae8c1e78bc9fb92bbbf56d282e0a1f73f7b3f5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "dcf4806d_93eb9a1d",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2957,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-01T16:15:54Z",
+      "side": 1,
+      "message": "Will do.",
+      "parentUuid": "4437e0a6_5822021a",
+      "range": {
+        "startLine": 2952,
+        "startChar": 1,
+        "endLine": 2957,
+        "endChar": 12
+      },
+      "revId": "58ae8c1e78bc9fb92bbbf56d282e0a1f73f7b3f5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
