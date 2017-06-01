@@ -22,6 +22,30 @@
       "revId": "5215c0b033e9dedc2571ae7c79979762cbb36402",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "061948a8_ff316c9c",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3557,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-01T16:55:55Z",
+      "side": 1,
+      "message": "I\u0027ll do it.",
+      "parentUuid": "cb9c0463_e4258a20",
+      "range": {
+        "startLine": 3557,
+        "startChar": 28,
+        "endLine": 3557,
+        "endChar": 41
+      },
+      "revId": "5215c0b033e9dedc2571ae7c79979762cbb36402",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
