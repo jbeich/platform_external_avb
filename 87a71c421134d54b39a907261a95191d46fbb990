@@ -73,6 +73,30 @@
     },
     {
       "key": {
+        "uuid": "fe5a61a8_c4e54222",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-21T18:36:20Z",
+      "side": 1,
+      "message": "If the system is using an initrd then the kernel simply ignores the root\u003d parameter and the initrd will mount the system partition (at /system). So this will work fine for non-A/B systems.\n\nBtw, this is also the case of A/B systems booting into recovery (for usual boot with A/B the bootloader will append skip_initramfs to the kernel cmdline).",
+      "parentUuid": "fd6567ee_c4b0a365",
+      "range": {
+        "startLine": 28,
+        "startChar": 19,
+        "endLine": 28,
+        "endChar": 59
+      },
+      "revId": "87a71c421134d54b39a907261a95191d46fbb990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10b92cec_8c0fae8d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
