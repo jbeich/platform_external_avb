@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "fd6567ee_c4b0a365",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-21T17:05:13Z",
+      "side": 1,
+      "message": "Sorry for not being clear.\n\nI meant for non-A/B, the root isn\u0027t system. (it\u0027s ramdisk in boot.img). In current avbtool, looks like it only adds root\u003dPARTUUID\u003d$(ANDROID_SYSTEM_PARTUUID) when \u0027setup_rootfs_from_kernel\u0027 or \u0027setup_as_rootfs_from_kernel\u0027 is specified when making vbmeta.img.",
+      "parentUuid": "356ba31f_bb37aa57",
+      "range": {
+        "startLine": 28,
+        "startChar": 19,
+        "endLine": 28,
+        "endChar": 59
+      },
+      "revId": "87a71c421134d54b39a907261a95191d46fbb990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10b92cec_8c0fae8d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
