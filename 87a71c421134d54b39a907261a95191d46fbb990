@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "356ba31f_bb37aa57",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-21T13:42:01Z",
+      "side": 1,
+      "message": "This will also work for non-A/B devices since the caller of avb_slot_verify() will pass \"\" as |slot_suffix| so $(ANDROID_SYSTEM_PARTUUID) will be resolved as the partition GUID for the partition with the name \"system\" ... see sub_cmdline() in avb_slot_verify.c for more details.",
+      "parentUuid": "2b83433e_a303e8c7",
+      "range": {
+        "startLine": 28,
+        "startChar": 19,
+        "endLine": 28,
+        "endChar": 59
+      },
+      "revId": "87a71c421134d54b39a907261a95191d46fbb990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10b92cec_8c0fae8d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "032af771_9580153d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-21T13:42:01Z",
+      "side": 1,
+      "message": "Absolutely. The point of the comment is that the bootloader won\u0027t have to special-case anything for when the VERIFICATION_DISABLED flag is set in the top-level vbmeta (unless it wants to).",
+      "parentUuid": "10b92cec_8c0fae8d",
+      "range": {
+        "startLine": 32,
+        "startChar": 63,
+        "endLine": 33,
+        "endChar": 31
+      },
+      "revId": "87a71c421134d54b39a907261a95191d46fbb990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6d70fb45_2634af4f",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 1
@@ -59,6 +107,30 @@
       "writtenOn": "2017-06-21T09:52:13Z",
       "side": 1,
       "message": "nit: should we move the two lines to #1131. So we don\u0027t have to comment there and leave this function only process vbmeta/descriptors?\n\nAlso, if load_requested_partitions() doesn\u0027t return AVB_SLOT_VERIFY_RESULT_OK, the root\u003d... won\u0027t be in cmdline. Is this expected?",
+      "range": {
+        "startLine": 672,
+        "startChar": 0,
+        "endLine": 673,
+        "endChar": 80
+      },
+      "revId": "87a71c421134d54b39a907261a95191d46fbb990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3f49c2fb_37416ca3",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 673,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-21T13:42:01Z",
+      "side": 1,
+      "message": "\u003e nit:\n\nGood idea. I\u0027m doing that.\n\n\u003e Is this expected?\n\nYes, if load_requested_partitions() it will be a fatal failure so we\u0027ll end up not returning a AvbSlotVerifyResult object. I\u0027ll add a comment about that. However, with the change you suggested there is also now no doubt since cmdline is set later...",
+      "parentUuid": "6d70fb45_2634af4f",
       "range": {
         "startLine": 672,
         "startChar": 0,
