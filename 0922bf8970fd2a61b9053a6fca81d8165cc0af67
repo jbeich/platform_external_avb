@@ -46,6 +46,30 @@
       "revId": "0922bf8970fd2a61b9053a6fca81d8165cc0af67",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "136ab000_47268016",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-22T13:56:21Z",
+      "side": 1,
+      "message": "Yup, I think removing it sounds a good plan.\n\nAs we can tell device is locked or not by:\n   ro.boot.verifiedbootstate \u003d\u003d \"orange\"",
+      "parentUuid": "201b63e8_f3354ba6",
+      "range": {
+        "startLine": 1110,
+        "startChar": 30,
+        "endLine": 1110,
+        "endChar": 61
+      },
+      "revId": "0922bf8970fd2a61b9053a6fca81d8165cc0af67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
