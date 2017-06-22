@@ -97,6 +97,30 @@
     },
     {
       "key": {
+        "uuid": "83e75414_ea782791",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-22T05:13:38Z",
+      "side": 1,
+      "message": "I see, nice info!\n\nI was just unsure whether root\u003d will be ignored in this case or not.",
+      "parentUuid": "fe5a61a8_c4e54222",
+      "range": {
+        "startLine": 28,
+        "startChar": 19,
+        "endLine": 28,
+        "endChar": 59
+      },
+      "revId": "87a71c421134d54b39a907261a95191d46fbb990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "10b92cec_8c0fae8d",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
