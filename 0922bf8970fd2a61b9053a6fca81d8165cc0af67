@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "cc4247ea_0b4af4f9",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-06-22T07:53:14Z",
+      "side": 1,
+      "message": "nit: should we also set this when there is no metadata. (i.e., always set it regardless of verification is disabled or not).\n\nAs the device state isn\u0027t quite related to metadata itself.",
+      "range": {
+        "startLine": 1110,
+        "startChar": 30,
+        "endLine": 1110,
+        "endChar": 61
+      },
+      "revId": "0922bf8970fd2a61b9053a6fca81d8165cc0af67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
