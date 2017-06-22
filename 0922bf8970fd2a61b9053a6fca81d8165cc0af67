@@ -22,6 +22,30 @@
       "revId": "0922bf8970fd2a61b9053a6fca81d8165cc0af67",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "201b63e8_f3354ba6",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1110,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-06-22T13:43:15Z",
+      "side": 1,
+      "message": "I don\u0027t think anyone is actually using this.... IIRC there\u0027s another variable (not related to AVB) which has the lock state? If so we should probably remove androidboot.vbmeta.device_state altogether... (but we can do that in another CL.)",
+      "parentUuid": "cc4247ea_0b4af4f9",
+      "range": {
+        "startLine": 1110,
+        "startChar": 30,
+        "endLine": 1110,
+        "endChar": 61
+      },
+      "revId": "0922bf8970fd2a61b9053a6fca81d8165cc0af67",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
