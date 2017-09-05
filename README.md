@@ -185,6 +185,12 @@ validation operation (see `avb_validate_vbmeta_public_key()` in
 * `boot_control/`
     + An implementation of the Android `boot_control` HAL for use with
       boot loaders using the experimental `libavb_ab` A/B stack.
+* `contrib/`
+    + Contains AVB-specific kernel patches in .zip format.
+      For example, `contrib/linux/4.4` has the patches for Linux kernel 4.4.
+      The file name is of format `<num>.<git-sha1>.diff.zip`, where `<num>` is
+      the order to apply the patch and `<git-sha1>` is the git commit ID from
+      the [Common Android Kernel Tree](https://android.googlesource.com/kernel/common/).
 * `Android.bp`
     + Build instructions for building `libavb` (a static library for use
       on the device), host-side libraries (for unit tests), and unit
@@ -546,6 +552,8 @@ and `--salt`.
 
 Build system variables (such as `PRODUCT_SUPPORTS_VERITY_FEC`) used
 for previous version of Verified Boot in Android are not used in AVB.
+
+A/B related build system variables can be found [here](https://source.android.com/devices/tech/ota/ab_updates#build-variables).
 
 # Device Integration
 
