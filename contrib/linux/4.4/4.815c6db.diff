@@ -1,0 +1,70 @@
+From 815c6db10b0741ba10e6c7d3e7fcdc0777bc8918 Mon Sep 17 00:00:00 2001
+From: David Zeuthen <zeuthen@google.com>
+Date: Mon, 22 May 2017 17:49:40 -0400
+Subject: [PATCH] ANDROID: AVB: Fix invalidate_vbmeta_submit().
+
+On some boards with newer kernels the invalidate_vbmeta_submit()
+function failed likely because it's using a hard-coded size of
+512. Use PAGE_SIZE and also use bio_add_page(). Also print out if the
+I/O actually fails.
+
+Additionally, print major:minor of the device we're acting on since
+another subset of boards get this wrong by passing the wrong GUID to
+libavb in the bootloader. Having this information printed out makes it
+a lot easier to pinpoint such mistakes.
+
+Test: Manually tested.
+Bug: 38451312
+Change-Id: Ib58548953a3375a3c79acf74aa745be9420b8216
+Signed-off-by: David Zeuthen <zeuthen@google.com>
+---
+
+diff --git a/drivers/md/dm-verity-avb.c b/drivers/md/dm-verity-avb.c
+index a0ee31e..7486dd7 100644
+--- a/drivers/md/dm-verity-avb.c
++++ b/drivers/md/dm-verity-avb.c
+@@ -18,6 +18,8 @@
+ 
+ static void invalidate_vbmeta_endio(struct bio *bio)
+ {
++	if (bio->bi_error)
++		DMERR("invalidate_vbmeta_endio: error %d", bio->bi_error);
+ 	complete(bio->bi_private);
+ }
+ 
+@@ -31,20 +33,17 @@
+ 	bio->bi_private = &wait;
+ 	bio->bi_end_io = invalidate_vbmeta_endio;
+ 	bio->bi_bdev = bdev;
++	bio->bi_rw = rw;
+ 
+ 	bio->bi_iter.bi_sector = 0;
+ 	if (access_last_sector) {
+ 		sector_t last_sector = (i_size_read(bdev->bd_inode)>>SECTOR_SHIFT) - 1;
+ 		bio->bi_iter.bi_sector = last_sector;
+ 	}
+-	bio->bi_vcnt = 1;
+-	bio->bi_iter.bi_idx = 0;
+-	bio->bi_iter.bi_size = 512;
+-	bio->bi_iter.bi_bvec_done = 0;
+-	bio->bi_rw = rw;
+-	bio->bi_io_vec[0].bv_page = page;
+-	bio->bi_io_vec[0].bv_len = 512;
+-	bio->bi_io_vec[0].bv_offset = 0;
++	if (!bio_add_page(bio, page, PAGE_SIZE, 0)) {
++		DMERR("invalidate_vbmeta_submit: bio_add_page error");
++		return -EIO;
++	}
+ 
+ 	submit_bio(rw, bio);
+ 	/* Wait up to 2 seconds for completion or fail. */
+@@ -66,6 +65,9 @@
+ 	int rw = REQ_SYNC | REQ_SOFTBARRIER | REQ_NOIDLE;
+ 	int access_last_sector = 0;
+ 
++	DMINFO("invalidate_vbmeta: acting on device %d:%d",
++	       MAJOR(vbmeta_devt), MINOR(vbmeta_devt));
++
+ 	/* First we open the device for reading. */
+ 	dev_mode = FMODE_READ | FMODE_EXCL;
+ 	bdev = blkdev_get_by_dev(vbmeta_devt, dev_mode,

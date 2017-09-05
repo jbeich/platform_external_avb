@@ -1,0 +1,51 @@
+From f0893c7ddba2580e25ce9386ec7f4569c9a8b5fb Mon Sep 17 00:00:00 2001
+From: David Zeuthen <zeuthen@google.com>
+Date: Tue, 23 May 2017 17:45:39 -0400
+Subject: [PATCH] ANDROID: AVB: Fix linter errors.
+
+Various other kernel trees complained about style problems with
+dm-verity-avb.c, specifically some lines being wider than 80
+characters and spaces being used instead of tabs. With these changes
+checkpatch.pl is happy:
+
+ $ scripts/checkpatch.pl --file drivers/md/dm-verity-avb.c
+ total: 0 errors, 0 warnings, 229 lines checked
+
+ drivers/md/dm-verity-avb.c has no obvious style problems and is ready for submission.
+
+Bug: None
+Test: Compiles.
+Change-Id: I08913adf61c5bf2b0f78f7d9e18dbe93feaba9f7
+Signed-off-by: David Zeuthen <zeuthen@google.com>
+---
+
+diff --git a/drivers/md/dm-verity-avb.c b/drivers/md/dm-verity-avb.c
+index 7486dd7..727aacb 100644
+--- a/drivers/md/dm-verity-avb.c
++++ b/drivers/md/dm-verity-avb.c
+@@ -37,7 +37,9 @@
+ 
+ 	bio->bi_iter.bi_sector = 0;
+ 	if (access_last_sector) {
+-		sector_t last_sector = (i_size_read(bdev->bd_inode)>>SECTOR_SHIFT) - 1;
++		sector_t last_sector;
++
++		last_sector = (i_size_read(bdev->bd_inode)>>SECTOR_SHIFT) - 1;
+ 		bio->bi_iter.bi_sector = last_sector;
+ 	}
+ 	if (!bio_add_page(bio, page, PAGE_SIZE, 0)) {
+@@ -118,7 +120,7 @@
+ 			goto failed_to_submit_read;
+ 		}
+ 		if (memcmp("AVBf", page_address(page) + offset, 4) != 0) {
+-			DMERR("invalidate_vbmeta called on non-vbmeta partition");
++			DMERR("invalidate_vbmeta on non-vbmeta partition");
+ 			ret = -EINVAL;
+ 			goto invalid_header;
+ 		}
+@@ -224,4 +226,4 @@
+ #define MODULE_PARAM_PREFIX	"androidboot.vbmeta."
+ module_param_string(device, avb_vbmeta_device, sizeof(avb_vbmeta_device), 0);
+ module_param_string(invalidate_on_error, avb_invalidate_on_error,
+-                    sizeof(avb_invalidate_on_error), 0);
++		    sizeof(avb_invalidate_on_error), 0);
