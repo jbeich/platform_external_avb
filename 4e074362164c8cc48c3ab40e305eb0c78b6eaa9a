@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "79b1e9c3_10b032d2",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-09-07T03:42:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "18ebf12d_54f12386",
+      "range": {
+        "startLine": 189,
+        "startChar": 6,
+        "endLine": 189,
+        "endChar": 57
+      },
+      "revId": "4e074362164c8cc48c3ab40e305eb0c78b6eaa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bcc5c6ec_cf848e70",
         "filename": "README.md",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-09-06T15:11:30Z",
       "side": 1,
       "message": "I don\u0027t think using the sha1 in the name is helpful. I would rather that it\u0027s named the same way \u0027git format-patch\u0027 does, e.g. \n\n 01-ANDROID-Update-init-do_mounts_dm.c-to-the-latest-ChromiumOS version.patch\n 02-yada-yada-yada.patch\n ...\n\nThat way it\u0027s a lot easier to get an overview of what\u0027s needed.",
+      "range": {
+        "startLine": 191,
+        "startChar": 6,
+        "endLine": 193,
+        "endChar": 88
+      },
+      "revId": "4e074362164c8cc48c3ab40e305eb0c78b6eaa9a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "8e3b46d0_892c603d",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 193,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-09-07T03:42:23Z",
+      "side": 1,
+      "message": "OK, agree.\n\nI\u0027ll use \"git squash\" to merge 2-5 into a single patch for dm-verity-avb.c and keep the first one for init/do_mounts_dm.c.\n\nThen use \"git format-patch\" to generate the patches!",
+      "parentUuid": "bcc5c6ec_cf848e70",
       "range": {
         "startLine": 191,
         "startChar": 6,
