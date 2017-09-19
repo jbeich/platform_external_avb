@@ -25,5 +25,4 @@
 // This test ensures that user code can include libavb*.h and compile without
 // defining AVB_COMPILATION (which user code must not).
 #include "libavb/libavb.h"
-#include "libavb_ab/libavb_ab.h"
 #include "libavb_atx/libavb_atx.h"

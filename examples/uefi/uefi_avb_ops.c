@@ -25,7 +25,7 @@
 #include <efi.h>
 #include <efilib.h>
 
-#include <libavb_ab/libavb_ab.h>
+#include <libavb/libavb.h>
 
 #include "uefi_avb_ops.h"
 #include "uefi_avb_util.h"
@@ -638,7 +638,6 @@ AvbOps* uefi_avb_ops_new(EFI_HANDLE app_image) {
     return 0;
   }
 
-  data->ops.ab_ops = &data->ab_ops;
   data->ops.read_from_partition = read_from_partition;
   data->ops.write_to_partition = write_to_partition;
   data->ops.validate_vbmeta_public_key = validate_vbmeta_public_key;
@@ -647,10 +646,6 @@ AvbOps* uefi_avb_ops_new(EFI_HANDLE app_image) {
   data->ops.read_is_device_unlocked = read_is_device_unlocked;
   data->ops.get_unique_guid_for_partition = get_unique_guid_for_partition;
   data->ops.get_size_of_partition = get_size_of_partition;
-
-  data->ab_ops.ops = &data->ops;
-  data->ab_ops.read_ab_metadata = avb_ab_data_read;
-  data->ab_ops.write_ab_metadata = avb_ab_data_write;
 
   return &data->ops;
 }

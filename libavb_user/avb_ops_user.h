@@ -50,11 +50,6 @@ extern "C" {
  *   - read_is_device_unlocked(): always returns |true|.
  *   - get_unique_guid_for_partition(): always returns the empty string.
  *
- * - The |ab_ops| member will point to a valid AvbABOps instance
- *   implemented via libavb_ab/. This should only be used if the AVB
- *   A/B stack is used on the device. This is what is used in
- *   bootctrl.avb boot control implementation.
- *
  * Free with avb_ops_user_free().
  */
 AvbOps* avb_ops_user_new(void);
