@@ -179,8 +179,7 @@ typedef struct {
  * modify stored_rollback_index[n] locations e.g. it will never use
  * the write_rollback_index() AvbOps operation. Instead it is the job
  * of the caller of avb_slot_verify() to do this based on e.g. A/B
- * policy and other factors. See libavb_ab/avb_ab_flow.c for an
- * example of how to do this.
+ * policy and other factors.
  *
  * The |cmdline| field is a NUL-terminated string in UTF-8 resulting
  * from concatenating all |AvbKernelCmdlineDescriptor| and then

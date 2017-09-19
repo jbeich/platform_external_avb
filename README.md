@@ -174,17 +174,11 @@ validation operation (see `avb_validate_vbmeta_public_key()` in
       expected to be provided by the platform is defined in
       `avb_sysdeps.h`. If the platform provides the standard C runtime
       `avb_sysdeps_posix.c` can be used.
-* `libavb_ab/`
-    + An experimental A/B implementation for use in boot loaders
-      and AVB examples.
 * `libavb_atx/`
     + An Android Things Extension for validating public key metadata.
 * `libavb_user/`
     + Contains an `AvbOps` implementation suitable for use in Android
       userspace. This is used in `boot_control.avb` and `avbctl`.
-* `boot_control/`
-    + An implementation of the Android `boot_control` HAL for use with
-      boot loaders using the experimental `libavb_ab` A/B stack.
 * `contrib/`
     + Contains patches needed in other projects for interoperability with AVB.
       For example, `contrib/linux/4.4` has the patches for Linux kernel 4.4,
@@ -197,14 +191,13 @@ validation operation (see `avb_validate_vbmeta_public_key()` in
     + A tool written in Python for working with images related to
       verified boot.
 * `test/`
-    + Unit tests for `abvtool`, `libavb`, `libavb_ab`, and
-      `libavb_atx`.
+    + Unit tests for `abvtool`, `libavb`, and `libavb_atx`.
 * `tools/avbctl/`
     + Contains the source-code for a tool that can be used to control
       AVB at runtime in Android.
 * `examples/uefi/`
     + Contains the source-code for a UEFI-based boot-loader utilizing
-      `libavb/` and `libavb_ab/`.
+      `libavb/`.
 * `README.md`
     + This file.
 * `docs/`
@@ -696,10 +689,7 @@ if (is_slot_is_marked_as_successful(slot->ab_suffix)) {
 
 For an HLOS where it's possible to roll back to a previous version,
 `stored_rollback_index[n]` should be set to the largest possible value
-allowing all bootable slots to boot. This approach is implemented in
-AVB's experimental A/B stack `libavb_ab`, see the `avb_ab_flow()`
-implementation. Note that this requires verifying *all* bootable slots
-at every boot and this may impact boot time.
+allowing all bootable slots to boot.
 
 ## Recommended Bootflow
 
