@@ -63,9 +63,6 @@ typedef enum {
 struct AvbOps;
 typedef struct AvbOps AvbOps;
 
-/* Forward-declaration of operations in libavb_ab. */
-struct AvbABOps;
-
 /* Forward-declaration of operations in libavb_atx. */
 struct AvbAtxOps;
 
@@ -83,10 +80,10 @@ struct AvbOps {
    */
   void* user_data;
 
-  /* If libavb_ab is used, this should point to the
-   * AvbABOps. Otherwise it must be set to NULL.
+  /* This pointer can be used by an A/B library integrating with
+   * libavb. It should not be used by applications.
    */
-  struct AvbABOps* ab_ops;
+  void* ab_user_data;
 
   /* If libavb_atx is used, this should point to the
    * AvbAtxOps. Otherwise it must be set to NULL.

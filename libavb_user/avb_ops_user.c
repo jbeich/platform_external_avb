@@ -37,7 +37,7 @@
 #include <cutils/properties.h>
 #include <fs_mgr.h>
 
-#include <libavb_ab/libavb_ab.h>
+#include <libavb/libavb.h>
 
 /* Open the appropriate fstab file and fallback to /fstab.device if
  * that's what's being used.
@@ -308,14 +308,6 @@ AvbOps* avb_ops_user_new(void) {
     goto out;
   }
 
-  ops->ab_ops = calloc(1, sizeof(AvbABOps));
-  if (ops->ab_ops == NULL) {
-    avb_error("Error allocating memory for AvbABOps.\n");
-    free(ops);
-    goto out;
-  }
-  ops->ab_ops->ops = ops;
-
   ops->read_from_partition = read_from_partition;
   ops->write_to_partition = write_to_partition;
   ops->validate_vbmeta_public_key = validate_vbmeta_public_key;
@@ -324,14 +316,11 @@ AvbOps* avb_ops_user_new(void) {
   ops->read_is_device_unlocked = read_is_device_unlocked;
   ops->get_unique_guid_for_partition = get_unique_guid_for_partition;
   ops->get_size_of_partition = get_size_of_partition;
-  ops->ab_ops->read_ab_metadata = avb_ab_data_read;
-  ops->ab_ops->write_ab_metadata = avb_ab_data_write;
 
 out:
   return ops;
 }
 
 void avb_ops_user_free(AvbOps* ops) {
-  free(ops->ab_ops);
   free(ops);
 }

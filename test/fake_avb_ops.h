@@ -30,7 +30,6 @@
 #include <set>
 #include <string>
 
-#include <libavb_ab/libavb_ab.h>
 #include <libavb_atx/libavb_atx.h>
 
 namespace avb {
@@ -99,16 +98,9 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
   static FakeAvbOps* GetInstanceFromAvbOps(AvbOps* ops) {
     return reinterpret_cast<FakeAvbOps*>(ops->user_data);
   }
-  static FakeAvbOps* GetInstanceFromAvbABOps(AvbABOps* ab_ops) {
-    return reinterpret_cast<FakeAvbOps*>(ab_ops->ops->user_data);
-  }
 
   AvbOps* avb_ops() {
     return &avb_ops_;
-  }
-
-  AvbABOps* avb_ab_ops() {
-    return &avb_ab_ops_;
   }
 
   AvbAtxOps* avb_atx_ops() {
@@ -216,7 +208,6 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
  private:
   AvbOps avb_ops_;
-  AvbABOps avb_ab_ops_;
   AvbAtxOps avb_atx_ops_;
 
   FakeAvbOpsDelegate* delegate_;

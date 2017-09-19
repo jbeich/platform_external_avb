@@ -26,12 +26,11 @@
 #define UEFI_AVB_OPS_H_
 
 #include <efi.h>
-#include <libavb_ab/libavb_ab.h>
+#include <libavb/libavb.h>
 
 /* The |user_data| member of AvbOps points to a struct of this type. */
 typedef struct UEFIAvbOpsData {
   AvbOps ops;
-  AvbABOps ab_ops;
 
   EFI_HANDLE efi_image_handle;
   EFI_DEVICE_PATH* path;

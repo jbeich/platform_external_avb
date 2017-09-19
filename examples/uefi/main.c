@@ -25,7 +25,7 @@
 #include <efi.h>
 #include <efilib.h>
 
-#include <libavb_ab/libavb_ab.h>
+#include <libavb/libavb.h>
 
 #include "uefi_avb_boot.h"
 #include "uefi_avb_ops.h"
@@ -33,13 +33,14 @@
 EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle,
                            EFI_SYSTEM_TABLE* SystemTable) {
   AvbOps* ops;
-  AvbABFlowResult ab_result;
+  AvbSlotVerifyResult slot_verify_result;
   AvbSlotVerifyData* slot_data;
   UEFIAvbBootKernelResult boot_result;
   const char* requested_partitions[] = {"boot", NULL};
   bool unlocked = true;
   char* additional_cmdline = NULL;
   AvbSlotVerifyFlags flags;
+  const char* ab_suffix;
 
   InitializeLib(ImageHandle, SystemTable);
 
@@ -66,18 +67,28 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle,
     flags |= AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR;
   }
 
-  ab_result = avb_ab_flow(ops->ab_ops,
-                          requested_partitions,
-                          flags,
-                          AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
-                          &slot_data);
-  avb_printv("avb_ab_flow() returned ",
-             avb_ab_flow_result_to_string(ab_result),
+  // TODO(zeuthen): For the benefits of people integrating libavb with
+  // their bootloader, would be nice to include a super-simple A/B
+  // stack in this example - this way the integration points would be
+  // easy to see. For now, just default to slot A.
+  ab_suffix = "_a";
+
+  slot_verify_result =
+      avb_slot_verify(ops,
+                      requested_partitions,
+                      ab_suffix,
+                      flags,
+                      AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                      &slot_data);
+  avb_printv("avb_slot_verify() returned ",
+             avb_slot_verify_result_to_string(slot_verify_result),
              "\n",
              NULL);
-  switch (ab_result) {
-    case AVB_AB_FLOW_RESULT_OK:
-    case AVB_AB_FLOW_RESULT_OK_WITH_VERIFICATION_ERROR:
+  switch (slot_verify_result) {
+    case AVB_SLOT_VERIFY_RESULT_OK:
+    case AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION:
+    case AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED:
+    case AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX:
       avb_printv("slot_suffix:    ", slot_data->ab_suffix, "\n", NULL);
       avb_printv("cmdline:        ", slot_data->cmdline, "\n", NULL);
       avb_printv(
@@ -110,16 +121,19 @@ EFI_STATUS EFIAPI efi_main(EFI_HANDLE ImageHandle,
       avb_slot_verify_data_free(slot_data);
       avb_free(additional_cmdline);
       break;
-    case AVB_AB_FLOW_RESULT_ERROR_OOM:
-      avb_fatal("OOM error while doing A/B select flow.\n");
+    case AVB_SLOT_VERIFY_RESULT_ERROR_OOM:
+      avb_fatal("OOM error while verifying slot.\n");
       break;
-    case AVB_AB_FLOW_RESULT_ERROR_IO:
-      avb_fatal("I/O error while doing A/B select flow.\n");
+    case AVB_SLOT_VERIFY_RESULT_ERROR_IO:
+      avb_fatal("I/O error while verifying slot.\n");
       break;
-    case AVB_AB_FLOW_RESULT_ERROR_NO_BOOTABLE_SLOTS:
-      avb_fatal("No bootable slots - enter repair mode\n");
+    case AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA:
+      avb_fatal("Invalid metadata in slot.\n");
       break;
-    case AVB_AB_FLOW_RESULT_ERROR_INVALID_ARGUMENT:
+    case AVB_SLOT_VERIFY_RESULT_ERROR_UNSUPPORTED_VERSION:
+      avb_fatal("Unsupported version of AVB metadata in slot.\n");
+      break;
+    case AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_ARGUMENT:
       avb_fatal("Invalid arguments passed\n");
       break;
   }

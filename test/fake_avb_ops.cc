@@ -369,7 +369,6 @@ static void my_ops_set_key_version(AvbAtxOps* atx_ops,
 }
 
 FakeAvbOps::FakeAvbOps() {
-  avb_ops_.ab_ops = &avb_ab_ops_;
   avb_ops_.atx_ops = &avb_atx_ops_;
   avb_ops_.user_data = this;
   avb_ops_.read_from_partition = my_ops_read_from_partition;
@@ -380,11 +379,6 @@ FakeAvbOps::FakeAvbOps() {
   avb_ops_.read_is_device_unlocked = my_ops_read_is_device_unlocked;
   avb_ops_.get_unique_guid_for_partition = my_ops_get_unique_guid_for_partition;
   avb_ops_.get_size_of_partition = my_ops_get_size_of_partition;
-
-  // Just use the built-in A/B metadata read/write routines.
-  avb_ab_ops_.ops = &avb_ops_;
-  avb_ab_ops_.read_ab_metadata = avb_ab_data_read;
-  avb_ab_ops_.write_ab_metadata = avb_ab_data_write;
 
   avb_atx_ops_.ops = &avb_ops_;
   avb_atx_ops_.read_permanent_attributes = my_ops_read_permanent_attributes;
