@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "686d659e_9165f5a8",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1064128
+      },
+      "writtenOn": "2017-09-20T17:08:41Z",
+      "side": 1,
+      "message": "just `return android::base::GetProperty(\"ro.boot.slot_suffix\", \"\");` ?",
+      "revId": "440cfbfca3423a73b3b62298e201680a51581517",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
