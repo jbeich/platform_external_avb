@@ -16,6 +16,24 @@
       "revId": "440cfbfca3423a73b3b62298e201680a51581517",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "21ae014e_fe82c49c",
+        "filename": "tools/avbctl/avbctl.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 225,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-09-20T17:32:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "686d659e_9165f5a8",
+      "revId": "440cfbfca3423a73b3b62298e201680a51581517",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
