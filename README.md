@@ -3,7 +3,6 @@
 
 This repository contains tools and libraries for working with Android
 Verified Boot 2.0. Usually AVB is used to refer to this codebase.
-
 # Table of Contents
 
 * [What is it?](#What-is-it)
@@ -209,6 +208,9 @@ validation operation (see `avb_validate_vbmeta_public_key()` in
 * `examples/uefi/`
     + Contains the source-code for a UEFI-based boot-loader utilizing
       `libavb/` and `libavb_ab/`.
+* `examples/things/`
+    + Contains the source-code for a slot verification suitable for Android
+      Things.
 * `README.md`
     + This file.
 * `docs/`
