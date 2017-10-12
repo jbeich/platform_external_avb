@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "6e6d811b_fcd1bbc3",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-10-12T21:02:16Z",
+      "side": 1,
+      "message": "This function appears to do two things\n\n- checks if a rollback index has been exceeded\n- updates a rollback index\n\nwhich is what you refer to as \"resolve\"?\n\nFor the AVB rollback indexes the check is actually unnecessary as avb_slot_verify() already does this ... so maybe only do the update in this function and instead call it bump_rollback_index()? I think this is clearer than \"resolve\".\n\nI understand ATX also uses rollback indexes for versions... in this case you do need the check so maybe in addition to bump_rollback_index() you also have a check_rollback_index() that is used before bumping?",
+      "range": {
+        "startLine": 82,
+        "startChar": 27,
+        "endLine": 82,
+        "endChar": 49
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "68ac0b29_cd639a9f",
         "filename": "examples/things/avb_atx_slot_verify.c",
         "patchSetId": 2
