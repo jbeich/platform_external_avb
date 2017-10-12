@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b92c079_f923b6fd",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1231496
+      },
+      "writtenOn": "2017-10-12T20:09:12Z",
+      "side": 1,
+      "message": "What if there is an overflow past the array in the ++ operator? Any way to error check or use a circular array?",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 51
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "68ac0b29_cd639a9f",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1231496
+      },
+      "writtenOn": "2017-10-12T20:09:12Z",
+      "side": 1,
+      "message": "It appears that the flow could reach this statement in at least two situations: (1) current_value \u003d\u003d value; and (2) (value - current_value \u003c kRollbackIndexIncreaseThreashold) \u0026\u0026 io_result \u003d\u003d AVB_IO_RESULT_OK.  I have doubts this is correct.  Main concern: shouldn\u0027t  value be strictly greater than current_value for the rollback index to be bumped up?",
+      "range": {
+        "startLine": 106,
+        "startChar": 9,
+        "endLine": 106,
+        "endChar": 34
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75a3c4c1_20d66e1c",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1231496
+      },
+      "writtenOn": "2017-10-12T20:09:12Z",
+      "side": 1,
+      "message": "It seems that the code reaches the end of the loop at each iteration in two situations: (1) rollback_index_value is 0 OR result is AVB_SLOT_VERIFY_RESULT_OK. Does 0 value indicate an unused/empty slot? If so, it may make sense to define a named constant set to 0 for for clarity. \n\nAlso, is resolve_rollback_index possibly called 100,000 times?",
+      "range": {
+        "startLine": 151,
+        "startChar": 2,
+        "endLine": 160,
+        "endChar": 5
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5f6493d7_7a55ab7b",
+        "filename": "examples/things/avb_atx_slot_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1231496
+      },
+      "writtenOn": "2017-10-12T20:09:12Z",
+      "side": 1,
+      "message": "Grammar issue. Not clear.",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 8
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
