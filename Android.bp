@@ -208,7 +208,10 @@ cc_library_host_static {
 
 cc_library {
     name: "bootctrl.avb",
-    defaults: ["avb_defaults"],
+    defaults: [
+        "avb_defaults",
+        "avb_sources",
+    ],
     relative_install_path: "hw",
     static_libs: [
         "libavb_user",
@@ -221,5 +224,10 @@ cc_library {
     cflags: [
         "-DAVB_AB_I_UNDERSTAND_LIBAVB_AB_IS_DEPRECATED",
     ],
-    srcs: ["boot_control/boot_control_avb.c"],
+    srcs: [
+        "boot_control/boot_control_avb.c",
+        "libavb_ab/avb_ab_flow.c",
+        "libavb/avb_sysdeps_posix.c",
+        "libavb_user/avb_ops_user.c",
+    ],
 }
