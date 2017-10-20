@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "1eda3754_03899a3c",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-10-20T21:50:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2b92c079_f923b6fd",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 61,
+        "endChar": 51
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6e6d811b_fcd1bbc3",
         "filename": "examples/things/avb_atx_slot_verify.c",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2017-10-12T21:02:16Z",
       "side": 1,
       "message": "This function appears to do two things\n\n- checks if a rollback index has been exceeded\n- updates a rollback index\n\nwhich is what you refer to as \"resolve\"?\n\nFor the AVB rollback indexes the check is actually unnecessary as avb_slot_verify() already does this ... so maybe only do the update in this function and instead call it bump_rollback_index()? I think this is clearer than \"resolve\".\n\nI understand ATX also uses rollback indexes for versions... in this case you do need the check so maybe in addition to bump_rollback_index() you also have a check_rollback_index() that is used before bumping?",
+      "range": {
+        "startLine": 82,
+        "startChar": 27,
+        "endLine": 82,
+        "endChar": 49
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "737a22e3_8a7bc003",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-10-20T21:50:10Z",
+      "side": 1,
+      "message": "This function doesn\u0027t check that it\u0027s been exceeded, it just updates. I\u0027ve renamed to update_rollback_index.\n\nI have, however, added a redundant check that the new value is greater than the old as a safeguard.",
+      "parentUuid": "6e6d811b_fcd1bbc3",
       "range": {
         "startLine": 82,
         "startChar": 27,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "c23ea0b4_155d332a",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-10-20T21:50:10Z",
+      "side": 1,
+      "message": "It should be: if-no-update-needed || update-succeeded\n\nI\u0027ve added an early exit if the current value equals the new value to clarify the flow. This will be the case on any boot that doesn\u0027t immediately follow an update.",
+      "parentUuid": "68ac0b29_cd639a9f",
+      "range": {
+        "startLine": 106,
+        "startChar": 9,
+        "endLine": 106,
+        "endChar": 34
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "75a3c4c1_20d66e1c",
         "filename": "examples/things/avb_atx_slot_verify.c",
         "patchSetId": 2
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "1d28a270_2033918c",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 160,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-10-20T21:50:10Z",
+      "side": 1,
+      "message": "Added a constant for not-used.\n\nAVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS is 32 (and matches the array size) so the loop will run at most this many times.",
+      "parentUuid": "75a3c4c1_20d66e1c",
+      "range": {
+        "startLine": 151,
+        "startChar": 2,
+        "endLine": 160,
+        "endChar": 5
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5f6493d7_7a55ab7b",
         "filename": "examples/things/avb_atx_slot_verify.h",
         "patchSetId": 2
@@ -105,6 +201,30 @@
       "writtenOn": "2017-10-12T20:09:12Z",
       "side": 1,
       "message": "Grammar issue. Not clear.",
+      "range": {
+        "startLine": 67,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 8
+      },
+      "revId": "d90edd4e1431c0eef0ba4296cb1a30435b4eda04",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b62f82c5_bfa18450",
+        "filename": "examples/things/avb_atx_slot_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2017-10-20T21:50:10Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5f6493d7_7a55ab7b",
       "range": {
         "startLine": 67,
         "startChar": 2,
