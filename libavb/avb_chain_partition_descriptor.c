@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#include "avb_chain_partition_descriptor.h"
-#include "avb_util.h"
+#include "libavb/avb_chain_partition_descriptor.h"
+#include "libavb/avb_util.h"
 
 bool avb_chain_partition_descriptor_validate_and_byteswap(
     const AvbChainPartitionDescriptor* src, AvbChainPartitionDescriptor* dest) {

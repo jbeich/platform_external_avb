@@ -29,14 +29,14 @@
 #ifndef AVB_VBMETA_IMAGE_H_
 #define AVB_VBMETA_IMAGE_H_
 
-#include "avb_sysdeps.h"
+#include "libavb/avb_sysdeps.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "avb_crypto.h"
-#include "avb_descriptor.h"
+#include "libavb/avb_crypto.h"
+#include "libavb/avb_descriptor.h"
 
 /* Size of the vbmeta image header. */
 #define AVB_VBMETA_IMAGE_HEADER_SIZE 256

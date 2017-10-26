@@ -29,7 +29,7 @@
 #ifndef AVB_PROPERTY_DESCRIPTOR_H_
 #define AVB_PROPERTY_DESCRIPTOR_H_
 
-#include "avb_descriptor.h"
+#include "libavb/avb_descriptor.h"
 
 #ifdef __cplusplus
 extern "C" {
