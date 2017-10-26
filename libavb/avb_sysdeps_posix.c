@@ -28,7 +28,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "avb_sysdeps.h"
+#include "libavb/avb_sysdeps.h"
 
 int avb_memcmp(const void* src1, const void* src2, size_t n) {
   return memcmp(src1, src2, n);

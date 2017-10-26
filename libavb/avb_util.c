@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "avb_util.h"
+#include "libavb/avb_util.h"
 
 #include <stdarg.h>
 

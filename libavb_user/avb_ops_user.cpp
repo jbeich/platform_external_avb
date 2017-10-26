@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "avb_ops_user.h"
+#include "libavb_user/avb_ops_user.h"
 
 #include <errno.h>
 #include <fcntl.h>

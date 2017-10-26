@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#include "avb_kernel_cmdline_descriptor.h"
-#include "avb_util.h"
+#include "libavb/avb_kernel_cmdline_descriptor.h"
+#include "libavb/avb_util.h"
 
 bool avb_kernel_cmdline_descriptor_validate_and_byteswap(
     const AvbKernelCmdlineDescriptor* src, AvbKernelCmdlineDescriptor* dest) {

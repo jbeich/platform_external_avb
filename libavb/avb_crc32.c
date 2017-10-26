@@ -42,8 +42,8 @@
  * CRC32 code derived from work by Gary S. Brown.
  */
 
-#include "avb_sysdeps.h"
-#include "avb_util.h"
+#include "libavb/avb_sysdeps.h"
+#include "libavb/avb_util.h"
 
 /* Code taken from FreeBSD 8 */
 
