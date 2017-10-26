@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "libavb_atx/avb_atx_validate.h"
+#include "avb_atx_validate.h"
 
 #include "libavb/avb_rsa.h"
 #include "libavb/avb_sha.h"
