@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-#include "avb_descriptor.h"
-#include "avb_util.h"
-#include "avb_vbmeta_image.h"
+#include "libavb/avb_descriptor.h"
+#include "libavb/avb_util.h"
+#include "libavb/avb_vbmeta_image.h"
 
 bool avb_descriptor_validate_and_byteswap(const AvbDescriptor* src,
                                           AvbDescriptor* dest) {

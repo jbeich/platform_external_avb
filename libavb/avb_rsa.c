@@ -32,10 +32,10 @@
  * support multiple RSA key lengths and hash digest algorithms.
  */
 
-#include "avb_rsa.h"
-#include "avb_sha.h"
-#include "avb_util.h"
-#include "avb_vbmeta_image.h"
+#include "libavb/avb_rsa.h"
+#include "libavb/avb_sha.h"
+#include "libavb/avb_util.h"
+#include "libavb/avb_vbmeta_image.h"
 
 typedef struct IAvbKey {
   unsigned int len; /* Length of n[] in number of uint32_t */
