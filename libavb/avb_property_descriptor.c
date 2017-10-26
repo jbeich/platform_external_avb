@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#include "avb_property_descriptor.h"
-#include "avb_util.h"
+#include "libavb/avb_property_descriptor.h"
+#include "libavb/avb_util.h"
 
 bool avb_property_descriptor_validate_and_byteswap(
     const AvbPropertyDescriptor* src, AvbPropertyDescriptor* dest) {

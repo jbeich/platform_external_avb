@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-#include "avb_user_verity.h"
+#include "libavb_user/avb_user_verity.h"
 
 /* Maximum allow length (in bytes) of a partition name, including
  * ab_suffix.
