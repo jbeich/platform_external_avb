@@ -44,8 +44,8 @@
  */
 
 #define AVB_INSIDE_LIBAVB_AB_H
-#include "avb_ab_flow.h"
-#include "avb_ab_ops.h"
+#include "libavb_ab/avb_ab_flow.h"
+#include "libavb_ab/avb_ab_ops.h"
 #undef AVB_INSIDE_LIBAVB_AB_H
 
 #endif /* LIBAVB_AB_H_ */

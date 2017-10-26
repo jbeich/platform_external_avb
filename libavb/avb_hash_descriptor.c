@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#include "avb_hash_descriptor.h"
-#include "avb_util.h"
+#include "libavb/avb_hash_descriptor.h"
+#include "libavb/avb_util.h"
 
 bool avb_hash_descriptor_validate_and_byteswap(const AvbHashDescriptor* src,
                                                AvbHashDescriptor* dest) {

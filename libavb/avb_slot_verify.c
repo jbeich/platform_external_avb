@@ -22,15 +22,15 @@
  * SOFTWARE.
  */
 
-#include "avb_slot_verify.h"
-#include "avb_chain_partition_descriptor.h"
-#include "avb_footer.h"
-#include "avb_hash_descriptor.h"
-#include "avb_kernel_cmdline_descriptor.h"
-#include "avb_sha.h"
-#include "avb_util.h"
-#include "avb_vbmeta_image.h"
-#include "avb_version.h"
+#include "libavb/avb_slot_verify.h"
+#include "libavb/avb_chain_partition_descriptor.h"
+#include "libavb/avb_footer.h"
+#include "libavb/avb_hash_descriptor.h"
+#include "libavb/avb_kernel_cmdline_descriptor.h"
+#include "libavb/avb_sha.h"
+#include "libavb/avb_util.h"
+#include "libavb/avb_vbmeta_image.h"
+#include "libavb/avb_version.h"
 
 /* Maximum allow length (in bytes) of a partition name, including
  * ab_suffix.

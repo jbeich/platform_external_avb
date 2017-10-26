@@ -29,8 +29,8 @@
 #ifndef AVB_SLOT_VERIFY_H_
 #define AVB_SLOT_VERIFY_H_
 
-#include "avb_ops.h"
-#include "avb_vbmeta_image.h"
+#include "libavb/avb_ops.h"
+#include "libavb/avb_vbmeta_image.h"
 
 #ifdef __cplusplus
 extern "C" {
