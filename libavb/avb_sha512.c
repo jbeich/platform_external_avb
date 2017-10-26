@@ -35,7 +35,7 @@
  * SUCH DAMAGE.
  */
 
-#include "avb_sha.h"
+#include "libavb/avb_sha.h"
 
 #define SHFR(x, n) (x >> n)
 #define ROTR(x, n) ((x >> n) | (x << ((sizeof(x) << 3) - n)))

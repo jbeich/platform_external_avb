@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-#include "avb_hashtree_descriptor.h"
-#include "avb_util.h"
+#include "libavb/avb_hashtree_descriptor.h"
+#include "libavb/avb_util.h"
 
 bool avb_hashtree_descriptor_validate_and_byteswap(
     const AvbHashtreeDescriptor* src, AvbHashtreeDescriptor* dest) {

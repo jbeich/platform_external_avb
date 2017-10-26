@@ -33,9 +33,9 @@
  */
 
 #define AVB_INSIDE_LIBAVB_ATX_H
-#include "avb_atx_ops.h"
-#include "avb_atx_types.h"
-#include "avb_atx_validate.h"
+#include "libavb_atx/avb_atx_ops.h"
+#include "libavb_atx/avb_atx_types.h"
+#include "libavb_atx/avb_atx_validate.h"
 #undef AVB_INSIDE_LIBAVB_ATX_H
 
 #endif /* LIBAVB_ATX_H_ */
