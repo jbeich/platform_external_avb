@@ -84,6 +84,7 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
   AvbSlotVerifyResult ret;
   AvbIOResult io_ret;
   uint8_t* image_buf = NULL;
+  bool image_preloaded = false;
   size_t part_num_read;
   uint8_t* digest;
   size_t digest_len;
@@ -159,26 +160,41 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
     }
   }
 
-  image_buf = avb_malloc(image_size);
-  if (image_buf == NULL) {
-    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
-    goto out;
+  if (ops->get_preloaded_partition != NULL) {
+    io_ret = ops->get_preloaded_partition(ops, part_name, &image_buf);
+    if (io_ret != AVB_IO_RESULT_OK) {
+      avb_errorv(part_name, ": Error loading data from partition.\n", NULL);
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+      goto out;
+    }
+
+    if (image_buf != NULL) {
+      image_preloaded = true;
+    }
   }
 
-  io_ret = ops->read_from_partition(
-      ops, part_name, 0 /* offset */, image_size, image_buf, &part_num_read);
-  if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
-    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
-    goto out;
-  } else if (io_ret != AVB_IO_RESULT_OK) {
-    avb_errorv(part_name, ": Error loading data from partition.\n", NULL);
-    ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
-    goto out;
-  }
-  if (part_num_read != image_size) {
-    avb_errorv(part_name, ": Read fewer than requested bytes.\n", NULL);
-    ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
-    goto out;
+  if (!image_preloaded) {
+    image_buf = avb_malloc(image_size);
+    if (image_buf == NULL) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto out;
+    }
+
+    io_ret = ops->read_from_partition(
+        ops, part_name, 0 /* offset */, image_size, image_buf, &part_num_read);
+    if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto out;
+    } else if (io_ret != AVB_IO_RESULT_OK) {
+      avb_errorv(part_name, ": Error loading data from partition.\n", NULL);
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+      goto out;
+    }
+    if (part_num_read != image_size) {
+      avb_errorv(part_name, ": Read fewer than requested bytes.\n", NULL);
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+      goto out;
+    }
   }
 
   if (avb_strcmp((const char*)hash_desc.hash_algorithm, "sha256") == 0) {
@@ -234,11 +250,12 @@ out:
     loaded_partition->partition_name = avb_strdup(found);
     loaded_partition->data_size = image_size;
     loaded_partition->data = image_buf;
+    loaded_partition->preloaded = image_preloaded;
     image_buf = NULL;
   }
 
 fail:
-  if (image_buf != NULL) {
+  if (image_buf != NULL && !image_preloaded) {
     avb_free(image_buf);
   }
   return ret;
@@ -325,6 +342,7 @@ static AvbSlotVerifyResult load_requested_partitions(
     }
     loaded_partition->data_size = image_size;
     loaded_partition->data = image_buf;
+    loaded_partition->preloaded = false;
     image_buf = NULL;
   }
 
@@ -1254,7 +1272,6 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
   avb_assert(ops->validate_vbmeta_public_key != NULL);
   avb_assert(ops->read_rollback_index != NULL);
   avb_assert(ops->get_unique_guid_for_partition != NULL);
-  /* avb_assert(ops->get_size_of_partition != NULL); */
 
   if (out_data != NULL) {
     *out_data = NULL;
@@ -1415,7 +1432,7 @@ void avb_slot_verify_data_free(AvbSlotVerifyData* data) {
       if (loaded_partition->partition_name != NULL) {
         avb_free(loaded_partition->partition_name);
       }
-      if (loaded_partition->data != NULL) {
+      if (loaded_partition->data != NULL && !loaded_partition->preloaded) {
         avb_free(loaded_partition->data);
       }
     }

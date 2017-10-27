@@ -104,6 +104,11 @@ class AvbAtxValidateTest : public ::testing::Test, public FakeAvbOpsDelegate {
     return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
   }
 
+  AvbIOResult get_preloaded_partition(const char* partition,
+                                      uint8_t** out_pointer) override {
+    return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
+  }
+
   AvbIOResult write_to_partition(const char* partition,
                                  int64_t offset,
                                  size_t num_bytes,
@@ -573,6 +578,12 @@ class AvbAtxSlotVerifyTest : public BaseAvbToolTest, public FakeAvbOpsDelegate {
                                   size_t* out_num_read) override {
     return ops_.read_from_partition(
         partition, offset, num_bytes, buffer, out_num_read);
+  }
+
+  AvbIOResult get_preloaded_partition(const char* partition,
+                                      uint8_t** out_pointer) override {
+    *out_pointer = NULL;
+    return AVB_IO_RESULT_OK;
   }
 
   AvbIOResult write_to_partition(const char* partition,
