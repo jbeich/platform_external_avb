@@ -117,6 +117,17 @@ struct AvbOps {
                                      void* buffer,
                                      size_t* out_num_read);
 
+  /* Gets the starting pointer of a partition that is pre-loaded in memory. This
+   * provides an alternative way to access a partition that is pre-loaded into
+   * memory without a full memory copy. When this function pointer is not set
+   * (has value NULL), or when the |out_pointer| is set to NULL as a result,
+   * read_from_partition will be used as the fallback. This function is mainly
+   * used for access the entire partition content to calculate its hash.
+   */
+  AvbIOResult (*get_preloaded_partition)(AvbOps* ops,
+                                         const char* partition,
+                                         uint8_t** out_pointer);
+
   /* Writes |num_bytes| from |bffer| at offset |offset| to partition
    * with name |partition| (NUL-terminated UTF-8 string). If |offset|
    * is negative, its absolute value should be interpreted as the
