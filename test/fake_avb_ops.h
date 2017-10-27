@@ -46,6 +46,9 @@ class FakeAvbOpsDelegate {
                                           void* buffer,
                                           size_t* out_num_read) = 0;
 
+  virtual AvbIOResult get_preloaded_partition(const char* partition,
+                                              uint8_t** out_pointer) = 0;
+
   virtual AvbIOResult write_to_partition(const char* partition,
                                          int64_t offset,
                                          size_t num_bytes,
@@ -162,6 +165,11 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
     permanent_attributes_hash_ = hash;
   }
 
+  void enable_get_preloaded_partition();
+
+  bool preload_partition(const std::string& partition,
+                         const base::FilePath& path);
+
   // Gets the partition names that were passed to the
   // read_from_partition() operation.
   std::set<std::string> get_partition_names_read_from();
@@ -172,6 +180,9 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
                                   size_t num_bytes,
                                   void* buffer,
                                   size_t* out_num_read) override;
+
+  AvbIOResult get_preloaded_partition(const char* partition,
+                                      uint8_t** out_pointer) override;
 
   AvbIOResult write_to_partition(const char* partition,
                                  int64_t offset,
@@ -235,6 +246,7 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
   std::string permanent_attributes_hash_;
 
   std::set<std::string> partition_names_read_from_;
+  std::map<std::string, uint8_t*> preloaded_partitions_;
 };
 
 }  // namespace avb
