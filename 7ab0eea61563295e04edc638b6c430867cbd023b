@@ -106,6 +106,24 @@
       "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "49e7b097_5cc9f579",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-10-30T19:55:29Z",
+      "side": 1,
+      "message": "Hi, thanks for doing that!\n\nHmm, yeah, I was thinking we\u0027d wanted avb_slot_verify_data_free() to call that but I forgot it requires AvbOps... hmm.. on second thought, let\u0027s just skip the release() function... but please add a comment to the get_preloaded_partition() function that the implementation should expect to keep the returned memory alive for as long as data returned by avb_slot_verify() is still used.",
+      "parentUuid": "e3827c69_5499f099",
+      "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
