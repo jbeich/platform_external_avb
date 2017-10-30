@@ -1,0 +1,9 @@
+Autosubmit+1: Zach Riggle <riggle@google.com>
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Verified+1: David Zeuthen <zeuthen@google.com>
+Presubmit-Verified-1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Zach Riggle <riggle@google.com>
+Submitted-at: Mon, 30 Oct 2017 22:00:18 +0000
+Reviewed-on: https://android-review.googlesource.com/522415
+Project: platform/external/avb
+Branch: refs/heads/master
