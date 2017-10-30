@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10f7c68d_3d31f84d",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-10-30T16:43:32Z",
+      "side": 1,
+      "message": "We should take |num_bytes| and also return how many bytes was preloaded. As with read_from_partition() we allow partial I/O, e.g. |out_num_read| returned may be smaller than |num_bytes| passed in.\n\nAdditionally, to easier manage the life-time we should add a release_preloaded_partition() operation and guarantee that is called whenever the resulting AvbPartitionData is freed.",
+      "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
