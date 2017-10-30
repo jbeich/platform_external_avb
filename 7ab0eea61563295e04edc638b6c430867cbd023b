@@ -16,6 +16,24 @@
       "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "aaffa3c1_3dc1c1f0",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-10-30T17:06:55Z",
+      "side": 1,
+      "message": "I can make the change, but I would like to understand the rationale here. I thought the size of the partition is provided by get_size_of_partition()? I currently do not see a need to support partial loading for preloaded partitions (at least for our use case). Are you suggesting there might be a use case where partial/header loading is required? Or you just think it is a safer API design in general? I see some code in avb_verify_slot() where get_size_of_partition() is not called when allow_verification_error is not set. Is this the thing you are worrying about?\n\nOn the other note, I don\u0027t think avb_verify_slot() should call a function like release_preloaded_partition(). Because the partition is \"preloaded\" into memory, it is not a memory allocation operation. avb_verify_slot() (or AvbPartitionData) does not own the memory, and therefore, it should not be avb_verify_slot()\u0027s job (or any libavb\u0027s functions\u0027 job) to release it. In fact, because the preloaded partition is normally the boot image, it will never be freed in the bootloader.",
+      "parentUuid": "10f7c68d_3d31f84d",
+      "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
