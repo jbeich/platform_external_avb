@@ -124,6 +124,24 @@
       "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5237e1a6_627ee8fe",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-10-30T21:17:52Z",
+      "side": 1,
+      "message": "Done. PTAL.",
+      "parentUuid": "49e7b097_5cc9f579",
+      "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
