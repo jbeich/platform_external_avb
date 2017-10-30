@@ -52,6 +52,24 @@
       "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bef0a6da_72815460",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-10-30T17:52:31Z",
+      "side": 1,
+      "message": "libavb expects the data returned by get_preloaded_partition() is at least N bytes [1]. It seems prudent to check that the memory returned by get_preloaded_partition() actually satisfies this instead of just assuming the implementation knows how many bytes are expected... just added safety (it\u0027s not hard to imagine where this can get out of sync ... e.g. suppose partitions are resized and someone forgets to update vbmeta... or the other way around).\n\nAs for release_preloaded_partition(), I can see many examples where it\u0027s useful... the most obvious one being where the AvbOps implementation has a reference to the memory it\u0027s returning... in get_preloaded_partition() the impl would increase the ref count and in release_preloaded_partition() it\u0027s decreased. With this there\u0027s no question of \"for how long will this memory I returned still be used?\" ... essentially, this makes memory management in a system with reference counting a lot easier... sure, it might not matter in *your* application but it might matter in others.\n\nThe use of the verbs \"get\" and \"release\" is intentional - it\u0027s *not* about memory management in the strict sense of the word you are implying ... it\u0027s just so the libavb-using application can signal it is done using the memory returned by get_preloaded_partition().\n\n[1] : where N is from the HashDescriptor.image_siz if |allow_verification_error| is FALSE, otherwise either get_size_of_partition().",
+      "parentUuid": "aaffa3c1_3dc1c1f0",
+      "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
