@@ -88,6 +88,24 @@
       "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3827c69_5499f099",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-10-30T19:14:49Z",
+      "side": 1,
+      "message": "Okay, I will just do what you asked. I still feel it is weird to allow the semantics of partial loading; it seems more error prone to me... but anyways, you are the boss here.\n\nDo you expect the release() function to be called in avb_slot_verify_data_free() or somewhere? Should I send in the entire AvbOps into avb_slot_verify_data_free() as an argument? Or you just want to add a function pointer but not used anywhere?",
+      "parentUuid": "105331a5_047b860b",
+      "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
