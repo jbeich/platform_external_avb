@@ -34,6 +34,24 @@
       "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "5dc17c50_55a1a2b5",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-10-30T17:50:27Z",
+      "side": 1,
+      "message": "fwiw, I added an `expected_size` argument. This will handle the case where the preloaded part in memory is larger than required (which is my current understanding of the allow_verification_error thing). If the preloaded part is smaller than required, this function should set *out_pointer to NULL (to fall back to read_from_partition()) or just return a failure (to complain loudly).",
+      "parentUuid": "aaffa3c1_3dc1c1f0",
+      "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
