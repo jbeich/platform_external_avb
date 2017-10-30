@@ -70,6 +70,24 @@
       "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "105331a5_047b860b",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-10-30T17:57:19Z",
+      "side": 1,
+      "message": "\u003e added an `expected_size` argument\n\nAs I explained, I think it\u0027s better if get_preloaded_partition() takes a |num_bytes| param for how many bytes libavb asks for and returns the number of bytes in |out_num_bytes_preloaded| .... explaining that this number may be smaller than |num_bytes| but never bigger.",
+      "parentUuid": "5dc17c50_55a1a2b5",
+      "revId": "7ab0eea61563295e04edc638b6c430867cbd023b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
