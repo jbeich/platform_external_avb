@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "816751dc_1f42e2ba",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-10-31T20:52:34Z",
+      "side": 1,
+      "message": "I think this would be a problem with the metadata (the hash partition is obviously too big since it\u0027ll never fit in memory) so it would be better to return AVB_SLOT_VERITY_RESULT_ERROR_INVALID_METADATA here.",
+      "range": {
+        "startLine": 167,
+        "startChar": 10,
+        "endLine": 167,
+        "endChar": 41
+      },
+      "revId": "01d1edb19f69d30b3f7d0779b1563c23d1622489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d357d70_fa8c3fb0",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-10-31T20:52:34Z",
+      "side": 1,
+      "message": "Handle AVB_IO_RESULT_OOM -\u003e AVB_SLOT_VERIFY_RESULT_ERROR_OOM separately just like in read_from_partitition() ... (yes, it would be weird for get_preloaded_partition() to fail with OOM in most cases... but it *could* happen.)",
+      "range": {
+        "startLine": 174,
+        "startChar": 4,
+        "endLine": 174,
+        "endChar": 37
+      },
+      "revId": "01d1edb19f69d30b3f7d0779b1563c23d1622489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0c4c23e0_6fbf1a98",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-10-31T20:52:34Z",
+      "side": 1,
+      "message": "Also need to use get_preloaded_partition() in this function.",
+      "revId": "01d1edb19f69d30b3f7d0779b1563c23d1622489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
