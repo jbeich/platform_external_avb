@@ -27,9 +27,11 @@
 
 #include <base/files/file_util.h>
 #include <map>
+#include <set>
 #include <string>
 
 #include <libavb_ab/libavb_ab.h>
+#include <libavb_atx/libavb_atx.h>
 
 namespace avb {
 
@@ -72,6 +74,19 @@ class FakeAvbOpsDelegate {
                                                     const char* partition,
                                                     char* guid_buf,
                                                     size_t guid_buf_size) = 0;
+
+  virtual AvbIOResult get_size_of_partition(AvbOps* ops,
+                                            const char* partition,
+                                            uint64_t* out_size) = 0;
+
+  virtual AvbIOResult read_permanent_attributes(
+      AvbAtxPermanentAttributes* attributes) = 0;
+
+  virtual AvbIOResult read_permanent_attributes_hash(
+      uint8_t hash[AVB_SHA256_DIGEST_SIZE]) = 0;
+
+  virtual void set_key_version(size_t rollback_index_location,
+                               uint64_t key_version) = 0;
 };
 
 // Provides fake implementations of AVB ops. All instances of this class must be
@@ -94,6 +109,10 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   AvbABOps* avb_ab_ops() {
     return &avb_ab_ops_;
+  }
+
+  AvbAtxOps* avb_atx_ops() {
+    return &avb_atx_ops_;
   }
 
   FakeAvbOpsDelegate* delegate() {
@@ -127,9 +146,25 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
     return stored_rollback_indexes_;
   }
 
+  std::map<size_t, uint64_t> get_verified_rollback_indexes() {
+    return verified_rollback_indexes_;
+  }
+
   void set_stored_is_device_unlocked(bool stored_is_device_unlocked) {
     stored_is_device_unlocked_ = stored_is_device_unlocked;
   }
+
+  void set_permanent_attributes(const AvbAtxPermanentAttributes& attributes) {
+    permanent_attributes_ = attributes;
+  }
+
+  void set_permanent_attributes_hash(const std::string& hash) {
+    permanent_attributes_hash_ = hash;
+  }
+
+  // Gets the partition names that were passed to the
+  // read_from_partition() operation.
+  std::set<std::string> get_partition_names_read_from();
 
   // FakeAvbOpsDelegate methods.
   AvbIOResult read_from_partition(const char* partition,
@@ -166,9 +201,23 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
                                             char* guid_buf,
                                             size_t guid_buf_size) override;
 
+  AvbIOResult get_size_of_partition(AvbOps* ops,
+                                    const char* partition,
+                                    uint64_t* out_size) override;
+
+  AvbIOResult read_permanent_attributes(
+      AvbAtxPermanentAttributes* attributes) override;
+
+  AvbIOResult read_permanent_attributes_hash(
+      uint8_t hash[AVB_SHA256_DIGEST_SIZE]) override;
+
+  void set_key_version(size_t rollback_index_location,
+                       uint64_t key_version) override;
+
  private:
   AvbOps avb_ops_;
   AvbABOps avb_ab_ops_;
+  AvbAtxOps avb_atx_ops_;
 
   FakeAvbOpsDelegate* delegate_;
 
@@ -178,8 +227,14 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
   std::string expected_public_key_metadata_;
 
   std::map<size_t, uint64_t> stored_rollback_indexes_;
+  std::map<size_t, uint64_t> verified_rollback_indexes_;
 
   bool stored_is_device_unlocked_;
+
+  AvbAtxPermanentAttributes permanent_attributes_;
+  std::string permanent_attributes_hash_;
+
+  std::set<std::string> partition_names_read_from_;
 };
 
 }  // namespace avb

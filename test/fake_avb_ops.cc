@@ -37,10 +37,15 @@
 #include <base/files/file_util.h>
 #include <base/strings/string_util.h>
 #include <base/strings/stringprintf.h>
+#include <openssl/sha.h>
 
 #include "fake_avb_ops.h"
 
 namespace avb {
+
+std::set<std::string> FakeAvbOps::get_partition_names_read_from() {
+  return partition_names_read_from_;
+}
 
 AvbIOResult FakeAvbOps::read_from_partition(const char* partition,
                                             int64_t offset,
@@ -49,6 +54,8 @@ AvbIOResult FakeAvbOps::read_from_partition(const char* partition,
                                             size_t* out_num_read) {
   base::FilePath path =
       partition_dir_.Append(std::string(partition)).AddExtension("img");
+
+  partition_names_read_from_.insert(partition);
 
   if (offset < 0) {
     int64_t file_size;
@@ -66,7 +73,11 @@ AvbIOResult FakeAvbOps::read_from_partition(const char* partition,
             "Error opening file '%s': %s\n",
             path.value().c_str(),
             strerror(errno));
-    return AVB_IO_RESULT_ERROR_IO;
+    if (errno == ENOENT) {
+      return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
+    } else {
+      return AVB_IO_RESULT_ERROR_IO;
+    }
   }
   if (lseek(fd, offset, SEEK_SET) != offset) {
     fprintf(stderr,
@@ -120,7 +131,11 @@ AvbIOResult FakeAvbOps::write_to_partition(const char* partition,
             "Error opening file '%s': %s\n",
             path.value().c_str(),
             strerror(errno));
-    return AVB_IO_RESULT_ERROR_IO;
+    if (errno == ENOENT) {
+      return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
+    } else {
+      return AVB_IO_RESULT_ERROR_IO;
+    }
   }
   if (lseek(fd, offset, SEEK_SET) != offset) {
     fprintf(stderr,
@@ -214,6 +229,46 @@ AvbIOResult FakeAvbOps::get_unique_guid_for_partition(AvbOps* ops,
   return AVB_IO_RESULT_OK;
 }
 
+AvbIOResult FakeAvbOps::get_size_of_partition(AvbOps* ops,
+                                              const char* partition,
+                                              uint64_t* out_size) {
+  base::FilePath path =
+      partition_dir_.Append(std::string(partition)).AddExtension("img");
+
+  int64_t file_size;
+  if (!base::GetFileSize(path, &file_size)) {
+    fprintf(stderr, "Error getting size of file '%s'\n", path.value().c_str());
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+  *out_size = file_size;
+  return AVB_IO_RESULT_OK;
+}
+
+AvbIOResult FakeAvbOps::read_permanent_attributes(
+    AvbAtxPermanentAttributes* attributes) {
+  *attributes = permanent_attributes_;
+  return AVB_IO_RESULT_OK;
+}
+
+AvbIOResult FakeAvbOps::read_permanent_attributes_hash(
+    uint8_t hash[AVB_SHA256_DIGEST_SIZE]) {
+  if (permanent_attributes_hash_.empty()) {
+    SHA256(reinterpret_cast<const unsigned char*>(&permanent_attributes_),
+           sizeof(AvbAtxPermanentAttributes),
+           hash);
+    return AVB_IO_RESULT_OK;
+  }
+  memset(hash, 0, AVB_SHA256_DIGEST_SIZE);
+  permanent_attributes_hash_.copy(reinterpret_cast<char*>(hash),
+                                  AVB_SHA256_DIGEST_SIZE);
+  return AVB_IO_RESULT_OK;
+}
+
+void FakeAvbOps::set_key_version(size_t rollback_index_location,
+                                 uint64_t key_version) {
+  verified_rollback_indexes_[rollback_index_location] = key_version;
+}
+
 static AvbIOResult my_ops_read_from_partition(AvbOps* ops,
                                               const char* partition,
                                               int64_t offset,
@@ -283,8 +338,39 @@ static AvbIOResult my_ops_get_unique_guid_for_partition(AvbOps* ops,
       ->get_unique_guid_for_partition(ops, partition, guid_buf, guid_buf_size);
 }
 
+static AvbIOResult my_ops_get_size_of_partition(AvbOps* ops,
+                                                const char* partition,
+                                                uint64_t* out_size) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)
+      ->delegate()
+      ->get_size_of_partition(ops, partition, out_size);
+}
+
+static AvbIOResult my_ops_read_permanent_attributes(
+    AvbAtxOps* atx_ops, AvbAtxPermanentAttributes* attributes) {
+  return FakeAvbOps::GetInstanceFromAvbOps(atx_ops->ops)
+      ->delegate()
+      ->read_permanent_attributes(attributes);
+}
+
+static AvbIOResult my_ops_read_permanent_attributes_hash(
+    AvbAtxOps* atx_ops, uint8_t hash[AVB_SHA256_DIGEST_SIZE]) {
+  return FakeAvbOps::GetInstanceFromAvbOps(atx_ops->ops)
+      ->delegate()
+      ->read_permanent_attributes_hash(hash);
+}
+
+static void my_ops_set_key_version(AvbAtxOps* atx_ops,
+                                   size_t rollback_index_location,
+                                   uint64_t key_version) {
+  return FakeAvbOps::GetInstanceFromAvbOps(atx_ops->ops)
+      ->delegate()
+      ->set_key_version(rollback_index_location, key_version);
+}
+
 FakeAvbOps::FakeAvbOps() {
   avb_ops_.ab_ops = &avb_ab_ops_;
+  avb_ops_.atx_ops = &avb_atx_ops_;
   avb_ops_.user_data = this;
   avb_ops_.read_from_partition = my_ops_read_from_partition;
   avb_ops_.write_to_partition = my_ops_write_to_partition;
@@ -293,11 +379,18 @@ FakeAvbOps::FakeAvbOps() {
   avb_ops_.write_rollback_index = my_ops_write_rollback_index;
   avb_ops_.read_is_device_unlocked = my_ops_read_is_device_unlocked;
   avb_ops_.get_unique_guid_for_partition = my_ops_get_unique_guid_for_partition;
+  avb_ops_.get_size_of_partition = my_ops_get_size_of_partition;
 
   // Just use the built-in A/B metadata read/write routines.
   avb_ab_ops_.ops = &avb_ops_;
   avb_ab_ops_.read_ab_metadata = avb_ab_data_read;
   avb_ab_ops_.write_ab_metadata = avb_ab_data_write;
+
+  avb_atx_ops_.ops = &avb_ops_;
+  avb_atx_ops_.read_permanent_attributes = my_ops_read_permanent_attributes;
+  avb_atx_ops_.read_permanent_attributes_hash =
+      my_ops_read_permanent_attributes_hash;
+  avb_atx_ops_.set_key_version = my_ops_set_key_version;
 
   delegate_ = this;
 }

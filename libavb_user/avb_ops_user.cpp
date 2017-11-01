@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+#include "avb_ops_user.h"
+
 #include <errno.h>
 #include <fcntl.h>
 #include <linux/fs.h>
@@ -35,19 +37,14 @@
 #include <cutils/properties.h>
 #include <fs_mgr.h>
 
-#include "avb_ops_device.h"
+#include <libavb_ab/libavb_ab.h>
 
 /* Open the appropriate fstab file and fallback to /fstab.device if
  * that's what's being used.
  */
 static struct fstab* open_fstab(void) {
-  char propbuf[PROPERTY_VALUE_MAX];
-  char fstab_name[PROPERTY_VALUE_MAX + 32];
-  struct fstab* fstab;
+  struct fstab* fstab = fs_mgr_read_fstab_default();
 
-  property_get("ro.hardware", propbuf, "");
-  snprintf(fstab_name, sizeof(fstab_name), "/fstab.%s", propbuf);
-  fstab = fs_mgr_read_fstab(fstab_name);
   if (fstab != NULL) {
     return fstab;
   }
@@ -100,7 +97,7 @@ static int open_partition(const char* name, int flags) {
     }
     trimmed_len = end_slash - record->blk_device + 1;
     name_len = strlen(name);
-    path = calloc(trimmed_len + name_len + 1, 1);
+    path = static_cast<char*>(calloc(trimmed_len + name_len + 1, 1));
     strncpy(path, record->blk_device, trimmed_len);
     strncpy(path + trimmed_len, name, name_len);
   }
@@ -125,9 +122,19 @@ static AvbIOResult read_from_partition(AvbOps* ops,
 
   fd = open_partition(partition, O_RDONLY);
   if (fd == -1) {
-    avb_errorv("Error opening \"", partition, "\" partition.\n", NULL);
-    ret = AVB_IO_RESULT_ERROR_IO;
+    ret = AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
     goto out;
+  }
+
+  if (offset < 0) {
+    uint64_t partition_size;
+    if (ioctl(fd, BLKGETSIZE64, &partition_size) != 0) {
+      avb_errorv(
+          "Error getting size of \"", partition, "\" partition.\n", NULL);
+      ret = AVB_IO_RESULT_ERROR_IO;
+      goto out;
+    }
+    offset = partition_size - (-offset);
   }
 
   where = lseek(fd, offset, SEEK_SET);
@@ -214,35 +221,117 @@ out:
   return ret;
 }
 
-AvbABOps* avb_ops_device_new(void) {
-  AvbABOps* ab_ops;
-
-  ab_ops = calloc(1, sizeof(AvbABOps));
-  if (ab_ops == NULL) {
-    avb_error("Error allocating memory for AvbABOps.\n");
-    goto out;
+static AvbIOResult validate_vbmeta_public_key(
+    AvbOps* ops,
+    const uint8_t* public_key_data,
+    size_t public_key_length,
+    const uint8_t* public_key_metadata,
+    size_t public_key_metadata_length,
+    bool* out_is_trusted) {
+  if (out_is_trusted != NULL) {
+    *out_is_trusted = true;
   }
-
-  ab_ops->ops = calloc(1, sizeof(AvbOps));
-  if (ab_ops->ops == NULL) {
-    avb_error("Error allocating memory for AvbOps.\n");
-    free(ab_ops);
-    goto out;
-  }
-
-  /* We only need these operations since that's all what is being used
-   * by the A/B routines.
-   */
-  ab_ops->ops->read_from_partition = read_from_partition;
-  ab_ops->ops->write_to_partition = write_to_partition;
-  ab_ops->read_ab_metadata = avb_ab_data_read;
-  ab_ops->write_ab_metadata = avb_ab_data_write;
-
-out:
-  return ab_ops;
+  return AVB_IO_RESULT_OK;
 }
 
-void avb_ops_device_free(AvbABOps* ab_ops) {
-  free(ab_ops->ops);
-  free(ab_ops);
+static AvbIOResult read_rollback_index(AvbOps* ops,
+                                       size_t rollback_index_location,
+                                       uint64_t* out_rollback_index) {
+  if (out_rollback_index != NULL) {
+    *out_rollback_index = 0;
+  }
+  return AVB_IO_RESULT_OK;
+}
+
+static AvbIOResult write_rollback_index(AvbOps* ops,
+                                        size_t rollback_index_location,
+                                        uint64_t rollback_index) {
+  return AVB_IO_RESULT_OK;
+}
+
+static AvbIOResult read_is_device_unlocked(AvbOps* ops, bool* out_is_unlocked) {
+  if (out_is_unlocked != NULL) {
+    *out_is_unlocked = true;
+  }
+  return AVB_IO_RESULT_OK;
+}
+
+static AvbIOResult get_size_of_partition(AvbOps* ops,
+                                         const char* partition,
+                                         uint64_t* out_size_in_bytes) {
+  int fd;
+  AvbIOResult ret;
+
+  fd = open_partition(partition, O_WRONLY);
+  if (fd == -1) {
+    avb_errorv("Error opening \"", partition, "\" partition.\n", NULL);
+    ret = AVB_IO_RESULT_ERROR_IO;
+    goto out;
+  }
+
+  if (out_size_in_bytes != NULL) {
+    if (ioctl(fd, BLKGETSIZE64, out_size_in_bytes) != 0) {
+      avb_errorv(
+          "Error getting size of \"", partition, "\" partition.\n", NULL);
+      ret = AVB_IO_RESULT_ERROR_IO;
+      goto out;
+    }
+  }
+
+  ret = AVB_IO_RESULT_OK;
+
+out:
+  if (fd != -1) {
+    if (close(fd) != 0) {
+      avb_error("Error closing file descriptor.\n");
+    }
+  }
+  return ret;
+}
+
+static AvbIOResult get_unique_guid_for_partition(AvbOps* ops,
+                                                 const char* partition,
+                                                 char* guid_buf,
+                                                 size_t guid_buf_size) {
+  if (guid_buf != NULL && guid_buf_size > 0) {
+    guid_buf[0] = '\0';
+  }
+  return AVB_IO_RESULT_OK;
+}
+
+AvbOps* avb_ops_user_new(void) {
+  AvbOps* ops;
+
+  ops = static_cast<AvbOps*>(calloc(1, sizeof(AvbOps)));
+  if (ops == NULL) {
+    avb_error("Error allocating memory for AvbOps.\n");
+    goto out;
+  }
+
+  ops->ab_ops = static_cast<AvbABOps*>(calloc(1, sizeof(AvbABOps)));
+  if (ops->ab_ops == NULL) {
+    avb_error("Error allocating memory for AvbABOps.\n");
+    free(ops);
+    goto out;
+  }
+  ops->ab_ops->ops = ops;
+
+  ops->read_from_partition = read_from_partition;
+  ops->write_to_partition = write_to_partition;
+  ops->validate_vbmeta_public_key = validate_vbmeta_public_key;
+  ops->read_rollback_index = read_rollback_index;
+  ops->write_rollback_index = write_rollback_index;
+  ops->read_is_device_unlocked = read_is_device_unlocked;
+  ops->get_unique_guid_for_partition = get_unique_guid_for_partition;
+  ops->get_size_of_partition = get_size_of_partition;
+  ops->ab_ops->read_ab_metadata = avb_ab_data_read;
+  ops->ab_ops->write_ab_metadata = avb_ab_data_write;
+
+out:
+  return ops;
+}
+
+void avb_ops_user_free(AvbOps* ops) {
+  free(ops->ab_ops);
+  free(ops);
 }

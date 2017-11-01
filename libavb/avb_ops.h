@@ -66,8 +66,15 @@ typedef struct AvbOps AvbOps;
 /* Forward-declaration of operations in libavb_ab. */
 struct AvbABOps;
 
+/* Forward-declaration of operations in libavb_atx. */
+struct AvbAtxOps;
+
 /* High-level operations/functions/methods that are platform
  * dependent.
+ *
+ * Operations may be added in the future so when implementing it
+ * always make sure to zero out sizeof(AvbOps) bytes of the struct to
+ * ensure that unimplemented operations are set to NULL.
  */
 struct AvbOps {
   /* This pointer can be used by the application/bootloader using
@@ -80,6 +87,11 @@ struct AvbOps {
    * AvbABOps. Otherwise it must be set to NULL.
    */
   struct AvbABOps* ab_ops;
+
+  /* If libavb_atx is used, this should point to the
+   * AvbAtxOps. Otherwise it must be set to NULL.
+   */
+  struct AvbAtxOps* atx_ops;
 
   /* Reads |num_bytes| from offset |offset| from partition with name
    * |partition| (NUL-terminated UTF-8 string). If |offset| is
@@ -197,6 +209,16 @@ struct AvbOps {
                                                const char* partition,
                                                char* guid_buf,
                                                size_t guid_buf_size);
+
+  /* Gets the size of a partition with the name in |partition|
+   * (NUL-terminated UTF-8 string). Returns the value in
+   * |out_size_num_bytes|.
+   *
+   * Returns AVB_IO_RESULT_OK on success, otherwise an error code.
+   */
+  AvbIOResult (*get_size_of_partition)(AvbOps* ops,
+                                       const char* partition,
+                                       uint64_t* out_size_num_bytes);
 };
 
 #ifdef __cplusplus

@@ -50,6 +50,11 @@ std::string mem_to_hexstring(const uint8_t* data, size_t len);
 
 namespace avb {
 
+// These two functions are in avb_sysdeps_posix_testing.cc and is
+// used for finding memory leaks.
+void testing_memory_reset();
+size_t testing_memory_all_freed();
+
 /* Base-class used for unit test. */
 class BaseAvbToolTest : public ::testing::Test {
  public:
@@ -96,11 +101,13 @@ class BaseAvbToolTest : public ::testing::Test {
   /* Generate a file with name |file_name| of size |image_size| with
    * known content (0x00 0x01 0x02 .. 0xff 0x00 0x01 ..).
    */
-  base::FilePath GenerateImage(const std::string file_name, size_t image_size) {
+  base::FilePath GenerateImage(const std::string file_name,
+                               size_t image_size,
+                               uint8_t start_byte = 0) {
     std::vector<uint8_t> image;
     image.resize(image_size);
     for (size_t n = 0; n < image_size; n++) {
-      image[n] = uint8_t(n);
+      image[n] = uint8_t(n + start_byte);
     }
     base::FilePath image_path = testdir_.Append(file_name);
     EXPECT_EQ(image_size,
@@ -136,19 +143,23 @@ class BaseAvbToolTest : public ::testing::Test {
     return key_data;
   }
 
-  /* Create temporary directory to stash images in. */
   virtual void SetUp() override {
+    /* Create temporary directory to stash images in. */
     base::FilePath ret;
     char* buf = strdup("/tmp/libavb-tests.XXXXXX");
     ASSERT_TRUE(mkdtemp(buf) != nullptr);
     testdir_ = base::FilePath(buf);
     free(buf);
+    /* Reset memory leak tracing */
+    avb::testing_memory_reset();
   }
 
-  /* Nuke temporary directory. */
   virtual void TearDown() override {
+    /* Nuke temporary directory. */
     ASSERT_EQ(0U, testdir_.value().find("/tmp/libavb-tests"));
     ASSERT_TRUE(base::DeleteFile(testdir_, true /* recursive */));
+    /* Ensure all memory has been freed. */
+    EXPECT_TRUE(avb::testing_memory_all_freed());
   }
 
   /* Temporary directory created in SetUp(). */

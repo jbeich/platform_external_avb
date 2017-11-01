@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 The Android Open Source Project
+ * Copyright (C) 2017 The Android Open Source Project
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,19 +22,13 @@
  * SOFTWARE.
  */
 
-#ifndef AVB_OPS_DEVICE_H_
-#define AVB_OPS_DEVICE_H_
+#include "avb_version.h"
 
-#include <libavb_ab/libavb_ab.h>
+#define AVB_QUOTE(str) #str
+#define AVB_EXPAND_AND_QUOTE(str) AVB_QUOTE(str)
 
-/* Allocates an AvbOps instance suitable for use on the
- * device. Returns NULL on OOM.
- *
- * Free with avb_ops_device_free().
- */
-AvbABOps* avb_ops_device_new(void);
-
-/* Frees an AvbOps instance previously allocated with avb_ops_device_new(). */
-void avb_ops_device_free(AvbABOps* ab_ops);
-
-#endif /* AVB_OPS_DEVICE_H_ */
+/* Keep in sync with get_release_string() in avbtool. */
+const char* avb_version_string(void) {
+  return AVB_EXPAND_AND_QUOTE(AVB_VERSION_MAJOR) "." AVB_EXPAND_AND_QUOTE(
+      AVB_VERSION_MINOR) "." AVB_EXPAND_AND_QUOTE(AVB_VERSION_SUB);
+}
