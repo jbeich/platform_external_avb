@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e91ad168_f496e1a4",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2810,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-11-01T19:55:26Z",
+      "side": 1,
+      "message": "this pattern is repeatedly used in this file, but will trigger an exception when the input image is small (might be true if it is a small partition with just config data).\n\nIn fact, a lot of the code in this file lots like copy-pasted code. If your team has the energy/time (which I personally do not have right now), maybe it is a good idea to deduplicate (and unit test) them. Just a kind suggestion.",
+      "range": {
+        "startLine": 2810,
+        "startChar": 6,
+        "endLine": 2810,
+        "endChar": 51
+      },
+      "revId": "55e331bbe2ed61a625c75f50f385cf62a702ff3b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
