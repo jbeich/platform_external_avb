@@ -2858,28 +2858,29 @@ class Avb(object):
           signing_helper_with_files, release_string,
           append_to_release_string)
 
-      # If the image isn't sparse, its size might not be a multiple of
-      # the block size. This will screw up padding later so just grow it.
-      if image.image_size % image.block_size != 0:
-        assert not image.is_sparse
-        padding_needed = image.block_size - (image.image_size%image.block_size)
-        image.truncate(image.image_size + padding_needed)
-
-      # The append_raw() method requires content with size being a
-      # multiple of |block_size| so add padding as needed. Also record
-      # where this is written to since we'll need to put that in the
-      # footer.
-      vbmeta_offset = image.image_size
-      padding_needed = (round_to_multiple(len(vbmeta_blob), image.block_size) -
-                        len(vbmeta_blob))
-      vbmeta_blob_with_padding = vbmeta_blob + '\0'*padding_needed
-
       # Write vbmeta blob, if requested.
       if output_vbmeta_image:
         output_vbmeta_image.write(vbmeta_blob)
 
       # Append vbmeta blob and footer, unless requested not to.
       if not do_not_append_vbmeta_image:
+        # If the image isn't sparse, its size might not be a multiple of
+        # the block size. This will screw up padding later so just grow it.
+        if image.image_size % image.block_size != 0:
+          assert not image.is_sparse
+          padding_needed = image.block_size - (
+              image.image_size%image.block_size)
+          image.truncate(image.image_size + padding_needed)
+
+        # The append_raw() method requires content with size being a
+        # multiple of |block_size| so add padding as needed. Also record
+        # where this is written to since we'll need to put that in the
+        # footer.
+        vbmeta_offset = image.image_size
+        padding_needed = (round_to_multiple(len(vbmeta_blob), image.block_size)
+                          - len(vbmeta_blob))
+        vbmeta_blob_with_padding = vbmeta_blob + '\0'*padding_needed
+
         image.append_raw(vbmeta_blob_with_padding)
         vbmeta_end_offset = vbmeta_offset + len(vbmeta_blob_with_padding)
 
