@@ -1363,7 +1363,7 @@ TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
                         d.kernel_cmdline_length));
 }
 
-TEST_F(AvbToolTest, AddHashFooterSmallImage) {
+TEST_F(AvbToolTest, AddHashFooterSmallImageWithExternalVbmeta) {
   const size_t image_size = 37;
   const size_t partition_size = 20 * 4096;
 
@@ -1389,6 +1389,8 @@ TEST_F(AvbToolTest, AddHashFooterSmallImage) {
                  image_path.value().c_str(),
                  partition_size,
                  ext_vbmeta_path.value().c_str());
+
+  // It is not this unit test's job to check the vbmeta content.
 
   int64_t file_size;
   ASSERT_TRUE(base::GetFileSize(image_path, &file_size));
