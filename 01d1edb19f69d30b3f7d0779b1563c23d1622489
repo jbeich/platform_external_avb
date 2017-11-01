@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c36d557a_fc2edfd5",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 167,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-11-01T21:38:05Z",
+      "side": 1,
+      "message": "Done.\n\nThis theoretically could happen when a 64-bit 4GB kernel (which is suppose to be loaded into a 64-bit bootloader...) is incorrectly loaded by a 32-bit bootloader... not sure if this is something you might want to consider to happen in userland programs.\n\nit is probably not a good idea to load all hashed partitions into memory (some of them might just need a hash for integrity but does not need to be booted), but anyways... I will have this get_preloaded_partition, so I am happy.\n\na side note, I just found out yesterday that our uboot actually do not have a heap large enough by default to malloc() for the entire kernel. the heap size might be tunable, but feels like a waste to increase it. preloaded partition solves all that.",
+      "parentUuid": "816751dc_1f42e2ba",
+      "range": {
+        "startLine": 167,
+        "startChar": 10,
+        "endLine": 167,
+        "endChar": 41
+      },
+      "revId": "01d1edb19f69d30b3f7d0779b1563c23d1622489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d357d70_fa8c3fb0",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 9
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "70007502_1b8874b9",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-11-01T21:38:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d357d70_fa8c3fb0",
+      "range": {
+        "startLine": 174,
+        "startChar": 4,
+        "endLine": 174,
+        "endChar": 37
+      },
+      "revId": "01d1edb19f69d30b3f7d0779b1563c23d1622489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "0c4c23e0_6fbf1a98",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 9
@@ -59,6 +107,24 @@
       "writtenOn": "2017-10-31T20:52:34Z",
       "side": 1,
       "message": "Also need to use get_preloaded_partition() in this function.",
+      "revId": "01d1edb19f69d30b3f7d0779b1563c23d1622489",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "91daad46_f080aa5c",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-11-01T21:38:05Z",
+      "side": 1,
+      "message": "Done. I am extracting the common part out into a function.",
+      "parentUuid": "0c4c23e0_6fbf1a98",
       "revId": "01d1edb19f69d30b3f7d0779b1563c23d1622489",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
