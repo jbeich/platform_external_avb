@@ -1,0 +1,9 @@
+Code-Review+2: Jocelyn Bohr <bohr@google.com>
+Verified+1: Darren Krahn <dkrahn@google.com>
+Autosubmit+1: Darren Krahn <dkrahn@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Sat, 04 Nov 2017 01:01:23 +0000
+Reviewed-on: https://android-review.googlesource.com/529083
+Project: platform/external/avb
+Branch: refs/heads/master
