@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84b6c4e5_d0166ab4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-11-08T16:59:33Z",
+      "side": 1,
+      "message": "Per boot_control.h the isSlotBootable() operation is allowed to return whatever negative errno it wants... so this seems like a bug in the VTS ... it should probably just check that whatever it returns is negative if the passed-in slot doesn\u0027t exist.",
+      "revId": "2220d4df40a7531d08821274540dcd93ed72c38b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "2abe61a3_6f261a67",
+        "filename": "boot_control/boot_control_avb.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-11-08T16:59:33Z",
+      "side": 1,
+      "message": "Couple of problems:\n\n1. It\u0027s not at all intuitive that this macro will return -EIO if the condition is not met. Usually if macros with a embedded return is used, the name will say so (e.g. return_if_fail(expr) or similar). In this case, just expand the macro - it\u0027s clearer that way.\n\n2. No I/O is going on so EIO is not a good error code. EINVAL or ENOENT would be a better error code to return.\n\n3. We already have a check below, why add another one? Why not just delete the assert?",
+      "revId": "2220d4df40a7531d08821274540dcd93ed72c38b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6dad01db_77341115",
+        "filename": "libavb_ab/avb_ab_flow.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-11-08T16:59:33Z",
+      "side": 1,
+      "message": "This function returns an AvbIOResult but you are returning -EIO which is not an allowed value. Just stay with the assert.",
+      "revId": "2220d4df40a7531d08821274540dcd93ed72c38b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
