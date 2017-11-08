@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "caedabb6_e1f33865",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1115183
+      },
+      "writtenOn": "2017-11-08T19:43:57Z",
+      "side": 1,
+      "message": "VTS tests the treble interface defined in https://android.googlesource.com/platform/hardware/interfaces/+/master/boot/1.0/IBootControl.hal not the legacy interface described in boot_control.h. This project implements the legacy interface, so it needs to be wrapped with the Treble HAL implementation in https://android.googlesource.com/platform/hardware/interfaces/+/master/boot/1.0/default/BootControl.cpp in order to pass VTS.",
+      "parentUuid": "84b6c4e5_d0166ab4",
+      "revId": "2220d4df40a7531d08821274540dcd93ed72c38b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2abe61a3_6f261a67",
         "filename": "boot_control/boot_control_avb.c",
         "patchSetId": 1
