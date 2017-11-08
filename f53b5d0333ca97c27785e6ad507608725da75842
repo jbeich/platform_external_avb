@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d52a830c_4f3aa657",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1231496
+      },
+      "writtenOn": "2017-11-08T01:54:41Z",
+      "side": 1,
+      "message": "linux_glibc breaks make in the top directory for me for the default lunch target:\n\nerror: external/avb/Android.bp:95:20: unrecognized property \"target.linux_glibc\"",
+      "range": {
+        "startLine": 95,
+        "startChar": 14,
+        "endLine": 95,
+        "endChar": 18
+      },
+      "revId": "f53b5d0333ca97c27785e6ad507608725da75842",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
