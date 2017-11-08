@@ -21,7 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+#include <errno.h>
 #include "avb_ab_flow.h"
 
 bool avb_ab_data_verify_and_byteswap(const AvbABData* src, AvbABData* dest) {
@@ -412,7 +412,7 @@ AvbIOResult avb_ab_mark_slot_active(AvbABOps* ab_ops,
   unsigned int other_slot_number;
   AvbIOResult ret;
 
-  avb_assert(slot_number < 2);
+  avb_slot_check(slot_number < 2);
 
   ret = load_metadata(ab_ops, &ab_data, &ab_data_orig);
   if (ret != AVB_IO_RESULT_OK) {
@@ -444,7 +444,7 @@ AvbIOResult avb_ab_mark_slot_unbootable(AvbABOps* ab_ops,
   AvbABData ab_data, ab_data_orig;
   AvbIOResult ret;
 
-  avb_assert(slot_number < 2);
+  avb_slot_check(slot_number < 2);
 
   ret = load_metadata(ab_ops, &ab_data, &ab_data_orig);
   if (ret != AVB_IO_RESULT_OK) {
@@ -467,7 +467,7 @@ AvbIOResult avb_ab_mark_slot_successful(AvbABOps* ab_ops,
   AvbABData ab_data, ab_data_orig;
   AvbIOResult ret;
 
-  avb_assert(slot_number < 2);
+  avb_slot_check(slot_number < 2);
 
   ret = load_metadata(ab_ops, &ab_data, &ab_data_orig);
   if (ret != AVB_IO_RESULT_OK) {
