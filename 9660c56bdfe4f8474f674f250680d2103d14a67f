@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4c80e7e2_81482600",
+        "filename": "libavb_ab/avb_ab_flow.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 417,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-11-09T15:09:18Z",
+      "side": 1,
+      "message": "Passing in an invalid slot number is not a recoverable error (it\u0027s a programmer error e.g. the contract is that slot_number must be either 0 or 1) so the assert() is correct. Ditto below.",
+      "revId": "9660c56bdfe4f8474f674f250680d2103d14a67f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
