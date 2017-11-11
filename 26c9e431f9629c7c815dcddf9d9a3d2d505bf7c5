@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab15a889_a06a8ee3",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1125188
+      },
+      "writtenOn": "2017-11-11T02:37:07Z",
+      "side": 1,
+      "message": "It\u0027s possible that the console uses a timestamp to determine the rollback index, and if we rotate the PIK once every several years the increase threshold could be large",
+      "range": {
+        "startLine": 34,
+        "startChar": 56,
+        "endLine": 34,
+        "endChar": 62
+      },
+      "revId": "26c9e431f9629c7c815dcddf9d9a3d2d505bf7c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
