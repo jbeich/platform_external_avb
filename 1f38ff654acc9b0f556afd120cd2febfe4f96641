@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "af4400aa_f01bf176",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-11-13T21:51:17Z",
+      "side": 1,
+      "message": "Hi David. thanks for the comment.\n\nIt is not really about the \"androidboot.\" prefixes. Maybe it is miswording to say they are android specific (fwiw, I removed that from the commit message), but I really do not need those code in our bootloader. Our verified boot is already working with all these code deleted. All things I need for dm-verity can be generated on image provisioning time in the vbmeta command line descriptor. Having these code in our bootloader only enlarges the attack surface, which is what I worry the most.\n\nFYI, here is how our command line is generated:\nhttps://critique.corp.google.com/#review/175255635 \n\nTo setup dm-verity, the /init only needs the image size, salt, hash and hashalg, which can all be put into the command line descriptor when preparing vbmeta, similar to how --setup_rootfs_from_kernel works.\n\nWe also do not have non-root partitions, but even if we had, we would also prefer to put it into the command line descriptor during provisioning, and just pass it through without modification in the bootloader.\n\nAlso, we do not use UUID for partitions, so we do not need string replacements. For device_state (locked vs unlocked, or prod vs dev), we simply use different signing keys as we own and control all the devices.\n\nI guess one of the important reasons that android\u0027s setup here needs some of the \"androidboot.\" things is because that the same vbmeta is parsed from disk again in the userland in /init ( based on what I understand from https://b.corp.google.com/issues/67854557#comment6 ), so you need to at least pass the hash of the main vbmeta (\"androidboot.vbmeta.digest\") to make sure the userland /init is parsing the same one, and of course, this hash of the vbmeta cannot be saved in vbmeta itself in advance. Therefore the bootloader has to append this hash to the command line dynamically on booting.\n\nI am in no place to judge if this android\u0027s design choice is good or bad, and I would prefer not to make this more complicated by adding more branches to the logic (like ANDROID_SYSTEM_xxx vs SYSTEM_xxx). I am just looking for an easy way for me to drop the code that I do not need, while I can simply copy in most of the other code with no modification from libavb upstream -- here.",
+      "parentUuid": "fa2221e2_0c06aa74",
+      "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3611a84e_60f6f78d",
         "filename": "libavb/avb_cmdline.h",
         "patchSetId": 3
@@ -36,6 +54,24 @@
     },
     {
       "key": {
+        "uuid": "06052b67_050f2482",
+        "filename": "libavb/avb_cmdline.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-11-13T21:51:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3611a84e_60f6f78d",
+      "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f6b11241_0be659e8",
         "filename": "libavb/avb_cmdline.h",
         "patchSetId": 3
@@ -47,6 +83,24 @@
       "writtenOn": "2017-11-13T18:43:30Z",
       "side": 1,
       "message": "Prepend both function names with avb_.",
+      "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a19b3bcf_91ba7ba7",
+        "filename": "libavb/avb_cmdline.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1242600
+      },
+      "writtenOn": "2017-11-13T21:51:17Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6b11241_0be659e8",
       "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
