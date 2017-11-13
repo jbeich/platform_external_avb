@@ -1,0 +1,9 @@
+Verified+1: Sandeep Patil <sspatil@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+1: Bowgo Tsai <bowgotsai@google.com>
+Code-Review+2: Tom Cherry <tomcherry@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Mon, 13 Nov 2017 16:36:31 +0000
+Reviewed-on: https://android-review.googlesource.com/534679
+Project: platform/external/avb
+Branch: refs/heads/master
