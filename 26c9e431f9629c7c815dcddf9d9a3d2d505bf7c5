@@ -46,6 +46,30 @@
       "revId": "26c9e431f9629c7c815dcddf9d9a3d2d505bf7c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "75779d85_0e4c2e05",
+        "filename": "examples/things/avb_atx_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1125188
+      },
+      "writtenOn": "2017-11-13T22:44:55Z",
+      "side": 1,
+      "message": "Sounds good!",
+      "parentUuid": "074365ad_b7a4748d",
+      "range": {
+        "startLine": 34,
+        "startChar": 56,
+        "endLine": 34,
+        "endChar": 62
+      },
+      "revId": "26c9e431f9629c7c815dcddf9d9a3d2d505bf7c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
