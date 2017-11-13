@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fa2221e2_0c06aa74",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-11-13T18:43:30Z",
+      "side": 1,
+      "message": "There\u0027s actually nothing Android-specific about the added cmdline options... maybe it\u0027s the \"androidboot.\" and \"ANDROID_\" prefixes that makes you think so? I mean, you\u0027ll need this information in other OSes too if e.g. you intend to setup dm-verity on non-root partitions...\n\nHere\u0027s an idea...\n\n1. Add the following to avb_sysdeps.h:\n\n /* This prefix will be used for passing options (e.g.\n  * androidboot.veritymode, androidboot.vbmeta.digest etc.)\n  * to user space on the kernel command-line. On Android\n  * this should be \"androidboot.\" but other operating systems\n  * is free to use a more suitable prefix.\n  */\n #define AVB_KERNEL_OPTION_PREFIX \"androidboot.\"\n\nand use AVB_KERNEL_OPTION_PREFIX everywhere instead of \"androidboot.\".\n\n2. Add support in sub_cmdline() for ${SYSTEM_PARTUUID}, ${BOOT_PARTUUID}, ${VBMETA_PARTUUID}\n\n3. Rename avbtool\u0027s  --setup_rootfs_from_kernel to --android_setup_rootfs_from_kernel option (but keep support for --setup_rootfs_from_kernel for backwards compat).",
+      "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3611a84e_60f6f78d",
+        "filename": "libavb/avb_cmdline.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-11-13T18:43:30Z",
+      "side": 1,
+      "message": "Prepend with AVB_",
+      "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f6b11241_0be659e8",
+        "filename": "libavb/avb_cmdline.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-11-13T18:43:30Z",
+      "side": 1,
+      "message": "Prepend both function names with avb_.",
+      "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
