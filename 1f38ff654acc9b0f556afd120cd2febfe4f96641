@@ -37,6 +37,24 @@
     },
     {
       "key": {
+        "uuid": "4b1737f6_c8e743a2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2017-11-14T15:04:30Z",
+      "side": 1,
+      "message": "Yes, AVB was designed explicitly to have userspace set up additional verity partitions because requirements. Which is why androidboot.* variables exist. I realize you don\u0027t have these requirements, great, but other OSes may!\n\nNo worries, we can always make the change I suggested later.",
+      "parentUuid": "af4400aa_f01bf176",
+      "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3611a84e_60f6f78d",
         "filename": "libavb/avb_cmdline.h",
         "patchSetId": 3
