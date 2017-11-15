@@ -55,6 +55,24 @@
     },
     {
       "key": {
+        "uuid": "e5b5e725_f6406ab6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-11-15T07:39:57Z",
+      "side": 1,
+      "message": "re: so you need to at least pass the hash of the main vbmeta (\"androidboot.vbmeta.digest\") to make sure the userland /init is parsing the same one,\n\nCorrect. In Android, there are more non-root partitions: /vendor, and /odm, /oem in the future. So we wanted to void putting too much stuff into kernel cmdline.",
+      "parentUuid": "4b1737f6_c8e743a2",
+      "revId": "1f38ff654acc9b0f556afd120cd2febfe4f96641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3611a84e_60f6f78d",
         "filename": "libavb/avb_cmdline.h",
         "patchSetId": 3
