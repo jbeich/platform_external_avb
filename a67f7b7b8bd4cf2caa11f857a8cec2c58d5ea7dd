@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "989da639_fc2999d4",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2017-11-15T07:59:34Z",
+      "side": 1,
+      "message": "You should just include libavb_user into PRODUCT_STATIC_BOOT_CONTROL_HAL",
+      "range": {
+        "startLine": 227,
+        "startChar": 9,
+        "endLine": 227,
+        "endChar": 20
+      },
+      "revId": "a67f7b7b8bd4cf2caa11f857a8cec2c58d5ea7dd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
