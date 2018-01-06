@@ -520,6 +520,18 @@ to embed a blob (`AVB_pkmd` in the following) that can be used to
 e.g. derive `AVB_pk`. Both `AVB_pk` and `AVB_pkmd` are passed to the
 `validate_vbmeta_public_key()` operation when verifying a slot.
 
+On the Pixel 2 and Pixel 2 XL, `AVB_pkmd` can be flashed to the device
+with fastboot when the bootloader is in the UNLOCKED state:
+
+    avbtool extract_public_key --key key.pem --output pkmd.bin
+    fastboot flash avb_custom_key pkmd.bin
+
+It can be cleared with an erase command:
+
+    fastboot erase avb_custom_key
+
+Other devices may use a different mechanism for setting a custom public key.
+
 To prevent rollback attacks, the rollback index should be increased on
 a regular basis. The rollback index can be set with the
 `BOARD_AVB_ROLLBACK_INDEX` variable:
