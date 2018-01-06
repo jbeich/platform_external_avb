@@ -1,0 +1,10 @@
+Code-Review+2: Pirama Arumuga Nainar <pirama@google.com>
+Code-Review+1: Bowgo Tsai <bowgotsai@google.com>
+Verified+1: Yi Kong <yikong@google.com>
+Autosubmit+1: Yi Kong <yikong@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Sat, 06 Jan 2018 10:14:26 +0000
+Reviewed-on: https://android-review.googlesource.com/579088
+Project: platform/external/avb
+Branch: refs/heads/master
