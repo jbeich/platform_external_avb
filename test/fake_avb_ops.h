@@ -47,7 +47,9 @@ class FakeAvbOpsDelegate {
                                           size_t* out_num_read) = 0;
 
   virtual AvbIOResult get_preloaded_partition(
-      const char* partition, size_t num_bytes, uint8_t** out_pointer,
+      const char* partition,
+      size_t num_bytes,
+      uint8_t** out_pointer,
       size_t* out_num_bytes_preloaded) = 0;
 
   virtual AvbIOResult write_to_partition(const char* partition,
@@ -91,6 +93,8 @@ class FakeAvbOpsDelegate {
 
   virtual void set_key_version(size_t rollback_index_location,
                                uint64_t key_version) = 0;
+
+  virtual AvbIOResult get_random(size_t num_bytes, uint8_t* output) = 0;
 };
 
 // Provides fake implementations of AVB ops. All instances of this class must be
@@ -182,9 +186,10 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
                                   void* buffer,
                                   size_t* out_num_read) override;
 
-  AvbIOResult get_preloaded_partition(
-      const char* partition, size_t num_bytes, uint8_t** out_pointer,
-      size_t* out_num_bytes_preloaded) override;
+  AvbIOResult get_preloaded_partition(const char* partition,
+                                      size_t num_bytes,
+                                      uint8_t** out_pointer,
+                                      size_t* out_num_bytes_preloaded) override;
 
   AvbIOResult write_to_partition(const char* partition,
                                  int64_t offset,
@@ -226,6 +231,8 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   void set_key_version(size_t rollback_index_location,
                        uint64_t key_version) override;
+
+  AvbIOResult get_random(size_t num_bytes, uint8_t* output) override;
 
  private:
   AvbOps avb_ops_;
