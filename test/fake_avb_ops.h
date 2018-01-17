@@ -103,6 +103,8 @@ class FakeAvbOpsDelegate {
 
   virtual void set_key_version(size_t rollback_index_location,
                                uint64_t key_version) = 0;
+
+  virtual AvbIOResult get_random(size_t num_bytes, uint8_t* output) = 0;
 };
 
 // Provides fake implementations of AVB ops. All instances of this class must be
@@ -248,6 +250,8 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   void set_key_version(size_t rollback_index_location,
                        uint64_t key_version) override;
+
+  AvbIOResult get_random(size_t num_bytes, uint8_t* output) override;
 
  private:
   AvbOps avb_ops_;
