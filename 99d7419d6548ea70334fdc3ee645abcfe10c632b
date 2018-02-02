@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2bfd407_47194314",
+        "filename": "libavb_atx/avb_atx_validate.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1125188
+      },
+      "writtenOn": "2018-02-02T19:04:58Z",
+      "side": 1,
+      "message": "What is the rationale for having the PSK and PUK share the same min version? I think that the PSK min version is bumped fairly regularly, so it might be a pain to have to purge all RMA center ATFAs of PUKs with every time the OEM pushes a software update.",
+      "range": {
+        "startLine": 367,
+        "startChar": 0,
+        "endLine": 367,
+        "endChar": 79
+      },
+      "revId": "99d7419d6548ea70334fdc3ee645abcfe10c632b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
