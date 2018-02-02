@@ -55,4 +55,13 @@ AvbSlotVerifyResult avb_append_options(
     AvbAlgorithmType algorithm_type,
     AvbHashtreeErrorMode hashtree_error_mode);
 
+/* Adds a hashtree root digest to be substituted in $(AVB_*_ROOT_DIGEST)
+ * variables. The partition name differentiates the variable. For example, if
+ * |part_name| is "foo" then $(AVB_FOO_ROOT_DIGEST) will be substituted with the
+ * hex encoding of the digest. Returns AVB_SLOT_VERIFY_RESULT_OK on success.
+ */
+AvbSlotVerifyResult avb_add_root_digest_substitution(const char* part_name,
+                                                     const uint8_t* digest,
+                                                     size_t digest_size);
+
 #endif
