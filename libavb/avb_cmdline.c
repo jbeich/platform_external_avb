@@ -28,6 +28,29 @@
 #include "avb_version.h"
 
 #define NUM_GUIDS 3
+#define AVB_MAX_DIGEST_SUBSTITUTIONS 4
+
+/* Holds information about a digest substitution. */
+typedef struct AvbRootDigestSubstitution {
+  char part_name[AVB_PART_NAME_MAX_SIZE];
+  uint8_t digest[AVB_SHA512_DIGEST_SIZE];
+  size_t digest_size;
+} AvbRootDigestSubstitution;
+
+static AvbRootDigestSubstitution digest_sub_list[AVB_MAX_DIGEST_SUBSTITUTIONS];
+static size_t digest_sub_list_size = 0;
+
+static AvbRootDigestSubstitution* add_digest_sub() {
+  if (digest_sub_list_size >= AVB_MAX_DIGEST_SUBSTITUTIONS) {
+    avb_error("Too many digest substitutions.\n");
+    return NULL;
+  }
+  return &digest_sub_list[digest_sub_list_size++];
+}
+
+static void clear_digest_sub_list() {
+  digest_sub_list_size = 0;
+}
 
 /* Substitutes all variables (e.g. $(ANDROID_SYSTEM_PARTUUID)) with
  * values. Returns NULL on OOM, otherwise the cmdline with values
@@ -39,8 +62,11 @@ char* avb_sub_cmdline(AvbOps* ops, const char* cmdline, const char* ab_suffix,
   const char* replace_str[NUM_GUIDS] = {"$(ANDROID_SYSTEM_PARTUUID)",
                                         "$(ANDROID_BOOT_PARTUUID)",
                                         "$(ANDROID_VBMETA_PARTUUID)"};
+  const char* digest_sub_prefix = "$(AVB_";
+  const char* digest_sub_suffix = "_ROOT_DIGEST)";
   char* ret = NULL;
   AvbIOResult io_ret;
+  size_t n;
 
   /* Special-case for when the top-level vbmeta struct is in the boot
    * partition.
@@ -50,7 +76,7 @@ char* avb_sub_cmdline(AvbOps* ops, const char* cmdline, const char* ab_suffix,
   }
 
   /* Replace unique partition GUIDs */
-  for (size_t n = 0; n < NUM_GUIDS; n++) {
+  for (n = 0; n < NUM_GUIDS; n++) {
     char part_name[AVB_PART_NAME_MAX_SIZE];
     char guid_buf[37];
 
@@ -67,7 +93,7 @@ char* avb_sub_cmdline(AvbOps* ops, const char* cmdline, const char* ab_suffix,
     io_ret = ops->get_unique_guid_for_partition(
         ops, part_name, guid_buf, sizeof guid_buf);
     if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
-      return NULL;
+      goto fail;
     } else if (io_ret != AVB_IO_RESULT_OK) {
       avb_error("Error getting unique GUID for partition.\n");
       goto fail;
@@ -84,6 +110,39 @@ char* avb_sub_cmdline(AvbOps* ops, const char* cmdline, const char* ab_suffix,
       goto fail;
     }
   }
+
+  avb_assert(ret != NULL);
+
+  /* Replace digest substitutions. */
+  for (n = 0; n < digest_sub_list_size; ++n) {
+    char* digest_sub_value;
+    char* digest_hex;
+    char* new_ret;
+
+    avb_uppercase(digest_sub_list[n].part_name);
+    digest_sub_value = avb_strdupv(digest_sub_prefix,
+                                   digest_sub_list[n].part_name,
+                                   digest_sub_suffix,
+                                   NULL);
+    if (digest_sub_value == NULL) {
+      goto fail;
+    }
+    digest_hex =
+        avb_bin2hex(digest_sub_list[n].digest, digest_sub_list[n].digest_size);
+    if (digest_hex == NULL) {
+      avb_free(digest_sub_value);
+      goto fail;
+    }
+    new_ret = avb_replace(ret, digest_sub_value, digest_hex);
+    avb_free(ret);
+    ret = new_ret;
+    if (ret == NULL) {
+      goto fail;
+    }
+    avb_free(digest_hex);
+    avb_free(digest_sub_value);
+  }
+  clear_digest_sub_list();
 
   return ret;
 
@@ -185,22 +244,11 @@ static int cmdline_append_hex(AvbSlotVerifyData* slot_data,
                               const char* key,
                               const uint8_t* data,
                               size_t data_len) {
-  char hex_digits[17] = "0123456789abcdef";
-  char* hex_data;
   int ret;
-  size_t n;
-
-  hex_data = avb_malloc(data_len * 2 + 1);
+  char* hex_data = avb_bin2hex(data, data_len);
   if (hex_data == NULL) {
     return 0;
   }
-
-  for (n = 0; n < data_len; n++) {
-    hex_data[n * 2] = hex_digits[data[n] >> 4];
-    hex_data[n * 2 + 1] = hex_digits[data[n] & 0x0f];
-  }
-  hex_data[n * 2] = '\0';
-
   ret = cmdline_append_option(slot_data, key, hex_data);
   avb_free(hex_data);
   return ret;
@@ -368,3 +416,24 @@ out:
   return ret;
 }
 
+AvbSlotVerifyResult avb_add_root_digest_substitution(const char* part_name,
+                                                     const uint8_t* digest,
+                                                     size_t digest_size) {
+  AvbRootDigestSubstitution* new_digest_sub = add_digest_sub();
+  if (!new_digest_sub) {
+    return AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+  }
+  size_t part_name_len = avb_strlen(part_name);
+
+  avb_assert(part_name_len < AVB_PART_NAME_MAX_SIZE);
+  avb_assert(digest_size <= AVB_SHA512_DIGEST_SIZE);
+  if (part_name_len >= AVB_PART_NAME_MAX_SIZE ||
+      digest_size > AVB_SHA512_DIGEST_SIZE) {
+    return AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+  }
+  avb_memcpy(new_digest_sub->part_name, part_name, part_name_len);
+  new_digest_sub->part_name[part_name_len] = '\0';
+  avb_memcpy(new_digest_sub->digest, digest, digest_size);
+  new_digest_sub->digest_size = digest_size;
+  return AVB_SLOT_VERIFY_RESULT_OK;
+}

@@ -33,12 +33,14 @@
 
 namespace avb {
 
-class AvbSlotVerifyTest : public BaseAvbToolTest {
+class AvbSlotVerifyTest : public BaseAvbToolTest,
+                          public FakeAvbOpsDelegateWithDefaults {
  public:
   AvbSlotVerifyTest() {}
 
   virtual void SetUp() override {
     BaseAvbToolTest::SetUp();
+    ops_.set_delegate(this);
     ops_.set_partition_dir(testdir_);
     ops_.set_stored_rollback_indexes({{0, 0}, {1, 0}, {2, 0}, {3, 0}});
     ops_.set_stored_is_device_unlocked(false);
@@ -47,8 +49,6 @@ class AvbSlotVerifyTest : public BaseAvbToolTest {
   void CmdlineWithHashtreeVerification(bool hashtree_verification_on);
   void CmdlineWithChainedHashtreeVerification(bool hashtree_verification_on);
   void VerificationDisabled(bool use_avbctl, bool preload);
-
-  FakeAvbOps ops_;
 };
 
 TEST_F(AvbSlotVerifyTest, Basic) {
@@ -1780,8 +1780,8 @@ TEST_F(AvbSlotVerifyTest, CmdlineWithChainedHashtreeVerificationOn) {
   CmdlineWithChainedHashtreeVerification(true);
 }
 
-void AvbSlotVerifyTest::VerificationDisabled(
-    bool use_avbctl, bool preload_boot) {
+void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
+                                             bool preload_boot) {
   const size_t boot_part_size = 32 * 1024 * 1024;
   const size_t dtbo_part_size = 4 * 1024 * 1024;
   const size_t rootfs_size = 1028 * 1024;
@@ -2437,5 +2437,436 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
     avb_slot_verify_data_free(slot_data);
   }
 }
+
+class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
+ protected:
+  void SetupWithHashDescriptor() {
+    const size_t factory_partition_size = 16 * 1024 * 1024;
+    const size_t factory_image_size = 5 * 1024 * 1024;
+    base::FilePath factory_path =
+        GenerateImage("factory.img", factory_image_size);
+
+    EXPECT_COMMAND(0,
+                   "./avbtool add_hash_footer"
+                   " --image %s"
+                   " --rollback_index 0"
+                   " --partition_name factory"
+                   " --partition_size %zd"
+                   " --salt deadbeef"
+                   " --internal_release_string \"\""
+                   " --use_persistent_digest",
+                   factory_path.value().c_str(),
+                   factory_partition_size);
+
+    GenerateVBMetaImage(
+        "vbmeta_a.img",
+        "SHA256_RSA2048",
+        0,
+        base::FilePath("test/data/testkey_rsa2048.pem"),
+        base::StringPrintf("--internal_release_string \"\" "
+                           "--include_descriptors_from_image %s ",
+                           factory_path.value().c_str()));
+
+    EXPECT_EQ(
+        "Minimum libavb version:   1.0\n"
+        "Header Block:             256 bytes\n"
+        "Authentication Block:     320 bytes\n"
+        "Auxiliary Block:          704 bytes\n"
+        "Algorithm:                SHA256_RSA2048\n"
+        "Rollback Index:           0\n"
+        "Flags:                    0\n"
+        "Release String:           ''\n"
+        "Descriptors:\n"
+        "    Hash descriptor:\n"
+        "      Image Size:            5242880 bytes\n"
+        "      Hash Algorithm:        sha256\n"
+        "      Partition Name:        factory\n"
+        "      Salt:                  deadbeef\n"
+        "      Digest:                \n",
+        InfoImage(vbmeta_image_path_));
+
+    ops_.set_expected_public_key(
+        PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  }
+
+  void SetupWithHashtreeDescriptor() {
+    const size_t factory_partition_size = 16 * 1024 * 1024;
+    const size_t factory_image_size = 5 * 1024 * 1024;
+    base::FilePath factory_path =
+        GenerateImage("factory.img", factory_image_size);
+
+    EXPECT_COMMAND(
+        0,
+        "./avbtool add_hashtree_footer"
+        " --image %s"
+        " --rollback_index 0"
+        " --partition_name factory"
+        " --partition_size %zd"
+        " --salt deadbeef"
+        " --hash_algorithm %s"
+        " --internal_release_string \"\""
+        " --kernel_cmdline "
+        "'androidboot.vbmeta.factory.digest=$(AVB_FACTORY_ROOT_DIGEST)'"
+        " --use_persistent_digest",
+        factory_path.value().c_str(),
+        factory_partition_size,
+        verity_hash_algorithm_.c_str());
+
+    GenerateVBMetaImage(
+        "vbmeta_a.img",
+        "SHA256_RSA2048",
+        0,
+        base::FilePath("test/data/testkey_rsa2048.pem"),
+        base::StringPrintf("--internal_release_string \"\" "
+                           "--include_descriptors_from_image %s ",
+                           factory_path.value().c_str()));
+
+    int expected_tree_size =
+        (verity_hash_algorithm_ == "sha512") ? 86016 : 45056;
+    int expected_fec_offset =
+        (verity_hash_algorithm_ == "sha512") ? 5328896 : 5287936;
+    EXPECT_EQ(
+        base::StringPrintf(
+            "Minimum libavb version:   1.0\n"
+            "Header Block:             256 bytes\n"
+            "Authentication Block:     320 bytes\n"
+            "Auxiliary Block:          832 bytes\n"
+            "Algorithm:                SHA256_RSA2048\n"
+            "Rollback Index:           0\n"
+            "Flags:                    0\n"
+            "Release String:           ''\n"
+            "Descriptors:\n"
+            "    Hashtree descriptor:\n"
+            "      Version of dm-verity:  1\n"
+            "      Image Size:            5242880 bytes\n"
+            "      Tree Offset:           5242880\n"
+            "      Tree Size:             %d bytes\n"
+            "      Data Block Size:       4096 bytes\n"
+            "      Hash Block Size:       4096 bytes\n"
+            "      FEC num roots:         2\n"
+            "      FEC offset:            %d\n"
+            "      FEC size:              49152 bytes\n"
+            "      Hash Algorithm:        %s\n"
+            "      Partition Name:        factory\n"
+            "      Salt:                  deadbeef\n"
+            "      Root Digest:           \n"
+            "    Kernel Cmdline descriptor:\n"
+            "      Flags:                 0\n"
+            "      Kernel Cmdline:        "
+            "'androidboot.vbmeta.factory.digest=$(AVB_FACTORY_ROOT_DIGEST)'\n",
+            expected_tree_size,
+            expected_fec_offset,
+            verity_hash_algorithm_.c_str()),
+        InfoImage(vbmeta_image_path_));
+
+    ops_.set_expected_public_key(
+        PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  }
+
+  void Verify(bool expect_success) {
+    AvbSlotVerifyData* slot_data = NULL;
+    const char* requested_partitions[] = {"factory", NULL};
+    AvbSlotVerifyResult result =
+        avb_slot_verify(ops_.avb_ops(),
+                        requested_partitions,
+                        "_a",
+                        AVB_SLOT_VERIFY_FLAGS_NONE,
+                        AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                        &slot_data);
+    if (expect_success) {
+      ASSERT_EQ(AVB_SLOT_VERIFY_RESULT_OK, result);
+      ASSERT_NE(nullptr, slot_data);
+      last_cmdline_ = slot_data->cmdline;
+      avb_slot_verify_data_free(slot_data);
+    } else {
+      EXPECT_NE(AVB_SLOT_VERIFY_RESULT_OK, result);
+      EXPECT_EQ(nullptr, slot_data);
+      if (expected_error_code_ != AVB_SLOT_VERIFY_RESULT_OK) {
+        EXPECT_EQ(expected_error_code_, result);
+      }
+    }
+  }
+
+  std::string last_cmdline_;
+  std::string verity_hash_algorithm_{"sha1"};
+  AvbSlotVerifyResult expected_error_code_{AVB_SLOT_VERIFY_RESULT_OK};
+
+ public:
+  // By convention, persistent digests always use the "AVBPD_" prefix combined
+  // with the partition name.
+  const char* kPersistentValueName = "AVBPD_factory";
+  // The digest for the hash descriptor which matches the factory contents.
+  const uint8_t kDigest[AVB_SHA256_DIGEST_SIZE] = {
+      0x18, 0x4c, 0xb3, 0x62, 0x43, 0xad, 0xb8, 0xb8, 0x7d, 0x2d, 0x8c,
+      0x48, 0x02, 0xde, 0x32, 0x12, 0x5f, 0xe2, 0x94, 0xec, 0x46, 0x75,
+      0x3d, 0x73, 0x21, 0x44, 0xee, 0x65, 0xdf, 0x68, 0xa2, 0x3d};
+};
+
+TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic) {
+  SetupWithHashDescriptor();
+  // Store the expected image digest as a persistent value.
+  ops_.write_persistent_value(
+      kPersistentValueName, AVB_SHA256_DIGEST_SIZE, kDigest);
+  Verify(true /* expect_success */);
+  EXPECT_EQ(
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
+      "androidboot.vbmeta.avb_version=1.0 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha256 "
+      "androidboot.vbmeta.size=1280 "
+      "androidboot.vbmeta.digest="
+      "384bbfda201b09dda0439c466a468f06de88f2b3578a6ed045202d3dcf796eee "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing",
+      last_cmdline_);
+}
+
+class AvbSlotVerifyTestWithPersistentDigest_InvalidDigestLength
+    : public AvbSlotVerifyTestWithPersistentDigest,
+      public ::testing::WithParamInterface<size_t> {};
+
+TEST_P(AvbSlotVerifyTestWithPersistentDigest_InvalidDigestLength, Param) {
+  SetupWithHashDescriptor();
+  // Store a digest value with the given length.
+  ops_.write_persistent_value(kPersistentValueName, GetParam(), kDigest);
+  Verify(false /* expect_success */);
+}
+
+// Test a bunch of invalid digest length values.
+INSTANTIATE_TEST_CASE_P(
+    P,
+    AvbSlotVerifyTestWithPersistentDigest_InvalidDigestLength,
+    ::testing::Values(AVB_SHA256_DIGEST_SIZE + 1,
+                      AVB_SHA256_DIGEST_SIZE - 1,
+                      0,
+                      AVB_SHA512_DIGEST_SIZE));
+
+class AvbSlotVerifyTestWithPersistentDigest_InvalidPersistentValueName
+    : public AvbSlotVerifyTestWithPersistentDigest,
+      public ::testing::WithParamInterface<const char*> {};
+
+TEST_P(AvbSlotVerifyTestWithPersistentDigest_InvalidPersistentValueName,
+       Param) {
+  SetupWithHashDescriptor();
+  ops_.write_persistent_value(GetParam(), AVB_SHA256_DIGEST_SIZE, kDigest);
+  Verify(false /* expect_success */);
+}
+
+// Test a bunch of invalid persistent value names.
+INSTANTIATE_TEST_CASE_P(
+    P,
+    AvbSlotVerifyTestWithPersistentDigest_InvalidPersistentValueName,
+    ::testing::Values(
+        "",
+        "AVBPD_factory0",
+        "AVBPD_factor",
+        "loooooooooooooooooooooooooooooooooooooooooooooongvalue"));
+
+class AvbSlotVerifyTestWithPersistentDigest_ReadDigestFailure
+    : public AvbSlotVerifyTestWithPersistentDigest,
+      public ::testing::WithParamInterface<AvbIOResult> {
+  // FakeAvbOpsDelegate override.
+  AvbIOResult read_persistent_value(const char* persistent_value_name,
+                                    size_t value_size,
+                                    uint8_t* out_value) override {
+    return GetParam();
+  }
+};
+
+TEST_P(AvbSlotVerifyTestWithPersistentDigest_ReadDigestFailure, Param) {
+  SetupWithHashDescriptor();
+  ops_.write_persistent_value(
+      kPersistentValueName, AVB_SHA256_DIGEST_SIZE, kDigest);
+  switch (GetParam()) {
+    case AVB_IO_RESULT_ERROR_OOM:
+      expected_error_code_ = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      break;
+    // Fall through.
+    case AVB_IO_RESULT_ERROR_NO_SUCH_VALUE:
+    case AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE:
+      expected_error_code_ = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+      break;
+    default:
+      break;
+  }
+  Verify(false /* expect_success */);
+}
+
+// Test a bunch of error codes.
+INSTANTIATE_TEST_CASE_P(
+    P,
+    AvbSlotVerifyTestWithPersistentDigest_ReadDigestFailure,
+    ::testing::Values(AVB_IO_RESULT_ERROR_OOM,
+                      AVB_IO_RESULT_ERROR_IO,
+                      AVB_IO_RESULT_ERROR_NO_SUCH_VALUE,
+                      AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE));
+
+TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic_Hashtree_Sha1) {
+  verity_hash_algorithm_ = "sha1";
+  SetupWithHashtreeDescriptor();
+  // Store an arbitrary image digest.
+  uint8_t fake_digest[]{0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
+  ops_.write_persistent_value(
+      kPersistentValueName, AVB_SHA1_DIGEST_SIZE, fake_digest);
+  Verify(true /* expect_success */);
+  EXPECT_EQ(
+      "androidboot.vbmeta.factory.digest="
+      // Note: Here appear the bytes used in write_persistent_value above.
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa "
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
+      "androidboot.vbmeta.avb_version=1.0 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha256 "
+      "androidboot.vbmeta.size=1408 "
+      "androidboot.vbmeta.digest="
+      "7714a5e60de082eece25527b0b9627416088cd93be631a17c5e361ca678bd841 "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing",
+      last_cmdline_);
+}
+
+TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic_Hashtree_Sha256) {
+  verity_hash_algorithm_ = "sha256";
+  SetupWithHashtreeDescriptor();
+  // Store an arbitrary image digest.
+  uint8_t fake_digest[]{0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+                        0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
+  ops_.write_persistent_value(
+      kPersistentValueName, AVB_SHA256_DIGEST_SIZE, fake_digest);
+  Verify(true /* expect_success */);
+  EXPECT_EQ(
+      "androidboot.vbmeta.factory.digest="
+      // Note: Here appear the bytes used in write_persistent_value above.
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa "
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
+      "androidboot.vbmeta.avb_version=1.0 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha256 "
+      "androidboot.vbmeta.size=1408 "
+      "androidboot.vbmeta.digest="
+      "e46480fd6d03a7434f09d4cf1a7c6f1f597a34c5e1d8cc8e52000a087520787c "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing",
+      last_cmdline_);
+}
+
+TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic_Hashtree_Sha512) {
+  verity_hash_algorithm_ = "sha512";
+  SetupWithHashtreeDescriptor();
+  // Store an arbitrary image digest.
+  uint8_t fake_digest[]{
+      0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+      0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+      0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+      0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+      0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA,
+      0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
+  ops_.write_persistent_value(
+      kPersistentValueName, AVB_SHA512_DIGEST_SIZE, fake_digest);
+  Verify(true /* expect_success */);
+  EXPECT_EQ(
+      "androidboot.vbmeta.factory.digest="
+      // Note: Here appear the bytes used in write_persistent_value above.
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa "
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
+      "androidboot.vbmeta.avb_version=1.0 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha256 "
+      "androidboot.vbmeta.size=1408 "
+      "androidboot.vbmeta.digest="
+      "ae864ea92e2d2b97abd240a4ba7b6d295a872a4f3dc9efbfaea551a40869b4f4 "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing",
+      last_cmdline_);
+}
+
+class AvbSlotVerifyTestWithPersistentDigest_Hashtree_InvalidDigestLength
+    : public AvbSlotVerifyTestWithPersistentDigest,
+      public ::testing::WithParamInterface<size_t> {};
+
+TEST_P(AvbSlotVerifyTestWithPersistentDigest_Hashtree_InvalidDigestLength,
+       Param) {
+  SetupWithHashtreeDescriptor();
+  // Store a digest value with the given length.
+  ops_.write_persistent_value(kPersistentValueName, GetParam(), kDigest);
+  Verify(false /* expect_success */);
+}
+
+// Test a bunch of invalid digest length values.
+INSTANTIATE_TEST_CASE_P(
+    P,
+    AvbSlotVerifyTestWithPersistentDigest_Hashtree_InvalidDigestLength,
+    ::testing::Values(AVB_SHA1_DIGEST_SIZE + 1,
+                      AVB_SHA1_DIGEST_SIZE - 1,
+                      0,
+                      AVB_SHA256_DIGEST_SIZE,
+                      AVB_SHA512_DIGEST_SIZE));
+
+class AvbSlotVerifyTestWithPersistentDigest_Hashtree_InvalidPersistentValueName
+    : public AvbSlotVerifyTestWithPersistentDigest,
+      public ::testing::WithParamInterface<const char*> {};
+
+TEST_P(
+    AvbSlotVerifyTestWithPersistentDigest_Hashtree_InvalidPersistentValueName,
+    Param) {
+  SetupWithHashtreeDescriptor();
+  ops_.write_persistent_value(GetParam(), AVB_SHA256_DIGEST_SIZE, kDigest);
+  Verify(false /* expect_success */);
+}
+
+// Test a bunch of invalid persistent value names.
+INSTANTIATE_TEST_CASE_P(
+    P,
+    AvbSlotVerifyTestWithPersistentDigest_Hashtree_InvalidPersistentValueName,
+    ::testing::Values(
+        "",
+        "AVBPD_factory0",
+        "AVBPD_factor",
+        "loooooooooooooooooooooooooooooooooooooooooooooongvalue"));
+
+class AvbSlotVerifyTestWithPersistentDigest_Hashtree_ReadDigestFailure
+    : public AvbSlotVerifyTestWithPersistentDigest,
+      public ::testing::WithParamInterface<AvbIOResult> {
+  // FakeAvbOpsDelegate override.
+  AvbIOResult read_persistent_value(const char* persistent_value_name,
+                                    size_t value_size,
+                                    uint8_t* out_value) override {
+    return GetParam();
+  }
+};
+
+TEST_P(AvbSlotVerifyTestWithPersistentDigest_Hashtree_ReadDigestFailure,
+       Param) {
+  SetupWithHashtreeDescriptor();
+  ops_.write_persistent_value(
+      kPersistentValueName, AVB_SHA256_DIGEST_SIZE, kDigest);
+  switch (GetParam()) {
+    case AVB_IO_RESULT_ERROR_OOM:
+      expected_error_code_ = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      break;
+    // Fall through.
+    case AVB_IO_RESULT_ERROR_NO_SUCH_VALUE:
+    case AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE:
+      expected_error_code_ = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+      break;
+    default:
+      break;
+  }
+  Verify(false /* expect_success */);
+}
+
+// Test a bunch of error codes.
+INSTANTIATE_TEST_CASE_P(
+    P,
+    AvbSlotVerifyTestWithPersistentDigest_Hashtree_ReadDigestFailure,
+    ::testing::Values(AVB_IO_RESULT_ERROR_OOM,
+                      AVB_IO_RESULT_ERROR_IO,
+                      AVB_IO_RESULT_ERROR_NO_SUCH_VALUE,
+                      AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE));
 
 }  // namespace avb

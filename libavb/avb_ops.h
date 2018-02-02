@@ -51,13 +51,21 @@ extern "C" {
  * AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION is returned if the
  * range of bytes requested to be read or written is outside the range
  * of the partition.
+ *
+ * AVB_IO_RESULT_ERROR_NO_SUCH_VALUE is returned if a named persistent value
+ * does not exist.
+ *
+ * AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE is returned if a named persistent
+ * value size is not supported or does not match the expected size.
  */
 typedef enum {
   AVB_IO_RESULT_OK,
   AVB_IO_RESULT_ERROR_OOM,
   AVB_IO_RESULT_ERROR_IO,
   AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION,
-  AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION
+  AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION,
+  AVB_IO_RESULT_ERROR_NO_SUCH_VALUE,
+  AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE,
 } AvbIOResult;
 
 struct AvbOps;
@@ -240,6 +248,50 @@ struct AvbOps {
   AvbIOResult (*get_size_of_partition)(AvbOps* ops,
                                        const char* partition,
                                        uint64_t* out_size_num_bytes);
+
+  /* Gets the size of a persistent value corresponding to the given
+   * |persistent_value_name|. The size is returned in |out_value_size|.
+   *
+   * Returns AVB_IO_RESULT_OK on success, otherwise an error code.
+   *
+   * If the value does not exist, is not supported, or is not populated, returns
+   * AVB_IO_RESULT_ERROR_NO_SUCH_VALUE.
+   */
+  AvbIOResult (*get_persistent_value_size)(AvbOps* ops,
+                                           const char* persistent_value_name,
+                                           size_t* out_value_size);
+
+  /* Reads a persistent value corresponding to the given
+   * |persistent_value_name|. The value is returned in |out_value| which must
+   * point to |value_size| bytes.
+   *
+   * Returns AVB_IO_RESULT_OK on success, otherwise an error code.
+   *
+   * If the length of the stored value does not match |value_size| exactly,
+   * returns AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE. If the value does not
+   * exist, is not supported, or is not populated, returns
+   * AVB_IO_RESULT_ERROR_NO_SUCH_VALUE.
+   */
+  AvbIOResult (*read_persistent_value)(AvbOps* ops,
+                                       const char* persistent_value_name,
+                                       size_t value_size,
+                                       uint8_t* out_value);
+
+  /* Writes a persistent value corresponding to the given
+   * |persistent_value_name|. The value is supplied in |value| which must point
+   * to |value_size| bytes. Any existing value with the same name is
+   * overwritten.
+   *
+   * Returns AVB_IO_RESULT_OK on success, otherwise an error code.
+   *
+   * If the |digest_location| is not supported, returns
+   * AVB_IO_RESULT_ERROR_NO_SUCH_VALUE. If the |digest_size| is not supported,
+   * returns AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE.
+   */
+  AvbIOResult (*write_persistent_value)(AvbOps* ops,
+                                        const char* persistent_value_name,
+                                        size_t value_size,
+                                        const uint8_t* value);
 };
 
 #ifdef __cplusplus

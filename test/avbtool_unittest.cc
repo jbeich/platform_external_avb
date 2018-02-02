@@ -738,6 +738,44 @@ TEST_F(AvbToolTest, AddHashFooterCalcMaxImageSize) {
                  partition_size);
 }
 
+TEST_F(AvbToolTest, AddHashFooterWithPersistentDigest) {
+  size_t partition_size = 1024 * 1024;
+  base::FilePath path = GenerateImage("digest_location", 1024);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hash_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--use_persistent_digest",
+                 path.value().c_str(),
+                 (int)partition_size);
+  ASSERT_EQ(
+      "Footer version:           1.0\n"
+      "Image size:               1048576 bytes\n"
+      "Original image size:      1024 bytes\n"
+      "VBMeta offset:            4096\n"
+      "VBMeta size:              1280 bytes\n"
+      "--\n"
+      "Minimum libavb version:   1.0\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          704 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Hash descriptor:\n"
+      "      Image Size:            1024 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        foobar\n"
+      "      Salt:                  d00df00d\n"
+      "      Digest:                \n",
+      InfoImage(path));
+}
+
 void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   const size_t rootfs_size = 1028 * 1024;
   const size_t partition_size = 1536 * 1024;
@@ -1287,6 +1325,52 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithFEC) {
                  " --internal_release_string \"\"",
                  system_path.value().c_str(),
                  partition_size);
+}
+
+TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigest) {
+  size_t partition_size = 10 * 1024 * 1024;
+  base::FilePath path = GenerateImage("digest_location", partition_size / 2);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--use_persistent_digest",
+                 path.value().c_str(),
+                 (int)partition_size);
+  ASSERT_EQ(
+      "Footer version:           1.0\n"
+      "Image size:               10485760 bytes\n"
+      "Original image size:      5242880 bytes\n"
+      "VBMeta offset:            5337088\n"
+      "VBMeta size:              1344 bytes\n"
+      "--\n"
+      "Minimum libavb version:   1.0\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          768 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Hashtree descriptor:\n"
+      "      Version of dm-verity:  1\n"
+      "      Image Size:            5242880 bytes\n"
+      "      Tree Offset:           5242880\n"
+      "      Tree Size:             45056 bytes\n"
+      "      Data Block Size:       4096 bytes\n"
+      "      Hash Block Size:       4096 bytes\n"
+      "      FEC num roots:         2\n"
+      "      FEC offset:            5287936\n"
+      "      FEC size:              49152 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        foobar\n"
+      "      Salt:                  d00df00d\n"
+      "      Root Digest:           \n",
+      InfoImage(path));
 }
 
 TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
