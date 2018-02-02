@@ -409,7 +409,8 @@ static std::string AddHashFooterGetExpectedVBMetaInfo(
       "      Salt:                  d00df00d\n"
       "      Digest:                "
       "9a58cc996d405e08a1e00f96dbfe9104fedf41cb83b1f"
-      "5e4ed357fbcf58d88d9\n",
+      "5e4ed357fbcf58d88d9\n"
+      "      Flags:                 0\n",
       partition_size,
       sparse_image ? " (Sparse)" : "");
 }
@@ -486,7 +487,8 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
         "      Salt:                  d00df00d\n"
         "      Digest:                "
         "9a58cc996d405e08a1e00f96dbfe9104fedf41cb83b1f"
-        "5e4ed357fbcf58d88d9\n",
+        "5e4ed357fbcf58d88d9\n"
+        "      Flags:                 0\n",
         InfoImage(ext_vbmeta_path));
   }
 
@@ -690,7 +692,8 @@ TEST_F(AvbToolTest, AddHashFooterSparseWithHoleAtTheEnd) {
       "      Image Size:            10354688 bytes\n"
       "      Hash Algorithm:        sha256\n"
       "      Partition Name:        foobar\n"
-      "      Salt:                  d00df00d\n",
+      "      Salt:                  d00df00d\n"
+      "      Flags:                 0\n",
       info);
 
   EXPECT_COMMAND(0,
@@ -736,6 +739,134 @@ TEST_F(AvbToolTest, AddHashFooterCalcMaxImageSize) {
                  " --internal_release_string \"\"",
                  boot_path.value().c_str(),
                  partition_size);
+}
+
+TEST_F(AvbToolTest, AddHashFooterWithPersistentDigest) {
+  size_t partition_size = 1024 * 1024;
+  base::FilePath path = GenerateImage("digest_location", 1024);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hash_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--use_persistent_digest",
+                 path.value().c_str(),
+                 (int)partition_size);
+  // There are two important bits specific to these flags:
+  //   Minimum libavb version = 1.1
+  //   Hash descriptor -> Digest = (empty)
+  ASSERT_EQ(
+      "Footer version:           1.0\n"
+      "Image size:               1048576 bytes\n"
+      "Original image size:      1024 bytes\n"
+      "VBMeta offset:            4096\n"
+      "VBMeta size:              1280 bytes\n"
+      "--\n"
+      "Minimum libavb version:   1.1\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          704 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Hash descriptor:\n"
+      "      Image Size:            1024 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        foobar\n"
+      "      Salt:                  d00df00d\n"
+      "      Digest:                \n"
+      "      Flags:                 0\n",
+      InfoImage(path));
+}
+
+TEST_F(AvbToolTest, AddHashFooterWithNoAB) {
+  size_t partition_size = 1024 * 1024;
+  base::FilePath path = GenerateImage("digest_location", 1024);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hash_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--do_not_use_ab",
+                 path.value().c_str(),
+                 (int)partition_size);
+  // There are two important bits specific to these flags:
+  //   Minimum libavb version = 1.1
+  //   Hash descriptor -> Flags = 1
+  ASSERT_EQ(
+      "Footer version:           1.0\n"
+      "Image size:               1048576 bytes\n"
+      "Original image size:      1024 bytes\n"
+      "VBMeta offset:            4096\n"
+      "VBMeta size:              1280 bytes\n"
+      "--\n"
+      "Minimum libavb version:   1.1\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          704 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Hash descriptor:\n"
+      "      Image Size:            1024 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        foobar\n"
+      "      Salt:                  d00df00d\n"
+      "      Digest:                "
+      "91386fea3e251ad0c2cb6859e4f4772f37fdb69f17d46636ddc9e7fbfd3bf3d0\n"
+      "      Flags:                 1\n",
+      InfoImage(path));
+}
+
+TEST_F(AvbToolTest, AddHashFooterWithPersistentDigestAndNoAB) {
+  size_t partition_size = 1024 * 1024;
+  base::FilePath path = GenerateImage("digest_location", 1024);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hash_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--use_persistent_digest --do_not_use_ab",
+                 path.value().c_str(),
+                 (int)partition_size);
+  // There are three important bits specific to these flags:
+  //   Minimum libavb version = 1.1
+  //   Hash descriptor -> Digest = (empty)
+  //   Hash descriptor -> Flags = 1
+  ASSERT_EQ(
+      "Footer version:           1.0\n"
+      "Image size:               1048576 bytes\n"
+      "Original image size:      1024 bytes\n"
+      "VBMeta offset:            4096\n"
+      "VBMeta size:              1280 bytes\n"
+      "--\n"
+      "Minimum libavb version:   1.1\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          704 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Hash descriptor:\n"
+      "      Image Size:            1024 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        foobar\n"
+      "      Salt:                  d00df00d\n"
+      "      Digest:                \n"
+      "      Flags:                 1\n",
+      InfoImage(path));
 }
 
 void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
@@ -810,7 +941,8 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                                  "      Partition Name:        foobar\n"
                                  "      Salt:                  d00df00d\n"
                                  "      Root Digest:           "
-                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67\n",
+                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
+                                 "      Flags:                 0\n",
                                  sparse_image ? " (Sparse)" : ""),
               InfoImage(rootfs_path));
 
@@ -838,7 +970,8 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
         "      Partition Name:        foobar\n"
         "      Salt:                  d00df00d\n"
         "      Root Digest:           "
-        "e811611467dcd6e8dc4324e45f706c2bdd51db67\n",
+        "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
+        "      Flags:                 0\n",
         InfoImage(ext_vbmeta_path));
   }
 
@@ -1080,7 +1213,8 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                                  "      Partition Name:        foobar\n"
                                  "      Salt:                  d00df00d\n"
                                  "      Root Digest:           "
-                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67\n",
+                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
+                                 "      Flags:                 0\n",
                                  sparse_image ? " (Sparse)" : ""),
               InfoImage(rootfs_path));
   }
@@ -1287,6 +1421,158 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithFEC) {
                  " --internal_release_string \"\"",
                  system_path.value().c_str(),
                  partition_size);
+}
+
+TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigest) {
+  size_t partition_size = 10 * 1024 * 1024;
+  base::FilePath path = GenerateImage("digest_location", partition_size / 2);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--use_persistent_digest",
+                 path.value().c_str(),
+                 (int)partition_size);
+  // There are two important bits here specific to --use_persistent_digest:
+  //   Minimum libavb version = 1.1
+  //   Hashtree descriptor -> Root Digest = (empty)
+  ASSERT_EQ(
+      "Footer version:           1.0\n"
+      "Image size:               10485760 bytes\n"
+      "Original image size:      5242880 bytes\n"
+      "VBMeta offset:            5337088\n"
+      "VBMeta size:              1344 bytes\n"
+      "--\n"
+      "Minimum libavb version:   1.1\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          768 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Hashtree descriptor:\n"
+      "      Version of dm-verity:  1\n"
+      "      Image Size:            5242880 bytes\n"
+      "      Tree Offset:           5242880\n"
+      "      Tree Size:             45056 bytes\n"
+      "      Data Block Size:       4096 bytes\n"
+      "      Hash Block Size:       4096 bytes\n"
+      "      FEC num roots:         2\n"
+      "      FEC offset:            5287936\n"
+      "      FEC size:              49152 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        foobar\n"
+      "      Salt:                  d00df00d\n"
+      "      Root Digest:           \n"
+      "      Flags:                 0\n",
+      InfoImage(path));
+}
+
+TEST_F(AvbToolTest, AddHashtreeFooterWithNoAB) {
+  size_t partition_size = 10 * 1024 * 1024;
+  base::FilePath path = GenerateImage("digest_location", partition_size / 2);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--do_not_use_ab",
+                 path.value().c_str(),
+                 (int)partition_size);
+  // There are two important bits here we're expecting with --do_not_use_ab:
+  //   Minimum libavb version = 1.1
+  //   Hashtree descriptor -> Flags = 1
+  ASSERT_EQ(
+      "Footer version:           1.0\n"
+      "Image size:               10485760 bytes\n"
+      "Original image size:      5242880 bytes\n"
+      "VBMeta offset:            5337088\n"
+      "VBMeta size:              1344 bytes\n"
+      "--\n"
+      "Minimum libavb version:   1.1\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          768 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Hashtree descriptor:\n"
+      "      Version of dm-verity:  1\n"
+      "      Image Size:            5242880 bytes\n"
+      "      Tree Offset:           5242880\n"
+      "      Tree Size:             45056 bytes\n"
+      "      Data Block Size:       4096 bytes\n"
+      "      Hash Block Size:       4096 bytes\n"
+      "      FEC num roots:         2\n"
+      "      FEC offset:            5287936\n"
+      "      FEC size:              49152 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        foobar\n"
+      "      Salt:                  d00df00d\n"
+      "      Root Digest:           "
+      "d0e31526f5a3f8e3f59acf726bd31ae7861ee78f9baa9195356bf479c6f9119d\n"
+      "      Flags:                 1\n",
+      InfoImage(path));
+}
+
+TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigestAndNoAB) {
+  size_t partition_size = 10 * 1024 * 1024;
+  base::FilePath path = GenerateImage("digest_location", partition_size / 2);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--use_persistent_digest --do_not_use_ab",
+                 path.value().c_str(),
+                 (int)partition_size);
+  // There are three important bits specific to these flags:
+  //   Minimum libavb version = 1.1
+  //   Hashtree descriptor -> Root Digest = (empty)
+  //   Hashtree descriptor -> Flags = 1
+  ASSERT_EQ(
+      "Footer version:           1.0\n"
+      "Image size:               10485760 bytes\n"
+      "Original image size:      5242880 bytes\n"
+      "VBMeta offset:            5337088\n"
+      "VBMeta size:              1344 bytes\n"
+      "--\n"
+      "Minimum libavb version:   1.1\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          768 bytes\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Hashtree descriptor:\n"
+      "      Version of dm-verity:  1\n"
+      "      Image Size:            5242880 bytes\n"
+      "      Tree Offset:           5242880\n"
+      "      Tree Size:             45056 bytes\n"
+      "      Data Block Size:       4096 bytes\n"
+      "      Hash Block Size:       4096 bytes\n"
+      "      FEC num roots:         2\n"
+      "      FEC offset:            5287936\n"
+      "      FEC size:              49152 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        foobar\n"
+      "      Salt:                  d00df00d\n"
+      "      Root Digest:           \n"
+      "      Flags:                 1\n",
+      InfoImage(path));
 }
 
 TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
@@ -1591,7 +1877,7 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           0\n"
       "Flags:                    0\n"
-      "Release String:           'avbtool 1.0.0 '\n"
+      "Release String:           'avbtool 1.1.0 '\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
@@ -1950,6 +2236,7 @@ TEST_F(AvbToolTest, PrintRequiredLibavbVersion) {
   base::FilePath output_path = testdir_.Append("versions.txt");
 
   const size_t boot_partition_size = 16 * 1024 * 1024;
+  // Hash footer requiring only 1.0.
   EXPECT_COMMAND(0,
                  "./avbtool add_hash_footer"
                  " --rollback_index 0"
@@ -1961,7 +2248,21 @@ TEST_F(AvbToolTest, PrintRequiredLibavbVersion) {
                  boot_partition_size,
                  output_path.value().c_str());
 
+  // Hash footer requiring 1.1 (--do_not_use_ab).
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hash_footer"
+                 " --rollback_index 0"
+                 " --partition_name boot"
+                 " --partition_size %zd"
+                 " --salt deadbeef"
+                 " --internal_release_string \"\""
+                 " --do_not_use_ab"
+                 " --print_required_libavb_version >> %s",
+                 boot_partition_size,
+                 output_path.value().c_str());
+
   const size_t system_partition_size = 10 * 1024 * 1024;
+  // Hashtree footer requiring only 1.0.
   EXPECT_COMMAND(0,
                  "./avbtool add_hashtree_footer --salt d00df00d "
                  "--partition_size %zd --partition_name system "
@@ -1970,6 +2271,17 @@ TEST_F(AvbToolTest, PrintRequiredLibavbVersion) {
                  system_partition_size,
                  output_path.value().c_str());
 
+  // Hashtree footer requiring 1.1 (--do_not_use_ab).
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer --salt d00df00d "
+                 "--partition_size %zd --partition_name system "
+                 "--internal_release_string \"\""
+                 " --do_not_use_ab"
+                 " --print_required_libavb_version >> %s",
+                 system_partition_size,
+                 output_path.value().c_str());
+
+  // Vbmeta requiring only 1.0.
   EXPECT_COMMAND(0,
                  "./avbtool make_vbmeta_image "
                  "--algorithm SHA256_RSA2048 "
@@ -1978,10 +2290,55 @@ TEST_F(AvbToolTest, PrintRequiredLibavbVersion) {
                  " --print_required_libavb_version >> %s",
                  output_path.value().c_str());
 
-  // Check that "1.0\n" was printed for all three invocations.
+  // Vbmeta requiring 1.1 (includes hash descriptor requiring 1.1).
+  base::FilePath image_path = GenerateImage("test_print_version1", 1024);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hash_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--do_not_use_ab",
+                 image_path.value().c_str(),
+                 (int)boot_partition_size);
+  EXPECT_COMMAND(0,
+                 "./avbtool make_vbmeta_image "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\""
+                 " --include_descriptors_from_image %s"
+                 " --print_required_libavb_version >> %s",
+                 image_path.value().c_str(),
+                 output_path.value().c_str());
+
+  // Vbmeta requiring 1.1 (includes hashtree descriptor requiring 1.1).
+  base::FilePath image_path2 =
+      GenerateImage("test_print_version2", system_partition_size / 2);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer --salt d00df00d "
+                 "--hash_algorithm sha256 --image %s "
+                 "--partition_size %d --partition_name foobar "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--do_not_use_ab",
+                 image_path2.value().c_str(),
+                 (int)system_partition_size);
+  EXPECT_COMMAND(0,
+                 "./avbtool make_vbmeta_image "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\""
+                 " --include_descriptors_from_image %s"
+                 " --print_required_libavb_version >> %s",
+                 image_path2.value().c_str(),
+                 output_path.value().c_str());
+
+  // Check that "1.0\n" style output was printed for all invocations.
   std::string versions;
   ASSERT_TRUE(base::ReadFileToString(output_path, &versions));
-  EXPECT_EQ(versions, std::string("1.0\n1.0\n1.0\n"));
+  EXPECT_EQ(versions, std::string("1.0\n1.1\n1.0\n1.1\n1.0\n1.1\n1.1\n"));
 }
 
 TEST_F(AvbToolTest, MakeAtxPikCertificate) {
