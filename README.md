@@ -22,6 +22,8 @@ Verified Boot 2.0. Usually AVB is used to refer to this codebase.
     + [System Dependencies](#System-Dependencies)
     + [Locked and Unlocked mode](#Locked-and-Unlocked-mode)
     + [Tamper-evident Storage](#Tamper_evident-Storage)
+    + [Named Persistent Values](#Named-Persistent-Values)
+    + [Persistent Digests](#Persistent-Digests)
     + [Updating Stored Rollback Indexes](#Updating-Stored-Rollback-Indexes)
     + [Recommended Bootflow](#Recommended-Bootflow)
     + [Handling dm-verity Errors](#Handling-dm_verity-Errors)
@@ -639,9 +641,9 @@ if the HLOS has tampered with the data, e.g. if it has been
 overwritten.
 
 Tamper-evident storage must be used for stored rollback indexes, keys
-used for verification, and device state (whether the device is LOCKED
-or UNLOCKED). If tampering has been detected the corresponding
-`AvbOps` operation should fail by e.g. returning
+used for verification, device state (whether the device is LOCKED or
+UNLOCKED), and named persistent values. If tampering has been detected
+the corresponding `AvbOps` operation should fail by e.g. returning
 `AVB_IO_RESULT_ERROR_IO`. It is especially important that verification
 keys cannot be tampered with since they represent the root-of-trust.
 
@@ -650,6 +652,35 @@ user, e.g. it must never be set at the factory or store or any
 intermediate point before the end user. Additionally, it must only be
 possible to set or clear a key while the device is in the UNLOCKED
 state.
+
+## Named Persistent Values
+
+AVB v1.1 introduces support for named persistent values which must be
+tamper evident and allows AVB to store arbitrary key-value pairs.
+Integrators may limit support for these values to a set of fixed
+well-known names, a maximum value size, and / or a maximum number of
+values.
+
+## Persistent Digests
+
+Using a persistent digest for a partition means the digest (or root
+digest in the case of a hashtree) is not stored in the descriptor but
+is stored in a named persistent value. This allows configuration data
+which may differ from device to device to be verified by AVB. It must
+not be possible to modify the persistent digest when AVB is LOCKED.
+
+To specify that a descriptor should use a persistent digest, use the
+`--use_persistent_digest` option for the `add_hash_footer` or
+`add_hashtree_footer` avbtool operations. Then, during verification of
+the descriptor, AVB will look for the digest in the named persistent
+value `avb.persistent_digest.$(partition_name)` instead of in the
+descriptor itself.
+
+For hashtree descriptors using a persistent digest, the digest value
+will be available for substitution into kernel command line descriptors
+using a token of the form `$(AVB_FOO_ROOT_DIGEST)` where 'FOO' is the
+uppercase partition name, in this case for the partition named 'foo'.
+The token will be replaced by the digest in hexadecimal form.
 
 ## Updating Stored Rollback Indexes
 

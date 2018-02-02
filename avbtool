@@ -38,7 +38,7 @@ import time
 
 # Keep in sync with libavb/avb_version.h.
 AVB_VERSION_MAJOR = 1
-AVB_VERSION_MINOR = 0
+AVB_VERSION_MINOR = 1
 AVB_VERSION_SUB = 0
 
 AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED = 1
@@ -1252,7 +1252,8 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       o += salt_len
       self.root_digest = data[(self.SIZE + o):(self.SIZE + o + root_digest_len)]
       if root_digest_len != len(hashlib.new(name=self.hash_algorithm).digest()):
-        raise LookupError('root_digest_len doesn\'t match hash algorithm')
+        if root_digest_len != 0:
+          raise LookupError('root_digest_len doesn\'t match hash algorithm')
 
     else:
       self.dm_verity_version = 0
@@ -1341,8 +1342,8 @@ class AvbHashtreeDescriptor(AvbDescriptor):
                                                 digest_padding,
                                                 hash_level_offsets,
                                                 tree_size)
-    # The root digest must match...
-    if root_digest != self.root_digest:
+    # The root digest must match unless it is not embedded in the descriptor.
+    if len(self.root_digest) != 0 and root_digest != self.root_digest:
       sys.stderr.write('hashtree of {} does not match descriptor\n'.
                        format(image_filename))
       return False
@@ -1419,7 +1420,8 @@ class AvbHashDescriptor(AvbDescriptor):
       o += salt_len
       self.digest = data[(self.SIZE + o):(self.SIZE + o + digest_len)]
       if digest_len != len(hashlib.new(name=self.hash_algorithm).digest()):
-        raise LookupError('digest_len doesn\'t match hash algorithm')
+        if digest_len != 0:
+          raise LookupError('digest_len doesn\'t match hash algorithm')
 
     else:
       self.image_size = 0
@@ -1480,7 +1482,8 @@ class AvbHashDescriptor(AvbDescriptor):
     ha.update(self.salt)
     ha.update(data)
     digest = ha.digest()
-    if digest != self.digest:
+    # The digest must match unless there is no digest in the descriptor.
+    if len(self.digest) != 0 and digest != self.digest:
       sys.stderr.write('{} digest of {} does not match digest in descriptor\n'.
                        format(self.hash_algorithm, image_filename))
       return False
@@ -2743,7 +2746,7 @@ class Avb(object):
                       signing_helper, signing_helper_with_files,
                       release_string, append_to_release_string,
                       output_vbmeta_image, do_not_append_vbmeta_image,
-                      print_required_libavb_version):
+                      print_required_libavb_version, use_persistent_digest):
     """Implementation of the add_hash_footer on unsparse images.
 
     Arguments:
@@ -2775,6 +2778,7 @@ class Avb(object):
       output_vbmeta_image: If not None, also write vbmeta struct to this file.
       do_not_append_vbmeta_image: If True, don't append vbmeta struct.
       print_required_libavb_version: True to only print required libavb version.
+      use_persistent_digest: Use a persistent digest on device.
 
     Raises:
       AvbError: If an argument is incorrect.
@@ -2860,7 +2864,8 @@ class Avb(object):
       h_desc.hash_algorithm = hash_algorithm
       h_desc.partition_name = partition_name
       h_desc.salt = salt
-      h_desc.digest = digest
+      if not use_persistent_digest:
+        h_desc.digest = digest
 
       # Generate the VBMeta footer.
       ht_desc_to_setup = None
@@ -2934,7 +2939,8 @@ class Avb(object):
                           signing_helper_with_files,
                           release_string, append_to_release_string,
                           output_vbmeta_image, do_not_append_vbmeta_image,
-                          print_required_libavb_version):
+                          print_required_libavb_version,
+                          use_persistent_root_digest):
     """Implements the 'add_hashtree_footer' command.
 
     See https://gitlab.com/cryptsetup/cryptsetup/wikis/DMVerity for
@@ -2974,6 +2980,7 @@ class Avb(object):
       output_vbmeta_image: If not None, also write vbmeta struct to this file.
       do_not_append_vbmeta_image: If True, don't append vbmeta struct.
       print_required_libavb_version: True to only print required libavb version.
+      use_persistent_root_digest: Use a persistent root digest on device.
 
     Raises:
       AvbError: If an argument is incorrect.
@@ -3090,7 +3097,8 @@ class Avb(object):
       ht_desc.hash_algorithm = hash_algorithm
       ht_desc.partition_name = partition_name
       ht_desc.salt = salt
-      ht_desc.root_digest = root_digest
+      if not use_persistent_root_digest:
+        ht_desc.root_digest = root_digest
 
       # Write the hash tree
       padding_needed = (round_to_multiple(len(hash_tree), image.block_size) -
@@ -3516,6 +3524,10 @@ class AvbTool(object):
     sub_parser.add_argument('--set_hashtree_disabled_flag',
                             help='Set the HASHTREE_DISABLED flag',
                             action='store_true')
+    sub_parser.add_argument('--use_persistent_digest',
+                            help='Use a persistent digest on device instead of '
+                                 'storing the digest in the descriptor',
+                            action='store_true')
 
   def _fixup_common_args(self, args):
     """Common fixups needed by subcommands.
@@ -3869,7 +3881,8 @@ class AvbTool(object):
                              args.append_to_release_string,
                              args.output_vbmeta_image,
                              args.do_not_append_vbmeta_image,
-                             args.print_required_libavb_version)
+                             args.print_required_libavb_version,
+                             args.use_persistent_digest)
 
   def add_hashtree_footer(self, args):
     """Implements the 'add_hashtree_footer' sub-command."""
@@ -3900,7 +3913,8 @@ class AvbTool(object):
                                  args.append_to_release_string,
                                  args.output_vbmeta_image,
                                  args.do_not_append_vbmeta_image,
-                                 args.print_required_libavb_version)
+                                 args.print_required_libavb_version,
+                                 args.use_persistent_digest)
 
   def erase_footer(self, args):
     """Implements the 'erase_footer' sub-command."""
