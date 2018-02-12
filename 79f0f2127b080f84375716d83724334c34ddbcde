@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b0fc4852_8015a742",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3530,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-12T23:28:28Z",
+      "side": 1,
+      "message": "I imagine one would want to use this feature only on some partitions (e.g. \"vendor\" but not \"system\")... maybe make this take a comma-separated list of partition names for which this should apply?",
+      "revId": "79f0f2127b080f84375716d83724334c34ddbcde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "bccf9914_847c67c9",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-12T23:28:28Z",
+      "side": 1,
+      "message": "I would suggest the following changes:\n\n1. Drop get_persistent_value_size() operation... I think it would be helpful with a more \"elastic\" API that\u0027s just a property bag and where we don\u0027t enforce anything about the value size ... this is because I think it\u0027s handy to leave it up to the caller and be able to grow values as needed.\n\n2. We should have a list of \"well-known\" persistent value names including the expected size / meaning of the values (avb_ops.h would be the appropriate place for this list). We should also have a general overview of this feature in README.md including best practices on how a device is expected to implement it (like we talked about, a storage-constrained device would do clever things and switch on the key name and assign that to fixed locations... a device with tons of volatile storage could just dump a raw dictionary.)\n\n3. We discussed earlier offline that some values need to be stored in tamper-evident storage and some do not. How do you intend for libavb to convey this to the AvbOps implementor?\n\n4. Concretely, I\u0027d change read_persistent_value() to be this API:\n\n    AvbIOResult read_persistent_value(AvbOps *ops, const char *key,\n      uint8_t* buf,\n      size_t buf_size,\n      size_t* out_num_read);\n\nwhere the caller passes in the buffer to copy the value to (|buf|, |buf_size|) and it returns (in |out_num_read|) how many bytes were read. If the buffer is not big enough the operation fails with AVB_IO_ERROR_INSUFFICIENT_SPACE.",
+      "revId": "79f0f2127b080f84375716d83724334c34ddbcde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "3d556b5e_e912909d",
+        "filename": "libavb/avb_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 415,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-12T23:28:28Z",
+      "side": 1,
+      "message": "const char",
+      "range": {
+        "startLine": 415,
+        "startChar": 2,
+        "endLine": 415,
+        "endChar": 6
+      },
+      "revId": "79f0f2127b080f84375716d83724334c34ddbcde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
