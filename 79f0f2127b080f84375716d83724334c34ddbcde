@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5d3cca47_0cfa06bd",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3530,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-13T17:45:44Z",
+      "side": 1,
+      "message": "This is actually only used for add_hash_footer / add_hashtree_footer which both apply to a specific target partition. (IIUC). Should I move these out of add_common_args or just add a comment here?",
+      "parentUuid": "b0fc4852_8015a742",
+      "revId": "79f0f2127b080f84375716d83724334c34ddbcde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bccf9914_847c67c9",
         "filename": "libavb/avb_ops.h",
         "patchSetId": 1
@@ -33,6 +51,24 @@
       "revId": "79f0f2127b080f84375716d83724334c34ddbcde",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1686527d_3d564815",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 278,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-13T17:45:44Z",
+      "side": 1,
+      "message": "\u003e I would suggest the following changes:\n\u003e \n\u003e 1. Drop get_persistent_value_size() operation... I think it would be helpful with a more \"elastic\" API that\u0027s just a property bag and where we don\u0027t enforce anything about the value size ... this is because I think it\u0027s handy to leave it up to the caller and be able to grow values as needed.\n\nYes, I had this just to serve as a way to get the value length before reading to malloc the buffer. Your suggestion below is also fine but on AVB_IO_ERROR_INSUFFICIENT_SPACE maybe return the actual required size in out_num_read?\n\n\u003e \n\u003e 2. We should have a list of \"well-known\" persistent value names including the expected size / meaning of the values (avb_ops.h would be the appropriate place for this list). We should also have a general overview of this feature in README.md including best practices on how a device is expected to implement it (like we talked about, a storage-constrained device would do clever things and switch on the key name and assign that to fixed locations... a device with tons of volatile storage could just dump a raw dictionary.)\n\nI don\u0027t mind the idea of well-known names but I don\u0027t have any, currently. I do have the prefix / suffix of the name so I could document that.\n\nI\u0027ll add a section to the README as well.\n\n\u003e \n\u003e 3. We discussed earlier offline that some values need to be stored in tamper-evident storage and some do not. How do you intend for libavb to convey this to the AvbOps implementor?\n\nI don\u0027t have any non-tamper-evident values and I can\u0027t think of a reason to store any values not tamper-evident, so I didn\u0027t put in the feature. To do the feature properly we\u0027d also need more nuance than just a boolean, we\u0027d need an enum of policies. I think it would be better to design this part if and when we need it.\n\n\u003e \n\u003e 4. Concretely, I\u0027d change read_persistent_value() to be this API:\n\u003e \n\u003e     AvbIOResult read_persistent_value(AvbOps *ops, const char *key,\n\u003e       uint8_t* buf,\n\u003e       size_t buf_size,\n\u003e       size_t* out_num_read);\n\u003e \n\u003e where the caller passes in the buffer to copy the value to (|buf|, |buf_size|) and it returns (in |out_num_read|) how many bytes were read. If the buffer is not big enough the operation fails with AVB_IO_ERROR_INSUFFICIENT_SPACE.\n\nI\u0027ve shied away from using the term \u0027key\u0027 because AVB works with crypto and I didn\u0027t want confusion with a \u0027key\u0027 in that context, but otherwise I\u0027m ok with this. (Honestly, I\u0027m not a fan of having to call a function twice with a malloc in between, but it works).",
+      "parentUuid": "bccf9914_847c67c9",
+      "revId": "79f0f2127b080f84375716d83724334c34ddbcde",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     },
     {
       "key": {
