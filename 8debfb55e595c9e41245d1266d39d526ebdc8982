@@ -1,0 +1,118 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "68c95996_aad7e62b",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-14T18:44:16Z",
+      "side": 1,
+      "message": "Sorry to keep asking for docs... but at the end of this document, please add a new major section called \"Version history\" (at the same level as \"Device Integration\") with a single sub-section called \"Version 1.1\" and explain that in version 1.1 we added support for persistent digests (and link to the section).",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "cc6a6079_5a137cca",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-14T18:44:16Z",
+      "side": 1,
+      "message": "the device is in the LOCKED state.",
+      "range": {
+        "startLine": 670,
+        "startChar": 53,
+        "endLine": 670,
+        "endChar": 66
+      },
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "80d37f5b_be7e73dd",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2868,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-14T18:44:16Z",
+      "side": 1,
+      "message": "If |use_persistent_digest| is set, we also need to set |required_libavb_version_major,minor| in the vbmeta struct to 1.1 ... this needs to be done early in the function because of print_required_libavb_version.\n\nAlso need to do the same in add_hashtree_footer().\n\nWe also should check |required_libavb_version_major,minor| is set to 1.1. via an unit test if - and only if - this option is used.",
+      "range": {
+        "startLine": 2867,
+        "startChar": 0,
+        "endLine": 2868,
+        "endChar": 30
+      },
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "174b03a0_54c92675",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-14T18:44:16Z",
+      "side": 1,
+      "message": "I thought this would make whatever PREUPLOAD.cfg does complain about formatting? Are you running that hook?",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "134352f1_d03e7ad4",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-14T18:44:16Z",
+      "side": 1,
+      "message": "So... are you are saying that IF --use_persistent_digest is used for \u0027foo\u0027 then the \u0027foo\u0027 partition must never be A/B\u0027ed? Is there a situation where you could use persistent digests but _still_ use A/B?",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c96ed001_2fa8814e",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-14T18:44:16Z",
+      "side": 1,
+      "message": "It seems like this is the wrong place to do this (we want to do as little work as long as there is still data to verify) ... why can\u0027t this be done at the end of avb_slot_verify() where all the other cmdline mangling is done? (That way we won\u0027t have to stash all the digest substitutions in a pre-allocated buffer...)",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
