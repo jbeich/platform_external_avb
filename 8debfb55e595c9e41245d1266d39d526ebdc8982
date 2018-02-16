@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "5bd6803f_e9089b42",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-16T03:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68c95996_aad7e62b",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "cc6a6079_5a137cca",
         "filename": "README.md",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2018-02-14T18:44:16Z",
       "side": 1,
       "message": "the device is in the LOCKED state.",
+      "range": {
+        "startLine": 670,
+        "startChar": 53,
+        "endLine": 670,
+        "endChar": 66
+      },
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1cb21392_990321e5",
+        "filename": "README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 670,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-16T03:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cc6a6079_5a137cca",
       "range": {
         "startLine": 670,
         "startChar": 53,
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "d68f2464_fec9f6af",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2868,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-16T03:09:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "80d37f5b_be7e73dd",
+      "range": {
+        "startLine": 2867,
+        "startChar": 0,
+        "endLine": 2868,
+        "endChar": 30
+      },
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "174b03a0_54c92675",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 2
@@ -76,6 +142,24 @@
       "writtenOn": "2018-02-14T18:44:16Z",
       "side": 1,
       "message": "I thought this would make whatever PREUPLOAD.cfg does complain about formatting? Are you running that hook?",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "508dd4b0_fe5df0b0",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-16T03:09:34Z",
+      "side": 1,
+      "message": "I\u0027m running all the files I touch through clang-format (using the .clang-format in the root dir). It seems some past CLs have not run it so there\u0027s a bit of collateral clean-up.\n\nOn a related note, avbtool needs pylint clean-up also but I\u0027m not adding that to this CL.",
+      "parentUuid": "174b03a0_54c92675",
       "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
@@ -99,6 +183,24 @@
     },
     {
       "key": {
+        "uuid": "5ff89bff_c127b7b9",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 233,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-16T03:09:34Z",
+      "side": 1,
+      "message": "As discussed, we can\u0027t think of a persistent digest use case with A/B so that will be explicitly not supported.",
+      "parentUuid": "134352f1_d03e7ad4",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c96ed001_2fa8814e",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 2
@@ -110,6 +212,24 @@
       "writtenOn": "2018-02-14T18:44:16Z",
       "side": 1,
       "message": "It seems like this is the wrong place to do this (we want to do as little work as long as there is still data to verify) ... why can\u0027t this be done at the end of avb_slot_verify() where all the other cmdline mangling is done? (That way we won\u0027t have to stash all the digest substitutions in a pre-allocated buffer...)",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "559fbc30_7a6759a5",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-16T03:09:34Z",
+      "side": 1,
+      "message": "We\u0027re not actually doing any mangling here, it will happen at the end of avb_slot_verify with the other mangling. I think this is the right place to do descriptor validation which is all the code here up to |avb_add_root_digest_substitution| below. And it doesn\u0027t seem right to read the digest from RPMB to validate it exists, throw it away, then loop through all the descriptors again later, and read the digest from RPMB again.",
+      "parentUuid": "c96ed001_2fa8814e",
       "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
