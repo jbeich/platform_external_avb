@@ -166,6 +166,24 @@
     },
     {
       "key": {
+        "uuid": "e8ae711a_36c68506",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-16T20:50:17Z",
+      "side": 1,
+      "message": "Are you running clang-format manually or via \u0027repo upload\u0027? IIRC the PRESUBMIT.cfg clang-format hook does something (or runs its own clang-format frontend or something) such that it doesn\u0027t yield the same results....\n\nThe way I do this - and I think others as well - is\n\n 1. ensure you are in a shell setup with \u0027. build/envsetup.sh; lunch board-userdebug\u0027\n 2. commit your changes... upload with \u0027repo upload .\u0027 ... wait for clang-format to complain about formatting... respond with \u0027y\u0027 when it offers to make the needed changes\n 3. commit/fixup the changes made by clang-format\n 4. run \u0027repo upload .\u0027 again - this time it shouldn\u0027t complain\n\nI *think* it\u0027s possible to run clang-format manually as well but IIRC it depends on both your environment and how it\u0027s invoked... the only thing that worked reliably for me is the above.",
+      "parentUuid": "508dd4b0_fe5df0b0",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "134352f1_d03e7ad4",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 2
@@ -230,6 +248,24 @@
       "side": 1,
       "message": "We\u0027re not actually doing any mangling here, it will happen at the end of avb_slot_verify with the other mangling. I think this is the right place to do descriptor validation which is all the code here up to |avb_add_root_digest_substitution| below. And it doesn\u0027t seem right to read the digest from RPMB to validate it exists, throw it away, then loop through all the descriptors again later, and read the digest from RPMB again.",
       "parentUuid": "c96ed001_2fa8814e",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "047f67d6_7c519e48",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-16T20:50:17Z",
+      "side": 1,
+      "message": "OK, but I really don\u0027t like the use of global static variables (|digest_sub_list| in avb_cmdline.c)... that really doesn\u0027t fly since it breaks concurrent execution (which may be used in some testing setups) and global variables are generally bad.\n\nHow about instead making load_and_verify_vbmeta() take a \"char** additional_cmdline\" and then you add to |additional_cmdline| here (in a helper function to avoid this getting too long)... and then you make the avb_slot_verify() append this at the end of the cmdline. [0]\n\n[0] : It would be better to have some kind of private struct with all the parameters (including |ab_suffix|, |requested_partitions|, AvbOps) we pass around between all these functions (then |additional_cmdline| would just be a field we\u0027d add to there). But I\u0027m not going to make you do that since it\u0027s a lot of work... unless you want to!",
+      "parentUuid": "559fbc30_7a6759a5",
       "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
