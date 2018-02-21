@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "119dc4a2_bc056d7d",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2895,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-21T01:28:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94437987_7b3449d0",
+      "revId": "da10c0ac9a8c00a325c08e2cfad9d9c91ebe246d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "5070016c_7683e6ee",
         "filename": "avbtool",
         "patchSetId": 3
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "2b8f37ae_0e949b6a",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3576,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-21T01:28:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5070016c_7683e6ee",
+      "range": {
+        "startLine": 3564,
+        "startChar": 0,
+        "endLine": 3576,
+        "endChar": 48
+      },
+      "revId": "da10c0ac9a8c00a325c08e2cfad9d9c91ebe246d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "852a28e9_ed6654d1",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 3
@@ -53,6 +95,30 @@
       "writtenOn": "2018-02-16T20:50:17Z",
       "side": 1,
       "message": "This fails for the case where A/B isn\u0027t used on the device (in which case |ab_suffix| is the empty string) and --use_persistent_digest was passed. (See comment in avbtool also.)\n\nProposed fix: Only fail if |ab_suffix| is non-empty.",
+      "range": {
+        "startLine": 239,
+        "startChar": 0,
+        "endLine": 245,
+        "endChar": 13
+      },
+      "revId": "da10c0ac9a8c00a325c08e2cfad9d9c91ebe246d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c10741a_bc06374e",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-21T01:28:29Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "852a28e9_ed6654d1",
       "range": {
         "startLine": 239,
         "startChar": 0,

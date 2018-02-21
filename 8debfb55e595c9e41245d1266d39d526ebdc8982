@@ -184,6 +184,24 @@
     },
     {
       "key": {
+        "uuid": "cfcda140_c1c5d628",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-21T01:28:29Z",
+      "side": 1,
+      "message": "I have it integrated into my editor -- but it automatically picks up .clang-format files (and external/avb has one) so the style should be right. repo upload does do the check and does not complain, but maybe it only checks code that has changed? In which case this might have slipped through the cracks for a while. In any case, I think it looks good like this!",
+      "parentUuid": "e8ae711a_36c68506",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "134352f1_d03e7ad4",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 2
@@ -266,6 +284,24 @@
       "side": 1,
       "message": "OK, but I really don\u0027t like the use of global static variables (|digest_sub_list| in avb_cmdline.c)... that really doesn\u0027t fly since it breaks concurrent execution (which may be used in some testing setups) and global variables are generally bad.\n\nHow about instead making load_and_verify_vbmeta() take a \"char** additional_cmdline\" and then you add to |additional_cmdline| here (in a helper function to avoid this getting too long)... and then you make the avb_slot_verify() append this at the end of the cmdline. [0]\n\n[0] : It would be better to have some kind of private struct with all the parameters (including |ab_suffix|, |requested_partitions|, AvbOps) we pass around between all these functions (then |additional_cmdline| would just be a field we\u0027d add to there). But I\u0027m not going to make you do that since it\u0027s a lot of work... unless you want to!",
       "parentUuid": "559fbc30_7a6759a5",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "29a61ff5_37e8c38d",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 980,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-21T01:28:29Z",
+      "side": 1,
+      "message": "re globals - agreed - done. Did not refactor further. :)",
+      "parentUuid": "047f67d6_7c519e48",
       "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
