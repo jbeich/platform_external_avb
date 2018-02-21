@@ -202,6 +202,24 @@
     },
     {
       "key": {
+        "uuid": "b3a19601_6fd3ad84",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-21T20:58:46Z",
+      "side": 1,
+      "message": "Interesting. If I add \"bool bar\" at the end to what\u0027s in the repo now then \u0027git-clang-format --diff libavb/*.[ch]\u0027 spits (in part) this out:\n\n  static AvbSlotVerifyResult load_full_partition(\n -    AvbOps* ops, const char* part_name,\n -    uint64_t image_size, uint8_t** out_image_buf,\n -    bool* out_image_preloaded, bool bar) {\n +    AvbOps* ops, const char* part_name, uint64_t image_size,\n +    uint8_t** out_image_buf, bool* out_image_preloaded, bool bar) {\n\nwhich suggest existing formatting is fine except that it packs the arguments more efficiently. If I take your formatting it says \"clang-format did not modify any files\" which means that it\u0027s fine with that kind of formatting too. So apparently clang-format is fine with code formatted in multiple ways. Hmm.\n\n\u003e In any case, I think it looks good like this!\n\nI actually agree it looks better but one main reason for enforcing code formatting is that it should format the code so it looks exactly *one* way ... I guess we should look into why it doesn\u0027t do (and then reformat the code)... that but that\u0027s for another bug and/or CL :-)",
+      "parentUuid": "cfcda140_c1c5d628",
+      "revId": "8debfb55e595c9e41245d1266d39d526ebdc8982",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "134352f1_d03e7ad4",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 2
