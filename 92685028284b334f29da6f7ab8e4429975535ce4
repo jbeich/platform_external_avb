@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6dac3a32_7bb6a166",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-21T20:58:46Z",
+      "side": 1,
+      "message": "Please add a paragraph that says something like \"This operation is currently only used for persistent digests. If your device isn\u0027t using this feature this function pointer can be set to NULL.\" ... then when we add more users (EIO handling for example) we\u0027ll add to the end of the first sentence.\n\nAlso repeat this paragraph in the docs for write_persistent_value().",
+      "revId": "92685028284b334f29da6f7ab8e4429975535ce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "d750716d_9195058e",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-21T20:58:46Z",
+      "side": 1,
+      "message": "In my previous comment, my suggestion was to use \"char** additional_cmdline\" and then grow that as needed...\n\nWith a struct encapsulating this - which admittedly is nicer, maybe we can just create a AvbCmdlineSubstList at the top and just pass a pointer to it instead of a pointer to a pointer. I think that would be nicer!",
+      "range": {
+        "startLine": 472,
+        "startChar": 4,
+        "endLine": 472,
+        "endChar": 55
+      },
+      "revId": "92685028284b334f29da6f7ab8e4429975535ce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "1c3ba556_6573fc89",
+        "filename": "test/avb_slot_verify_unittest.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2481,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-21T20:58:46Z",
+      "side": 1,
+      "message": "Could we also add an unit test where we check for 1.1 only when --do_not_use_ab is set and --use_persistent_digest isn\u0027t? (Maybe just have a |use_factory_partition| param for that?)",
+      "range": {
+        "startLine": 2481,
+        "startChar": 33,
+        "endLine": 2481,
+        "endChar": 66
+      },
+      "revId": "92685028284b334f29da6f7ab8e4429975535ce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
