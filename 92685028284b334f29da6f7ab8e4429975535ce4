@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f1dbcf0e_39f31d9f",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 274,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-23T02:08:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6dac3a32_7bb6a166",
+      "revId": "92685028284b334f29da6f7ab8e4429975535ce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d750716d_9195058e",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 4
@@ -42,6 +60,30 @@
     },
     {
       "key": {
+        "uuid": "bb72f6b0_dad2fece",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 472,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-23T02:08:32Z",
+      "side": 1,
+      "message": "Yeah, I thought the char** was a bit messy :)\n\nThe reason I made this a ** was so it would have no impact when the feature is not used. I\u0027ve added the allocation one layer up, though it will be a needless allocation in many cases.",
+      "parentUuid": "d750716d_9195058e",
+      "range": {
+        "startLine": 472,
+        "startChar": 4,
+        "endLine": 472,
+        "endChar": 55
+      },
+      "revId": "92685028284b334f29da6f7ab8e4429975535ce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1c3ba556_6573fc89",
         "filename": "test/avb_slot_verify_unittest.cc",
         "patchSetId": 4
@@ -53,6 +95,30 @@
       "writtenOn": "2018-02-21T20:58:46Z",
       "side": 1,
       "message": "Could we also add an unit test where we check for 1.1 only when --do_not_use_ab is set and --use_persistent_digest isn\u0027t? (Maybe just have a |use_factory_partition| param for that?)",
+      "range": {
+        "startLine": 2481,
+        "startChar": 33,
+        "endLine": 2481,
+        "endChar": 66
+      },
+      "revId": "92685028284b334f29da6f7ab8e4429975535ce4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "0e610146_291f0e4e",
+        "filename": "test/avb_slot_verify_unittest.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 2481,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-23T02:08:32Z",
+      "side": 1,
+      "message": "I think this fits best in avbtool tests, I\u0027ve added it there.",
+      "parentUuid": "1c3ba556_6573fc89",
       "range": {
         "startLine": 2481,
         "startChar": 33,
