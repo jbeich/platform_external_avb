@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d20ff606_cebd1634",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-23T21:30:13Z",
+      "side": 1,
+      "message": "I think it would be cleaner to call this androidboot.vbmeta.persistent_digest.factory otherwise partition names will pollute the android.vbmeta.* namespace.\n\n(I know it\u0027s just an example and the string/pattern doesn\u0027t appear in the code parts of the CL... right?)",
+      "range": {
+        "startLine": 23,
+        "startChar": 1,
+        "endLine": 23,
+        "endChar": 35
+      },
+      "revId": "68683ec758cd0a88057971c4f5ec466437d02c58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "62b9f539_6b9ded0c",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 2341,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-02-23T21:30:13Z",
+      "side": 1,
+      "message": "Hmm, I know the original code did it but I think this is hard to read given there\u0027s now more than three versions to check and they\u0027re not all 1.0... - please check version.txt after each \u0027make_vbmeta_image\u0027 invocation (maybe through a one-line helper).",
+      "revId": "68683ec758cd0a88057971c4f5ec466437d02c58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
