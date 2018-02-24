@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a11341e6_ba758c17",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-24T00:57:39Z",
+      "side": 1,
+      "message": "Done. (but used root_digest). Also changed in a few unit tests.",
+      "parentUuid": "d20ff606_cebd1634",
+      "range": {
+        "startLine": 23,
+        "startChar": 1,
+        "endLine": 23,
+        "endChar": 35
+      },
+      "revId": "68683ec758cd0a88057971c4f5ec466437d02c58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "62b9f539_6b9ded0c",
         "filename": "test/avbtool_unittest.cc",
         "patchSetId": 6
@@ -36,6 +60,24 @@
       "writtenOn": "2018-02-23T21:30:13Z",
       "side": 1,
       "message": "Hmm, I know the original code did it but I think this is hard to read given there\u0027s now more than three versions to check and they\u0027re not all 1.0... - please check version.txt after each \u0027make_vbmeta_image\u0027 invocation (maybe through a one-line helper).",
+      "revId": "68683ec758cd0a88057971c4f5ec466437d02c58",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "f1a432dd_7c23917a",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 2341,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-02-24T00:57:39Z",
+      "side": 1,
+      "message": "Done. I actually split these out so it will be easier to add additional versions going forward.",
+      "parentUuid": "62b9f539_6b9ded0c",
       "revId": "68683ec758cd0a88057971c4f5ec466437d02c58",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
