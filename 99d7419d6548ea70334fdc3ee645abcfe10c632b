@@ -46,6 +46,30 @@
       "revId": "99d7419d6548ea70334fdc3ee645abcfe10c632b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a0035032_0b225bcc",
+        "filename": "libavb_atx/avb_atx_validate.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 367,
+      "author": {
+        "id": 1125188
+      },
+      "writtenOn": "2018-03-29T18:20:23Z",
+      "side": 1,
+      "message": "SGTM, and actually I think that my initial concern about PUK credential management would be even easier if PUK authentication happened on the console instead of (or in addition to) the ATFAs. Also agreed that without it we wouldn\u0027t have a way to revoke PUKs.",
+      "parentUuid": "f435f5f8_9de60a13",
+      "range": {
+        "startLine": 367,
+        "startChar": 0,
+        "endLine": 367,
+        "endChar": 79
+      },
+      "revId": "99d7419d6548ea70334fdc3ee645abcfe10c632b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
