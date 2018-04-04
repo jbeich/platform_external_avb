@@ -2577,6 +2577,7 @@ class Avb(object):
 
     # Add descriptors from other images.
     if include_descriptors_from_image:
+      descriptors_dict = dict()
       for image in include_descriptors_from_image:
         image_handler = ImageHandler(image.name)
         (_, image_vbmeta_header, image_descriptors, _) = self._parse_image(
@@ -2585,7 +2586,13 @@ class Avb(object):
         h.bump_required_libavb_version_minor(
             image_vbmeta_header.required_libavb_version_minor)
         for desc in image_descriptors:
-          encoded_descriptors.extend(desc.encode())
+          if hasattr(desc, 'partition_name'):
+            # Override descriptors of the same partition from previous images.
+            descriptors_dict[desc.partition_name] = desc
+          else:
+            encoded_descriptors.extend(desc.encode())
+      for _, desc in descriptors_dict.items():
+        encoded_descriptors.extend(desc.encode())
 
     # Load public key metadata blob, if requested.
     pkmd_blob = []
