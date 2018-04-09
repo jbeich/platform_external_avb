@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c23c06d2_791ef1a1",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2589,
+      "author": {
+        "id": 1079733
+      },
+      "writtenOn": "2018-04-09T20:02:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "783f8130_ffb1a700",
+      "range": {
+        "startLine": 2589,
+        "startChar": 10,
+        "endLine": 2589,
+        "endChar": 45
+      },
+      "revId": "d42f9117d453fd1610885a8acf060c55c6769077",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e51e711e_5e3a43bf",
         "filename": "avbtool",
         "patchSetId": 3
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "971c863f_342a0632",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2591,
+      "author": {
+        "id": 1079733
+      },
+      "writtenOn": "2018-04-09T20:02:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e51e711e_5e3a43bf",
+      "range": {
+        "startLine": 2591,
+        "startChar": 29,
+        "endLine": 2591,
+        "endChar": 48
+      },
+      "revId": "d42f9117d453fd1610885a8acf060c55c6769077",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b26e52ce_33e621ba",
         "filename": "avbtool",
         "patchSetId": 3
@@ -59,6 +107,30 @@
       "writtenOn": "2018-04-09T19:29:42Z",
       "side": 1,
       "message": "So I think we only need to sort the keys (each key only has one value so no point in sorting on values) so it should be something like\n\n for key in sorted(descriptor_dict.keys()):\n   encoded_descriptors.extend(descriptor_dict[key])",
+      "range": {
+        "startLine": 2594,
+        "startChar": 1,
+        "endLine": 2595,
+        "endChar": 40
+      },
+      "revId": "d42f9117d453fd1610885a8acf060c55c6769077",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a2f50661_305ac184",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2595,
+      "author": {
+        "id": 1079733
+      },
+      "writtenOn": "2018-04-09T20:02:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b26e52ce_33e621ba",
       "range": {
         "startLine": 2594,
         "startChar": 1,
