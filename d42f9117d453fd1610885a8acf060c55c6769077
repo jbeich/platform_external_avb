@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "783f8130_ffb1a700",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2589,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-04-09T19:29:42Z",
+      "side": 1,
+      "message": "Add a comment before this line explaining what problem we\u0027re trying to achieve. For example\n\n # The --include_descriptors_from_image option is used in some setups\n # with images A and B where both A and B contain a descriptor\n # for a partition with the same name. Since it\u0027s not meaningful\n # to include both descriptors, only include the last seen descriptor.\n # See bug 76386656 for details.\n\nI don\u0027t think we need to document this behavior in README.md... I mean, it\u0027s kinda oddball case.",
+      "range": {
+        "startLine": 2589,
+        "startChar": 10,
+        "endLine": 2589,
+        "endChar": 45
+      },
+      "revId": "d42f9117d453fd1610885a8acf060c55c6769077",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e51e711e_5e3a43bf",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2591,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-04-09T19:29:42Z",
+      "side": 1,
+      "message": "Hmm, reading this code again, testing whether the description has the attribute \u0027partition_name\u0027 is kind of a hack.\n\nThat said, what worries me more however is that this might actually break in the future if we add new kinds of descriptors with the attribute \u0027partition_name\u0027 and we expect them to co-exist with existing descriptors...\n\nSo I think this can be fixed by prefixing the partition_name with the descriptor type, something like this\n\n key \u003d type(desc).__name__ + \u0027_\u0027 + desc.partition_name\n descriptors_dict[key] \u003d desc.encode()\n\nIt\u0027s not pretty but I think it\u0027ll work!",
+      "range": {
+        "startLine": 2591,
+        "startChar": 29,
+        "endLine": 2591,
+        "endChar": 48
+      },
+      "revId": "d42f9117d453fd1610885a8acf060c55c6769077",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b26e52ce_33e621ba",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2595,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-04-09T19:29:42Z",
+      "side": 1,
+      "message": "So I think we only need to sort the keys (each key only has one value so no point in sorting on values) so it should be something like\n\n for key in sorted(descriptor_dict.keys()):\n   encoded_descriptors.extend(descriptor_dict[key])",
+      "range": {
+        "startLine": 2594,
+        "startChar": 1,
+        "endLine": 2595,
+        "endChar": 40
+      },
+      "revId": "d42f9117d453fd1610885a8acf060c55c6769077",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
