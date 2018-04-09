@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "fdb8ce96_5320730d",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2594,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-04-09T15:07:11Z",
+      "side": 1,
+      "message": "One concern here is that the list of tuples returned by items() may not be deterministic? (And even if they appear to be, it may be a side-effect of the hash-table implementation in use... which could change.) ... Googling for this (I\u0027m no Python expert) seems to suggest just that: https://stackoverflow.com/questions/14956313/why-is-dictionary-ordering-non-deterministic\n\nSo... maybe we can sort the returned list first by the key and then after that by encoded descriptor (you\u0027d insert desc.encode() into the dict then)? I think that would guarantee the same order, always.",
+      "range": {
+        "startLine": 2594,
+        "startChar": 37,
+        "endLine": 2594,
+        "endChar": 45
+      },
+      "revId": "e4c3e650f7389ec7509d4bc5755535f30820ca0c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
