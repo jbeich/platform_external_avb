@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "d484fd7f_df9c80d9",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1379,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-04-10T20:15:51Z",
+      "side": 1,
+      "message": "I would agree but clang-format in the repo hook wants it this way...",
+      "parentUuid": "84e7dbd1_8b7d3944",
+      "revId": "ec661edce043236368c99220bcdb93b8835988b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2e4540b4_9717e6f5",
         "filename": "libavb/avb_slot_verify.h",
         "patchSetId": 2
@@ -30,6 +48,30 @@
       "writtenOn": "2018-04-10T18:28:43Z",
       "side": 1,
       "message": "nit: |data|",
+      "range": {
+        "startLine": 263,
+        "startChar": 41,
+        "endLine": 263,
+        "endChar": 54
+      },
+      "revId": "ec661edce043236368c99220bcdb93b8835988b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08b08e6f_6708caf6",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 263,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-04-10T20:15:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2e4540b4_9717e6f5",
       "range": {
         "startLine": 263,
         "startChar": 41,
