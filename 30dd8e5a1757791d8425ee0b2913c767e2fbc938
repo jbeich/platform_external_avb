@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3e103211_bd94c2d5",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1364,
+      "author": {
+        "id": 1079733
+      },
+      "writtenOn": "2018-04-10T22:13:22Z",
+      "side": 1,
+      "message": "Just get rid of this variable and return directly here",
+      "range": {
+        "startLine": 1364,
+        "startChar": 6,
+        "endLine": 1364,
+        "endChar": 16
+      },
+      "revId": "30dd8e5a1757791d8425ee0b2913c767e2fbc938",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
