@@ -1,0 +1,8 @@
+Verified+1: Darren Krahn <dkrahn@google.com>
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Darren Krahn <dkrahn@google.com>
+Submitted-at: Wed, 20 Jun 2018 01:15:44 +0000
+Reviewed-on: https://android-review.googlesource.com/706769
+Project: platform/external/avb
+Branch: refs/heads/master
