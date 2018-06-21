@@ -317,7 +317,8 @@ AvbSlotVerifyResult avb_append_options(
   }
 
   /* Set androidboot.veritymode and androidboot.vbmeta.invalidate_on_error */
-  if (toplevel_vbmeta->flags & AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED) {
+  if (toplevel_vbmeta->flags & (AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED |
+                                AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED)) {
     verity_mode = "disabled";
   } else {
     const char* dm_verity_mode;
