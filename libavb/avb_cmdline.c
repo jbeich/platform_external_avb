@@ -350,6 +350,11 @@ AvbSlotVerifyResult avb_append_options(
         verity_mode = "logging";
         dm_verity_mode = "ignore_corruption";
         break;
+      case AVB_HASHTREE_ERROR_MODE_MANAGED_RESTART_AND_EIO:
+        // Should never get here because MANAGED_RESTART_AND_EIO is
+        // remapped by avb_manage_hashtree_error_mode().
+        avb_assert_not_reached();
+        break;
     }
     new_ret = avb_replace(
         slot_data->cmdline, "$(ANDROID_VERITY_MODE)", dm_verity_mode);
