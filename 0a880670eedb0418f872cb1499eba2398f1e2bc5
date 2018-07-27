@@ -70,6 +70,30 @@
       "revId": "0a880670eedb0418f872cb1499eba2398f1e2bc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f65a8dc_57599632",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-07-27T18:39:24Z",
+      "side": 1,
+      "message": "Yep, it\u0027s fine to use both flags at the same time!",
+      "parentUuid": "95ff4892_3a9c9fce",
+      "range": {
+        "startLine": 116,
+        "startChar": 2,
+        "endLine": 116,
+        "endChar": 72
+      },
+      "revId": "0a880670eedb0418f872cb1499eba2398f1e2bc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
