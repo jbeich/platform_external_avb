@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3089f3c5_56c6bc3d",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1138338
+      },
+      "writtenOn": "2018-07-27T00:06:00Z",
+      "side": 1,
+      "message": "is it ok to use\n\nAVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR | AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR\n\nwhen the device is unlocked?",
+      "range": {
+        "startLine": 116,
+        "startChar": 2,
+        "endLine": 116,
+        "endChar": 72
+      },
+      "revId": "0a880670eedb0418f872cb1499eba2398f1e2bc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
