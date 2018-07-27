@@ -22,6 +22,30 @@
       "revId": "0a880670eedb0418f872cb1499eba2398f1e2bc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a1730318_b901418f",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-07-27T14:40:46Z",
+      "side": 1,
+      "message": "you meant AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR | AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR ?\n\nLooks ok to me.\nThe former can only be used when the device is unlocked.\nThe latter can be used irrespective of locked/unlocked.\n\nDavid, please CMIIW",
+      "parentUuid": "3089f3c5_56c6bc3d",
+      "range": {
+        "startLine": 116,
+        "startChar": 2,
+        "endLine": 116,
+        "endChar": 72
+      },
+      "revId": "0a880670eedb0418f872cb1499eba2398f1e2bc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
