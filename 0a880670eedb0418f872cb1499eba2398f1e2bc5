@@ -46,6 +46,30 @@
       "revId": "0a880670eedb0418f872cb1499eba2398f1e2bc5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95ff4892_3a9c9fce",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1002032
+      },
+      "writtenOn": "2018-07-27T17:03:00Z",
+      "side": 1,
+      "message": "Yes I meant AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR | AVB_SLOT_VERIFY_FLAGS_RESTART_CAUSED_BY_HASHTREE_CORRUPTION. Just wanted to make sure there is not conflict between them",
+      "parentUuid": "a1730318_b901418f",
+      "range": {
+        "startLine": 116,
+        "startChar": 2,
+        "endLine": 116,
+        "endChar": 72
+      },
+      "revId": "0a880670eedb0418f872cb1499eba2398f1e2bc5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
