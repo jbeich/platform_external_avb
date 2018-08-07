@@ -89,6 +89,14 @@ partition or - via a chain partition descriptor - in the partition
 that they are used to integrity check. This allows for a wide range of
 organizational and trust relationships.
 
+Chained partitions need not use a footer - it is permissible to have a
+chained partition point to a partition where the VBMeta struct is at
+the beginning (e.g. just like the `vbmeta` partition). This is useful
+for use-cases where all hash- and hashtree-descriptors for the partitions
+owned by an entire organization are stored in a dedicated partition,
+for example `vbmeta_google` and some of the bigger partitions are managed
+as logical partitions not understood by the boot loader.
+
 ## Rollback Protection
 
 AVB includes Rollback Protection which is used to protect against
