@@ -296,24 +296,16 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
    */
   image_size = hash_desc.image_size;
   if (allow_verification_error) {
-    if (ops->get_size_of_partition == NULL) {
-      avb_errorv(part_name,
-                 ": The get_size_of_partition() operation is "
-                 "not implemented so we may not load the entire partition. "
-                 "Please implement.",
-                 NULL);
-    } else {
-      io_ret = ops->get_size_of_partition(ops, part_name, &image_size);
-      if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
-        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
-        goto out;
-      } else if (io_ret != AVB_IO_RESULT_OK) {
-        avb_errorv(part_name, ": Error determining partition size.\n", NULL);
-        ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
-        goto out;
-      }
-      avb_debugv(part_name, ": Loading entire partition.\n", NULL);
+    io_ret = ops->get_size_of_partition(ops, part_name, &image_size);
+    if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto out;
+    } else if (io_ret != AVB_IO_RESULT_OK) {
+      avb_errorv(part_name, ": Error determining partition size.\n", NULL);
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+      goto out;
     }
+    avb_debugv(part_name, ": Loading entire partition.\n", NULL);
   }
 
   ret = load_full_partition(
@@ -416,12 +408,6 @@ static AvbSlotVerifyResult load_requested_partitions(
   bool image_preloaded = false;
   size_t n;
 
-  if (ops->get_size_of_partition == NULL) {
-    avb_error("get_size_of_partition() not implemented.\n");
-    ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_ARGUMENT;
-    goto out;
-  }
-
   for (n = 0; requested_partitions[n] != NULL; n++) {
     char part_name[AVB_PART_NAME_MAX_SIZE];
     AvbIOResult io_ret;
@@ -503,6 +489,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     AvbAlgorithmType* out_algorithm_type,
     AvbCmdlineSubstList* out_additional_cmdline_subst) {
   char full_partition_name[AVB_PART_NAME_MAX_SIZE];
+  char full_detached_partition_name[AVB_PART_NAME_MAX_SIZE];
   AvbSlotVerifyResult ret;
   AvbIOResult io_ret;
   size_t vbmeta_offset;
@@ -520,6 +507,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   bool is_main_vbmeta;
   bool is_vbmeta_partition;
   AvbVBMetaData* vbmeta_image_data = NULL;
+  uint64_t detached_partition_size = 0;
+  const char* partition_to_load_from = NULL;
 
   ret = AVB_SLOT_VERIFY_RESULT_OK;
 
@@ -538,7 +527,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     goto out;
   }
 
-  /* Construct full partition name. */
+  /* Construct full partition name e.g. system_a. */
   if (!avb_str_concat(full_partition_name,
                       sizeof full_partition_name,
                       partition_name,
@@ -549,11 +538,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
     goto out;
   }
-
-  avb_debugv("Loading vbmeta struct from partition '",
-             full_partition_name,
-             "'.\n",
-             NULL);
+  partition_to_load_from = full_partition_name;
 
   /* If we're loading from the main vbmeta partition, the vbmeta
    * struct is in the beginning. Otherwise we have to locate it via a
@@ -563,43 +548,76 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     vbmeta_offset = 0;
     vbmeta_size = VBMETA_MAX_SIZE;
   } else {
-    uint8_t footer_buf[AVB_FOOTER_SIZE];
-    size_t footer_num_read;
-    AvbFooter footer;
-
-    io_ret = ops->read_from_partition(ops,
-                                      full_partition_name,
-                                      -AVB_FOOTER_SIZE,
-                                      AVB_FOOTER_SIZE,
-                                      footer_buf,
-                                      &footer_num_read);
-    if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
-      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    /* Construct full partition name for detached partition
+     * e.g. vbmeta_system_a.
+     */
+    if (!avb_str_concat(full_detached_partition_name,
+                        sizeof full_detached_partition_name,
+                        "vbmeta_",
+                        (size_t)7,
+                        full_partition_name,
+                        avb_strlen(full_partition_name))) {
+      avb_error("vbmeta_, partition name, and suffix does not fit.\n");
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
       goto out;
-    } else if (io_ret != AVB_IO_RESULT_OK) {
-      avb_errorv(full_partition_name, ": Error loading footer.\n", NULL);
+    }
+    io_ret = ops->get_size_of_partition(
+        ops, full_detached_partition_name, &detached_partition_size);
+    if (io_ret == AVB_IO_RESULT_OK) {
+      vbmeta_offset = 0;
+      vbmeta_size = VBMETA_MAX_SIZE;
+      avb_debugv(
+          full_partition_name, ": Detected detached vbmeta partition.\n", NULL);
+      partition_to_load_from = full_detached_partition_name;
+    } else if (io_ret != AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION) {
+      avb_errorv(full_partition_name,
+                 ": Error detecting detached vbmeta partition.\n",
+                 NULL);
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
       goto out;
-    }
-    avb_assert(footer_num_read == AVB_FOOTER_SIZE);
+    } else {
+      /* The case where io_ret returned AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
+       * which is fine - just means there is no detached partition and we need
+       * to look into a footer.
+       */
+      uint8_t footer_buf[AVB_FOOTER_SIZE];
+      size_t footer_num_read;
+      AvbFooter footer;
 
-    if (!avb_footer_validate_and_byteswap((const AvbFooter*)footer_buf,
-                                          &footer)) {
-      avb_errorv(full_partition_name, ": Error validating footer.\n", NULL);
-      ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
-      goto out;
-    }
+      io_ret = ops->read_from_partition(ops,
+                                        full_partition_name,
+                                        -AVB_FOOTER_SIZE,
+                                        AVB_FOOTER_SIZE,
+                                        footer_buf,
+                                        &footer_num_read);
+      if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+        goto out;
+      } else if (io_ret != AVB_IO_RESULT_OK) {
+        avb_errorv(full_partition_name, ": Error loading footer.\n", NULL);
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+        goto out;
+      }
+      avb_assert(footer_num_read == AVB_FOOTER_SIZE);
 
-    /* Basic footer sanity check since the data is untrusted. */
-    if (footer.vbmeta_size > VBMETA_MAX_SIZE) {
-      avb_errorv(
-          full_partition_name, ": Invalid vbmeta size in footer.\n", NULL);
-      ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
-      goto out;
-    }
+      if (!avb_footer_validate_and_byteswap((const AvbFooter*)footer_buf,
+                                            &footer)) {
+        avb_errorv(full_partition_name, ": Error validating footer.\n", NULL);
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+        goto out;
+      }
 
-    vbmeta_offset = footer.vbmeta_offset;
-    vbmeta_size = footer.vbmeta_size;
+      /* Basic footer sanity check since the data is untrusted. */
+      if (footer.vbmeta_size > VBMETA_MAX_SIZE) {
+        avb_errorv(
+            full_partition_name, ": Invalid vbmeta size in footer.\n", NULL);
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+        goto out;
+      }
+
+      vbmeta_offset = footer.vbmeta_offset;
+      vbmeta_size = footer.vbmeta_size;
+    }
   }
 
   vbmeta_buf = avb_malloc(vbmeta_size);
@@ -608,8 +626,13 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     goto out;
   }
 
+  avb_debugv("Loading vbmeta struct from partition '",
+             partition_to_load_from,
+             "'.\n",
+             NULL);
+
   io_ret = ops->read_from_partition(ops,
-                                    full_partition_name,
+                                    partition_to_load_from,
                                     vbmeta_offset,
                                     vbmeta_size,
                                     vbmeta_buf,
@@ -623,7 +646,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
      */
     if (is_main_vbmeta && io_ret == AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION &&
         is_vbmeta_partition) {
-      avb_debugv(full_partition_name,
+      avb_debugv(partition_to_load_from,
                  ": No such partition. Trying 'boot' instead.\n",
                  NULL);
       ret = load_and_verify_vbmeta(ops,
@@ -641,7 +664,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
                                    out_additional_cmdline_subst);
       goto out;
     } else {
-      avb_errorv(full_partition_name, ": Error loading vbmeta data.\n", NULL);
+      avb_errorv(
+          partition_to_load_from, ": Error loading vbmeta data.\n", NULL);
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
       goto out;
     }
@@ -662,7 +686,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     case AVB_VBMETA_VERIFY_RESULT_HASH_MISMATCH:
     case AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH:
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION;
-      avb_errorv(full_partition_name,
+      avb_errorv(partition_to_load_from,
                  ": Error verifying vbmeta image: ",
                  avb_vbmeta_verify_result_to_string(vbmeta_ret),
                  "\n",
@@ -675,7 +699,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     case AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER:
       /* No way to continue this case. */
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
-      avb_errorv(full_partition_name,
+      avb_errorv(partition_to_load_from,
                  ": Error verifying vbmeta image: invalid vbmeta header\n",
                  NULL);
       goto out;
@@ -683,7 +707,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     case AVB_VBMETA_VERIFY_RESULT_UNSUPPORTED_VERSION:
       /* No way to continue this case. */
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_UNSUPPORTED_VERSION;
-      avb_errorv(full_partition_name,
+      avb_errorv(partition_to_load_from,
                  ": Error verifying vbmeta image: unsupported AVB version\n",
                  NULL);
       goto out;
@@ -699,7 +723,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   } else {
     if (vbmeta_header.flags != 0) {
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
-      avb_errorv(full_partition_name,
+      avb_errorv(partition_to_load_from,
                  ": chained vbmeta image has non-zero flags\n",
                  NULL);
       goto out;
@@ -712,7 +736,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
       avb_assert(!is_main_vbmeta);
       if (expected_public_key_length != pk_len ||
           avb_safe_memcmp(expected_public_key, pk_data, pk_len) != 0) {
-        avb_errorv(full_partition_name,
+        avb_errorv(partition_to_load_from,
                    ": Public key used to sign data does not match key in chain "
                    "partition descriptor.\n",
                    NULL);
@@ -740,14 +764,14 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
         ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
         goto out;
       } else if (io_ret != AVB_IO_RESULT_OK) {
-        avb_errorv(full_partition_name,
+        avb_errorv(partition_to_load_from,
                    ": Error while checking public key used to sign data.\n",
                    NULL);
         ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
         goto out;
       }
       if (!key_is_trusted) {
-        avb_errorv(full_partition_name,
+        avb_errorv(partition_to_load_from,
                    ": Public key used to sign data rejected.\n",
                    NULL);
         ret = AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED;
@@ -765,7 +789,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
     goto out;
   } else if (io_ret != AVB_IO_RESULT_OK) {
-    avb_errorv(full_partition_name,
+    avb_errorv(partition_to_load_from,
                ": Error getting rollback index for location.\n",
                NULL);
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
@@ -773,7 +797,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   }
   if (vbmeta_header.rollback_index < stored_rollback_index) {
     avb_errorv(
-        full_partition_name,
+        partition_to_load_from,
         ": Image rollback index is less than the stored rollback index.\n",
         NULL);
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX;
@@ -789,7 +813,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     avb_assert(slot_data->num_vbmeta_images > 0);
   }
   if (slot_data->num_vbmeta_images == MAX_NUMBER_OF_VBMETA_IMAGES) {
-    avb_errorv(full_partition_name, ": Too many vbmeta images.\n", NULL);
+    avb_errorv(partition_to_load_from, ": Too many vbmeta images.\n", NULL);
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
     goto out;
   }
@@ -814,7 +838,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   if (vbmeta_header.flags & AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED) {
     AvbSlotVerifyResult sub_ret;
     avb_debugv(
-        full_partition_name, ": VERIFICATION_DISABLED bit is set.\n", NULL);
+        partition_to_load_from, ": VERIFICATION_DISABLED bit is set.\n", NULL);
     /* If load_requested_partitions() fail it is always a fatal
      * failure (e.g. ERROR_INVALID_ARGUMENT, ERROR_OOM, etc.) rather
      * than recoverable (e.g. one where result_should_continue()
@@ -847,7 +871,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     AvbDescriptor desc;
 
     if (!avb_descriptor_validate_and_byteswap(descriptors[n], &desc)) {
-      avb_errorv(full_partition_name, ": Descriptor is invalid.\n", NULL);
+      avb_errorv(partition_to_load_from, ": Descriptor is invalid.\n", NULL);
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
       goto out;
     }
@@ -877,7 +901,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
 
         /* Only allow CHAIN_PARTITION descriptors in the main vbmeta image. */
         if (!is_main_vbmeta) {
-          avb_errorv(full_partition_name,
+          avb_errorv(partition_to_load_from,
                      ": Encountered chain descriptor not in main image.\n",
                      NULL);
           ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
@@ -886,7 +910,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
 
         if (!avb_chain_partition_descriptor_validate_and_byteswap(
                 (AvbChainPartitionDescriptor*)descriptors[n], &chain_desc)) {
-          avb_errorv(full_partition_name,
+          avb_errorv(partition_to_load_from,
                      ": Chain partition descriptor is invalid.\n",
                      NULL);
           ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
@@ -894,7 +918,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
         }
 
         if (chain_desc.rollback_index_location == 0) {
-          avb_errorv(full_partition_name,
+          avb_errorv(partition_to_load_from,
                      ": Chain partition has invalid "
                      "rollback_index_location field.\n",
                      NULL);
@@ -936,7 +960,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
         if (!avb_kernel_cmdline_descriptor_validate_and_byteswap(
                 (AvbKernelCmdlineDescriptor*)descriptors[n],
                 &kernel_cmdline_desc)) {
-          avb_errorv(full_partition_name,
+          avb_errorv(partition_to_load_from,
                      ": Kernel cmdline descriptor is invalid.\n",
                      NULL);
           ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
@@ -948,7 +972,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
 
         if (!avb_validate_utf8(kernel_cmdline,
                                kernel_cmdline_desc.kernel_cmdline_length)) {
-          avb_errorv(full_partition_name,
+          avb_errorv(partition_to_load_from,
                      ": Kernel cmdline is not valid UTF-8.\n",
                      NULL);
           ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
@@ -1010,8 +1034,9 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
 
         if (!avb_hashtree_descriptor_validate_and_byteswap(
                 (AvbHashtreeDescriptor*)descriptors[n], &hashtree_desc)) {
-          avb_errorv(
-              full_partition_name, ": Hashtree descriptor is invalid.\n", NULL);
+          avb_errorv(partition_to_load_from,
+                     ": Hashtree descriptor is invalid.\n",
+                     NULL);
           ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
           goto out;
         }
@@ -1100,7 +1125,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
 
   if (rollback_index_location >= AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS) {
     avb_errorv(
-        full_partition_name, ": Invalid rollback_index_location.\n", NULL);
+        partition_to_load_from, ": Invalid rollback_index_location.\n", NULL);
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
     goto out;
   }
@@ -1237,13 +1262,10 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
       (flags & AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR);
   AvbCmdlineSubstList* additional_cmdline_subst = NULL;
 
-  /* Fail early if we're missing the AvbOps needed for slot verification.
-   *
-   * For now, handle get_size_of_partition() not being implemented. In
-   * a later release we may change that.
-   */
+  /* Fail early if we're missing the AvbOps needed for slot verification. */
   avb_assert(ops->read_is_device_unlocked != NULL);
   avb_assert(ops->read_from_partition != NULL);
+  avb_assert(ops->get_size_of_partition != NULL);
   avb_assert(ops->validate_vbmeta_public_key != NULL);
   avb_assert(ops->read_rollback_index != NULL);
   avb_assert(ops->get_unique_guid_for_partition != NULL);
