@@ -1959,6 +1959,33 @@ class Avb(object):
   MAX_VBMETA_SIZE = 64 * 1024
   MAX_FOOTER_SIZE = 4096
 
+  def extract_vbmeta_image(self, output, image_filename, padding_size):
+    """Implements the 'extract_vbmeta_image' command.
+
+    Arguments:
+      output: Write vbmeta struct to this file.
+      image_filename: File to extract vbmeta data from (with a footer).
+      padding_size: If not 0, pads output so size is a multiple of the number.
+
+    Raises:
+      AvbError: If there's no footer in the image.
+    """
+    image = ImageHandler(image_filename)
+
+    (footer, _, _, _) = self._parse_image(image)
+
+    if not footer:
+      raise AvbError('Given image does not have a footer.')
+
+    image.seek(footer.vbmeta_offset)
+    vbmeta_blob = image.read(footer.vbmeta_size)
+    output.write(vbmeta_blob)
+
+    if padding_size > 0:
+      padded_size = round_to_multiple(len(vbmeta_blob), padding_size)
+      padding_needed = padded_size - len(vbmeta_blob)
+      output.write('\0' * padding_needed)
+
   def erase_footer(self, image_filename, keep_hashtree):
     """Implements the 'erase_footer' command.
 
@@ -2230,14 +2257,17 @@ class Avb(object):
 
     for desc in descriptors:
       if isinstance(desc, AvbChainPartitionDescriptor):
-        ch_image_filename = os.path.join(image_dir, desc.partition_name + image_ext)
+        # Check for detached vbmeta and use if available
+        ch_image_filename = os.path.join(image_dir, 'vbmeta_' + desc.partition_name + image_ext)
+        if not os.path.isfile(ch_image_filename):
+          ch_image_filename = os.path.join(image_dir, desc.partition_name + image_ext)
         ch_image = ImageHandler(ch_image_filename)
         (ch_footer, ch_header, ch_descriptors, ch_image_size) = self._parse_image(ch_image)
         ch_offset = 0
+        ch_size = (ch_header.SIZE + ch_header.authentication_data_block_size +
+                   ch_header.auxiliary_data_block_size)
         if ch_footer:
           ch_offset = ch_footer.vbmeta_offset
-          ch_size = (ch_header.SIZE + ch_header.authentication_data_block_size +
-                     ch_header.auxiliary_data_block_size)
         ch_image.seek(ch_offset)
         ch_vbmeta_blob = ch_image.read(ch_size)
         hasher.update(ch_vbmeta_blob)
@@ -3871,6 +3901,23 @@ class AvbTool(object):
                             action='store_true')
     sub_parser.set_defaults(func=self.erase_footer)
 
+    sub_parser = subparsers.add_parser('extract_vbmeta_image',
+                                       help='Extracts vbmeta from an image with a footer.')
+    sub_parser.add_argument('--image',
+                            help='Image with footer',
+                            type=argparse.FileType('rwb+'),
+                            required=True)
+    sub_parser.add_argument('--output',
+                            help='Output file name',
+                            type=argparse.FileType('wb'))
+    sub_parser.add_argument('--padding_size',
+                            metavar='NUMBER',
+                            help='If non-zero, pads output with NUL bytes so '
+                                 'its size is a multiple of NUMBER (default: 0)',
+                            type=parse_number,
+                            default=0)
+    sub_parser.set_defaults(func=self.extract_vbmeta_image)
+
     sub_parser = subparsers.add_parser('resize_image',
                                        help='Resize image with a footer.')
     sub_parser.add_argument('--image',
@@ -4154,6 +4201,11 @@ class AvbTool(object):
   def erase_footer(self, args):
     """Implements the 'erase_footer' sub-command."""
     self.avb.erase_footer(args.image.name, args.keep_hashtree)
+
+  def extract_vbmeta_image(self, args):
+    """Implements the 'extract_vbmeta_image' sub-command."""
+    self.avb.extract_vbmeta_image(args.output, args.image.name,
+                                  args.padding_size)
 
   def resize_image(self, args):
     """Implements the 'resize_image' sub-command."""

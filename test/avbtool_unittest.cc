@@ -433,7 +433,9 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
       rootfs[n] = uint8_t(n);
     }
   }
-  base::FilePath ext_vbmeta_path = testdir_.Append("ext_vbmeta.bin");
+  base::FilePath external_vbmeta_path = testdir_.Append("external_vbmeta.bin");
+  base::FilePath extracted_vbmeta_path =
+      testdir_.Append("extracted_vbmeta.bin");
   base::FilePath rootfs_path = testdir_.Append("rootfs.bin");
   EXPECT_EQ(rootfs_size,
             static_cast<const size_t>(
@@ -465,7 +467,7 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                    "--internal_release_string \"\"",
                    rootfs_path.value().c_str(),
                    (int)partition_size,
-                   ext_vbmeta_path.value().c_str());
+                   external_vbmeta_path.value().c_str());
 
     ASSERT_EQ(AddHashFooterGetExpectedVBMetaInfo(sparse_image, partition_size),
               InfoImage(rootfs_path));
@@ -489,7 +491,18 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
         "9a58cc996d405e08a1e00f96dbfe9104fedf41cb83b1f"
         "5e4ed357fbcf58d88d9\n"
         "      Flags:                 0\n",
-        InfoImage(ext_vbmeta_path));
+        InfoImage(external_vbmeta_path));
+
+    // Check that the extracted vbmeta matches the externally generally one.
+    EXPECT_COMMAND(0,
+                   "./avbtool extract_vbmeta_image --image %s "
+                   "--output %s",
+                   rootfs_path.value().c_str(),
+                   extracted_vbmeta_path.value().c_str());
+    EXPECT_COMMAND(0,
+                   "diff %s %s",
+                   external_vbmeta_path.value().c_str(),
+                   extracted_vbmeta_path.value().c_str());
   }
 
   // Resize the image and check that the only thing that has changed
@@ -607,14 +620,14 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                  "--internal_release_string \"\"",
                  rootfs_path.value().c_str(),
                  (int)partition_size,
-                 ext_vbmeta_path.value().c_str());
+                 external_vbmeta_path.value().c_str());
   int64_t file_size;
   ASSERT_TRUE(base::GetFileSize(rootfs_path, &file_size));
   EXPECT_EQ(static_cast<size_t>(file_size), rootfs_size);
   EXPECT_COMMAND(0,
                  "diff %s %s_2nd_run",
-                 ext_vbmeta_path.value().c_str(),
-                 ext_vbmeta_path.value().c_str());
+                 external_vbmeta_path.value().c_str(),
+                 external_vbmeta_path.value().c_str());
 }
 
 TEST_F(AvbToolTest, AddHashFooter) {
@@ -880,7 +893,9 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   rootfs.resize(rootfs_size);
   for (size_t n = 0; n < rootfs_size; n++)
     rootfs[n] = uint8_t(n);
-  base::FilePath ext_vbmeta_path = testdir_.Append("ext_vbmeta.bin");
+  base::FilePath external_vbmeta_path = testdir_.Append("external_vbmeta.bin");
+  base::FilePath extracted_vbmeta_path =
+      testdir_.Append("extracted_vbmeta.bin");
   base::FilePath rootfs_path = testdir_.Append("rootfs.bin");
   EXPECT_EQ(rootfs_size,
             static_cast<const size_t>(
@@ -912,7 +927,7 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                    "--do_not_generate_fec",
                    rootfs_path.value().c_str(),
                    (int)partition_size,
-                   ext_vbmeta_path.value().c_str());
+                   external_vbmeta_path.value().c_str());
 
     ASSERT_EQ(base::StringPrintf("Footer version:           1.0\n"
                                  "Image size:               1572864 bytes\n"
@@ -974,7 +989,18 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
         "      Root Digest:           "
         "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
         "      Flags:                 0\n",
-        InfoImage(ext_vbmeta_path));
+        InfoImage(external_vbmeta_path));
+
+    // Check that the extracted vbmeta matches the externally generally one.
+    EXPECT_COMMAND(0,
+                   "./avbtool extract_vbmeta_image --image %s "
+                   "--output %s",
+                   rootfs_path.value().c_str(),
+                   extracted_vbmeta_path.value().c_str());
+    EXPECT_COMMAND(0,
+                   "diff %s %s",
+                   external_vbmeta_path.value().c_str(),
+                   extracted_vbmeta_path.value().c_str());
   }
 
   if (sparse_image) {
@@ -1129,14 +1155,14 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                  "--do_not_generate_fec",
                  rootfs_path.value().c_str(),
                  (int)partition_size,
-                 ext_vbmeta_path.value().c_str());
+                 external_vbmeta_path.value().c_str());
   int64_t file_size;
   ASSERT_TRUE(base::GetFileSize(rootfs_path, &file_size));
   EXPECT_EQ(static_cast<size_t>(file_size), 1069056UL);
   EXPECT_COMMAND(0,
                  "diff %s %s_2nd_run",
-                 ext_vbmeta_path.value().c_str(),
-                 ext_vbmeta_path.value().c_str());
+                 external_vbmeta_path.value().c_str(),
+                 external_vbmeta_path.value().c_str());
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooter) {
