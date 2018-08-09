@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "fb96f756_c3c6d4b5",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-08-09T16:45:28Z",
+      "side": 1,
+      "message": "I don\u0027t see how this creates a 1:1 mapping - all it does is to make it possible to stash vbmeta in the beginning of another partition instead of in a footer. You are still completely free to store descriptors where you want, things will still work (because each descriptor themselves has a name field).",
+      "parentUuid": "d08189e4_a1e855c9",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 31
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8655e708_f7f14a43",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2018-08-09T15:50:14Z",
       "side": 1,
       "message": "why this becomes mandatory?\nShouldn\u0027t get_size_of_partition() only for HASH partitions?",
+      "range": {
+        "startLine": 15,
+        "startChar": 38,
+        "endLine": 15,
+        "endChar": 65
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4383e4c1_06312e93",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-08-09T16:45:28Z",
+      "side": 1,
+      "message": "Knowing the size of each partition is already mandatory since it\u0027s needed to implement read_from_partition() - passing a negative offset means reading from the end. So nothing new here.",
+      "parentUuid": "8655e708_f7f14a43",
       "range": {
         "startLine": 15,
         "startChar": 38,
@@ -68,6 +116,30 @@
       "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f06017e7_2b526e53",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-08-09T16:45:28Z",
+      "side": 1,
+      "message": "(Not sure you know but you can go back and edit/delete comment...)",
+      "parentUuid": "0686032e_758a953b",
+      "range": {
+        "startLine": 564,
+        "startChar": 0,
+        "endLine": 565,
+        "endChar": 69
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
