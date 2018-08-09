@@ -167,6 +167,30 @@
     },
     {
       "key": {
+        "uuid": "f252d848_f2ce763a",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2165,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2018-08-09T17:50:10Z",
+      "side": 1,
+      "message": "+1 for \"--follow_chain_partition\". I also noticed the current behavior in my previous debugging, then realized it only verified the _embedded_ descriptor against the info specified in the command line. Agreed it would be useful to be added, and as a separate feature/CL.",
+      "parentUuid": "993ca468_92d63eb8",
+      "range": {
+        "startLine": 2165,
+        "startChar": 6,
+        "endLine": 2165,
+        "endChar": 18
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9aea5fa6_dbab7278",
         "filename": "avbtool",
         "patchSetId": 1
