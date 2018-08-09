@@ -143,6 +143,30 @@
     },
     {
       "key": {
+        "uuid": "993ca468_92d63eb8",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2165,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-08-09T17:32:44Z",
+      "side": 1,
+      "message": "Actually... verify_image currently doesn\u0027t follow chain partitions... that is, when it runs into a chain partition all it does is to check the provided (rollback_index_slot, public_key) which is passed via \u0027--expected_chain_partition PART_NAME:ROLLBACK_SLOT:KEY_PATH\u0027 ...\n\nAs far as I remember, the thoughts when I designed this was \"this is by design\" ... the reason being that the whole idea of chain partitions is that they\u0027re used when separating responsibility from two organizations (e.g. OEM provides vbmeta.img and vendor.img - Google provides system.img). So you\u0027d need to run \u0027avbtool verify_image\u0027 on them separately. I think that\u0027s probably fine to do. We *could* add a --follow_chain_partition option to make \u0027avbtool verify_image\u0027 follow chained partitions and it would need to be an *option* because sometimes you just don\u0027t have the chained image to follow. I think that would be a separate CL. Thoughts?\n\nHowever right now \u0027avbtool verify_image --image system.img\u0027 will not look at vbmeta_system.img. Let me definitely add support for that including test cases.",
+      "parentUuid": "b20f3926_2308edbc",
+      "range": {
+        "startLine": 2165,
+        "startChar": 6,
+        "endLine": 2165,
+        "endChar": 18
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9aea5fa6_dbab7278",
         "filename": "avbtool",
         "patchSetId": 1
