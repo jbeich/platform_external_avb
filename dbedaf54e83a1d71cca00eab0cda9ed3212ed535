@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d08189e4_a1e855c9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-08-09T15:50:14Z",
+      "side": 1,
+      "message": "This creates a 1:1 mapping but Sandeep seems prefer to have the flexibility of 1-to-many mapping: b/80195851#comment5\n\nNote that in Q, we\u0027re likely to have: \n  /product\n  /product-services\n  /system\n  \u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d HIDL \u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\n  /vendor\n  /boot\n  /ramdisk\n  /dtbo\n  /odm (optional)\n  ...\n\nI\u0027m not sure should we have 1-to-many flexibility (it seems too tricky?)\n\nNote that only \u0027chained\u0027 partitions need the vbmeta_${PART_NAME}${AB_SUFFIX}.\nWe usually \u0027chain\u0027 a partition that needs to be \"independently OTAed\u0027. Given this, having 1:1 mapping seems better fit for the independency.",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 31
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8655e708_f7f14a43",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-08-09T15:50:14Z",
+      "side": 1,
+      "message": "why this becomes mandatory?\nShouldn\u0027t get_size_of_partition() only for HASH partitions?",
+      "range": {
+        "startLine": 15,
+        "startChar": 38,
+        "endLine": 15,
+        "endChar": 65
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0686032e_758a953b",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 565,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-08-09T15:50:14Z",
+      "side": 1,
+      "message": "Oh, please ignore my comments in the commit message.\nI got that idea of mandating get_size_of_partition().",
+      "range": {
+        "startLine": 564,
+        "startChar": 0,
+        "endLine": 565,
+        "endChar": 69
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
