@@ -96,6 +96,52 @@
     },
     {
       "key": {
+        "uuid": "3b497e6c_760480b7",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2165,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2018-08-09T17:07:00Z",
+      "side": 1,
+      "message": "For a setup with detached vbmeta for system, calling verify_image on the main vbmeta or system won\u0027t actually check the contents in vbmeta_system.img. And user has to manually verify \u0027vbmeta_system.img\u0027 to verify the detached vbmeta. Shall we also look for the detached vbmeta when verifying system.img, such as additionally comparing the vbmeta structs between the two?",
+      "range": {
+        "startLine": 2165,
+        "startChar": 6,
+        "endLine": 2165,
+        "endChar": 18
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9aea5fa6_dbab7278",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3908,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2018-08-09T17:07:00Z",
+      "side": 1,
+      "message": "The input image won\u0027t be modified, right?",
+      "range": {
+        "startLine": 3908,
+        "startChar": 51,
+        "endLine": 3908,
+        "endChar": 57
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "0686032e_758a953b",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 1
