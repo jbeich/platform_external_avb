@@ -191,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "2dfd5f3d_dd32b486",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2165,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-08-09T18:35:40Z",
+      "side": 1,
+      "message": "Done and latest PS has a summary of this discussion as a TODO/comment.",
+      "parentUuid": "f252d848_f2ce763a",
+      "range": {
+        "startLine": 2165,
+        "startChar": 6,
+        "endLine": 2165,
+        "endChar": 18
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9aea5fa6_dbab7278",
         "filename": "avbtool",
         "patchSetId": 1
@@ -235,6 +259,30 @@
       "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f7b93cb_e462282e",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3908,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-08-09T18:35:40Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "692e38e3_0b93afe4",
+      "range": {
+        "startLine": 3908,
+        "startChar": 51,
+        "endLine": 3908,
+        "endChar": 57
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
