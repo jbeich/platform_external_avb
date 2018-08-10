@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "22f41342_998a3146",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-08-10T14:08:08Z",
+      "side": 1,
+      "message": "\u003e I don\u0027t see how this creates a 1:1 mapping\nb/112007947#comment13\n\n\n\u003e You are still completely free to store descriptors where you want,\nAgree, b/112007947#comment14",
+      "parentUuid": "fb96f756_c3c6d4b5",
+      "range": {
+        "startLine": 10,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 31
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8655e708_f7f14a43",
         "filename": "/COMMIT_MSG",
         "patchSetId": 1
@@ -93,6 +117,30 @@
       "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "76b7dcb2_8e4a38eb",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-08-10T14:08:08Z",
+      "side": 1,
+      "message": "Ack.",
+      "parentUuid": "4383e4c1_06312e93",
+      "range": {
+        "startLine": 15,
+        "startChar": 38,
+        "endLine": 15,
+        "endChar": 65
+      },
+      "revId": "dbedaf54e83a1d71cca00eab0cda9ed3212ed535",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
