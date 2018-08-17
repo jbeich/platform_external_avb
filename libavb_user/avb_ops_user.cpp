@@ -83,7 +83,7 @@ static int open_partition(const char* name, int flags) {
   }
   record = fs_mgr_get_entry_for_mount_point(fstab, "/misc");
   if (record == NULL) {
-    fs_mgr_free_fstab(fstab);
+    delete fstab;
     return -1;
   }
   if (strcmp(name, "misc") == 0) {
@@ -92,7 +92,7 @@ static int open_partition(const char* name, int flags) {
     size_t trimmed_len, name_len;
     const char* end_slash = strrchr(record->blk_device, '/');
     if (end_slash == NULL) {
-      fs_mgr_free_fstab(fstab);
+      delete fstab;
       return -1;
     }
     trimmed_len = end_slash - record->blk_device + 1;
@@ -101,7 +101,7 @@ static int open_partition(const char* name, int flags) {
     strncpy(path, record->blk_device, trimmed_len);
     strncpy(path + trimmed_len, name, name_len);
   }
-  fs_mgr_free_fstab(fstab);
+  delete fstab;
 
   fd = open(path, flags);
   free(path);
