@@ -89,6 +89,24 @@ partition or - via a chain partition descriptor - in the partition
 that they are used to integrity check. This allows for a wide range of
 organizational and trust relationships.
 
+Specifically, additional `vbmeta` partitions can be created and chained
+into top-level `vbmeta.img`, in order to manage partitions in updatable
+groups. A chained `vbmeta` partition includes the hash or hash-tree
+descriptors for the partitions in the group, all of which - along with the
+chained `vbmeta` partition itself - can be updated independently of the
+rest of the partitions. Although this can be similarly done by setting up
+all such partitions as chained partitions, chaining `vbmeta` partition
+provides additional flexibility. First, partitions in a updatable group are
+logically bundled together, which shows a better relationship between
+partitions. Second, partitions managed by chained `vbmeta` partitions no
+longer need to be set up as chained partitions. This allows `libavb` to
+better incorporate with devices using logical partitions. Because the
+bootloader of such a device may not have the capability of accessing the
+HLOS-managed logical partitions. Having fixed-size `vbmeta` partitions -
+these partitions are not set up as logical partitions, as the sizes for
+them are typically small - allows the bootloader to be able to read the
+VBMeta structs for all the partitions.
+
 ## Rollback Protection
 
 AVB includes Rollback Protection which is used to protect against
@@ -551,9 +569,10 @@ This will make the build system create `vbmeta.img` which will contain
 a hash descriptor for `boot.img`, a hashtree descriptor for
 `system.img`, a kernel-cmdline descriptor for setting up `dm-verity`
 for `system.img` and append a hash-tree to `system.img`. If the build
-system is set up such that `vendor.img` is being built, a hash-tree
-will also be appended to this image and its hash-tree descriptor will
-be included in `vbmeta.img`.
+system is set up such that one or many of `vendor.img` / `product.img`
+/ `odm.img` / `product_services.img` are being built, the hash-tree for
+each of them will also be appended to the image respectively, and their
+hash-tree descriptors will be included into `vbmeta.img` accordingly.
 
 By default, the algorithm `SHA256_RSA4096` is used with a test key
 from the `external/avb/test/data` directory. This can be overriden by
@@ -574,6 +593,30 @@ e.g. derive `AVB_pk`. Both `AVB_pk` and `AVB_pkmd` are passed to the
 
 Some devices may support the end-user configuring the root of trust to use, see
 the [Device Specific Notes](#Device-Specific-Notes) section for details.
+
+Devices can be configured to create additional `vbmeta` partitions as
+[chained partitions](#The-VBMeta-struct) in order to update a subset of
+partitions without changing the top-level `vbmeta` partition. For example,
+the following variables create `vbmeta_mainline.img` as a chained `vbmeta`
+image that contains the hash-tree descriptors for `system.img` and
+`product_services.img`. `vbmeta_mainline.img` itself will be signed by the
+specified key and algorithm.
+
+    BOARD_AVB_VBMETA_MAINLINE := system product_services
+    BOARD_AVB_VBMETA_MAINLINE_KEY_PATH := external/avb/test/data/testkey_rsa2048.pem
+    BOARD_AVB_VBMETA_MAINLINE_ALGORITHM := SHA256_RSA2048
+    BOARD_AVB_VBMETA_MAINLINE_ROLLBACK_INDEX_LOCATION := 1
+
+Note that the hash-tree descriptors for `system.img` and
+`product_services.img` will be included in `vbmeta_mainline.img` only. With
+the example configuration, paritions `system.img`, `product_services.img`
+and `vbmeta_mainline.img` can be updated independently - but as a group -
+of the rest of the partitions, *or* as part of the traditional updates that
+update all the partitions.
+
+Currently build system supports building chained `vbmeta` images of
+`vbmeta_mainline.img` (`BOARD_AVB_VBMETA_MAINLINE`) and `vbmeta_vendor.img`
+(`BOARD_AVB_VBMETA_VENDOR`).
 
 To prevent rollback attacks, the rollback index should be increased on
 a regular basis. The rollback index can be set with the
