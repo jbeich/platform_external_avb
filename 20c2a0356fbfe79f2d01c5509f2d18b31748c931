@@ -22,6 +22,30 @@
       "revId": "20c2a0356fbfe79f2d01c5509f2d18b31748c931",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45a2fea0_d5f58239",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-09-05T16:18:50Z",
+      "side": 1,
+      "message": "That\u0027s a typo, nice catch thanks! Fixing.",
+      "parentUuid": "5b49bbfb_b65afbb7",
+      "range": {
+        "startLine": 276,
+        "startChar": 23,
+        "endLine": 276,
+        "endChar": 62
+      },
+      "revId": "20c2a0356fbfe79f2d01c5509f2d18b31748c931",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
