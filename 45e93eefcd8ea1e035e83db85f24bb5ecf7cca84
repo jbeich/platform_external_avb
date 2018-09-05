@@ -22,6 +22,30 @@
       "revId": "45e93eefcd8ea1e035e83db85f24bb5ecf7cca84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9dce60a_28330115",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-09-05T16:27:08Z",
+      "side": 1,
+      "message": "This is intentional... e.g. if the footer contains invalid data, fall back to checking at the beginning of the partition for vbmeta (_offset, _size already set for that).",
+      "parentUuid": "13363097_450561ff",
+      "range": {
+        "startLine": 574,
+        "startChar": 5,
+        "endLine": 575,
+        "endChar": 77
+      },
+      "revId": "45e93eefcd8ea1e035e83db85f24bb5ecf7cca84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
