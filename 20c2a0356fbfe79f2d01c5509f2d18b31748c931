@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5b49bbfb_b65afbb7",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 276,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-09-05T15:37:49Z",
+      "side": 1,
+      "message": "is it a typo to have two \u0027state machine\u0027s?",
+      "range": {
+        "startLine": 276,
+        "startChar": 23,
+        "endLine": 276,
+        "endChar": 62
+      },
+      "revId": "20c2a0356fbfe79f2d01c5509f2d18b31748c931",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
