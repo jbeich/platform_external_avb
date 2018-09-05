@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "13363097_450561ff",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-09-05T16:07:04Z",
+      "side": 1,
+      "message": "need \u0027goto out\u0027 here?",
+      "range": {
+        "startLine": 574,
+        "startChar": 5,
+        "endLine": 575,
+        "endChar": 77
+      },
+      "revId": "45e93eefcd8ea1e035e83db85f24bb5ecf7cca84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
