@@ -1,0 +1,9 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+1: Bowgo Tsai <bowgotsai@google.com>
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Verified+1: David Zeuthen <zeuthen@google.com>
+Submitted-by: Tao Bao <tbao@google.com>
+Submitted-at: Thu, 06 Sep 2018 23:09:39 +0000
+Reviewed-on: https://android-review.googlesource.com/740680
+Project: platform/external/avb
+Branch: refs/heads/master
