@@ -292,6 +292,9 @@ AvbIOResult FakeAvbOps::get_unique_guid_for_partition(AvbOps* ops,
   // This is faking it a bit but makes testing easy. It works
   // because avb_slot_verify.c doesn't check that the returned GUID
   // is wellformed.
+  if (hidden_partitions_.find(partition) != hidden_partitions_.end()) {
+    return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
+  }
   snprintf(guid_buf, guid_buf_size, "1234-fake-guid-for:%s", partition);
   return AVB_IO_RESULT_OK;
 }
