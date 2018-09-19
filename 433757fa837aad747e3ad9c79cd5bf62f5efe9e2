@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "651668e0_738cad09",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-09-19T14:56:31Z",
+      "side": 1,
+      "message": "Doh, I meant avb_strstr() \u003d\u003d NULL of course :-) ENEEDMORECOFFEE for me :-)",
+      "parentUuid": "cd3abf5a_a6ae71f7",
+      "range": {
+        "startLine": 65,
+        "startChar": 8,
+        "endLine": 65,
+        "endChar": 44
+      },
+      "revId": "433757fa837aad747e3ad9c79cd5bf62f5efe9e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a1fd1e5d_913800e1",
         "filename": "test/fake_avb_ops.cc",
         "patchSetId": 1
