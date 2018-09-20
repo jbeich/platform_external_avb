@@ -1,0 +1,106 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0bf8aa97_11093a82",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2308,
+      "author": {
+        "id": 1342319
+      },
+      "writtenOn": "2018-09-20T20:36:59Z",
+      "side": 1,
+      "message": "nit: () are not needed\n\nIt looks like image_size is never used.  Suggest prefixing the name with unused or replacing with a _",
+      "revId": "5245bbd26ffbfec0f2c948502619682c86a79f98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1f4ca5a5_f3cf782b",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2312,
+      "author": {
+        "id": 1342319
+      },
+      "writtenOn": "2018-09-20T20:36:59Z",
+      "side": 1,
+      "message": "nit: suggest replacing size with a more descriptive name",
+      "revId": "5245bbd26ffbfec0f2c948502619682c86a79f98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02e02f51_96380b50",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2321,
+      "author": {
+        "id": 1342319
+      },
+      "writtenOn": "2018-09-20T20:36:59Z",
+      "side": 1,
+      "message": "If ch_image_filename does not exist, do you think the error message to the user will be clear enough?",
+      "revId": "5245bbd26ffbfec0f2c948502619682c86a79f98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f16fca1d_aafabbfc",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2323,
+      "author": {
+        "id": 1342319
+      },
+      "writtenOn": "2018-09-20T20:36:59Z",
+      "side": 1,
+      "message": "similar nits to 2308",
+      "revId": "5245bbd26ffbfec0f2c948502619682c86a79f98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01c7f4ac_59e20df4",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2330,
+      "author": {
+        "id": 1342319
+      },
+      "writtenOn": "2018-09-20T20:36:59Z",
+      "side": 1,
+      "message": "Suggest kernel_cmdline \u003d []\n\nand\n\noutput.write(\u0027 \u0027.join(kernel_cmdline))\n\nbelow",
+      "revId": "5245bbd26ffbfec0f2c948502619682c86a79f98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "91906b98_b647fae8",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2332,
+      "author": {
+        "id": 1342319
+      },
+      "writtenOn": "2018-09-20T20:36:59Z",
+      "side": 1,
+      "message": "It looks like once use_cmdline \u003d False, the loop becomes a NOOP.  Maybe drop the variable and break instead?",
+      "revId": "5245bbd26ffbfec0f2c948502619682c86a79f98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
