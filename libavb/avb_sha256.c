@@ -320,9 +320,9 @@ static void SHA256_transform(AvbSHA256Ctx* ctx,
   }
 }
 
-void avb_sha256_update(AvbSHA256Ctx* ctx, const uint8_t* data, uint32_t len) {
-  unsigned int block_nb;
-  unsigned int new_len, rem_len, tmp_len;
+void avb_sha256_update(AvbSHA256Ctx* ctx, const uint8_t* data, size_t len) {
+  size_t block_nb;
+  size_t new_len, rem_len, tmp_len;
   const uint8_t* shifted_data;
 
   tmp_len = AVB_SHA256_BLOCK_SIZE - ctx->len;
@@ -352,9 +352,9 @@ void avb_sha256_update(AvbSHA256Ctx* ctx, const uint8_t* data, uint32_t len) {
 }
 
 uint8_t* avb_sha256_final(AvbSHA256Ctx* ctx) {
-  unsigned int block_nb;
-  unsigned int pm_len;
-  unsigned int len_b;
+  size_t block_nb;
+  size_t pm_len;
+  size_t len_b;
 #ifndef UNROLL_LOOPS
   int i;
 #endif
