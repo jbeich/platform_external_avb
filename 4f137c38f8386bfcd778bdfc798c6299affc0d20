@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "87e7fc83_e5588f16",
+        "filename": "libavb/avb_sha256.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 382,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-09-27T13:04:11Z",
+      "side": 1,
+      "message": "Oh, we didn\u0027t know this should be change to 8 and use UNPACK64 here.\nWe were worry about that -8 might override something ahead.",
+      "range": {
+        "startLine": 382,
+        "startChar": 40,
+        "endLine": 382,
+        "endChar": 41
+      },
+      "revId": "4f137c38f8386bfcd778bdfc798c6299affc0d20",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
