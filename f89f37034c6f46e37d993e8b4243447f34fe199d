@@ -1,0 +1,9 @@
+Verified+1: Bryan Henry <bryanhenry@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+1: Darren Krahn <dkrahn@google.com>
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Submitted-by: Bryan Henry <bryanhenry@google.com>
+Submitted-at: Thu, 11 Oct 2018 20:05:03 +0000
+Reviewed-on: https://android-review.googlesource.com/785956
+Project: platform/external/avb
+Branch: refs/heads/master
