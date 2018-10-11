@@ -137,7 +137,8 @@ static AvbSlotVerifyResult load_full_partition(AvbOps* ops,
  * the given |part_name|. The value is returned in |out_digest| which must point
  * to |expected_digest_size| bytes. If there is no digest stored for |part_name|
  * it can be initialized by providing a non-NULL |initial_digest| of length
- * |expected_digest_size|. The |initial_digest| may be NULL.
+ * |expected_digest_size|. This automatic initialization will only occur if the
+ * device is currently locked. The |initial_digest| may be NULL.
  *
  * Returns AVB_SLOT_VERIFY_RESULT_OK on success, otherwise returns an
  * AVB_SLOT_VERIFY_RESULT_ERROR_* error code.
@@ -154,53 +155,90 @@ static AvbSlotVerifyResult read_persistent_digest(AvbOps* ops,
                                                   const uint8_t* initial_digest,
                                                   uint8_t* out_digest) {
   char* persistent_value_name = NULL;
+  AvbSlotVerifyResult ret;
   AvbIOResult io_ret = AVB_IO_RESULT_OK;
   size_t stored_digest_size = 0;
+  bool is_device_unlocked = true;
 
   if (ops->read_persistent_value == NULL) {
     avb_errorv(part_name, ": Persistent values are not implemented.\n", NULL);
-    return AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+    goto out;
   }
   persistent_value_name =
       avb_strdupv(AVB_NPV_PERSISTENT_DIGEST_PREFIX, part_name, NULL);
   if (persistent_value_name == NULL) {
-    return AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    goto out;
   }
+
   io_ret = ops->read_persistent_value(ops,
                                       persistent_value_name,
                                       expected_digest_size,
                                       out_digest,
                                       &stored_digest_size);
+
+  // If no such named persistent value exists and an initial digest value was
+  // given, initialize the named persistent value with the given digest. Only do
+  // this when the device is locked.
   if (io_ret == AVB_IO_RESULT_ERROR_NO_SUCH_VALUE && initial_digest) {
-    avb_debugv(part_name,
-               ": Digest does not exist, initializing persistent digest.\n",
-               NULL);
-    stored_digest_size = expected_digest_size;
-    io_ret = ops->write_persistent_value(
-        ops, persistent_value_name, expected_digest_size, initial_digest);
-    if (io_ret == AVB_IO_RESULT_OK) {
+    io_ret = ops->read_is_device_unlocked(ops, &is_device_unlocked);
+    if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto out;
+    } else if (io_ret != AVB_IO_RESULT_OK) {
+      avb_error("Error getting device lock state.\n");
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+      goto out;
+    }
+
+    if (!is_device_unlocked) {
+      avb_debugv(part_name,
+                 ": Digest does not exist, initializing persistent digest.\n",
+                 NULL);
+      io_ret = ops->write_persistent_value(
+          ops, persistent_value_name, expected_digest_size, initial_digest);
+      if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+        goto out;
+      } else if (io_ret != AVB_IO_RESULT_OK) {
+        avb_errorv(
+            part_name, ": Error initializing persistent digest.\n", NULL);
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+        goto out;
+      }
+
       avb_memcpy(out_digest, initial_digest, expected_digest_size);
-    } else {
-      avb_errorv(part_name, ": Error initializing persistent digest.\n", NULL);
+      stored_digest_size = expected_digest_size;
     }
   }
-  avb_free(persistent_value_name);
+
   if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
-    return AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
   } else if (io_ret == AVB_IO_RESULT_ERROR_NO_SUCH_VALUE) {
     avb_errorv(part_name, ": Persistent digest does not exist.\n", NULL);
-    return AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
   } else if (io_ret == AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE ||
-             io_ret == AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE ||
-             expected_digest_size != stored_digest_size) {
+             io_ret == AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE) {
     avb_errorv(
         part_name, ": Persistent digest is not of expected size.\n", NULL);
-    return AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
   } else if (io_ret != AVB_IO_RESULT_OK) {
     avb_errorv(part_name, ": Error reading persistent digest.\n", NULL);
-    return AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+  } else if (expected_digest_size != stored_digest_size) {
+    avb_errorv(
+        part_name, ": Persistent digest is not of expected size.\n", NULL);
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+  } else {
+    ret = AVB_SLOT_VERIFY_RESULT_OK;
   }
-  return AVB_SLOT_VERIFY_RESULT_OK;
+
+out:
+  if (persistent_value_name != NULL) {
+    avb_free(persistent_value_name);
+  }
+  return ret;
 }
 
 static AvbSlotVerifyResult load_and_verify_hash_partition(
