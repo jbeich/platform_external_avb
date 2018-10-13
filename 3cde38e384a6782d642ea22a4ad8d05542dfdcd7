@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5799b2c4_6940ef14",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-13T00:57:13Z",
+      "side": 1,
+      "message": "There\u0027s an issue with this that I noticed that wasn\u0027t caught by the unit tests. A missing persistent digest ends up getting promoted to AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA, which is not one of the ignore-able verification errors.\n\nThat means you\u0027d never be able to boot when unlocked unless you manually populate the persistent digest with any correctly sized (but maybe wrong) digest value.\n\nIt seems like it would be better to instead translate NO_SUCH_VALUE to VERIFY_RESULT_ERROR_VERIFICATION.\n\nThe other errors - INVALID_VALUE_SIZE, INSUFFICIENT_SPACE, or the digest size not matching expected size - make sense to leave as ERROR_INVALID_METADATA, since that\u0027s consistent with the behavior for malformed hash descriptors.\n\nWDYT?",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 56
+      },
+      "revId": "3cde38e384a6782d642ea22a4ad8d05542dfdcd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
