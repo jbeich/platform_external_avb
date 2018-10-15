@@ -16,6 +16,24 @@
       "revId": "9a15b3ea0b6be86d00d86aa283ace0cafe2548fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "35b55d40_eaa67fd7",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-15T23:05:54Z",
+      "side": 1,
+      "message": "sys.exit(None) is still valid, but I guess it\u0027s a bit weird. Removed the sys.exit",
+      "parentUuid": "3560c4a9_1ffb8f0b",
+      "revId": "9a15b3ea0b6be86d00d86aa283ace0cafe2548fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
