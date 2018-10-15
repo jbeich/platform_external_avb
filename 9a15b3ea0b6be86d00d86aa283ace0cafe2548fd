@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3560c4a9_1ffb8f0b",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1219061
+      },
+      "writtenOn": "2018-10-15T22:58:10Z",
+      "side": 1,
+      "message": "WritePersistentDigest doesn\u0027t return anything?",
+      "revId": "9a15b3ea0b6be86d00d86aa283ace0cafe2548fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
