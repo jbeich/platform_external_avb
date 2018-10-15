@@ -22,6 +22,30 @@
       "revId": "3cde38e384a6782d642ea22a4ad8d05542dfdcd7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c797b775_98f6b9b9",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 220,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-15T22:53:20Z",
+      "side": 1,
+      "message": "I went ahead and made this change, plus a couple others.",
+      "parentUuid": "5799b2c4_6940ef14",
+      "range": {
+        "startLine": 220,
+        "startChar": 0,
+        "endLine": 220,
+        "endChar": 56
+      },
+      "revId": "3cde38e384a6782d642ea22a4ad8d05542dfdcd7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
