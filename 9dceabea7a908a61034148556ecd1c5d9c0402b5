@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "42aa4059_2b3854a4",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-15T22:24:25Z",
+      "side": 1,
+      "message": "nit:resolve",
+      "range": {
+        "startLine": 17,
+        "startChar": 3,
+        "endLine": 17,
+        "endChar": 19
+      },
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e17af98_c4eebe9f",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-15T22:24:25Z",
+      "side": 1,
+      "message": "optional: break this out to top level for readability and future reusability?",
+      "range": {
+        "startLine": 68,
+        "startChar": 8,
+        "endLine": 68,
+        "endChar": 20
+      },
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1efef06f_7bd6155b",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-15T22:24:25Z",
+      "side": 1,
+      "message": "nit: not used",
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b22a0a9_37615c9a",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-15T22:24:25Z",
+      "side": 1,
+      "message": "never returns non-zero?",
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d244e89b_ae2c182c",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-15T22:24:25Z",
+      "side": 1,
+      "message": "This may be pretty inconvenient. Should we take in an image file and hash it ourselves? Or maybe allow one or the other? In the future it would be nice if this script could compute a hash-tree.",
+      "range": {
+        "startLine": 129,
+        "startChar": 51,
+        "endLine": 129,
+        "endChar": 62
+      },
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
