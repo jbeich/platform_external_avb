@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "53bbcf6b_f3aac406",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-15T22:50:41Z",
+      "side": 1,
+      "message": "Whoops! Done.",
+      "parentUuid": "42aa4059_2b3854a4",
+      "range": {
+        "startLine": 17,
+        "startChar": 3,
+        "endLine": 17,
+        "endChar": 19
+      },
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7e17af98_c4eebe9f",
         "filename": "tools/at_write_persistent_digest.py",
         "patchSetId": 1
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "483c2451_e6f5d45a",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-15T22:50:41Z",
+      "side": 1,
+      "message": "I\u0027d rather not move it out of here because it uses a couple of the function inputs - verbose and serial - without needing to pass them in to every call.",
+      "parentUuid": "7e17af98_c4eebe9f",
+      "range": {
+        "startLine": 68,
+        "startChar": 8,
+        "endLine": 68,
+        "endChar": 20
+      },
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1efef06f_7bd6155b",
         "filename": "tools/at_write_persistent_digest.py",
         "patchSetId": 1
@@ -65,6 +113,24 @@
     },
     {
       "key": {
+        "uuid": "9851ba98_8114fbd4",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 84,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-15T22:50:41Z",
+      "side": 1,
+      "message": "This is actually copy/pasted from at_auth_unlock, which is why it has some things like an unused return value. Removed it from here.",
+      "parentUuid": "1efef06f_7bd6155b",
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1b22a0a9_37615c9a",
         "filename": "tools/at_write_persistent_digest.py",
         "patchSetId": 1
@@ -79,6 +145,24 @@
       "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "175ce565_fa09cbdc",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-15T22:50:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b22a0a9_37615c9a",
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -102,6 +186,30 @@
       "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4f53a97_5a58c2a9",
+        "filename": "tools/at_write_persistent_digest.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-15T22:50:41Z",
+      "side": 1,
+      "message": "I had initially planned to do that that but didn\u0027t think it was worth the time to add it yet. It would add a bunch...you\u0027d have to give not only the image file, but also algorithm, salt, and size to hash (in case the descriptor is set to not hash the full image). I didn\u0027t need it yet - it\u0027s more useful to clear digests than anything - and all that can also just be done with openssl if someone really needs it as a one-off.",
+      "parentUuid": "d244e89b_ae2c182c",
+      "range": {
+        "startLine": 129,
+        "startChar": 51,
+        "endLine": 129,
+        "endChar": 62
+      },
+      "revId": "9dceabea7a908a61034148556ecd1c5d9c0402b5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
