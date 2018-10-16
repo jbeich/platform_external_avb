@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0e433387_b7b62f58",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 186,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-16T22:26:38Z",
+      "side": 1,
+      "message": "nit: mention this may recurse into read_persistent_digest but with NULL initial_digest?",
+      "revId": "29b5fe889208e23530996af15e7332b204523c92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92e7f6e5_500cc696",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 203,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-16T22:26:38Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 203,
+        "startChar": 13,
+        "endLine": 203,
+        "endChar": 15
+      },
+      "revId": "29b5fe889208e23530996af15e7332b204523c92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c080ba0f_98d87fd4",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-16T22:26:38Z",
+      "side": 1,
+      "message": "nit: mention the NULL for initial_digest will ensure the recursion doesn\u0027t continue",
+      "revId": "29b5fe889208e23530996af15e7332b204523c92",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
