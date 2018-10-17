@@ -69,6 +69,30 @@
       "revId": "5c7d5b46483fb0e3e0b6ec71424c0999f9e0c280",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "53706d85_2a0dd36a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-10-17T19:10:38Z",
+      "side": 1,
+      "message": "Manually verified this, here\u0027s the excerpt from strace when running \u0027avbctl get-verity\u0027:\n\n openat(AT_FDCWD, \"/dev/block/by-name/vbmeta_a\", O_RDONLY) \u003d 3\nlseek(3, 0, SEEK_SET)                   \u003d 0",
+      "parentUuid": "d5b2d34e_996d625d",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 64
+      },
+      "revId": "5c7d5b46483fb0e3e0b6ec71424c0999f9e0c280",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
