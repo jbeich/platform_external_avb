@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f696d013_978114e8",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-24T16:33:14Z",
+      "side": 1,
+      "message": "optional nit: would read better if lines were split at \u0027:\u0027\n\nA :\nA + B",
+      "revId": "745452d247ae0a0e566105038d49df62aab04a8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de85c0d6_ce53479e",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-24T16:33:14Z",
+      "side": 1,
+      "message": "nit: document args",
+      "revId": "745452d247ae0a0e566105038d49df62aab04a8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cde5a27_06f614fd",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2018-10-24T16:33:14Z",
+      "side": 1,
+      "message": "nit: all_creds -- also description no longer matches?",
+      "range": {
+        "startLine": 283,
+        "startChar": 4,
+        "endLine": 283,
+        "endChar": 9
+      },
+      "revId": "745452d247ae0a0e566105038d49df62aab04a8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
