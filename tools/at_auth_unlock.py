@@ -26,11 +26,17 @@ Unlock credentials can be provided to the tool in one of two ways:
 
   1) by providing paths to the individual credential files using the
      '--pik_cert', '--puk_cert', and '--puk' command line swtiches, or
+
   2) by providing a path to a zip archive containing the three credential files,
      named as follows:
        - Product Intermediate Key (PIK) certificate: 'pik_certificate.*\.bin'
        - Product Unlock Key (PUK) certificate: 'puk_certificate.*\.bin'
        - PUK private key: 'puk.*\.pem'
+
+     You can also provide one or more archives and/or one or more directories
+     containing such zip archives. In either scenario, the tool will search all
+     of the provided credential archives for a match against the product ID of
+     the device being unlocked and automatically use the first match.
 
 Dependencies:
   - Python 2.7.x, 3.2.x, or newer (for argparse)
@@ -43,12 +49,13 @@ HELP_DESCRIPTION = """Performs an authenticated AVB unlock of an Android Things 
 fastboot, given valid unlock credentials for the device."""
 
 HELP_USAGE = """
-  %(prog)s [-h] [-v] [-s SERIAL] unlock_creds.zip
+  %(prog)s [-h] [-v] [-s SERIAL] unlock_creds.zip [unlock_creds_2.zip ...]
   %(prog)s --pik_cert pik_cert.bin --puk_cert puk_cert.bin --puk puk.pem"""
 
 HELP_EPILOG = """examples:
   %(prog)s unlock_creds.zip
-  %(prog)s unlock_creds.zip -s SERIAL
+  %(prog)s unlock_creds.zip unlock_creds_2.zip -s SERIAL
+  %(prog)s path_to_dir_with_multiple_unlock_creds/
   %(prog)s --pik_cert pik_cert.bin --puk_cert puk_cert.bin --puk puk.pem"""
 
 import sys
@@ -59,7 +66,7 @@ if (ver[0] < 2) or (ver[0] == 2 and ver[1] < 7) or (ver[0] == 3 and ver[1] < 2):
   sys.exit(1)
 
 import argparse
-import contextlib
+import binascii
 import os
 import re
 import shutil
@@ -78,25 +85,16 @@ except ImportError as e:
   print('PyCrypto 2.5 or newer required, missing or too old: ' + str(e))
 
 
-class NullContextManager(object):
-  """Local implementation of contextlib.nullcontext, which is Python 3-only."""
-
-  def __init__(self, enter_result=None):
-    self.enter_result = enter_result
-
-  def __enter__(self):
-    return self.enter_result
-
-  def __exit__(self, *args):
-    pass
-
-
 class UnlockCredentials(object):
   """Helper data container class for the 3 unlock credentials involved in an AVB authenticated unlock operation.
 
   """
 
-  def __init__(self, intermediate_cert_file, unlock_cert_file, unlock_key_file):
+  def __init__(self,
+               intermediate_cert_file,
+               unlock_cert_file,
+               unlock_key_file,
+               source_file=None):
     # The certificates are AvbAtxCertificate structs as defined in libavb_atx,
     # not an X.509 certificate. Do a basic length sanity check when reading
     # them.
@@ -115,6 +113,8 @@ class UnlockCredentials(object):
     with open(unlock_key_file, 'rb') as f:
       self._unlock_key = RSA.importKey(f.read())
 
+    self._source_file = source_file
+
   @property
   def intermediate_cert(self):
     return self._intermediate_cert
@@ -127,12 +127,11 @@ class UnlockCredentials(object):
   def unlock_key(self):
     return self._unlock_key
 
-  @classmethod
-  def from_files(cls, pik_cert, puk_cert, puk):
-    return NullContextManager(cls(pik_cert, puk_cert, puk))
+  @property
+  def source_file(self):
+    return self._source_file
 
   @classmethod
-  @contextlib.contextmanager
   def from_credential_archive(cls, archive):
     """Create UnlockCredentials from an unlock credential zip archive.
 
@@ -184,15 +183,68 @@ class UnlockCredentials(object):
 
         zip.extractall(path=tempdir, members=[pik_cert, puk_cert, puk])
 
-        yield cls(
+        return cls(
             intermediate_cert_file=os.path.join(tempdir, pik_cert),
             unlock_cert_file=os.path.join(tempdir, puk_cert),
-            unlock_key_file=os.path.join(tempdir, puk))
+            unlock_key_file=os.path.join(tempdir, puk),
+            source_file=archive)
     finally:
       shutil.rmtree(tempdir)
 
 
-def MakeAtxUnlockCredential(creds, challenge_file, out_file):
+class UnlockChallenge(object):
+  """Helper class for parsing the AvbAtxUnlockChallenge struct returned from 'fastboot oem at-get-vboot-unlock-challenge'.
+
+     The file provided to the constructor should be the full 52-byte
+     AvbAtxUnlockChallenge struct, not just the challenge itself.
+  """
+
+  def __init__(self, challenge_file):
+    CHALLENGE_STRUCT_SIZE = 52
+    PRODUCT_ID_HASH_SIZE = 32
+    CHALLENGE_DATA_SIZE = 16
+    with open(challenge_file, 'rb') as f:
+      data = f.read()
+      if len(data) != CHALLENGE_STRUCT_SIZE:
+        raise ValueError('Invalid unlock challenge length.')
+
+      self._version, self._product_id_hash, self._challenge_data = struct.unpack(
+          '<I{}s{}s'.format(PRODUCT_ID_HASH_SIZE, CHALLENGE_DATA_SIZE), data)
+
+  @property
+  def version(self):
+    return self._version
+
+  @property
+  def product_id_hash(self):
+    return self._product_id_hash
+
+  @property
+  def challenge_data(self):
+    return self._challenge_data
+
+
+def GetAtxCertificateSubject(cert):
+  """Parses and returns the subject field from the given AvbAtxCertificate struct."""
+  CERTIFICATE_SUBJECT_OFFSET = 4 + 1032  # Format version and public key come before subject
+  CERTIFICATE_SUBJECT_LENGTH = 32
+  return cert[CERTIFICATE_SUBJECT_OFFSET:CERTIFICATE_SUBJECT_OFFSET +
+              CERTIFICATE_SUBJECT_LENGTH]
+
+
+def SelectMatchingUnlockCredential(all_creds, challenge):
+  """Find and return the first UnlockCredentials object whose product ID matches that of the unlock challenge.
+
+     The Product Unlock Key (PUK) certificate's subject field contains the
+     SHA256 hash of the product ID that it can be used to unlock. This same
+     value (SHA256 hash of the product ID) is contained in the unlock challenge.
+  """
+  for creds in all_creds:
+    if challenge.product_id_hash == GetAtxCertificateSubject(creds.unlock_cert):
+      return creds
+
+
+def MakeAtxUnlockCredential(creds, challenge, out_file):
   """Simple reimplementation of 'avbtool make_atx_unlock_credential'.
 
   Generates an Android Things authenticated unlock credential to authorize
@@ -206,28 +258,14 @@ def MakeAtxUnlockCredential(creds, challenge_file, out_file):
   Arguments:
     creds: UnlockCredentials object wrapping the PIK certificate, PUK
       certificate, and PUK private key.
-    challenge_file: Challenge obtained via 'oem at-get-vboot-unlock-challenge'.
-      This should be the full 52-byte AvbAtxUnlockChallenge struct, not just the
-      challenge itself.
+    challenge: UnlockChallenge object created from challenge obtained via
+      'fastboot oem at-get-vboot-unlock-challenge'.
     out_file: Output filename to write the AvbAtxUnlockCredential struct to.
 
   Raises:
     ValueError: If challenge has wrong length.
   """
-  # The 16-byte challenge from the bootloader, which needs to be signed with the
-  # PUK and included in the AvbAtxUnlockCredential response, is located at the
-  # end of the 52-byte AvbAtxUnlockChallenge struct
-  CHALLENGE_STRUCT_SIZE = 52
-  CHALLENGE_FIELD_SIZE = 16
-  with open(challenge_file, 'rb') as f:
-    f.seek(0, os.SEEK_END)
-    if f.tell() != CHALLENGE_STRUCT_SIZE:
-      raise ValueError('Invalid unlock challenge length.')
-
-    f.seek(-CHALLENGE_FIELD_SIZE, os.SEEK_END)
-    challenge = f.read()
-
-  hash = SHA512.new(challenge)
+  hash = SHA512.new(challenge.challenge_data)
   signer = PKCS1_v1_5.new(creds.unlock_key)
   signature = signer.sign(hash)
 
@@ -238,7 +276,7 @@ def MakeAtxUnlockCredential(creds, challenge_file, out_file):
     out.write(signature)
 
 
-def AuthenticatedUnlock(creds, serial=None, verbose=False):
+def AuthenticatedUnlock(all_creds, serial=None, verbose=False):
   """Performs an authenticated AVB unlock of a device over fastboot.
 
   Arguments:
@@ -258,7 +296,7 @@ def AuthenticatedUnlock(creds, serial=None, verbose=False):
     def fastboot_cmd(args):
       args = ['fastboot'] + (['-s', serial] if serial else []) + args
       if verbose:
-        print('$ ' + ' '.join(args))
+        print('\n$ ' + ' '.join(args))
 
       try:
         out = subprocess.check_output(
@@ -275,7 +313,20 @@ def AuthenticatedUnlock(creds, serial=None, verbose=False):
 
     fastboot_cmd(['oem', 'at-get-vboot-unlock-challenge'])
     fastboot_cmd(['get_staged', challenge_file])
-    MakeAtxUnlockCredential(creds, challenge_file, credential_file)
+
+    challenge = UnlockChallenge(challenge_file)
+    print('Product ID SHA256 hash = {}'.format(
+        binascii.hexlify(challenge.product_id_hash)))
+
+    selected_cred = SelectMatchingUnlockCredential(all_creds, challenge)
+    if not selected_cred:
+      print('ERROR: None of the provided unlock credentials match this device.')
+      return 1
+    if selected_cred.source_file:
+      print('Found matching unlock credentials: {}'.format(
+          selected_cred.source_file))
+    MakeAtxUnlockCredential(selected_cred, challenge, credential_file)
+
     fastboot_cmd(['stage', credential_file])
     fastboot_cmd(['oem', 'at-unlock-vboot'])
 
@@ -290,6 +341,26 @@ def AuthenticatedUnlock(creds, serial=None, verbose=False):
     shutil.rmtree(tempdir)
 
 
+def FindUnlockCredentialsInDirectory(dir, verbose=False):
+  if not os.path.isdir(dir):
+    raise ValueError('Not a directory: ' + dir)
+
+  creds = []
+  for file in os.listdir(dir):
+    path = os.path.join(dir, file)
+    if os.path.isfile(path) and os.path.splitext(file)[1] == '.zip':
+      try:
+        creds.append(UnlockCredentials.from_credential_archive(path))
+        if verbose:
+          print('Found valid unlock credential bundle: ' + path)
+      except (IOError, ValueError) as e:
+        if verbose:
+          print(
+              "Ignoring .zip file which isn't a valid unlock credential bundle: "
+              + path)
+  return creds
+
+
 if __name__ == '__main__':
   parser = argparse.ArgumentParser(
       description=HELP_DESCRIPTION,
@@ -302,7 +373,8 @@ if __name__ == '__main__':
       '-v',
       '--verbose',
       action='store_true',
-      help='verbose; prints fastboot commands and their output')
+      help=
+      'enable verbose output, e.g. prints fastboot commands and their output')
   parser.add_argument(
       '-s',
       '--serial',
@@ -317,13 +389,18 @@ if __name__ == '__main__':
   # group to be specified - so we define them as optional arguments and do the
   # validation ourselves below.
 
-  # Argument group #1 - Unlock credential zip bundle/archive
+  # Argument group #1 - Unlock credential zip archive(s) (or directory
+  # containing multiple such archives)
   parser.add_argument(
       'bundle',
       metavar='unlock_creds.zip',
-      nargs='?',
+      nargs='*',
       help=
-      'Unlock using a zip bundle of credentials (e.g. from Developer Console).')
+      'Unlock using a zip bundle/archive of credentials (e.g. from Developer '
+      'Console). You can optionally provide multiple archives and/or a  '
+      'directory of such bundles and the tool will automatically select the '
+      'correct one to use based on matching the product ID against the device '
+      'being unlocked.')
 
   # Argument group #2 - Individual credential files
   parser.add_argument(
@@ -345,7 +422,7 @@ if __name__ == '__main__':
   # Do the custom validation described above.
   if args.pik_cert is not None or args.puk_cert is not None or args.puk is not None:
     # Check mutual exclusion with bundle positional argument
-    if args.bundle is not None:
+    if len(args.bundle):
       parser.error(
           'bundle argument is mutually exclusive with --pik_cert, --puk_cert, and --puk'
       )
@@ -357,14 +434,25 @@ if __name__ == '__main__':
       parser.error("--puk_cert is required if --pik_cert or --puk' is given")
     if args.puk is None:
       parser.error("--puk is required if --pik_cert or --puk_cert' is given")
-  elif args.bundle is None:
+  elif not len(args.bundle):
     parser.error(
         'must provide either credentials bundle or individual credential files')
 
-  if args.bundle is not None:
-    creds = UnlockCredentials.from_credential_archive(args.bundle)
+  # Parse arguments into UnlockCredentials objects
+  if len(args.bundle):
+    creds = []
+    for path in args.bundle:
+      if os.path.isfile(path):
+        creds.append(UnlockCredentials.from_credential_archive(path))
+      elif os.path.isdir(path):
+        creds.extend(
+            FindUnlockCredentialsInDirectory(path, verbose=args.verbose))
+      else:
+        parser.error("path argument '{}' does not exist".format(path))
+
+    if len(creds) == 0:
+      parser.error('No unlock credentials were found in any of the given paths')
   else:
-    creds = UnlockCredentials.from_files(args.pik_cert, args.puk_cert, args.puk)
-  with creds as creds:
-    sys.exit(
-        AuthenticatedUnlock(creds, serial=args.serial, verbose=args.verbose))
+    creds = [UnlockCredentials(args.pik_cert, args.puk_cert, args.puk)]
+
+  sys.exit(AuthenticatedUnlock(creds, serial=args.serial, verbose=args.verbose))
