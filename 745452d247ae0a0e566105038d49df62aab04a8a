@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "bff38e66_9270def9",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 232,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-25T21:59:21Z",
+      "side": 1,
+      "message": "I agree, this was how pyformat formatted it. Fixed by shortening constant names.",
+      "parentUuid": "f696d013_978114e8",
+      "revId": "745452d247ae0a0e566105038d49df62aab04a8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de85c0d6_ce53479e",
         "filename": "tools/at_auth_unlock.py",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "745452d247ae0a0e566105038d49df62aab04a8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f5f5ddfd_cabbc632",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 240,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-25T21:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de85c0d6_ce53479e",
+      "revId": "745452d247ae0a0e566105038d49df62aab04a8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -56,6 +92,30 @@
       "revId": "745452d247ae0a0e566105038d49df62aab04a8a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "85e6e6af_a21ca1ea",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 283,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2018-10-25T21:59:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8cde5a27_06f614fd",
+      "range": {
+        "startLine": 283,
+        "startChar": 4,
+        "endLine": 283,
+        "endChar": 9
+      },
+      "revId": "745452d247ae0a0e566105038d49df62aab04a8a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
