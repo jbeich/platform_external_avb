@@ -2181,6 +2181,43 @@ class Avb(object):
     if num_printed == 0:
       o.write('    (none)\n')
 
+  def hashtree_info(self, image_filename, output):
+    """Implements the 'hashtree_info' command.
+
+    Arguments:
+      image_filename: Image file to get information from (file object).
+      output: Output file to write human-readable information to (file object).
+    """
+
+    image = ImageHandler(image_filename)
+    (_, _, descriptors, _) = self._parse_image(image)
+
+    for desc in descriptors:
+      if type(desc) == AvbHashtreeDescriptor:
+        hashtree_info = [
+          ("dm_verity_version", desc.dm_verity_version),
+          ("image_size", desc.image_size),
+          ("tree_offset", desc.tree_offset),
+          ("tree_size", desc.tree_size),
+          ("data_block_size", desc.data_block_size),
+          ("hash_block_size", desc.hash_block_size),
+          ("fec_num_roots", desc.fec_num_roots),
+          ("fec_offset", desc.fec_offset),
+          ("fec_size", desc.fec_size),
+          ("hash_algorithm", desc.hash_algorithm),
+          ("partition_name", desc.partition_name),
+          ("salt", str(desc.salt).encode('hex')),
+          ("root_digest", str(desc.root_digest).encode('hex')),
+          ("flags", desc.flags),
+        ]
+
+        info_list = ["{}={}".format(key, value) for key, value in hashtree_info]
+        output.write('\n'.join(info_list))
+        return
+
+    output.write()
+    raise AvbError("hashtree descriptor not found")
+
   def verify_image(self, image_filename, key_path, expected_chain_partitions):
     """Implements the 'verify_image' command.
 
@@ -4019,6 +4056,20 @@ class AvbTool(object):
     sub_parser.set_defaults(func=self.resize_image)
 
     sub_parser = subparsers.add_parser(
+        'hashtree_info',
+        help="Dump the hashtree information of the given image."
+    )
+    sub_parser.add_argument('--image',
+                            help='Image to show information about',
+                            type=argparse.FileType('rb'),
+                            required=True)
+    sub_parser.add_argument('--output',
+                            help='Write info to file',
+                            type=argparse.FileType('wt'),
+                            default=sys.stdout)
+    sub_parser.set_defaults(func=self.hashtree_info)
+
+    sub_parser = subparsers.add_parser(
         'info_image',
         help='Show information about vbmeta or footer.')
     sub_parser.add_argument('--image',
@@ -4323,6 +4374,11 @@ class AvbTool(object):
   def info_image(self, args):
     """Implements the 'info_image' sub-command."""
     self.avb.info_image(args.image.name, args.output)
+
+  def hashtree_info(self, args):
+    """Implements the 'hashtree_info' sub-command"""
+    self.avb.hashtree_info(args.image.name, args.output)
+
 
   def verify_image(self, args):
     """Implements the 'verify_image' sub-command."""
