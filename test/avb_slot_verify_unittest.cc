@@ -2109,8 +2109,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
   }
 
   // Check that avb_slot_verify() doesn't return any of the
-  // descriptors and instead return a kernel command-line with
-  // root=PARTUUID=<whatever_for_system_a> and none of the
+  // descriptors, none of the kernel command-line is set, and none of the
   // androidboot.vbmeta.* options are set. Also ensure all the
   // requested partitions are loaded.
   //
@@ -2131,8 +2130,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
                             AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
                             &slot_data));
   EXPECT_NE(nullptr, slot_data);
-  EXPECT_EQ("root=PARTUUID=1234-fake-guid-for:system_a",
-            std::string(slot_data->cmdline));
+  EXPECT_EQ(nullptr, slot_data->cmdline);
   // Also make sure that it actually loads the boot and dtbo partitions.
   EXPECT_EQ(size_t(2), slot_data->num_loaded_partitions);
   EXPECT_EQ("boot",

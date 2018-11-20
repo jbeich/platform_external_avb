@@ -1403,16 +1403,9 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
      */
     if (toplevel_vbmeta.flags & AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED) {
       /* Since verification is disabled we didn't process any
-       * descriptors and thus there's no cmdline... so set root= such
-       * that the system partition is mounted.
+       * descriptors and thus there's no cmdline.
        */
       avb_assert(slot_data->cmdline == NULL);
-      slot_data->cmdline =
-          avb_strdup("root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)");
-      if (slot_data->cmdline == NULL) {
-        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
-        goto fail;
-      }
     } else {
       /* If requested, manage dm-verity mode... */
       AvbHashtreeErrorMode resolved_hashtree_error_mode = hashtree_error_mode;
