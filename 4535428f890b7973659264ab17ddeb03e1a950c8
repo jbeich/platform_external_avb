@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9a4d4b75_09a4ad12",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1415,
+      "author": {
+        "id": 1108565
+      },
+      "writtenOn": "2018-11-20T16:36:53Z",
+      "side": 0,
+      "message": "Question, shouldn\u0027t this code exist for upgrading devices and have a if (!dynamic_partitions) around it?\nI guess libavb is isolated into bootloaders, but are partner\u0027s not supposed to upgraded to Q libavb in their bootloaders? If the answer is NO, then this seems ok. If the answer is \u0027yes\u0027, then we may need that conditional.",
+      "range": {
+        "startLine": 1410,
+        "startChar": 4,
+        "endLine": 1415,
+        "endChar": 7
+      },
+      "revId": "4535428f890b7973659264ab17ddeb03e1a950c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
