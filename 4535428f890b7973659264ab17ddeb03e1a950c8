@@ -22,6 +22,30 @@
       "revId": "4535428f890b7973659264ab17ddeb03e1a950c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c8b879bc_7d3e7786",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1415,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-11-21T02:27:44Z",
+      "side": 0,
+      "message": "\u003e  if (!dynamic_partitions) around it?\n\nThere is no dynamic_partition logic in libavb, and I\u0027m not sure should we add it.\nThe change David did before is try to load vbmeta from the beginning (for vbmeta_system and vbmeta_vendor) when no AVB footer is found.\nhttps://android-review.googlesource.com/c/platform/external/avb/+/727488\n\n\u003e but are partner\u0027s not supposed to upgraded to Q libavb in their bootloaders? \nIIRC, we don\u0027t have such a requirement.\nBecause if this is yes, that means we\u0027ll require bootloader OTA in each Android release, which most OEMs don\u0027t want do to this unless for critical bug fix.",
+      "parentUuid": "9a4d4b75_09a4ad12",
+      "range": {
+        "startLine": 1410,
+        "startChar": 4,
+        "endLine": 1415,
+        "endChar": 7
+      },
+      "revId": "4535428f890b7973659264ab17ddeb03e1a950c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
