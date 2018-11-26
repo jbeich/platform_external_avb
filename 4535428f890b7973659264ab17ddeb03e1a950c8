@@ -46,6 +46,30 @@
       "revId": "4535428f890b7973659264ab17ddeb03e1a950c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "26dfdf39_1e68e171",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1415,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-11-26T16:49:12Z",
+      "side": 0,
+      "message": "The way libavb works is that root\u003d\u003cwhatever\u003e comes from libavb so that\u0027s why this code is here. Typically this root\u003d\u003cwhatever\u003e is ingested via the kernel cmdline snippets but in this case we don\u0027t have any of that.\n\nWe can\u0027t change this behavior because existing boot loaders already depend on it. Also remember that libavb is used outside Android (Android Things etc.) so we can\u0027t break anything.\n\nFor the case of dynamic partitions there will never be a system${ab_suffix} GPT partition so I think the right thing to do here is to use the get_unique_guid_for_partition() operation to test for the presence of a system partition and only put root\u003dPARTUUID\u003d$(ANDROID_SYSTEM_PARTUUID) there if found.",
+      "parentUuid": "c8b879bc_7d3e7786",
+      "range": {
+        "startLine": 1410,
+        "startChar": 4,
+        "endLine": 1415,
+        "endChar": 7
+      },
+      "revId": "4535428f890b7973659264ab17ddeb03e1a950c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
