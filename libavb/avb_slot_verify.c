@@ -1284,6 +1284,32 @@ out:
   return io_ret;
 }
 
+static int has_system_partition(AvbOps* ops, const char* ab_suffix) {
+  char part_name[AVB_PART_NAME_MAX_SIZE];
+  char* system_part_name = "system";
+  char guid_buf[37];
+  AvbIOResult io_ret;
+
+  if (!avb_str_concat(part_name,
+                      sizeof part_name,
+                      system_part_name,
+                      avb_strlen(system_part_name),
+                      ab_suffix,
+                      avb_strlen(ab_suffix))) {
+    avb_error("System partition name and suffix does not fit.\n");
+    return 0;
+  }
+
+  io_ret = ops->get_unique_guid_for_partition(
+      ops, part_name, guid_buf, sizeof guid_buf);
+  if (io_ret != AVB_IO_RESULT_OK) {
+    avb_error("Error getting unique GUID for partition.\n");
+    return 0;
+  }
+
+  return 1;
+}
+
 AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                     const char* const* requested_partitions,
                                     const char* ab_suffix,
@@ -1407,11 +1433,13 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
        * that the system partition is mounted.
        */
       avb_assert(slot_data->cmdline == NULL);
-      slot_data->cmdline =
-          avb_strdup("root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)");
-      if (slot_data->cmdline == NULL) {
-        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
-        goto fail;
+      if (has_system_partition(ops, ab_suffix)) {
+        slot_data->cmdline =
+            avb_strdup("root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)");
+        if (slot_data->cmdline == NULL) {
+          ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+          goto fail;
+        }
       }
     } else {
       /* If requested, manage dm-verity mode... */
