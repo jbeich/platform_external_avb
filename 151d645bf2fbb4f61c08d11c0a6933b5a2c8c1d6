@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7c491202_ac187dbc",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1287,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-11-27T15:02:36Z",
+      "side": 1,
+      "message": "Use the bool datatype here and literals true/false below.",
+      "range": {
+        "startLine": 1287,
+        "startChar": 7,
+        "endLine": 1287,
+        "endChar": 10
+      },
+      "revId": "151d645bf2fbb4f61c08d11c0a6933b5a2c8c1d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "835b24e5_eea315bc",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-11-27T15:02:36Z",
+      "side": 1,
+      "message": "This will do an avb_error() call on Dynamic Partition devices which seems wrong (and misleading to someone going through the bootloader logs). Instead, explicitly test for AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION and do avb_debug(\"No system partition partition\"), then result false.",
+      "range": {
+        "startLine": 1305,
+        "startChar": 2,
+        "endLine": 1308,
+        "endChar": 3
+      },
+      "revId": "151d645bf2fbb4f61c08d11c0a6933b5a2c8c1d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e47545d_561e7fc9",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 1436,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-11-27T15:02:36Z",
+      "side": 1,
+      "message": "May be redundant but I like to err on the side of making it easy for future readers to understand: Add a comment saying that not all devices have a system partition specifically calling out Dynamic Partitions and reference the bug where all this was discussed!",
+      "range": {
+        "startLine": 1436,
+        "startChar": 6,
+        "endLine": 1436,
+        "endChar": 47
+      },
+      "revId": "151d645bf2fbb4f61c08d11c0a6933b5a2c8c1d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d817f75a_6bb6e5b6",
+        "filename": "test/avb_slot_verify_unittest.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 2175,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-11-27T15:02:36Z",
+      "side": 1,
+      "message": "Please update all VerificationDisabled() callsites (incl. above and below) to read like this\n\n VerificationDisabled(true,   // use_avbctl\n                      false,  // preload_boot\n                      true);  // has_system_partition",
+      "range": {
+        "startLine": 2175,
+        "startChar": 22,
+        "endLine": 2175,
+        "endChar": 41
+      },
+      "revId": "151d645bf2fbb4f61c08d11c0a6933b5a2c8c1d6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
