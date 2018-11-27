@@ -70,6 +70,30 @@
       "revId": "4535428f890b7973659264ab17ddeb03e1a950c8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec80346c_517c47f7",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 1415,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2018-11-27T10:12:23Z",
+      "side": 0,
+      "message": "Agree your suggestion is better, thanks!",
+      "parentUuid": "26dfdf39_1e68e171",
+      "range": {
+        "startLine": 1410,
+        "startChar": 4,
+        "endLine": 1415,
+        "endChar": 7
+      },
+      "revId": "4535428f890b7973659264ab17ddeb03e1a950c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
