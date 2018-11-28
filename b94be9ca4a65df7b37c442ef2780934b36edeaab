@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0f9d171f_54c9ff46",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1308,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2018-11-28T15:53:12Z",
+      "side": 1,
+      "message": "Still need an else-if branch to check for failure and if so, avb_error() + return false.",
+      "range": {
+        "startLine": 1308,
+        "startChar": 2,
+        "endLine": 1308,
+        "endChar": 3
+      },
+      "revId": "b94be9ca4a65df7b37c442ef2780934b36edeaab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
