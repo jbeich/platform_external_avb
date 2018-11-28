@@ -74,12 +74,66 @@ cc_defaults {
     ],
 }
 
-cc_prebuilt_binary {
+python_library_host {
+    name: "hashtree_info_proto",
+    srcs: [
+        "hashtree_info.proto",
+    ],
+
+    libs: [
+        "python-symbol",
+        // Soong won't add "libprotobuf-python" to the dependencies if
+        // filegroup contains .proto files. So add it here explicitly.
+        "libprotobuf-python",
+    ],
+
+    proto: {
+        type: "lite",
+        canonical_path_from_root: false,
+    },
+
+    version: {
+        py2: {
+            enabled: true,
+            embedded_launcher: true,
+        },
+        py3: {
+            enabled: false,
+            embedded_launcher: false,
+        },
+    },
+}
+
+python_binary_host {
     name: "avbtool",
-    srcs: ["avbtool"],
+    srcs: [
+        "avbtool.py",
+    ],
     required: ["fec"],
-    device_supported: false,
-    host_supported: true,
+
+    libs: [
+        "hashtree_info_proto",
+        "python-symbol",
+        // Soong won't add "libprotobuf-python" to the dependencies if
+        // filegroup contains .proto files. So add it here explicitly.
+        "libprotobuf-python",
+    ],
+
+    proto: {
+        type: "lite",
+        canonical_path_from_root: false,
+    },
+
+    version: {
+        py2: {
+            enabled: true,
+            embedded_launcher: true,
+        },
+        py3: {
+            enabled: false,
+            embedded_launcher: false,
+        },
+    },
 }
 
 // Build libavb - this is a static library that depends

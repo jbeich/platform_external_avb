@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package avb;
+option optimize_for = LITE_RUNTIME;
+
+message HashtreeInfo {
+  // For now, only version 1 is supported for the on device dm verity
+  // calculation.
+  uint32 dm_verity_version = 1;
+
+  // The name for the given partition. e.g. system.
+  string partition_name = 2;
+
+  // The size in bytes for both data & hash blocks.
+  uint64 block_size = 3;
+
+  // The size in bytes for the adjusted image without dm verity.
+  uint64 image_size = 4;
+
+  // Start offset of the verity hashtree.
+  uint64 hashtree_offset = 5;
+
+  // Size of the verity hashtree.
+  uint64 hashtree_size = 6;
+
+  // The hash algorithm used in verity hash tree.
+  string hash_algorithm = 7;
+
+  // The root digest in hex string for the hashtree.
+  string root_digest = 8;
+
+  // The salt used for verity hashtree.
+  string salt = 9;
+}
+
