@@ -55,6 +55,7 @@ class AvbToolTest : public BaseAvbToolTest {
   void AddHashFooterTest(bool sparse_image);
   void AddHashtreeFooterTest(bool sparse_image);
   void AddHashtreeFooterFECTest(bool sparse_image);
+  void AddPropFromImageTest(bool sparse_image);
 
   void GenerateImageWithHashAndHashtreeSetup();
 
@@ -1379,6 +1380,119 @@ TEST_F(AvbToolTest, AddHashtreeFooterFEC) {
 
 TEST_F(AvbToolTest, AddHashtreeFooterFECSparse) {
   AddHashtreeFooterFECTest(true);
+}
+
+void AvbToolTest::AddPropFromImageTest(bool sparse_image) {
+  const base::FilePath original_img_path("test/data/prop.img");
+  const base::FilePath prop_img_path = testdir_.Append("prop.img");
+  const size_t partition_size = 1536 * 1024;
+
+  if (sparse_image) {
+    EXPECT_COMMAND(0,
+                   "cp %s %s",
+                   original_img_path.value().c_str(),
+                   prop_img_path.value().c_str());
+  } else {
+    EXPECT_COMMAND(0,
+                   "simg2img %s %s",
+                   original_img_path.value().c_str(),
+                   prop_img_path.value().c_str());
+  }
+
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hash_footer --salt d00df00d --image %s "
+                 "--partition_size %d --partition_name system "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--prop_from_image "
+                 "/system/build.prop:ro.build.version.security_patch",
+                 prop_img_path.value().c_str(),
+                 (int)partition_size);
+
+  ASSERT_EQ(base::StringPrintf("Footer version:           1.0\n"
+                               "Image size:               1572864 bytes\n"
+                               "Original image size:      409600 bytes\n"
+                               "VBMeta offset:            409600\n"
+                               "VBMeta size:              1408 bytes\n"
+                               "--\n"
+                               "Minimum libavb version:   1.0%s\n"
+                               "Header Block:             256 bytes\n"
+                               "Authentication Block:     320 bytes\n"
+                               "Auxiliary Block:          832 bytes\n"
+                               "Algorithm:                SHA256_RSA2048\n"
+                               "Rollback Index:           0\n"
+                               "Flags:                    0\n"
+                               "Release String:           ''\n"
+                               "Descriptors:\n"
+                               "    Hash descriptor:\n"
+                               "      Image Size:            409600 bytes\n"
+                               "      Hash Algorithm:        sha256\n"
+                               "      Partition Name:        system\n"
+                               "      Salt:                  d00df00d\n"
+                               "      Digest:                "
+                               "a3e74affd5b3d7dd855749f40b516da629159d40a937a"
+                               "c68437ed6fd0338a20a\n"
+                               "      Flags:                 0\n"
+                               "    Prop: ro.build.version.security_patch -> "
+                               "'2018-12-05'\n",
+                               sparse_image ? " (Sparse)" : ""),
+            InfoImage(prop_img_path));
+
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer --salt d00df00d --image %s "
+                 "--partition_size %d --partition_name system "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--internal_release_string \"\" "
+                 "--prop_from_image "
+                 "/system/build.prop:ro.build.version.security_patch",
+                 prop_img_path.value().c_str(),
+                 (int)partition_size);
+
+  ASSERT_EQ(base::StringPrintf(
+                "Footer version:           1.0\n"
+                "Image size:               1572864 bytes\n"
+                "Original image size:      409600 bytes\n"
+                "VBMeta offset:            421888\n"
+                "VBMeta size:              1408 bytes\n"
+                "--\n"
+                "Minimum libavb version:   1.0%s\n"
+                "Header Block:             256 bytes\n"
+                "Authentication Block:     320 bytes\n"
+                "Auxiliary Block:          832 bytes\n"
+                "Algorithm:                SHA256_RSA2048\n"
+                "Rollback Index:           0\n"
+                "Flags:                    0\n"
+                "Release String:           ''\n"
+                "Descriptors:\n"
+                "    Hashtree descriptor:\n"
+                "      Version of dm-verity:  1\n"
+                "      Image Size:            409600 bytes\n"
+                "      Tree Offset:           409600\n"
+                "      Tree Size:             4096 bytes\n"
+                "      Data Block Size:       4096 bytes\n"
+                "      Hash Block Size:       4096 bytes\n"
+                "      FEC num roots:         2\n"
+                "      FEC offset:            413696\n"
+                "      FEC size:              8192 bytes\n"
+                "      Hash Algorithm:        sha1\n"
+                "      Partition Name:        system\n"
+                "      Salt:                  d00df00d\n"
+                "      Root Digest:           "
+                "a5ac3496135c2e78c26459861b23cec96dcdef0a\n"
+                "      Flags:                 0\n"
+                "    Prop: ro.build.version.security_patch -> '2018-12-05'\n",
+                sparse_image ? " (Sparse)" : ""),
+            InfoImage(prop_img_path));
+}
+
+TEST_F(AvbToolTest, AddPropFromImage) {
+  AddPropFromImageTest(false);
+}
+
+TEST_F(AvbToolTest, AddPropFromImageSparse) {
+  AddPropFromImageTest(true);
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSize) {

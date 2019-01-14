@@ -77,7 +77,11 @@ cc_defaults {
 cc_prebuilt_binary {
     name: "avbtool",
     srcs: ["avbtool"],
-    required: ["fec"],
+    required: [
+        "debugfs",
+        "fec",
+        "simg2img",
+    ],
     device_supported: false,
     host_supported: true,
 }
