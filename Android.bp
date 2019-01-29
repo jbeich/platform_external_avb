@@ -184,6 +184,7 @@ cc_test_host {
     ],
     data: [
         "avbtool",
+        "fec",
         "test/avbtool_signing_helper_*.py",
         "test/data/*",
     ],
