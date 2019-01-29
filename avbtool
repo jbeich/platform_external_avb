@@ -37,6 +37,7 @@ import tempfile
 import time
 
 # Keep in sync with libavb/avb_version.h.
+# Random change to check presubmit works
 AVB_VERSION_MAJOR = 1
 AVB_VERSION_MINOR = 1
 AVB_VERSION_SUB = 0
