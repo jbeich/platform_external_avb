@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "267233a6_16a8329d",
+        "filename": "libavb_user/avb_ops_user.cpp",
+        "patchSetId": 1
+      },
+      "lineNbr": 107,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2019-01-30T02:11:50Z",
+      "side": 1,
+      "message": "if only asprintf(3) existed... or std::string...",
+      "range": {
+        "startLine": 104,
+        "startChar": 4,
+        "endLine": 107,
+        "endChar": 48
+      },
+      "revId": "bdd51fd31c1d4d5c2940b775d6959c030a135a84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
