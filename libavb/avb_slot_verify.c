@@ -385,16 +385,16 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
   if (ret != AVB_SLOT_VERIFY_RESULT_OK) {
     goto out;
   }
-
+  
+  AvbSHA256Ctx sha256_ctx;
+  AvbSHA512Ctx sha512_ctx;
   if (avb_strcmp((const char*)hash_desc.hash_algorithm, "sha256") == 0) {
-    AvbSHA256Ctx sha256_ctx;
     avb_sha256_init(&sha256_ctx);
     avb_sha256_update(&sha256_ctx, desc_salt, hash_desc.salt_len);
     avb_sha256_update(&sha256_ctx, image_buf, hash_desc.image_size);
     digest = avb_sha256_final(&sha256_ctx);
     digest_len = AVB_SHA256_DIGEST_SIZE;
   } else if (avb_strcmp((const char*)hash_desc.hash_algorithm, "sha512") == 0) {
-    AvbSHA512Ctx sha512_ctx;
     avb_sha512_init(&sha512_ctx);
     avb_sha512_update(&sha512_ctx, desc_salt, hash_desc.salt_len);
     avb_sha512_update(&sha512_ctx, image_buf, hash_desc.image_size);
