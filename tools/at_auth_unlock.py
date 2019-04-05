@@ -370,6 +370,43 @@ def FindUnlockCredentialsInDirectory(dir, verbose=False):
   return creds
 
 
+def ClearFactoryPersistentDigest(serial=None, verbose=False):
+  FACTORY_PERSISTENT_DIGEST_NAME = 'avb.persistent_digest.factory'
+
+  tempdir = tempfile.mkdtemp()
+  try:
+    digest_data = os.path.join(tempdir, 'digest_data')
+
+    with open(digest_data, 'wb') as out:
+      out.write(struct.pack('<I', len(FACTORY_PERSISTENT_DIGEST_NAME)))
+      out.write(FACTORY_PERSISTENT_DIGEST_NAME)
+      # Sending a zero length digest will clear the existing digest.
+      out.write(struct.pack('<I', 0))
+
+    def fastboot_cmd(args):
+      args = ['fastboot'] + (['-s', serial] if serial else []) + args
+      if verbose:
+        print('$ ' + ' '.join(args))
+
+      out = subprocess.check_output(
+          args, stderr=subprocess.STDOUT).decode('utf-8')
+
+      if verbose:
+        print(out)
+
+    try:
+      fastboot_cmd(['stage', digest_data])
+      fastboot_cmd(['oem', 'at-write-persistent-digest'])
+    except subprocess.CalledProcessError as e:
+      print(e.output.decode('utf-8'))
+      print("Command '{}' returned non-zero exit status {}".format(
+          ' '.join(e.cmd), e.returncode))
+      print("Warning: Failed to clear factory partition persistent digest.")
+
+  finally:
+    shutil.rmtree(tempdir)
+
+
 def main(in_args):
   parser = argparse.ArgumentParser(
       description=HELP_DESCRIPTION,
@@ -465,6 +502,9 @@ def main(in_args):
     creds = [UnlockCredentials(args.pik_cert, args.puk_cert, args.puk)]
 
   ret = AuthenticatedUnlock(creds, serial=args.serial, verbose=args.verbose)
+  if ret:
+    # Best effort to clear factory partition digest.
+    ClearFactoryPersistentDigest(serial=args.serial, verbose=args.verbose)
   return 0 if ret else 1
 
 
