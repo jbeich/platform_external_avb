@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4cd43336_680ea4a2",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2019-04-12T23:02:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c2943ff7_fd95b2b1",
+      "range": {
+        "startLine": 399,
+        "startChar": 6,
+        "endLine": 399,
+        "endChar": 24
+      },
+      "revId": "b6e1736854d76bd64a9dec4a2fb0cdb828cdc85d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "80a8bd45_240167e7",
         "filename": "tools/at_auth_unlock.py",
         "patchSetId": 1
@@ -36,6 +60,30 @@
       "writtenOn": "2019-04-12T19:29:39Z",
       "side": 1,
       "message": "Update ret based on success here, in case someone uses this in scripts. This step should be able to succeed if the unlock did, right? Or did you fine situations where the digest couldn\u0027t be cleared. Ideally wouldn\u0027t treat it as best effort.",
+      "range": {
+        "startLine": 507,
+        "startChar": 4,
+        "endLine": 507,
+        "endChar": 32
+      },
+      "revId": "b6e1736854d76bd64a9dec4a2fb0cdb828cdc85d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8264557e_dd85e5c2",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2019-04-12T23:02:41Z",
+      "side": 1,
+      "message": "As discussed, added an option for flexibility and update ret here.",
+      "parentUuid": "80a8bd45_240167e7",
       "range": {
         "startLine": 507,
         "startChar": 4,
