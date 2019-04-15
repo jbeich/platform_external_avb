@@ -93,6 +93,30 @@
       "revId": "b6e1736854d76bd64a9dec4a2fb0cdb828cdc85d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f979a6b_2b7d8741",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 507,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2019-04-15T18:47:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8264557e_dd85e5c2",
+      "range": {
+        "startLine": 507,
+        "startChar": 4,
+        "endLine": 507,
+        "endChar": 32
+      },
+      "revId": "b6e1736854d76bd64a9dec4a2fb0cdb828cdc85d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
