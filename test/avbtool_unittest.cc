@@ -1003,6 +1003,15 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                    extracted_vbmeta_path.value().c_str());
   }
 
+  // Zero the hashtree on a copy of the image.
+  EXPECT_COMMAND(0,
+                 "cp %s %s.zht",
+                 rootfs_path.value().c_str(),
+                 rootfs_path.value().c_str());
+  EXPECT_COMMAND(0,
+                 "./avbtool zero_hashtree --image %s.zht ",
+                 rootfs_path.value().c_str());
+
   if (sparse_image) {
     EXPECT_COMMAND(0,
                    "mv %s %s.sparse",
@@ -1013,6 +1022,16 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                    rootfs_path.value().c_str(),
                    rootfs_path.value().c_str());
     EXPECT_COMMAND(0, "rm -f %s.sparse", rootfs_path.value().c_str());
+
+    EXPECT_COMMAND(0,
+                   "mv %s.zht %s.zht.sparse",
+                   rootfs_path.value().c_str(),
+                   rootfs_path.value().c_str());
+    EXPECT_COMMAND(0,
+                   "simg2img %s.zht.sparse %s.zht",
+                   rootfs_path.value().c_str(),
+                   rootfs_path.value().c_str());
+    EXPECT_COMMAND(0, "rm -f %s.zht.sparse", rootfs_path.value().c_str());
   }
 
   // To check that we generate the correct hashtree we can use
@@ -1037,6 +1056,11 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   // Now check that we can find the VBMeta block again from the footer.
   std::string part_data;
   ASSERT_TRUE(base::ReadFileToString(rootfs_path, &part_data));
+
+  // Also read the zeroed hash-tree version.
+  std::string zht_part_data;
+  ASSERT_TRUE(base::ReadFileToString(
+      base::FilePath(rootfs_path.value() + ".zht"), &zht_part_data));
 
   // Check footer contains correct data.
   AvbFooter f;
@@ -1094,6 +1118,25 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   o += d.salt_len;
   EXPECT_EQ("e811611467dcd6e8dc4324e45f706c2bdd51db67",
             mem_to_hexstring(desc_end + o, d.root_digest_len));
+
+  // Check that the zeroed hashtree version differ only by the hashtree + fec
+  // being zeroed out.
+  EXPECT_EQ(part_data.size(), zht_part_data.size());
+  size_t zht_begin = d.tree_offset;
+  size_t zht_end = d.tree_offset + d.tree_size + d.fec_size;
+  EXPECT_EQ(0, memcmp(part_data.data(), zht_part_data.data(), zht_begin));
+  EXPECT_NE(0,
+            memcmp(part_data.data() + zht_begin,
+                   zht_part_data.data() + zht_begin,
+                   zht_end - zht_begin));
+  EXPECT_EQ(0,
+            memcmp(part_data.data() + zht_end,
+                   zht_part_data.data() + zht_end,
+                   zht_part_data.size() - zht_end));
+  EXPECT_EQ(0, strncmp(zht_part_data.data() + zht_begin, "ZeRoHaSH", 8));
+  for (size_t n = zht_begin + 8; n < zht_end; n++) {
+    EXPECT_EQ(0, zht_part_data.data()[n]);
+  }
 
   // Check that we correctly generate dm-verity kernel cmdline
   // snippets, if requested.
