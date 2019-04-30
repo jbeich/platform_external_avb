@@ -2086,6 +2086,63 @@ class Avb(object):
     # And cut...
     image.truncate(new_image_size)
 
+  def zero_hashtree(self, image_filename):
+    """Implements the 'zero_hashtree' command.
+
+    Arguments:
+      image_filename: File to zero hashtree and FEC data from.
+
+    Raises:
+      AvbError: If there's no footer in the image.
+    """
+
+    image = ImageHandler(image_filename)
+
+    (footer, _, descriptors, _) = self._parse_image(image)
+
+    if not footer:
+      raise AvbError('Given image does not have a footer.')
+
+    # Search for a hashtree descriptor to figure out the location and
+    # size of the hashtree and FEC.
+    ht_desc = None
+    for desc in descriptors:
+      if isinstance(desc, AvbHashtreeDescriptor):
+        ht_desc = desc
+        break
+
+    if not ht_desc:
+      raise AvbError('No hashtree descriptor was found.')
+
+    zero_ht_start_offset = ht_desc.tree_offset
+    zero_ht_num_bytes = ht_desc.tree_size
+    zero_fec_start_offset = None
+    zero_fec_num_bytes = 0
+    if ht_desc.fec_offset > 0:
+      if ht_desc.fec_offset != ht_desc.tree_offset + ht_desc.tree_size:
+        raise AvbError('Hash-tree and FEC data must be adjacent.')
+      zero_fec_start_offset = ht_desc.fec_offset
+      zero_fec_num_bytes = ht_desc.fec_size
+    zero_end_offset = zero_ht_start_offset + zero_ht_num_bytes + zero_fec_num_bytes
+    image.seek(zero_end_offset)
+    data = image.read(image.image_size - zero_end_offset)
+
+    # Write zeroes all over hashtree and FEC, except for the first eight bytes
+    # where a magic marker - ZeroHaSH - is placed. Place these markers in the
+    # beginning of both hashtree and FEC. (That way, in the future we can add
+    # options to 'avbtool zero_hashtree' so as to zero out only either/or.)
+    #
+    # Applications can use these markers to detect that the hashtree and/or
+    # FEC needs to be recomputed.
+    image.truncate(zero_ht_start_offset)
+    data_zeroed_firstblock = 'ZeRoHaSH' + '\0'*(image.block_size - 8)
+    image.append_raw(data_zeroed_firstblock)
+    image.append_fill('\0\0\0\0', zero_ht_num_bytes - image.block_size)
+    if zero_fec_start_offset:
+      image.append_raw(data_zeroed_firstblock)
+      image.append_fill('\0\0\0\0', zero_fec_num_bytes - image.block_size)
+    image.append_raw(data)
+
   def resize_image(self, image_filename, partition_size):
     """Implements the 'resize_image' command.
 
@@ -4026,6 +4083,14 @@ class AvbTool(object):
                             action='store_true')
     sub_parser.set_defaults(func=self.erase_footer)
 
+    sub_parser = subparsers.add_parser('zero_hashtree',
+                                       help='Zero out hashtree and FEC data.')
+    sub_parser.add_argument('--image',
+                            help='Image with a footer',
+                            type=argparse.FileType('rwb+'),
+                            required=True)
+    sub_parser.set_defaults(func=self.zero_hashtree)
+
     sub_parser = subparsers.add_parser('extract_vbmeta_image',
                                        help='Extracts vbmeta from an image with a footer.')
     sub_parser.add_argument('--image',
@@ -4346,6 +4411,10 @@ class AvbTool(object):
   def erase_footer(self, args):
     """Implements the 'erase_footer' sub-command."""
     self.avb.erase_footer(args.image.name, args.keep_hashtree)
+
+  def zero_hashtree(self, args):
+    """Implements the 'zero_hashtree' sub-command."""
+    self.avb.zero_hashtree(args.image.name)
 
   def extract_vbmeta_image(self, args):
     """Implements the 'extract_vbmeta_image' sub-command."""
