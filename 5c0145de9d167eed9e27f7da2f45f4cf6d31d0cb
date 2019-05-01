@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "752acf43_f3022945",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2120,
+      "author": {
+        "id": 1056365
+      },
+      "writtenOn": "2019-05-01T16:13:16Z",
+      "side": 1,
+      "message": "ht_desc.fec_offset",
+      "range": {
+        "startLine": 2120,
+        "startChar": 9,
+        "endLine": 2120,
+        "endChar": 27
+      },
+      "revId": "5c0145de9d167eed9e27f7da2f45f4cf6d31d0cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
