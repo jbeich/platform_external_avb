@@ -117,11 +117,19 @@ typedef enum {
  * should be set if using AVB_HASHTREE_ERROR_MODE_MANAGED_RESTART_AND_EIO
  * and the reason the boot loader is running is because the device
  * was restarted by the dm-verity driver.
+ *
+ * If the AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION flag is set then
+ * data won't be loaded from the "vbmeta" partition and the
+ * |validate_vbmeta_public_key| operation is never called. Instead, the
+ * vbmeta structs in |requested_partitions| are loaded and processed and the
+ * |validate_public_key_for_partition| operation is called for each of these
+ * vbmeta structs.
  */
 typedef enum {
   AVB_SLOT_VERIFY_FLAGS_NONE = 0,
   AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR = (1 << 0),
-  AVB_SLOT_VERIFY_FLAGS_RESTART_CAUSED_BY_HASHTREE_CORRUPTION = (1 << 1)
+  AVB_SLOT_VERIFY_FLAGS_RESTART_CAUSED_BY_HASHTREE_CORRUPTION = (1 << 1),
+  AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION = (1 << 2),
 } AvbSlotVerifyFlags;
 
 /* Get a textual representation of |result|. */
