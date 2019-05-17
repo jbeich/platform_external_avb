@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4633b1d5_e07da46d",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1365,
+      "author": {
+        "id": 1493494
+      },
+      "writtenOn": "2019-05-17T21:43:12Z",
+      "side": 1,
+      "message": "Do you think it\u0027d help to have this in the \"else\" block corresponding to the \"if\" at L1401?",
+      "range": {
+        "startLine": 1365,
+        "startChar": 2,
+        "endLine": 1365,
+        "endChar": 54
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "45acb0c0_0130d9a1",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1435,
+      "author": {
+        "id": 1493494
+      },
+      "writtenOn": "2019-05-17T21:43:12Z",
+      "side": 1,
+      "message": "Do you think we need a check to enforce \"requested_partitions !\u003d {NULL}\" if we use AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION?\n\nIf AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION is passed-in \u0026\u0026 requested_partitions \u003d\u003d {NULL}, the value for \"ret\" at L1479 would be uninitialized + it may go ahead and execute the rest of this method w/o any partition to work with, right?",
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
