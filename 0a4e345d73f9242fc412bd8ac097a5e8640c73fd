@@ -1,0 +1,9 @@
+Verified+1: Yu Shan <shanyu@google.com>
+Autosubmit+1: Yu Shan <shanyu@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Wed, 22 May 2019 14:20:21 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/external/avb/+/965832
+Project: platform/external/avb
+Branch: refs/heads/master
