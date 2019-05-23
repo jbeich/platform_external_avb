@@ -108,6 +108,30 @@
       "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e13a18c_af4c91e0",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1493494
+      },
+      "writtenOn": "2019-05-23T19:33:00Z",
+      "side": 1,
+      "message": "My understanding was that recovery_dtbo is an entry within the recovery.img (similar to ramdisk/kernel/..) and it wouldn\u0027t have its own hash desc (as such) for AVB.\n\nSo, even if recovery.img is self-signed, we would follow a flow similar to a vbmeta.img that is self-signed - i.e. boot into \"yellow state\" when locked due to the pubkey mismatch.\n\nIs that not right?",
+      "parentUuid": "a94b8b54_3f512250",
+      "range": {
+        "startLine": 1445,
+        "startChar": 35,
+        "endLine": 1445,
+        "endChar": 59
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
