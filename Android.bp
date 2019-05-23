@@ -261,3 +261,32 @@ cc_library {
     ],
     srcs: ["boot_control/boot_control_avb.c"],
 }
+
+cc_binary_host {
+    name: "libavb_fuzzer",
+    defaults: [
+        "avb_defaults",
+        "avb_sources",
+    ],
+
+    srcs: [
+        "test/fuzzing/avb_slot_verify_vbmeta_fuzzer.cpp",
+        "test/avb_sysdeps_posix_no_output.c",
+    ],
+    local_include_dirs: [
+        "test/fuzzing/include",
+    ],
+    static_libs: [
+        "libLLVMFuzzer",
+    ],
+    shared_libs: [
+        "libchrome",
+        "libbase",
+    ],
+    sanitize: {
+        address: true,
+        coverage: true,
+        misc_undefined: ["fuzzer"],
+    },
+    use_clang_lld: true,
+}
