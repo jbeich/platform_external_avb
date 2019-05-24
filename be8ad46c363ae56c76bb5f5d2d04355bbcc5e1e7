@@ -180,6 +180,30 @@
       "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de3d4c32_edbe9408",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-05-24T07:59:32Z",
+      "side": 1,
+      "message": "IIRC, in Q, dtb can\u0027t be a separate partition and needs to be included in boot.img together.\nSo probably no need to have \"recovery_dtb\" as the requested_partitions.\nhttps://android.googlesource.com/platform/system/core/+/refs/heads/master/mkbootimg/include/bootimg/bootimg.h#131\n\n\u003e larger partitions (hashtree).\n\nrequested_partitions is only for Hash but not hashtree.\nBecause there is no-op in bootloader stage for Hashtree, which should be done at userland.",
+      "parentUuid": "2d4d699f_c94c58a0",
+      "range": {
+        "startLine": 1445,
+        "startChar": 35,
+        "endLine": 1445,
+        "endChar": 59
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
