@@ -156,6 +156,30 @@
       "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d4d699f_c94c58a0",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1493494
+      },
+      "writtenOn": "2019-05-24T03:57:37Z",
+      "side": 1,
+      "message": "I would imagine it to be\nrequested_partitions \u003d {\"recovery\", NULL} for now, but it could extend to say\nrequested_partitions \u003d {\"recovery\", \"recovery_dtb\", NULL} if AOSP enables such a partition.\n\nThe only catch is that this wont scale well to larger partitions (hashtree). Although, recovery boot (being minimal for the task of recovering and/or OTA\u0027ing a device) may not need large (hashtree) partitions at any point in the future.\n\nIn short, piggybacking on |requested_partitions| will work for now. :)",
+      "parentUuid": "d49237c0_950df111",
+      "range": {
+        "startLine": 1445,
+        "startChar": 35,
+        "endLine": 1445,
+        "endChar": 59
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
