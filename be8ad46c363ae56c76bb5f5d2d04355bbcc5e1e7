@@ -132,6 +132,30 @@
       "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d49237c0_950df111",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-05-24T03:35:38Z",
+      "side": 1,
+      "message": "\u003e that recovery_dtbo is an entry within the recovery.img (similar to ramdisk/kernel/..)\nRight, I think recovey_dtbo isn\u0027t a good example.\n\nNot sure what\u0027s the typical requested_partitions when going into recovery route.",
+      "parentUuid": "8e13a18c_af4c91e0",
+      "range": {
+        "startLine": 1445,
+        "startChar": 35,
+        "endLine": 1445,
+        "endChar": 59
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
