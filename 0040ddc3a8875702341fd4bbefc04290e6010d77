@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3ded872f_d6c316b7",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-06-13T06:56:18Z",
+      "side": 1,
+      "message": "atest doesn\u0027t work (there is an internal issue tracking for this).\n\nLet\u0027s run the unit test manually.",
+      "range": {
+        "startLine": 26,
+        "startChar": 6,
+        "endLine": 26,
+        "endChar": 11
+      },
+      "revId": "0040ddc3a8875702341fd4bbefc04290e6010d77",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
