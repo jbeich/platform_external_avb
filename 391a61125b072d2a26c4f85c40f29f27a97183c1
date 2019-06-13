@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "c0bcd574_9256350e",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-06-13T14:39:27Z",
+      "side": 1,
+      "message": "Spelling error... but as in my previous comment, I\u0027d suggest to just not use a define for this at all.",
+      "range": {
+        "startLine": 46,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 40
+      },
+      "revId": "391a61125b072d2a26c4f85c40f29f27a97183c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "ca02ce11_2b12dc4c",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 3
