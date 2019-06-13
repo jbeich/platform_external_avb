@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ca02ce11_2b12dc4c",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-06-13T14:30:39Z",
+      "side": 1,
+      "message": "I agree with the change you\u0027re trying to make but I think the code would be easier to read (I had to read it a couple of times to convince myself) if we\n\n - renamed is_vbmeta_partition to look_for_vbmeta_footer\n - replaced \u0027is_vbmeta_partition \u003d ...\u0027 above with\n\n  /* Don\u0027t use footers for vbmeta partitions (\u0027vbmeta\u0027 or \u0027vbmeta_\u003cpartition_name\u003e\u0027). */\n  look_for_vbmeta_footer \u003d true;\n  if (avb_strncmp(partition, name, \"vbmeta\", avb_strlen(\"vbmeta\") \u003d\u003d 0) {\n    look_for_vbmeta_footer \u003d false;\n  }\n\nand then replace \u0027if (!is_vbmeta_partition)\u0027 with \u0027if (look_for_vbmeta_footer)\u0027 and update the comments as needed.",
+      "revId": "391a61125b072d2a26c4f85c40f29f27a97183c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
