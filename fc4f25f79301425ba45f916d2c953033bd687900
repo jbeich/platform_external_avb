@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b525cfb8_8a45efed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-06-13T03:36:23Z",
+      "side": 1,
+      "message": "We should run the unit test for any libavb changes :)",
+      "range": {
+        "startLine": 13,
+        "startChar": 6,
+        "endLine": 13,
+        "endChar": 32
+      },
+      "revId": "fc4f25f79301425ba45f916d2c953033bd687900",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
