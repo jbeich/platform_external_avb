@@ -43,6 +43,9 @@
 /* Maximum size of a vbmeta image - 64 KiB. */
 #define VBMETA_MAX_SIZE (64 * 1024)
 
+/* vbmeta partition prefix, for example vbmeta, vbmeta_system, vbmeta_vendor */
+#define VBMATA_PARTITION_PREFIX "vbmeta"
+
 static AvbSlotVerifyResult initialize_persistent_digest(
     AvbOps* ops,
     const char* part_name,
@@ -596,7 +599,9 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
    * vbmeta struct.
    */
   is_main_vbmeta = (rollback_index_location == 0);
-  is_vbmeta_partition = (avb_strcmp(partition_name, "vbmeta") == 0);
+  is_vbmeta_partition = (avb_strncmp(partition_name,
+                                     VBMATA_PARTITION_PREFIX,
+                                     avb_strlen(VBMATA_PARTITION_PREFIX)) == 0);
 
   if (!avb_validate_utf8((const uint8_t*)partition_name, partition_name_len)) {
     avb_error("Partition name is not valid UTF-8.\n");
