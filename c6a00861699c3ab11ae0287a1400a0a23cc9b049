@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "69ca590f_d37c7688",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-06-14T14:11:43Z",
+      "side": 1,
+      "message": "You\u0027re passing avb_strlen() \u003d\u003d 0 as the 3rd argument to avb_strncmp().\nLet me fix it.",
+      "range": {
+        "startLine": 604,
+        "startChar": 44,
+        "endLine": 604,
+        "endChar": 69
+      },
+      "revId": "c6a00861699c3ab11ae0287a1400a0a23cc9b049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
