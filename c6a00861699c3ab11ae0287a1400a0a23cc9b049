@@ -22,6 +22,30 @@
       "revId": "c6a00861699c3ab11ae0287a1400a0a23cc9b049",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "b72e0fce_6e38bf28",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-06-14T17:09:11Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69ca590f_d37c7688",
+      "range": {
+        "startLine": 604,
+        "startChar": 44,
+        "endLine": 604,
+        "endChar": 69
+      },
+      "revId": "c6a00861699c3ab11ae0287a1400a0a23cc9b049",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
