@@ -87,6 +87,24 @@
       "revId": "391a61125b072d2a26c4f85c40f29f27a97183c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72412779_fd037f5f",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 604,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-06-14T17:15:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ca02ce11_2b12dc4c",
+      "revId": "391a61125b072d2a26c4f85c40f29f27a97183c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
