@@ -403,6 +403,7 @@ hashtree is also appended to the image.
         [--append_to_release_string STR]                                           \
         [--calc_max_image_size]                                                    \
         [--do_not_use_ab]                                                          \
+        [--zero_hashtree]                                                          \
         [--use_persistent_digest]
 
 The size of an image with integrity footers can be changed using the
