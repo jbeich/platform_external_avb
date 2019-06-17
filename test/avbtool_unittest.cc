@@ -1553,6 +1553,41 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithFEC) {
                  partition_size);
 }
 
+TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithNoHashtree) {
+  const size_t partition_size = 10 * 1024 * 1024;
+  base::FilePath output_path = testdir_.Append("max_size.txt");
+
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer "
+                 "--no_hashtree "
+                 "--partition_size %zd --calc_max_image_size > %s",
+                 partition_size,
+                 output_path.value().c_str());
+  std::string max_image_size_data;
+  EXPECT_TRUE(base::ReadFileToString(output_path, &max_image_size_data));
+  EXPECT_EQ("10416128\n", max_image_size_data);
+  size_t max_image_size = atoll(max_image_size_data.c_str());
+
+  // vbmeta(64) + footer(4) takes up 68 KiB
+  EXPECT_EQ(68 * 1024ULL, partition_size - max_image_size);
+
+  // Check that we can add a hashtree with an image this size for such
+  // a partition size.
+  base::FilePath system_path = GenerateImage("system", max_image_size);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer"
+                 " --image %s"
+                 " --no_hashtree"
+                 " --partition_name system"
+                 " --partition_size %zd"
+                 " --salt deadbeef"
+                 " --algorithm SHA512_RSA4096 "
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --internal_release_string \"\"",
+                 system_path.value().c_str(),
+                 partition_size);
+}
+
 TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigest) {
   size_t partition_size = 10 * 1024 * 1024;
   base::FilePath path = GenerateImage("digest_location", partition_size / 2);
@@ -2518,6 +2553,34 @@ TEST_F(AvbToolTest, VerifyImageWithHashAndZeroedHashtree) {
 
   EXPECT_COMMAND(
       0, "./avbtool zero_hashtree --image %s", system_path.value().c_str());
+
+  EXPECT_COMMAND(1,
+                 "./avbtool verify_image --image %s",
+                 vbmeta_image_path_.value().c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool verify_image --image %s --accept_zeroed_hashtree",
+                 vbmeta_image_path_.value().c_str());
+}
+
+TEST_F(AvbToolTest, VerifyImageWithNoHashtree) {
+  const size_t system_partition_size = 10 * 1024 * 1024;
+  const size_t system_image_size = 8 * 1024 * 1024;
+  base::FilePath system_path = GenerateImage("system.img", system_image_size);
+  EXPECT_COMMAND(0,
+                 "./avbtool add_hashtree_footer --salt d00df00d --image %s "
+                 "--partition_size %zd --partition_name system "
+                 "--no_hashtree "
+                 "--internal_release_string \"\" ",
+                 system_path.value().c_str(),
+                 system_partition_size);
+
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--include_descriptors_from_image %s ",
+                                         system_path.value().c_str()));
 
   EXPECT_COMMAND(1,
                  "./avbtool verify_image --image %s",
