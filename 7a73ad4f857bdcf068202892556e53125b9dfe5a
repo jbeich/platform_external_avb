@@ -34,6 +34,24 @@
       "revId": "7a73ad4f857bdcf068202892556e53125b9dfe5a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "02198f20_dc3be885",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-06-18T13:33:29Z",
+      "side": 1,
+      "message": "Thanks! There are definitely pros and cons of this approach we\u0027re using... yes, it\u0027s noisy, but also catches a lot of potential problems, and we\u0027re already doing it everywhere else.",
+      "parentUuid": "8994262d_204c13cd",
+      "revId": "7a73ad4f857bdcf068202892556e53125b9dfe5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
