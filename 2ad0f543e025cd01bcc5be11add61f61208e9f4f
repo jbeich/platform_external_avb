@@ -22,6 +22,30 @@
       "revId": "2ad0f543e025cd01bcc5be11add61f61208e9f4f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "94f47676_469abff2",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3289,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2019-06-18T04:21:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dbc85727_d902f49b",
+      "range": {
+        "startLine": 3289,
+        "startChar": 6,
+        "endLine": 3289,
+        "endChar": 11
+      },
+      "revId": "2ad0f543e025cd01bcc5be11add61f61208e9f4f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
