@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "bcd6cb01_bb24770a",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-06-18T11:42:26Z",
+      "side": 1,
+      "message": "Would also want to check that size is actually set to 0... Suggest to add something like\n\n  ASSERT_EQ(\n      \"Footer version:           1.0\\n\"\n  [...]\n        InfoImage(system_path));\n\nThat way the descriptors are listed and size there will be 0.",
+      "revId": "7a73ad4f857bdcf068202892556e53125b9dfe5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
