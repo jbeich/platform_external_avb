@@ -16,6 +16,24 @@
       "revId": "7a73ad4f857bdcf068202892556e53125b9dfe5a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8994262d_204c13cd",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 4
+      },
+      "lineNbr": 1588,
+      "author": {
+        "id": 1415877
+      },
+      "writtenOn": "2019-06-18T12:41:13Z",
+      "side": 1,
+      "message": "Oops, I missed it. Done.\n\nHowever, is there a way to reduce noise? Comparing whole output string seems verbose and noisy.",
+      "parentUuid": "bcd6cb01_bb24770a",
+      "revId": "7a73ad4f857bdcf068202892556e53125b9dfe5a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
