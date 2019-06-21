@@ -164,6 +164,24 @@ a relying party can extract the digest and compare it with list of digests for
 known good operating systems which, if found, provides additional assurance
 about the device the application is running on.
 
+For [factory images of Pixel 3 and later
+devices](https://developers.google.com/android/images), the
+`pixel_factory_image_verify.py` located in `tools/transparency` is a convenience
+tool for downloading, verifying and calcuating VBMeta Digests.
+
+    $ pixel_factory_image_verify.py https://dl.google.com/dl/android/aosp/image.zip
+    Fetching file from: https://dl.google.com/dl/android/aosp/image.zip
+    Successfully downloaded file.
+    Successfully unpacked factory image.
+    Successfully unpacked factory image partitions.
+    Successfully verified VBmeta.
+    Successfully calculated VBMeta Digest.
+    The VBMeta Digest for factory image is: 1f329b20a2dd69425e7a29566ca870dad51d2c579311992d41c9ba9ba05e170e
+
+If the given argument is not an URL it considered to be a local file:
+
+    $ pixel_factory_image_verify.py image.zip
+
 # Tools and Libraries
 
 This section contains information about the tools and libraries
@@ -222,6 +240,18 @@ validation operation (see `avb_validate_vbmeta_public_key()` in
     + An Android Things Extension for validating public key metadata.
 * `libavb_user/`
     + Contains an `AvbOps` implementation suitable for use in Android
+      userspace. This is used in `boot_control.avb` and `avbctl`.
+* `libavb_ab/`
+    + An experimental A/B implementation for use in boot loaders and
+      AVB examples. **NOTE**: This code is *DEPRECATED* and you must
+      define `AVB_AB_I_UNDERSTAND_LIBAVB_AB_IS_DEPRECATED` to use
+      it. The code will be removed Jun 1 2018.
+* `boot_control/`
+    + An implementation of the Android `boot_control` HAL for use with
+      boot loaders using the experimental `libavb_ab` A/B stack.
+      **NOTE**: This code is *DEPRECATED* and will be removed Jun 1
+      2018.
+* `contrib/`
       userspace. This is used in `boot_control.avb` and `avbctl`.
 * `libavb_ab/`
     + An experimental A/B implementation for use in boot loaders and
@@ -926,18 +956,6 @@ be handled through the `hashtree_error_mode` parameter in the
   machine whereby **RESTART** is used by default and when the
   `AVB_SLOT_VERIFY_FLAGS_RESTART_CAUSED_BY_HASHTREE_CORRUPTION` is passed to
   `avb_slot_verify()` the mode transitions to **EIO**. When a new OS has been
-  detected the device transitions back to the **RESTART** mode.
-    + To do this persistent storage is needed - specifically this means that the
-      passed in `AvbOps` will need to have the `read_persistent_value()` and
-      `write_persistent_value()` operations implemented. The name of the
-      persistent value used is **avb.managed_verity_mode** and 32 bytes of storage
-      is needed.
-
-* `AVB_HASHTREE_ERROR_MODE_LOGGING` means that errors will be logged
-   and corrupt data may be returned to applications. This mode should
-   be used for **ONLY** diagnostics and debugging. It cannot be used
-   unless verification errors are allowed.
-
 The value passed in `hashtree_error_mode` is essentially just passed on through
 to the HLOS through the the `androidboot.veritymode`,
 `androidboot.veritymode.managed`, and `androidboot.vbmeta.invalidate_on_error`
