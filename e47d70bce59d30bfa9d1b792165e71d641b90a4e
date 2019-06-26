@@ -34,6 +34,24 @@
       "revId": "e47d70bce59d30bfa9d1b792165e71d641b90a4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f0f2c43_559051b2",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-06-26T15:18:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5907ccb7_b013885c",
+      "revId": "e47d70bce59d30bfa9d1b792165e71d641b90a4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
