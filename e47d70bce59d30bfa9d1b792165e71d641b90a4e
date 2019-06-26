@@ -16,6 +16,24 @@
       "revId": "e47d70bce59d30bfa9d1b792165e71d641b90a4e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5907ccb7_b013885c",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-06-26T13:46:17Z",
+      "side": 1,
+      "message": "I tested it and the tool also works outside of the repository location. Added a comment to reflect that.\n\njpm:~/blog_test$ /mnt/aosp/external/avb/tools/transparency/pixel_factory_image_verify.py https://dl.google.com/dl/android/aosp/bonito-pd2a.190115.032-factory-18c01bb1.zip\nFetching file from: https://dl.google.com/dl/android/aosp/bonito-pd2a.190115.032-factory-18c01bb1.zip\nSuccessfully downloaded file.\nSuccessfully unpacked factory image\nSuccessfully unpacked factory image partitions.\nSuccessfully verified VBmeta.\nSuccessfully calculated VBMeta Digest.\nThe VBMeta Digest for factory image is: 1f329b20a2dd69425e7a29566ca870dad51d2c579311992d41c9ba9ba05e170e",
+      "parentUuid": "de1ded0b_a320e7b2",
+      "revId": "e47d70bce59d30bfa9d1b792165e71d641b90a4e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
