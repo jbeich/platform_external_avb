@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d7c00c69_d23f31f5",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-07-29T20:54:36Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8c9d29a5_abaa9c27",
+      "range": {
+        "startLine": 100,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 0
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4633b1d5_e07da46d",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 5
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "ebe482ec_4eaa1c99",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1365,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-07-29T20:54:36Z",
+      "side": 1,
+      "message": "Yup, makes sense. Doing that.",
+      "parentUuid": "4633b1d5_e07da46d",
+      "range": {
+        "startLine": 1365,
+        "startChar": 2,
+        "endLine": 1365,
+        "endChar": 54
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "45acb0c0_0130d9a1",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 5
@@ -62,6 +110,24 @@
       "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d584f344_0d643bcf",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1435,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-07-29T20:54:36Z",
+      "side": 1,
+      "message": "That would be a programmer error / violation of contract... but not a bad idea to check and use avb_fatal(). Doing that.",
+      "parentUuid": "45acb0c0_0130d9a1",
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -85,6 +151,30 @@
       "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6df92317_4f123b0e",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1443,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-07-29T20:54:36Z",
+      "side": 1,
+      "message": "No, I don\u0027t think that would make sense. The whole idea of NO_VBMETA_PARTITION is that we\u0027ll verify only the partitions in |requested_partitions| - so we only need to pass NO_VBMETA_PARTITION at the top-most level.",
+      "parentUuid": "07185830_cf46aaee",
+      "range": {
+        "startLine": 1443,
+        "startChar": 35,
+        "endLine": 1443,
+        "endChar": 65
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -195,6 +285,30 @@
       "side": 1,
       "message": "IIRC, in Q, dtb can\u0027t be a separate partition and needs to be included in boot.img together.\nSo probably no need to have \"recovery_dtb\" as the requested_partitions.\nhttps://android.googlesource.com/platform/system/core/+/refs/heads/master/mkbootimg/include/bootimg/bootimg.h#131\n\n\u003e larger partitions (hashtree).\n\nrequested_partitions is only for Hash but not hashtree.\nBecause there is no-op in bootloader stage for Hashtree, which should be done at userland.",
       "parentUuid": "2d4d699f_c94c58a0",
+      "range": {
+        "startLine": 1445,
+        "startChar": 35,
+        "endLine": 1445,
+        "endChar": 59
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d8a183b8_69eadccb",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-07-29T20:54:36Z",
+      "side": 1,
+      "message": "The new flag - AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION - specifically requires that the partitions you list in |requested_partitions| have descriptors in them. That\u0027s how the CL *currently* works.\n\nWe could relax this so it\u0027s fine to include a partition in |requested_partitions| and it\u0027ll work even if it doesn\u0027t have a vbmeta struct. Then if another partition mentioned in |requested_partitions| has its descriptor it\u0027ll still get loaded and verified. IOW, this would work:\n\n recovery - has vbmeta with hash descriptor for \u0027recovery\u0027 and \u0027recovery_foobar\u0027\n recovery_foobar - no vbmeta\n\nif you pass {\"recovery\", \"recovery_foobar\", NULL} as |requested_partitions|. Today it will not work.\n\nDo you think this would be useful?",
+      "parentUuid": "de3d4c32_edbe9408",
       "range": {
         "startLine": 1445,
         "startChar": 35,
