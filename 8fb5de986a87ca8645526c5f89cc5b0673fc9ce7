@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8f0b0772_f42f2b39",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-07-30T16:24:40Z",
+      "side": 1,
+      "message": "Nice catch. Fixed.",
+      "parentUuid": "e64a2243_6ba16488",
+      "range": {
+        "startLine": 197,
+        "startChar": 59,
+        "endLine": 197,
+        "endChar": 60
+      },
+      "revId": "8fb5de986a87ca8645526c5f89cc5b0673fc9ce7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b1230e84_675039f7",
         "filename": "libavb/avb_ops.h",
         "patchSetId": 7
