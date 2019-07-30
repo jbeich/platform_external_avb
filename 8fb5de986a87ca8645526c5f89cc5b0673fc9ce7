@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "e64a2243_6ba16488",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-07-30T10:01:32Z",
+      "side": 1,
+      "message": "nit?",
+      "range": {
+        "startLine": 197,
+        "startChar": 59,
+        "endLine": 197,
+        "endChar": 60
+      },
+      "revId": "8fb5de986a87ca8645526c5f89cc5b0673fc9ce7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "b1230e84_675039f7",
         "filename": "libavb/avb_ops.h",
         "patchSetId": 7
