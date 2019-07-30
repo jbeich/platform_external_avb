@@ -178,6 +178,30 @@
     },
     {
       "key": {
+        "uuid": "dc853384_57323901",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1443,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-07-30T09:01:23Z",
+      "side": 1,
+      "message": "Oh, ok. I probably thought it wrong.\nThe *whole idea* makes sense to me now.",
+      "parentUuid": "6df92317_4f123b0e",
+      "range": {
+        "startLine": 1443,
+        "startChar": 35,
+        "endLine": 1443,
+        "endChar": 65
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a94b8b54_3f512250",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 5
@@ -342,6 +366,30 @@
       "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a84e14c_ff27b89c",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-07-30T09:01:23Z",
+      "side": 1,
+      "message": "Hi,\nAfter a few more thoughts, I think it\u0027s ok to keep it as it is now.\nMy original though is to replicating what vbmeta.img can do in the recovery.img (e.g., using --include_descriptors_from_image when building it).\n\nHowever, this is probably not useful as recovery by design is self-contained.\nThat said, when AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION(), each image in |requested_partitions| should be self signed without any dependency.\n\nAlso in Q, recovery_dtbo is included in recovery boot.img so just {\"recovery\", NULL} as |requested_partitions| should be fine.",
+      "parentUuid": "02cd9378_74cbb0bf",
+      "range": {
+        "startLine": 1445,
+        "startChar": 35,
+        "endLine": 1445,
+        "endChar": 59
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
