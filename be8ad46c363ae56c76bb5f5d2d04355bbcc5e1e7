@@ -318,6 +318,30 @@
       "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02cd9378_74cbb0bf",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1445,
+      "author": {
+        "id": 1493494
+      },
+      "writtenOn": "2019-07-30T04:25:31Z",
+      "side": 1,
+      "message": "That depends - do you guys have any plans to include additional partitions in the recovery boot flow?\nIf not, we should be able to address such \"embedded\" descriptors without affecting this API, if and when it\u0027s necessary.\n\nOtherwise, you\u0027d be replicating the vbmeta.img based flow for recovery boot - which seems like overkill if recovery.img is going to be fairly self-contained (dtb/dtbo and all).",
+      "parentUuid": "d8a183b8_69eadccb",
+      "range": {
+        "startLine": 1445,
+        "startChar": 35,
+        "endLine": 1445,
+        "endChar": 59
+      },
+      "revId": "be8ad46c363ae56c76bb5f5d2d04355bbcc5e1e7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
