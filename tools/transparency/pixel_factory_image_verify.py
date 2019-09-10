@@ -285,7 +285,7 @@ class PixelFactoryImageVerifier(object):
     os.chdir(image_dir)
     args = ['grep',
             '-a',
-            'ro\.build\.fingerprint=google/.*/release-keys',
+            '\.fingerprint=google/.*/release-keys',
             'system.img']
 
     result, output = self._run_command(
