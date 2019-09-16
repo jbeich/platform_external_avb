@@ -261,3 +261,22 @@ cc_library {
     ],
     srcs: ["boot_control/boot_control_avb.c"],
 }
+
+cc_library_headers {
+    name: "libavb_headers",
+    vendor_available: true,
+    recovery_available: true,
+    host_supported: true,
+    export_include_dirs: ["libavb"],
+    target: {
+        linux: {
+            enabled: true,
+        },
+        linux_bionic: {
+            enabled: true,
+        },
+        windows: {
+            enabled: true,
+        },
+    },
+}
