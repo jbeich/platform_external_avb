@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7fe3dfd1_04cd78eb",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 266,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-09-16T11:21:35Z",
+      "side": 1,
+      "message": "rename this to avb_headers",
+      "range": {
+        "startLine": 266,
+        "startChar": 11,
+        "endLine": 266,
+        "endChar": 25
+      },
+      "revId": "a602841c878935331f2fca8133920436cfd0d225",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90e7f0c4_3df125ef",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 270,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2019-09-16T11:21:35Z",
+      "side": 1,
+      "message": "use \".\", so we can use #include \u003clibavb/libavb.h\u003e in the client.",
+      "range": {
+        "startLine": 270,
+        "startChar": 27,
+        "endLine": 270,
+        "endChar": 33
+      },
+      "revId": "a602841c878935331f2fca8133920436cfd0d225",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
