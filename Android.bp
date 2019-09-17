@@ -106,6 +106,7 @@ cc_library_static {
         "avb_sources",
     ],
     host_supported: true,
+    vendor_available: true,
     recovery_available: true,
     export_include_dirs: ["."],
     target: {
