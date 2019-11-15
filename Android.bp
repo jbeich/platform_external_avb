@@ -385,3 +385,36 @@ cc_library_headers {
         },
     },
 }
+
+cc_library_static {
+    name: "bootctrl-static.avb",
+    recovery_available: true,
+    defaults: [
+        "avb_defaults",
+        "avb_sources",
+    ],
+    static_libs: [
+        "libcutils",
+    ],
+    shared_libs: [
+        "libbase",
+    ],
+    whole_static_libs: [
+        "libfstab"
+    ],
+    header_libs: [
+        "libhardware_headers",
+        "libsystem_headers",
+    ],
+    cflags: [
+        "-DAVB_AB_I_UNDERSTAND_LIBAVB_AB_IS_DEPRECATED",
+    ],
+    srcs: [
+        "libavb/avb_sysdeps_posix.c",
+        "libavb_ab/avb_ab_flow.c",
+        "libavb_user/avb_ops_user.cpp",
+        "libavb_user/avb_user_verity.c",
+        "libavb_user/avb_user_verification.c",
+        "boot_control/boot_control_avb.c"
+    ],
+}
