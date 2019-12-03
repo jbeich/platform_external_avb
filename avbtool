@@ -2073,6 +2073,71 @@ class AvbIcpEntry(object):
       return False
     return True
 
+def generate_icp_entry_data(log_url, signed_root_blob, proof_hashes):
+  """Generates an ICP entry data blob representing the data passed in.
+
+  Arguments:
+    log_url: String representing the transparency log URL.
+    signed_root_blob: The SignedLogRoot for the transparency log; treat as an opaque blob for now.
+    proof_hashes: The hashes representing the inclusion proof.
+
+  Returns:
+    A validly formed ICP entry structure representing the data passed in.
+  """
+  icp_data = bytearray()
+  icp_data.extend(log_url)
+  # add the signed tree hash as an opaque blob
+  icp_data.extend(signed_root_blob)
+  # add all hashes comprising the ICP
+  icp_data.extend(proof_hashes)
+  return icp_data
+
+def test_default_icp_entry():
+  """Performs validation on an empty ICP entry structure.
+
+  Returns:
+    True if the tests pass, False otherwise.
+  """
+
+  icp_entry = AvbIcpEntry()
+  if icp_entry.is_valid():
+    sys.stdout.write('ICP entry validation passed\n')
+    return True
+  else:
+    sys.stdout.write('ICP entry validation failed\n')
+    return False
+
+def test_icp_entry(log_url_size, leaf_index, signed_root_blob_size, proof_hash_count, proof_size, next_entry):
+  """Create an ICP entry structure and attempt to validate it.
+
+  Returns:
+    True if the tests pass, False otherwise.
+  """
+
+  icp_entry = AvbIcpEntry()
+  icp_entry.log_url_size = log_url_size
+  icp_entry.leaf_index = leaf_index
+  icp_entry.signed_root_blob_size = signed_root_blob_size
+  icp_entry.proof_hash_count = proof_hash_count
+  icp_entry.proof_size = proof_size
+  icp_entry.next_entry = next_entry
+  if icp_entry.is_valid():
+    sys.stdout.write('ICP entry validation passed\n')
+    return True
+  else:
+    sys.stdout.write('ICP entry validation failed\n')
+    return False
+
+def generate_icp_blob(algorithm_id, icp_entries, icp_entry_count):
+  icp_blob = bytearray()
+  icp_header = AvbIcpHeader(algorithm_id, icp_entry_count)
+  icp_blob.extend(icp_header.encode())
+  icp_blob.extend(icp_entries)
+  if validate_icp_blob(icp_blob) == True:
+    return icp_blob
+  else:
+    return bytearray()
+
 def validate_icp_blob(icp_blob):
   """Ensures that values in an ICP section are structurally sane.
 
@@ -2126,6 +2191,7 @@ def validate_icp_blob(icp_blob):
   if icp_index != len(icp_blob):
     sys.stderr.write("ICP blob size mismatch, expected {}, got {}\n".format(len(icp_blob), icp_index))
     return False
+  sys.stderr.write('Validation of ICP blob succeeded.\n')
   return True
 
 # AFTL structure test functions
@@ -2278,11 +2344,33 @@ def test_generate_icp_images():
   icp_blob2.extend(icp_data2)
   if not validate_icp_blob(icp_blob2):
     return False
+  #test the generation function
+  tl_url3 = 'aftl-test-server.google.com'
+  sth = bytearray()
+  sth.extend('m' * 160)
+  proof_hashes = bytearray()
+  proof_hashes.extend('n' * 32)
+  proof_hashes.extend('p' * 32)
+  icp_header.icp_count = 1
+  icp_data = generate_icp_entry_data(tl_url, sth, proof_hashes)
+  icp_entry = AvbIcpEntry()
+  icp_entry.log_url_size = len(tl_url)
+  icp_entry.leaf_index = 2
+  icp_entry.signed_root_blob_size = len(sth)
+  icp_entry.proof_hash_count = 2
+  icp_entry.proof_size = len(proof_hashes)
+  icp_entry.next_entry = 0
+  icp_blob = bytearray()
+  icp_blob.extend(icp_header.encode())
+  icp_blob.extend(icp_entry.encode())
+  icp_blob.extend(icp_data)
+  if not validate_icp_blob(icp_blob):
+    return False
   return True
 
 def test_icp_image():
   """The main function that handles testing all AFTL related components.
-      Currently performs tests for validation of AFTL related structures.
+  Currently performs tests for validation of AFTL related structures.
 
   Returns:
     True if all tests pass, False otherwise.
@@ -3056,7 +3144,7 @@ class Avb(object):
     return self._get_cmdline_descriptors_for_hashtree_descriptor(ht)
 
   def icp_test_suite(self):
-    """ Implements a self-contained test suite for AFTL related code
+    """Implements a self-contained test suite for AFTL related code.
 
     Returns:
       True if all tests pass, False otherwise.
