@@ -1,0 +1,461 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "55bb6b7d_e08e4457",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1913,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "This should only be indented by 2 spaces. The attributes there after an additional 2.",
+      "range": {
+        "startLine": 1913,
+        "startChar": 0,
+        "endLine": 1913,
+        "endChar": 16
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f7fcfa3_4b73f960",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1922,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "SIZE \u003d 18  # The size of the structure, in bytes",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb6c70ef_05b90b37",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be \u003d\u003d to align with the assert?",
+      "range": {
+        "startLine": 1932,
+        "startChar": 53,
+        "endLine": 1932,
+        "endChar": 55
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81809928_866fb166",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1993,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "New line before this paragraph.",
+      "range": {
+        "startLine": 1993,
+        "startChar": 2,
+        "endLine": 1993,
+        "endChar": 5
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6fb6e8cb_0ae8f1ab",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 1998,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "Please remove the tree_id again. I talked to tweek@ and we are going to hid the tree ID internally of AFTL. Please excuse the hassle.",
+      "range": {
+        "startLine": 1998,
+        "startChar": 4,
+        "endLine": 1998,
+        "endChar": 11
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "32907e5b_1c08446b",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2002,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "Do you mean size in bytes? If so I would call the parameter proof_size.",
+      "range": {
+        "startLine": 2002,
+        "startChar": 0,
+        "endLine": 2002,
+        "endChar": 50
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4650929e_f9ce2182",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2005,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "SIZE \u003d 30  # The size of the structure, in bytes",
+      "range": {
+        "startLine": 2005,
+        "startChar": 2,
+        "endLine": 2005,
+        "endChar": 11
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d73513b3_0bfc8f8e",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2018,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "Shouldn\u0027t that be \u003d\u003d? The assert tests for equality. If so pls fix elsewhere too.",
+      "range": {
+        "startLine": 2018,
+        "startChar": 53,
+        "endLine": 2018,
+        "endChar": 56
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "34605143_902d5a11",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "s/Arugments/Arguments/",
+      "range": {
+        "startLine": 2082,
+        "startChar": 2,
+        "endLine": 2082,
+        "endChar": 11
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "17b9ced2_ded36b8c",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2091,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "The pythonic way of doing these checks is: if not icp_header.is_valid()\n\nPls fix elsewhere too.",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca28996f_483fbe7e",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2108,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "59a0ec31_f93b8150",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2112,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "Suggest to do it this way: icp_index +\u003d AvbIcpEntry.SIZE\n\nPlease adjust in the rest of the method too.",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c28916ab_a7e407b0",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2212,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "if not test_default_icp_header():",
+      "range": {
+        "startLine": 2212,
+        "startChar": 0,
+        "endLine": 2212,
+        "endChar": 40
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27713785_174bbaef",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2215,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "if not test_icp_header(1, 1):",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6ed38215_0b485bf4",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2231,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "if not ... / remove \u003d\u003d False",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2bf9b44_5a71c83f",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2249,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "if not .. / remove \u003d\u003d False",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c16b7ffa_68b77a40",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2258,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "Same here.",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "19dd4c00_9cee074d",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2274,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "remove \"\u003d\u003d True\"",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d9e4966_1d907797",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2285,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "if not ... / remove \u003d\u003d False",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2f3c53b_1b62f88f",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2292,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "New line before this one.",
+      "range": {
+        "startLine": 2292,
+        "startChar": 2,
+        "endLine": 2292,
+        "endChar": 9
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0680a711_ae54200f",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2293,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": ". at the end.",
+      "range": {
+        "startLine": 2293,
+        "startChar": 34,
+        "endLine": 2293,
+        "endChar": 43
+      },
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15ff4979_c8d36b96",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2299,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "if not ... \n\nAlso fix the rest of the function.",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ec40996_0087280d",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2302,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T20:10:54Z",
+      "side": 1,
+      "message": "If testing for True you don\u0027t need \"\u003d\u003d True\" in python.",
+      "revId": "dd4f2e1164aa5d6918a4172a775b1f71ec4008a1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
