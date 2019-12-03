@@ -1,0 +1,671 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4869d1fc_d9030026",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 442,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "s/Arguments/Args/g . Please also fix elsewhere.",
+      "range": {
+        "startLine": 442,
+        "startChar": 2,
+        "endLine": 442,
+        "endChar": 11
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79cf3d2e_d8015517",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "s/Exception/AvbError/",
+      "range": {
+        "startLine": 449,
+        "startChar": 4,
+        "endLine": 449,
+        "endChar": 13
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ddf3af8_644df231",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1920,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Add a comment next to it to day if these are bytes.",
+      "range": {
+        "startLine": 1920,
+        "startChar": 9,
+        "endLine": 1920,
+        "endChar": 11
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50293689_9d7a0949",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1924,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Q \u003d unsigned long long . I think there will probably not be more then a few inclusion proofs.\n\nOr is there a alignment requirement?",
+      "range": {
+        "startLine": 1924,
+        "startChar": 20,
+        "endLine": 1924,
+        "endChar": 21
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e6a2d9f_a1db5ddc",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1927,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "- Point at the end of the sentence. Pls fix elsewhere too.\n- Also no space after the first \"\"\"",
+      "range": {
+        "startLine": 1927,
+        "startChar": 51,
+        "endLine": 1927,
+        "endChar": 52
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57d4f80b_d68f2689",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1953,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "The code here is the same is in encode(). Suggest to call from here directly into the encode() method.",
+      "range": {
+        "startLine": 1950,
+        "startChar": 17,
+        "endLine": 1953,
+        "endChar": 59
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d668e6de_c2ec2ec5",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1966,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Should this be part better part of the AvbIcpHeader class itself and be renamed to is_valid()?",
+      "range": {
+        "startLine": 1966,
+        "startChar": 0,
+        "endLine": 1966,
+        "endChar": 36
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07f00036_a03dd65e",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1969,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "In DOCSTRINGs everything after the tag goes onto a new line with an indentation of 2. Pls fix elsewhere too.",
+      "range": {
+        "startLine": 1969,
+        "startChar": 13,
+        "endLine": 1969,
+        "endChar": 56
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3ab134a_8e6ed7d1",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1969,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Looks like you are passing the AvbIcpHeader object directly and not a bytearray of it.",
+      "range": {
+        "startLine": 1969,
+        "startChar": 15,
+        "endLine": 1969,
+        "endChar": 24
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13bb2bc3_c784c1be",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1982,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "It should be: \u003e\u003d len(ALGORITHMS) ; otherwise you are off-by-one.",
+      "range": {
+        "startLine": 1982,
+        "startChar": 54,
+        "endLine": 1982,
+        "endChar": 72
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cec317d6_792bc3b6",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1997,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Indentation is broken in this DOCSTRING.",
+      "range": {
+        "startLine": 1997,
+        "startChar": 0,
+        "endLine": 1997,
+        "endChar": 5
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d5908b45_0bb1f66d",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1997,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "I think you need to add a field for the treeid. A AFTL server can serve multiple trees and you probably want to identify from which tree the ICP came from.",
+      "range": {
+        "startLine": 1997,
+        "startChar": 0,
+        "endLine": 1997,
+        "endChar": 16
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b6f0ea1_f5aa4afb",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2002,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "s/proof/proof./",
+      "range": {
+        "startLine": 2002,
+        "startChar": 46,
+        "endLine": 2002,
+        "endChar": 51
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4f4dd528_ea921752",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2006,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "That would need to go just before Attributes section.",
+      "range": {
+        "startLine": 2005,
+        "startChar": 0,
+        "endLine": 2006,
+        "endChar": 101
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb26cc0b_d300e3c1",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2010,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "The max tree size is 64 bits. Thus, Q.",
+      "range": {
+        "startLine": 2010,
+        "startChar": 20,
+        "endLine": 2010,
+        "endChar": 21
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7a5f1c9_aaca4a83",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2012,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "IIRC the max is 64 hashes. So L is a bit big.",
+      "range": {
+        "startLine": 2012,
+        "startChar": 0,
+        "endLine": 2012,
+        "endChar": 67
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "58776961_ac8968b0",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2013,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "What\u0027s this representing here? This seems to be a size when looking at the validate_icp_entry() function.",
+      "range": {
+        "startLine": 2013,
+        "startChar": 0,
+        "endLine": 2013,
+        "endChar": 43
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ae6bad61_4f111a8a",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2014,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "B would be sufficient IMO.",
+      "range": {
+        "startLine": 2014,
+        "startChar": 20,
+        "endLine": 2014,
+        "endChar": 21
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c4437ab_14973757",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2036,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Why 42. Shoudn\u0027t this be 22?",
+      "range": {
+        "startLine": 2036,
+        "startChar": 44,
+        "endLine": 2036,
+        "endChar": 46
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d557a9c_3e7a955a",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2044,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Suggest to call into encode() directly to get the bytearray().",
+      "range": {
+        "startLine": 2041,
+        "startChar": 17,
+        "endLine": 2044,
+        "endChar": 45
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5ae2f8c2_80ad09b4",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2047,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 2047,
+        "startChar": 31,
+        "endLine": 2047,
+        "endChar": 33
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bb622f9_ed40d996",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2060,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Looks like you are passing the AvbIcpEntry object directly and not a bytearray of it.",
+      "range": {
+        "startLine": 2060,
+        "startChar": 15,
+        "endLine": 2060,
+        "endChar": 27
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "15476e56_3a963ddb",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2097,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "s/section/header/ ?",
+      "range": {
+        "startLine": 2097,
+        "startChar": 40,
+        "endLine": 2097,
+        "endChar": 47
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba1e7969_8ee6c6d0",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2113,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "I would move this line past the if-block.",
+      "range": {
+        "startLine": 2113,
+        "startChar": 0,
+        "endLine": 2113,
+        "endChar": 44
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b2c331ea_eb65e193",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2200,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "The bytearray() that is set up here is not used but later on entirely redefined in line 2217.",
+      "range": {
+        "startLine": 2199,
+        "startChar": 0,
+        "endLine": 2200,
+        "endChar": 38
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe649027_ff2d56b5",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2250,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "IMO the test_* functions should be converted into unit test instead of having them inline in here.\n\nAt the moment, there is no validation in the control logic of this function and test_generate_icp_images to check if the results are meeting expectations. Which means even if there are errors running the ./avbtool.py icp_test_suite will lead always succeed.",
+      "range": {
+        "startLine": 2250,
+        "startChar": 0,
+        "endLine": 2250,
+        "endChar": 21
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dc1f5836_e9a08153",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4376,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Shouldn\u0027t tests better end up in a unit test which lives outside of the avbtool file?\n\n@zeuthen: WDYT?",
+      "range": {
+        "startLine": 4376,
+        "startChar": 40,
+        "endLine": 4376,
+        "endChar": 54
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "518587be_91376b73",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4378,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Running the test results in errors. Also the return code is 0. If the test fails it should end in a non-0 exit code.\n\n$ ./avbtool_aftl.py icp_test_suite\nICP header: algorithm identifier out of range: -12ICP header: ICP entry count out of range: -34ICP header: algorithm identifier out of range: 10ICP entry: invalid transparency log URL size: -2ICP entry: leaf index out of range: -1ICP entry: invalid signed root blob size: -2ICP entry: invalid next entry value: 32234ICP blob size mismatch, expected 665, got 361ICP blob size mismatch, expected 665, got 361ICP header: validation passedICP header: validation passedICP header: validation failedICP header: validation failedICP header: validation failedICP entry validation passedICP entry validation passedICP entry validation passedICP entry validation failedICP entry validation failedICP entry validation failedICP entry validation passedICP entry validation passedICP entry validation failedICP header: validation passedICP header: validation passedICP entry validation passedICP entry validation passed\n\n$ echo $?\n0",
+      "range": {
+        "startLine": 4378,
+        "startChar": 0,
+        "endLine": 4378,
+        "endChar": 53
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "02982dc2_899fd861",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4764,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-03T14:54:10Z",
+      "side": 1,
+      "message": "Pls add DOCSTRING.",
+      "range": {
+        "startLine": 4764,
+        "startChar": 0,
+        "endLine": 4764,
+        "endChar": 30
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
