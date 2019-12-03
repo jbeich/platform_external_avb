@@ -872,6 +872,30 @@
     },
     {
       "key": {
+        "uuid": "e144b9ab_f0d13522",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2014,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-03T17:43:05Z",
+      "side": 1,
+      "message": "This is just a boolean that says if there\u0027s another entry following this one. Offsets are calculated based on the information in the entry header and don\u0027t need to be duplicated here.",
+      "parentUuid": "556b974e_58202174",
+      "range": {
+        "startLine": 2014,
+        "startChar": 20,
+        "endLine": 2014,
+        "endChar": 21
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9c4437ab_14973757",
         "filename": "avbtool",
         "patchSetId": 1
