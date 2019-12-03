@@ -416,6 +416,30 @@
     },
     {
       "key": {
+        "uuid": "c2fc0d6e_aefbe214",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2014,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-03T15:25:10Z",
+      "side": 1,
+      "message": "I think with the URL and other blob after, a byte is not enough. A short makes more sense. Dan, what size would an average blob here be?",
+      "parentUuid": "ae6bad61_4f111a8a",
+      "range": {
+        "startLine": 2014,
+        "startChar": 20,
+        "endLine": 2014,
+        "endChar": 21
+      },
+      "revId": "ed072046bf2b1946f9a67ddf84651e923cd1c980",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "9c4437ab_14973757",
         "filename": "avbtool",
         "patchSetId": 1
