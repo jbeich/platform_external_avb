@@ -1,0 +1,251 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "64554313_6cdd6db0",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2081,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "s/: .../: bytearray containing the SignedLogRoot for the transparency log./",
+      "range": {
+        "startLine": 2081,
+        "startChar": 22,
+        "endLine": 2081,
+        "endChar": 98
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8c8e764_949e38f6",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2082,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "s/: .../bytearray of concatenated inclusion proof hashes/",
+      "range": {
+        "startLine": 2082,
+        "startChar": 18,
+        "endLine": 2082,
+        "endChar": 62
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "715e535f_02ce75d7",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2089,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "Uppercase the first word in the comment and end the comment with a \".\" Pls fix elsewhere too.",
+      "range": {
+        "startLine": 2089,
+        "startChar": 0,
+        "endLine": 2089,
+        "endChar": 46
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "806a5236_75424192",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2131,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "Pls add DOCSTRING.",
+      "range": {
+        "startLine": 2131,
+        "startChar": 0,
+        "endLine": 2131,
+        "endChar": 66
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "00d628bb_4beb5397",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2136,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "Remove \"\u003d\u003d True\"",
+      "range": {
+        "startLine": 2136,
+        "startChar": 0,
+        "endLine": 2136,
+        "endChar": 41
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3638231_ee0b190c",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2139,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "return None",
+      "range": {
+        "startLine": 2139,
+        "startChar": 0,
+        "endLine": 2139,
+        "endChar": 22
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8509ed6c_db39f644",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2347,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "# Test the generation function.",
+      "range": {
+        "startLine": 2347,
+        "startChar": 0,
+        "endLine": 2347,
+        "endChar": 31
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d595d27b_f2b782e8",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2356,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "icp_data and icp_entry are inherently tied together and make only sense together. Thus, my initial thoughts are that they should actually be represented by the same object to keep everything consistent. Thus could icp_data and related functions like generate_icp_entry_data() be folded into AvbIcpEntry?\n\nThen if you call encode on AvbIcpEntry it would know how to stream out the metadata and data bits correctly to the output.",
+      "range": {
+        "startLine": 2356,
+        "startChar": 0,
+        "endLine": 2356,
+        "endChar": 27
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "664bd48d_0fc65ca2",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2363,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "I would encapsulate icp_blob into a dedicated class including the generate_icp_blob() and validate_icp_blob() function. WDYT?\n\nIt would also reduce the amount of boilerplate code in this function around constructing the icp_blob.",
+      "range": {
+        "startLine": 2363,
+        "startChar": 0,
+        "endLine": 2363,
+        "endChar": 24
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64d69008_9ca25255",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2368,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "What you have in line 2363 to 2368 is the code you have in generate_icp_blob(). Thus, I would directly call into generate_icp_blob() instead of replicating the logic here.",
+      "range": {
+        "startLine": 2363,
+        "startChar": 0,
+        "endLine": 2368,
+        "endChar": 16
+      },
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ea0c280_cae6d6c8",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 2373,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:42:37Z",
+      "side": 1,
+      "message": "Add new empty line before this paragraph.",
+      "revId": "92d6bae012d61859b3d9a94f121cbd4ffad279f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
