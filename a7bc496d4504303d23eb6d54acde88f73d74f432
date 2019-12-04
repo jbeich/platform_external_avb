@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0504892e_8158428a",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 1999,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:48:20Z",
+      "side": 1,
+      "message": "s/.../signed_tree_head.../ to make it consistent with official terminology.",
+      "range": {
+        "startLine": 1999,
+        "startChar": 4,
+        "endLine": 1999,
+        "endChar": 15
+      },
+      "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2bdb44c3_3f3fb8d3",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2080,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-04T13:48:20Z",
+      "side": 1,
+      "message": "icp_blob: A bytearray() that contains an ICP, with headers, entries and data.",
+      "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
