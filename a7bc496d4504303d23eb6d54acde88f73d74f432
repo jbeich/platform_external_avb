@@ -39,6 +39,29 @@
       "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1396b781_0d7fe822",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 3064,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-12-04T17:22:47Z",
+      "side": 1,
+      "message": "Btw, it would be good to move this into a separate file. Historically avbtool is unit-tested from C++ (!) - see tests/avbtool_unittest.cc - mostly because libavb is used as part of the testing. However if you want to write tests in Python that\u0027s fine too!\n\n(Also, btw... wanted to mention that avbtool is a giant file... the reason for this is to simplify deployment... easy for copying around. I\u0027ve been meaning to split it into multiple files and merge them all together at build time. Just haven\u0027t found time to do that yet.)",
+      "range": {
+        "startLine": 3058,
+        "startChar": 0,
+        "endLine": 3064,
+        "endChar": 27
+      },
+      "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
