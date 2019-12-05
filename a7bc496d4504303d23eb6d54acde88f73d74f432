@@ -86,6 +86,30 @@
       "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "c57dbd78_080dcc77",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 3064,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-12-05T16:15:28Z",
+      "side": 1,
+      "message": "That\u0027s fine! Also, please make sure to run the unit tests to check that nothing broken... and add a Test line conveying this e.g. something like \"Test: atest libavb_host_unittest\"",
+      "parentUuid": "3e615c6c_45763de1",
+      "range": {
+        "startLine": 3058,
+        "startChar": 0,
+        "endLine": 3064,
+        "endChar": 27
+      },
+      "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
