@@ -62,6 +62,30 @@
       "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e615c6c_45763de1",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 3064,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-05T14:27:01Z",
+      "side": 1,
+      "message": "That\u0027s a good point. I\u0027ll set that up once all the CLs for this are in.",
+      "parentUuid": "1396b781_0d7fe822",
+      "range": {
+        "startLine": 3058,
+        "startChar": 0,
+        "endLine": 3064,
+        "endChar": 27
+      },
+      "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
