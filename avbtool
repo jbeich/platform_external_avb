@@ -2353,6 +2353,111 @@ class AvbIcpBlob(object):
     return True
 
 
+# AFTL Merkle Tree Functionality
+# TODO(danielaustin): Encapsulate this behavior in a class.
+def rfc6962_hash_leaf(leaf):
+  """RFC6962 hashing function compatible with Trillian
+  for hashing leaves of a Merkle tree.
+
+  Arguments:
+    leaf: A bytearray containing the Merkle tree leaf to be hashed.
+
+  Returns:
+    A bytearray containing the RFC6962 SHA256 hash of the leaf.
+  """
+  hasher = hashlib.sha256()
+  # RFC6962 states a '0' byte should be prepended to the data.
+  # This is done in conjunction with the '1' byte for non-leaf
+  # nodes for 2nd preimage attack resistance.
+  hasher.update(b'\x00')
+  hasher.update(leaf)
+  return hasher.digest()
+
+def rfc6962_hash_children(l, r):
+  """RFC6962 hashing function to calculate the inner Merkle tree
+  node hash of child nodes l and r.
+
+  Arguments:
+    l: A bytearray containing the left child node to be hashed.
+    r: A bytearray containing the right child node to be hashed.
+
+  Returns:
+    A bytearray containing the RFC6962 SHA256 hash of 1|l|r.
+  """
+  hasher = hashlib.sha256()
+  # RFC6962 states a '1' byte should be prepended to the concatenated data.
+  # This is done in conjunction with the '0' byte for leaf
+  # nodes for 2nd preimage attack resistance.
+  hasher.update(b'\x01')
+  hasher.update(l)
+  hasher.update(r)
+  return hasher.digest()
+
+def chain_border_right(seed, proof):
+  """Adapted from Trillian: Computes a subtree hash along the tree border.
+  The proof only includes left-side subtree hashes.
+
+  Arguments:
+    seed: A bytearray containing the starting hash.
+    proof: A list of bytearrays representing the hashes in the inclusion proof.
+
+  Returns:
+    A bytearray containing the left-side subtree hash.
+  """
+  for h in proof:
+    seed = rfc6962_hash_children(h, seed)
+  return seed
+
+def chain_inner(seed, proof, leaf_index):
+  """Adapted from Trillian: Computes a subtree hash for a node on
+  or below the tree's right border.
+
+  Arguments:
+    seed: A bytearray containing the starting hash.
+    proof: A list of bytearrays representing the hashes in the inclusion proof.
+    leaf_index: The current leaf index.
+
+  Returns:
+    A bytearray containing the subtree hash.
+  """
+  for i, h in enumerate(proof):
+    if leaf_index >> i & 1 == 0:
+      seed = rfc6962_hash_children(seed, h)
+    else:
+      seed = rfc6962_hash_children(h, seed)
+  return seed
+
+def root_from_icp(leaf_index, tree_size, proof, leaf_hash):
+  """Adapted from Trillian: Calculates the expected Merkle tree root hash
+  given the inclusion proof and initial leaf hash.
+
+  Arguments:
+    leaf_index: The current leaf index.
+    tree_size: The number of nodes in the Merkle tree.
+    proof: A list of bytearrays containing the inclusion proof.
+    leaf_hash: A bytearray containing the initial leaf hash.
+
+  Returns:
+    A bytearray containing the calculated Merkle tree root hash.
+
+  Raises:
+    AvbError if invalid parameters are passed in.
+  """
+  if leaf_index < 0:
+    raise AvbError('Invalid leaf_index value: {}'.format(leaf_index))
+  if tree_size < 0:
+    raise AvbError('Invalid tree_size value: {}'.format(tree_size))
+  if leaf_index >= tree_size:
+    err_str = 'leaf_index cannot be equal or larger than tree_size: {}, {}'
+    raise AvbError(err_str.format(leaf_index, tree_size))
+
+  # Calculate the point to split the proof into two parts.
+  # The split is where the paths to leaves diverge.
+  inner = (leaf_index ^ (tree_size - 1)).bit_length()
+  result = chain_inner(leaf_hash, proof[:inner], leaf_index)
+  result = chain_border_right(result, proof[inner:])
+  return result
+
 class AvbVBMetaHeader(object):
   """A class for parsing and writing AVB vbmeta images.
 
