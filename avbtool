@@ -2687,6 +2687,7 @@ def test_icp_image():
   # ICP entry related tests.
   if not test_default_icp_entry():
     return False
+
   test_url = 'test'
   test_sth = 'sth'
   test_proofs = 'proofs'
@@ -2722,6 +2723,183 @@ def test_icp_image():
   if not test_generate_icp_images():
     return False
   sys.stdout.write('All AFTL ICP tests passed.\n')
+  return True
+
+# AFTL Merkle Tree Functionality
+# TODO(danielaustin): Encapsulate this behavior in a class.
+def rfc6962_hash_leaf(leaf):
+  """RFC6962 hashing function compatible with Trillian
+  for hashing leaves of a Merkle tree.
+
+  Arguments:
+    leaf: A bytearray containing the Merkle tree leaf to be hashed.
+
+  Returns:
+    A bytearray containing the RFC6962 SHA256 hash of the leaf.
+  """
+  hasher = hashlib.sha256()
+  # RFC6962 states a '0' byte should be prepended to the data.
+  # This is done in conjunction with the '1' byte for non-leaf
+  # nodes for 2nd preimage attack resistance.
+  hasher.update(b'\x00')
+  hasher.update(leaf)
+  return hasher.digest()
+
+def rfc6962_hash_children(l, r):
+  """RFC6962 hashing function to calculate the inner Merkle tree
+  node hash of child nodes l and r.
+
+  Arguments:
+    l: A bytearray containing the left child node to be hashed.
+    r: A bytearray containing the right child node to be hashed.
+
+  Returns:
+    A bytearray containing the RFC6962 SHA256 hash of 1|l|r.
+  """
+  hasher = hashlib.sha256()
+  # RFC6962 states a '1' byte should be prepended to the concatenated data.
+  # This is done in conjunction with the '0' byte for leaf
+  # nodes for 2nd preimage attack resistance.
+  hasher.update(b'\x01')
+  hasher.update(l)
+  hasher.update(r)
+  return hasher.digest()
+
+def chain_border_right(seed, proof):
+  """Adapted from Trillian: Computes a subtree hash along the tree border.
+  The proof only includes left-side subtree hashes.
+
+  Arguments:
+    seed: A bytearray containing the starting hash.
+    proof: A list of bytearrays representing the hashes in the inclusion proof.
+
+  Returns:
+    A bytearray containing the left-side subtree hash.
+  """
+  for h in proof:
+    seed = rfc6962_hash_children(h, seed)
+  return seed
+
+def chain_inner(seed, proof, leaf_index):
+  """Adapted from Trillian: Computes a subtree hash for a node on
+  or below the tree's right border.
+
+  Arguments:
+    seed: A bytearray containing the starting hash.
+    proof: A list of bytearrays representing the hashes in the inclusion proof.
+    leaf_index: The current leaf index.
+
+  Returns:
+    A bytearray containing the subtree hash.
+  """
+  for i, h in enumerate(proof):
+    if leaf_index >> i & 1 == 0:
+      seed = rfc6962_hash_children(seed, h)
+    else:
+      seed = rfc6962_hash_children(h, seed)
+  return seed
+
+def root_from_icp(leaf_index, tree_size, proof, leaf_hash):
+  """Adapted from Trillian: Calculates the expected Merkle tree root hash
+  given the inclusion proof and initial leaf hash.
+
+  Arguments:
+    leaf_index: The current leaf index.
+    tree_size: The number of nodes in the Merkle tree.
+    proof: A list of bytearrays containing the inclusion proof.
+    leaf_hash: A bytearray containing the initial leaf hash.
+
+  Returns:
+    A bytearray containing the calculated Merkle tree root hash.
+
+  Raises:
+    AvbError if invalid parameters are passed in.
+  """
+  if leaf_index < 0:
+    raise AvbError('Invalid leaf_index value: {}'.format(leaf_index))
+  if tree_size < 0:
+    raise AvbError('Invalid tree_size value: {}'.format(tree_size))
+  if leaf_index >= tree_size:
+    err_str = 'leaf_index cannot be equal or larger than tree_size: {}, {}'
+    raise AvbError(err_str.format(leaf_index, tree_size))
+
+  # Calculate the point to split the proof into two parts.
+  # The split is where the paths to leaves diverge.
+  inner = (leaf_index ^ (tree_size - 1)).bit_length()
+  result = chain_inner(leaf_hash, proof[:inner], leaf_index)
+  result = chain_border_right(result, proof[inner:])
+  return result
+
+def test_icp_validate():
+  """The main function that handles testing ICP validation.
+
+  Returns:
+    True if all tests pass, False otherwise.
+  """
+
+  # These test data are taken from Trillian to ensure our
+  # calculations are correct.
+  leaf_index = 0
+  tree_size = 8
+  proof = [bytearray(b'\x96\xa2\x96\xd2\x24\xf2\x85\xc6\x7b\xee\x93'
+                     '\xc3\x0f\x8a\x30\x91\x57\xf0\xda\xa3\x5d'
+                     '\xc5\xb8\x7e\x41\x0b\x78\x63\x0a\x09\xcf\xc7'),
+           bytearray(b'\x5f\x08\x3f\x0a\x1a\x33\xca\x07\x6a\x95\x27'
+                     '\x98\x32\x58\x0d\xb3\xe0\xef\x45\x84\xbd\xff'
+                     '\x1f\x54\xc8\xa3\x60\xf5\x0d\xe3\x03\x1e'),
+           bytearray(b'\x6b\x47\xaa\xf2\x9e\xe3\xc2\xaf\x9a\xf8\x89'
+                     '\xbc\x1f\xb9\x25\x4d\xab\xd3\x11\x77\xf1\x62'
+                     '\x32\xdd\x6a\xab\x03\x5c\xa3\x9b\xf6\xe4')]
+  leaf_hash = rfc6962_hash_leaf(bytearray(b''))
+  provided_root = bytearray(b'\x5d\xc9\xda\x79\xa7\x06\x59\xa9\xad\x55\x9c'
+                            '\xb7\x01\xde\xd9\xa2\xab\x9d\x82\x3a\xad\x2f\x49'
+                            '\x60\xcf\xe3\x70\xef\xf4\x60\x43\x28')
+  calculated_root = root_from_icp(leaf_index, tree_size, proof, leaf_hash)
+  if not provided_root == calculated_root:
+    sys.stdout.write('Calculated root hash does not match. ')
+    sys.stdout.write('Expected {}, got {}\n'.format(
+        binascii.hexlify(provided_root), binascii.hexlify(calculated_root)))
+    return False
+
+  leaf_index = 5
+  tree_size = 8
+  proof = [bytearray(b'\xbc\x1a\x06\x43\xb1\x2e\x4d\x2d\x7c\x77\x91\x8f\x44'
+                     '\xe0\xf4\xf7\x9a\x83\x8b\x6c\xf9\xec\x5b\x5c\x28\x3e'
+                     '\x1f\x4d\x88\x59\x9e\x6b'),
+           bytearray(b'\xca\x85\x4e\xa1\x28\xed\x05\x0b\x41\xb3\x5f\xfc\x1b'
+                     '\x87\xb8\xeb\x2b\xde\x46\x1e\x9e\x3b\x55\x96\xec\xe6'
+                     '\xb9\xd5\x97\x5a\x0a\xe0'),
+           bytearray(b'\xd3\x7e\xe4\x18\x97\x6d\xd9\x57\x53\xc1\xc7\x38\x62'
+                     '\xb9\x39\x8f\xa2\xa2\xcf\x9b\x4f\xf0\xfd\xfe\x8b\x30'
+                     '\xcd\x95\x20\x96\x14\xb7')]
+  leaf_hash = rfc6962_hash_leaf(bytearray(b'\x40\x41\x42\x43'))
+  provided_root = bytearray(b'\x5d\xc9\xda\x79\xa7\x06\x59\xa9\xad\x55\x9c'
+                            '\xb7\x01\xde\xd9\xa2\xab\x9d\x82\x3a\xad\x2f\x49'
+                            '\x60\xcf\xe3\x70\xef\xf4\x60\x43\x28')
+  calculated_root = root_from_icp(leaf_index, tree_size, proof, leaf_hash)
+  if not provided_root == calculated_root:
+    sys.stdout.write('Calculated root hash does not match. ')
+    sys.stdout.write('Expected {}, got {}\n'.format(
+        binascii.hexlify(provided_root), binascii.hexlify(calculated_root)))
+    return False
+
+  leaf_index = 2
+  tree_size = 3
+  proof = [bytearray(b'\xfa\xc5\x42\x03\xe7\xcc\x69\x6c\xf0\xdf\xcb\x42\xc9'
+                     '\x2a\x1d\x9d\xba\xf7\x0a\xd9\xe6\x21\xf4\xbd\x8d\x98'
+                     '\x66\x2f\x00\xe3\xc1\x25')]
+  leaf_hash = rfc6962_hash_leaf(bytearray(b'\x10'))
+  provided_root = bytearray(b'\xae\xb6\xbc\xfe\x27\x4b\x70\xa1\x4f\xb0\x67'
+                            '\xa5\xe5\x57\x82\x64\xdb\x0f\xa9\xb5\x1a\xf5'
+                            '\xe0\xba\x15\x91\x58\xf3\x29\xe0\x6e\x77')
+  calculated_root = root_from_icp(leaf_index, tree_size, proof, leaf_hash)
+  if not provided_root == calculated_root:
+    sys.stdout.write('Calculated root hash does not match. ')
+    sys.stdout.write('Expected {}, got {}\n'.format(
+        binascii.hexlify(provided_root), binascii.hexlify(calculated_root)))
+    return False
+
+  sys.stdout.write('All calculated root hashes match expected values.\n')
   return True
 
 
@@ -3516,7 +3694,11 @@ class Avb(object):
     Returns:
       True if all tests pass, False otherwise.
     """
-    return test_icp_image()
+    if not test_icp_image():
+      return False
+    if not test_icp_validate():
+      return False
+    return True
 
   # TODO(danielaustin): Add unit tests once 1186416 is merged.
   def request_inclusion_proof(self, transparency_log, vbmeta_blob,
