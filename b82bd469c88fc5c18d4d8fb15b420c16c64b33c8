@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "eb489f8a_384cae08",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3631,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "s/.../request_icp_for_vbmeta/ ?",
+      "range": {
+        "startLine": 3631,
+        "startChar": 6,
+        "endLine": 3631,
+        "endChar": 26
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0faa9a49_02ca54c9",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3637,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "s/This blob/This blob (struct AvbIcpBlob)/",
+      "range": {
+        "startLine": 3637,
+        "startChar": 4,
+        "endLine": 3637,
+        "endChar": 14
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d845b8e_0860d9e5",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3643,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "Pls. clarify which additional meta information is sent along with it so it is transparent to the reader what happens.",
+      "range": {
+        "startLine": 3643,
+        "startChar": 4,
+        "endLine": 3643,
+        "endChar": 61
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f862117_fc97b0f4",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3653,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "Not clear which key is used here: Manufacturer key, platform key? Pls. clarify.",
+      "range": {
+        "startLine": 3653,
+        "startChar": 36,
+        "endLine": 3653,
+        "endChar": 48
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c397ba6f_20d851b5",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3654,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "s/files/files instead/",
+      "range": {
+        "startLine": 3654,
+        "startChar": 65,
+        "endLine": 3654,
+        "endChar": 70
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c4d391cb_963805e4",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3657,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "s/.../transparency_log_servers/g",
+      "range": {
+        "startLine": 3657,
+        "startChar": 6,
+        "endLine": 3657,
+        "endChar": 23
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fe9f0bd6_686ceab6",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3658,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "servers where inclusion proofs are requested from.",
+      "range": {
+        "startLine": 3658,
+        "startChar": 12,
+        "endLine": 3658,
+        "endChar": 19
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2fea0278_67f2dc57",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3659,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "1) s/.../trusted_transparency_log_keys/ or s/.../transparency_log_pub_keys/g\n\n2) Do we consider this a list of _trusted_ transparency log keys? If so, suggest we clarify this here.",
+      "range": {
+        "startLine": 3659,
+        "startChar": 6,
+        "endLine": 3659,
+        "endChar": 23
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0df11a1e_aafbf0b7",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3661,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "manufacturer_key: Path to key used to sign messages sent to the transparency log servers.",
+      "range": {
+        "startLine": 3661,
+        "startChar": 44,
+        "endLine": 3661,
+        "endChar": 56
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2375273e_3aa44ee2",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3665,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "True if the inclusion proofs could be fetched from the transparency log servers and could be successfully validated, False otherwise.",
+      "range": {
+        "startLine": 3665,
+        "startChar": 0,
+        "endLine": 3665,
+        "endChar": 75
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "96e622ed_d1e20b98",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 3667,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "Empty line before this one.",
+      "range": {
+        "startLine": 3667,
+        "startChar": 0,
+        "endLine": 3667,
+        "endChar": 11
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8472b6cb_fe674d83",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4973,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "s/.../request_icp_for_vbmeta/ ?",
+      "range": {
+        "startLine": 4973,
+        "startChar": 40,
+        "endLine": 4973,
+        "endChar": 61
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "11c1ecfd_d6ab971b",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4974,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "My impression from reading the DOCSTRING of the function make_icp_from_vbmeta() is that we only request a ICP but not baking it into the a new vbmeta image. Pls consistify.",
+      "range": {
+        "startLine": 4974,
+        "startChar": 0,
+        "endLine": 4974,
+        "endChar": 80
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f66c9abf_a2f8f592",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4976,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:57:05Z",
+      "side": 1,
+      "message": "Set up of sub_parser is not consistent with documented arguments. Missing ones are:\n- algorithm\n- key\n- signing_helper,\n- signing_helper_with_files,",
+      "range": {
+        "startLine": 4976,
+        "startChar": 0,
+        "endLine": 4976,
+        "endChar": 39
+      },
+      "revId": "b82bd469c88fc5c18d4d8fb15b420c16c64b33c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
