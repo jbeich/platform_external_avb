@@ -1930,7 +1930,7 @@ class AvbIcpHeader(object):
     Arguments:
       data: If not None, must be a bytearray of size == 18.
 
-    Raises:
+    Raise:
       AvbError if invalid structure for AvbIcpHeader.
     """
     assert struct.calcsize(self.FORMAT_STRING) == self.SIZE
@@ -1953,7 +1953,7 @@ class AvbIcpHeader(object):
     Arguments:
       output: The object to write the header to.
 
-    Raises:
+    Raise:
       AvbError if invalid structure for AvbIcpHeader.
     """
     output.write(self.encode())
@@ -1964,7 +1964,7 @@ class AvbIcpHeader(object):
     Returns:
       A bytearray() with the encoded header.
 
-    Raises:
+    Raise:
       AvbError if invalid structure for AvbIcpHeader.
     """
     if not self.is_valid():
@@ -2100,7 +2100,7 @@ class AvbIcpEntry(object):
     Arguments:
       output: The object to write the header to.
 
-    Raises:
+    Raise:
       AvbError if invalid entry structure.
     """
     output.write(self.encode())
@@ -2111,7 +2111,7 @@ class AvbIcpEntry(object):
     Returns:
       A bytearray() with the encoded header.
 
-    Raises:
+    Raise:
       AvbError if invalid entry structure.
     """
     if not self.is_valid():
@@ -2132,8 +2132,8 @@ class AvbIcpEntry(object):
     Returns:
       The expected size of the AvbIcpEntry from the header.
     """
-    return (self.SIZE + self.log_url_size +
-           self.signed_root_blob_size + self.proof_size)
+    return self.SIZE + self.log_url_size + \
+           self.signed_root_blob_size + self.proof_size
 
   def is_valid(self):
     """Ensures that values in an AvbIcpEntry structure are sane.
@@ -2146,27 +2146,22 @@ class AvbIcpEntry(object):
       sys.stderr.write(err_msg)
       return False
     if self.leaf_index < 0:
-      err_msg = ('ICP entry: leaf index out of range: '
-                '{}\n'.format(self.leaf_index))
+      err_msg = 'ICP entry: leaf index out of range: ' \
+                '{}\n'.format(self.leaf_index)
       sys.stderr.write(err_msg)
       return False
-    if (self.signed_root_blob and self.signed_root_blob_size !=
-       len(self.signed_root_blob)):
-      sys.stderr.write('ICP entry: invalid signed root blob size: ')
-      sys.stderr.write('{}, {}\n'.format(self.signed_root_blob_size,
-                                         len(self.signed_root_blob)))
+    if self.signed_root_blob and self.signed_root_blob_size != \
+       len(self.signed_root_blob):
+      sys.stderr.write('ICP entry: invalid signed root blob size: {}, {}\n'.format(self.signed_root_blob_size, len(self.signed_root_blob)))
       return False
     if self.proof_hash_count < 0:
-      sys.stderr.write('ICP entry: invalid proof count: {}\n'.format(
-          self.proof_hash_count))
+      sys.stderr.write('ICP entry: invalid proof count: {}\n'.format(self.proof_hash_count))
       return False
     if self.proofs and self.proof_size != len(self.proofs):
-      sys.stderr.write('ICP entry: invalid transparency log proof size: ')
-      sys.stderr.write('{}\n'.format(self.proof_size))
+      sys.stderr.write('ICP entry: invalid transparency log proof size: {}\n'.format(self.proof_size))
       return False
     if self.next_entry != 0 and self.next_entry != 1:
-      sys.stderr.write('ICP entry: invalid next entry value: {}\n'.format(
-          self.next_entry))
+      sys.stderr.write('ICP entry: invalid next entry value: {}\n'.format(self.next_entry))
       return False
     return True
 
@@ -2246,8 +2241,7 @@ class AvbIcpBlob(object):
     Arguments:
       output: The object to write the blob to.
 
-    Raises:
-      AvbError if invalid blob structure.
+    Raise: AvbError if invalid blob structure.
     """
     output.write(self.encode())
 
@@ -2257,11 +2251,10 @@ class AvbIcpBlob(object):
     Returns:
       A bytearray() with the encoded header.
 
-    Raises:
-      AvbError if invalid blob structure.
+    Raise: AvbError if invalid blob structure.
     """
-    # The header and entries are guaranteed to be valid when encode is called.
-    # Check the entire structure as a whole.
+    #The header and entries are guaranteed to be valid when encode is called.
+    #Check the entire structure as a whole.
     if not self.is_valid():
       raise AvbError('Invalid AvbIcpBlob structure.')
 
@@ -2567,7 +2560,11 @@ def test_generate_icp_images():
   else:
     sys.stdout.write('ICP blob encode failed\n')
     return False
-  icp_blob = AvbIcpBlob(expected_blob_bytes)
+  # This should fail. Catch the error and move on.
+  try:
+    icp_blob = AvbIcpBlob(expected_blob_bytes)
+  except AvbError:
+    sys.stdout.write('Caught invalid ICP blob successfully.\n')
   if not icp_blob.is_valid():
     sys.stdout.write('ICP blob constructor failed.\n')
     return False
@@ -3630,6 +3627,52 @@ class Avb(object):
       padded_size = round_to_multiple(len(vbmeta_blob), padding_size)
       padding_needed = padded_size - len(vbmeta_blob)
       output.write('\0' * padding_needed)
+
+  def make_icp_from_vbmeta(self, vbmeta_image_path, output, algorithm,
+                           key, signing_helper, signing_helper_with_files,
+                           version_incremental, transparency_log_servers,
+                           transparency_log_pub_keys, manufacturer_key):
+    """Generates an ICP blob given a vbmeta image.
+
+    This blob (struct AvbIcBlob) contains the information required to
+    validate an inclusion proof for a specific vbmeta image. It consists
+    of a header (struct AvbIcpHeader) and zero or more entry structures
+    (struct AvbIcpEntry) that contain the vbmeta leaf hash, tree size,
+    root hash, inclusion proof hashes, and the signature for the root hash.
+
+    The vbmeta image, its hash, the version_incremental part of the build
+    fingerprint, and the hash of the manufacturer key are sent to the
+    transparency log, with the message signed by the manufacturer key.
+    An inclusion proof is calculated and returned. This inclusion proof is
+    then packaged in a AvbIcpBlob structure and added to the end of the
+    vbmeta image. Validation of the inclusion proof does not require
+    communication with the transparency log.
+
+    Arguments:
+      vbmeta_image_path: Path to a vbmeta image file.
+      output: File to write the results to.
+      algorithm: The algorithm ID to use (see ALGORITHMS).
+      key: Path to the key that was used to sign the vbmeta image.
+      signing_helper: Program which signs a hash and returns a signature.
+      signing_helper_with_files: Same as signing_helper but uses files instead.
+      version_incremental: A string representing the subcomponent of the
+        build fingerprint used to identify the vbmeta in the transparency log.
+      transparency_log_servers: List of strings containing URLs of transparency
+        log servers where inclusion proofs are requested from.
+      transparency_log_pub_keys: List of paths to trusted public keys that
+        correspond with the transparency_logs.
+      manufacturer_key: Path to key used to sign messages sent to the
+        transparency log servers.
+
+    Returns:
+      True if the inclusion proofs could be fetched from the transparency log
+      servers and could be successfully validated, False otherwise.
+
+    Raises:
+      AvbError if communication with the log fails or the structures are
+      malformed.
+    """
+    return True
 
   def _generate_vbmeta_blob(self, algorithm_name, key_path,
                             public_key_metadata_path, descriptors,
@@ -4931,6 +4974,27 @@ class AvbTool(object):
     self._add_common_args(sub_parser)
     sub_parser.set_defaults(func=self.make_vbmeta_image)
 
+    sub_parser = subparsers.add_parser('make_icp_from_vbmeta',
+                                       help='Makes an ICP enhanced vbmeta image'
+                                       ' from an existing vbmeta image.')
+    sub_parser.add_argument('--output',
+                            help='Output file name',
+                            type=argparse.FileType('wb'))
+    sub_parser.add_argument('--vbmeta_image_path',
+                            help='Path to a generate vbmeta image file.',
+                            type=argparse.FileType('rb'))
+    sub_parser.add_argument('--version_incremental', help='current build ID')
+    sub_parser.add_argument('--manufacturer_key',
+                            help='manufacturer key for use with the log',
+                            type=argparse.FileType('rb'))
+    sub_parser.add_argument('--transparency_log_servers',
+                            help='transparency log server(s)', nargs='*')
+    sub_parser.add_argument('--transparency_log_pub_keys',
+                            help='transparency log server key(s)', nargs='*')
+    self._add_common_args(sub_parser)
+
+    sub_parser.set_defaults(func=self.make_icp_from_vbmeta)
+
     sub_parser = subparsers.add_parser('add_hash_footer',
                                        help='Add hashes and footer to image.')
     sub_parser.add_argument('--image',
@@ -5321,6 +5385,18 @@ class AvbTool(object):
                                args.append_to_release_string,
                                args.print_required_libavb_version,
                                args.padding_size)
+
+  def make_icp_from_vbmeta(self, args):
+    """Implements the 'make_icp_from_vbmeta' sub-command."""
+    args = self._fixup_common_args(args)
+    self.avb.make_icp_from_vbmeta(args.vbmeta_image_path,
+                                  args.output, args.algorithm, args.key,
+                                  args.signing_helper,
+                                  args.signing_helper_with_files,
+                                  args.version_incremental,
+                                  args.transparency_log_servers,
+                                  args.transparency_log_pub_keys,
+                                  args.manufacturer_key)
 
   def append_vbmeta_image(self, args):
     """Implements the 'append_vbmeta_image' sub-command."""
