@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "f226fbd2_c3513217",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 1933,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39b4837d_bca2e813",
+      "range": {
+        "startLine": 1933,
+        "startChar": 4,
+        "endLine": 1933,
+        "endChar": 9
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d02fb895_6cd74495",
         "filename": "avbtool",
         "patchSetId": 4
@@ -36,6 +60,30 @@
       "writtenOn": "2019-12-06T21:01:02Z",
       "side": 1,
       "message": "FYI: The standard way for wrapping lines is using () around the statement you want to wrap:\n\ne.g.:\n   return (self.SIZE + self.log_url_size +\n           self.signed_root_blob_size + self.proof_size)",
+      "range": {
+        "startLine": 2135,
+        "startChar": 0,
+        "endLine": 2136,
+        "endChar": 55
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "fdb3b56f_421e632b",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2136,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d02fb895_6cd74495",
       "range": {
         "startLine": 2135,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "8ce8e5a6_f0bdb6a6",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2155,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3989fea_a5eb5dd6",
+      "range": {
+        "startLine": 2155,
+        "startChar": 0,
+        "endLine": 2155,
+        "endChar": 139
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7f8faa0_ea684fdd",
         "filename": "avbtool",
         "patchSetId": 4
@@ -91,6 +163,30 @@
       "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c22ec19_24b27dd9",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2244,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7f8faa0_ea684fdd",
+      "range": {
+        "startLine": 2244,
+        "startChar": 0,
+        "endLine": 2244,
+        "endChar": 46
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "97f4c0d5_21221e3b",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2256,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e018fe92_4cc18fac",
+      "range": {
+        "startLine": 2256,
+        "startChar": 0,
+        "endLine": 2256,
+        "endChar": 8
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc779e58_8ad3bc0c",
         "filename": "avbtool",
         "patchSetId": 4
@@ -137,6 +257,30 @@
       "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e624ca7_56013f9a",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2565,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T22:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bc779e58_8ad3bc0c",
+      "range": {
+        "startLine": 2565,
+        "startChar": 0,
+        "endLine": 2565,
+        "endChar": 46
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
