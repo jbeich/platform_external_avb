@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "39b4837d_bca2e813",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 1933,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T21:01:02Z",
+      "side": 1,
+      "message": "s/Raise:/Raises:/g pls fix elsewhere too.",
+      "range": {
+        "startLine": 1933,
+        "startChar": 4,
+        "endLine": 1933,
+        "endChar": 9
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d02fb895_6cd74495",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2136,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T21:01:02Z",
+      "side": 1,
+      "message": "FYI: The standard way for wrapping lines is using () around the statement you want to wrap:\n\ne.g.:\n   return (self.SIZE + self.log_url_size +\n           self.signed_root_blob_size + self.proof_size)",
+      "range": {
+        "startLine": 2135,
+        "startChar": 0,
+        "endLine": 2136,
+        "endChar": 55
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e3989fea_a5eb5dd6",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2155,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T21:01:02Z",
+      "side": 1,
+      "message": "Wrap at 80 chars.",
+      "range": {
+        "startLine": 2155,
+        "startChar": 0,
+        "endLine": 2155,
+        "endChar": 139
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a7f8faa0_ea684fdd",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2244,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T21:01:02Z",
+      "side": 1,
+      "message": "The text of the raises needs to wrap to the new line with an ident of 2:\n\n  Raises:\n    AvbError if invalid blob structure.\n\nPls fix the other cases too.",
+      "range": {
+        "startLine": 2244,
+        "startChar": 0,
+        "endLine": 2244,
+        "endChar": 46
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e018fe92_4cc18fac",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2256,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T21:01:02Z",
+      "side": 1,
+      "message": "Add a space after #:\n\n# The ...\n# Check ...",
+      "range": {
+        "startLine": 2256,
+        "startChar": 0,
+        "endLine": 2256,
+        "endChar": 8
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bc779e58_8ad3bc0c",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2565,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T21:01:02Z",
+      "side": 1,
+      "message": "1) Why should this fail? Nothing has changes since the comparison in line 2558\n\n2) Also after this line you need \"return False\" to mark the failure.\n\n3) Pls also add a test case for a successful parsing via the AvbIcpBlob().",
+      "range": {
+        "startLine": 2565,
+        "startChar": 0,
+        "endLine": 2565,
+        "endChar": 46
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
