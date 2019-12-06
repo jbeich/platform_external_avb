@@ -613,6 +613,30 @@
     },
     {
       "key": {
+        "uuid": "5cba4843_9bd4b1e6",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2190,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls add a test case to check that this behaves as expected. AFAICS there is no test for this and I don\u0027t think this works properly if you have multiple AvbIcpEntryies.",
+      "parentUuid": "34b6d5f7_7eae8a87",
+      "range": {
+        "startLine": 2189,
+        "startChar": 0,
+        "endLine": 2190,
+        "endChar": 87
+      },
+      "revId": "ff2a74a2c357935999df0129f8e8c01394742f48",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6437f248_0747f220",
         "filename": "avbtool",
         "patchSetId": 2

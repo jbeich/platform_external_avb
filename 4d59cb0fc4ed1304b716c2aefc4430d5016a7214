@@ -1,0 +1,349 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "9254b7d6_e6122193",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1932,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls DOCSTRING the AvbError.",
+      "range": {
+        "startLine": 1932,
+        "startChar": 0,
+        "endLine": 1932,
+        "endChar": 7
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec3aeff1_c631aac6",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1952,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls DOCSTRING the AvbError that gets raised due to call to encode().",
+      "range": {
+        "startLine": 1952,
+        "startChar": 0,
+        "endLine": 1952,
+        "endChar": 7
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aab485fa_b706ad63",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1960,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls DOCSTRING the AvbError.",
+      "range": {
+        "startLine": 1960,
+        "startChar": 0,
+        "endLine": 1960,
+        "endChar": 7
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "921d1648_72f7e6df",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2019,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls wrap at 80 chars.",
+      "range": {
+        "startLine": 2019,
+        "startChar": 0,
+        "endLine": 2019,
+        "endChar": 116
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e5c1ba3_239aec3e",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2041,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Remove this line.",
+      "range": {
+        "startLine": 2041,
+        "startChar": 0,
+        "endLine": 2041,
+        "endChar": 14
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e6e412ef_83153782",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2092,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls DOCSTRING AvbError that is raised by the encode() call.",
+      "range": {
+        "startLine": 2092,
+        "startChar": 0,
+        "endLine": 2092,
+        "endChar": 7
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f65a06af_ae05f979",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2100,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls DOCSTRING AvbError.",
+      "range": {
+        "startLine": 2100,
+        "startChar": 0,
+        "endLine": 2100,
+        "endChar": 7
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1cfd5ee8_403fb253",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2104,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls split up the formation of the format string and the actual struct packing into seperate lines. At the moment it is difficult to read.\n\nPls also make the code align to 80 chars.",
+      "range": {
+        "startLine": 2104,
+        "startChar": 0,
+        "endLine": 2104,
+        "endChar": 134
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d808a07c_c384dc1d",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2123,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Lint: Wrap the code line here to not exceed 80 chars. Pls. do same with other if statements in this method.",
+      "range": {
+        "startLine": 2123,
+        "startChar": 0,
+        "endLine": 2123,
+        "endChar": 102
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d6790c55_e403edf4",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2215,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls DOCSTRING the raise of AvbError.",
+      "range": {
+        "startLine": 2215,
+        "startChar": 0,
+        "endLine": 2215,
+        "endChar": 7
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7343f9e6_c5e146eb",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2223,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls DOCSTRING the raise of AvbError.",
+      "range": {
+        "startLine": 2223,
+        "startChar": 0,
+        "endLine": 2223,
+        "endChar": 7
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0439dc5_ec907789",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2224,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Make line wrap at 80 chars.",
+      "range": {
+        "startLine": 2224,
+        "startChar": 0,
+        "endLine": 2224,
+        "endChar": 117
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ad9d603_50edb7d2",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2317,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Pls add a test function for testing the parsing behavior of the constructors for of AvbIcp* objects. At the moment these are not tested at all. You already have the test vector bytearray in the test function below so this should be easy to add.",
+      "range": {
+        "startLine": 2317,
+        "startChar": 0,
+        "endLine": 2317,
+        "endChar": 99
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7daa01d_b37706c4",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2359,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "Make the line wrap at 80 chars. Pls do same with the other test vectors.",
+      "range": {
+        "startLine": 2359,
+        "startChar": 0,
+        "endLine": 2359,
+        "endChar": 112
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eec858cd_e456e3c1",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2419,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-06T06:25:38Z",
+      "side": 1,
+      "message": "That should now be taken care of by the .add_icp_entry. Thus, the line here should be removed.",
+      "range": {
+        "startLine": 2419,
+        "startChar": 0,
+        "endLine": 2419,
+        "endChar": 40
+      },
+      "revId": "4d59cb0fc4ed1304b716c2aefc4430d5016a7214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
