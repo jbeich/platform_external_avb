@@ -78,7 +78,24 @@ python_binary_host {
     name: "avbtool",
     srcs: [":avbtool_py"],
     main: "avbtool.py",
-    required: ["fec"],
+    version: {
+        py2: {
+            enabled: true,
+            embedded_launcher: true,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}
+
+python_test_host {
+    name: "avbtool_test",
+    srcs: [
+        ":avbtool_py",
+        "avbtool_test.py",
+    ],
+    main: "avbtool_test.py",
     version: {
         py2: {
             enabled: true,
