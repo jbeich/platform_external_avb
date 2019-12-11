@@ -2190,65 +2190,12 @@ def validate_icp_blob(icp_blob):
 # AFTL structure test functions
 
 
-def test_default_icp_header():
-  """Performs validation on a default ICP header structure.
-
-  Returns:
-    True if the tests pass, False otherwise.
-  """
-
-  icp_header = AvbIcpHeader()
-  if icp_header.is_valid():
-    sys.stdout.write('ICP header: validation passed\n')
-    return True
-  sys.stdout.write('ICP header: validation failed\n')
-  return False
-
-
-def test_icp_header(algorithm, icp_count):
-  """Create an ICP header structure and attempt to validate it.
-
-  Arguments:
-    algorithm: The algorithm to be used.
-    icp_count: Number of ICPs that follow the ICP header.
-
-  Returns:
-    True if the tests pass, False otherwise.
-  """
-
-  icp_header = AvbIcpHeader()
-  icp_header.algorithm = algorithm
-  icp_header.icp_count = icp_count
-  if icp_header.is_valid():
-    sys.stdout.write('ICP header: validation passed\n')
-    return True
-  sys.stdout.write('ICP header: validation failed\n')
-  return False
-
-
-def test_default_icp_entry():
-  """Performs validation on an empty ICP entry structure.
-
-  Returns:
-    True if the tests pass, False otherwise.
-  """
-
-  icp_entry = AvbIcpEntry()
-  if icp_entry.is_valid():
-    sys.stdout.write('ICP entry validation passed\n')
-    return True
-  sys.stdout.write('ICP entry validation failed\n')
-  return False
-
-
 def test_icp_entry(log_url_size, leaf_index, signed_root_blob_size,
                    proof_hash_count, proof_size, next_entry):
   """Create an ICP entry structure and attempt to validate it.
-
   Returns:
     True if the tests pass, False otherwise.
   """
-
   icp_entry = AvbIcpEntry()
   icp_entry.log_url_size = log_url_size
   icp_entry.leaf_index = leaf_index
@@ -2262,20 +2209,12 @@ def test_icp_entry(log_url_size, leaf_index, signed_root_blob_size,
   sys.stdout.write('ICP entry validation failed\n')
   return False
 
-
 def test_generate_icp_images():
   """Test cases for full AFTL ICP structure generation.
 
   Returns:
     True if all tests return expected values, False otherwise.
   """
-
-  if not test_default_icp_header():
-    return False
-
-  if not test_icp_header(1, 1):
-    return False
-
   icp_header = AvbIcpHeader()
   icp_header.algorithm = 1
   icp_header.icp_count = 1
@@ -2354,35 +2293,6 @@ def test_icp_image():
   Returns:
     True if all tests pass, False otherwise.
   """
-
-  # Header related tests.
-  default_icp = test_default_icp_header()
-  # 1 is SHA256/RSA4096
-  if not test_icp_header(1, 4):
-    return False
-  # Header related failure tests.
-  if test_icp_header(-12, 4):
-    return False
-  if test_icp_header(4, -34):
-    return False
-  if test_icp_header(10, 10):
-    return False
-  # ICP entry related tests.
-  if not test_default_icp_entry():
-    return False
-  if not test_icp_entry(28, 2, 92, 2, 64, 0):
-    return False
-  if not test_icp_entry(28, 4, 160, 4, 128, 1):
-    return False
-  # ICP entry related failure tests.
-  if test_icp_entry(-2, 2, 92, 2, 64, 0):
-    return False
-  if test_icp_entry(28, -1, 92, 2, 64, 0):
-    return False
-  if test_icp_entry(28, 2, -2, 2, 64, 0):
-    return False
-  if test_icp_entry(28, 2, 92, 4, 128, 32234):
-    return False
   # Tests for the full AFTL ICP structure.
   if not test_generate_icp_images():
     return False
