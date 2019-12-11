@@ -2664,6 +2664,7 @@ def test_icp_image():
     return False
   if test_icp_entry_blob(test_url, len(test_url), 2, test_sth, len(test_sth), 2, test_proofs, len(test_proofs) - 3, 0):
     return False
+
   # Tests for the full AFTL ICP structure.
   if not test_generate_icp_images():
     return False
