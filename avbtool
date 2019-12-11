@@ -22,7 +22,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-"""Command-line tool for working with Android Verified Boot images."""
+""" Command-line tool for working with Android Verified Boot images."""
 
 import argparse
 import binascii
