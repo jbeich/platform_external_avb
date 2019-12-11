@@ -90,6 +90,24 @@ python_binary_host {
     },
 }
 
+python_test_host {
+    name: "avbtool_test",
+    main: "avbtool_test.py",
+    srcs: [
+        ":avbtool_py",
+	"avbtool_test.py",
+    ],
+    version: {
+        py2: {
+            enabled: true,
+            embedded_launcher: false,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}
+
 genrule {
   name: "avbtool_py",
   srcs: ["avbtool",],
