@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "8c4886f3_51225f8d",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3648,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-12-11T02:17:28Z",
+      "side": 1,
+      "message": "Is this actually what \u0027make_icp_from_vbmeta\u0027 does, though? It looks to me like it\u0027s just writing it to the file given by --output.\n\nWas the plan all along to store the AvbIpcBlob at the end of the vbmeta image? I had a vague idea that it was going to be in another partition, it could be I remember it wrong.\n\nIt\u0027s also not clear to me _when_ the inclusion proof is checked or what the general flow is when the device is booting... I think documenting this in README.md (as requested in the previous comment 😊) would help a ton with having readers understand how everything fits together!",
+      "range": {
+        "startLine": 3646,
+        "startChar": 51,
+        "endLine": 3648,
+        "endChar": 17
+      },
+      "revId": "271d46b96c3c7ec9eaceac6e69d91791750e356e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
