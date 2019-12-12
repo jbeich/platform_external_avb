@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "e6d8607e_a9e1bf4d",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 1933,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-12T15:05:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "39b4837d_bca2e813",
+      "range": {
+        "startLine": 1933,
+        "startChar": 4,
+        "endLine": 1933,
+        "endChar": 9
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d02fb895_6cd74495",
         "filename": "avbtool",
         "patchSetId": 4
@@ -81,6 +105,30 @@
         "id": 1451494
       },
       "writtenOn": "2019-12-06T22:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d02fb895_6cd74495",
+      "range": {
+        "startLine": 2135,
+        "startChar": 0,
+        "endLine": 2136,
+        "endChar": 55
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e4d9a742_159faef9",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2136,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-12T15:05:39Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "d02fb895_6cd74495",
@@ -143,6 +191,30 @@
     },
     {
       "key": {
+        "uuid": "f0420e7a_dab22ea5",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2155,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-12T15:05:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e3989fea_a5eb5dd6",
+      "range": {
+        "startLine": 2155,
+        "startChar": 0,
+        "endLine": 2155,
+        "endChar": 139
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "a7f8faa0_ea684fdd",
         "filename": "avbtool",
         "patchSetId": 4
@@ -175,6 +247,30 @@
         "id": 1451494
       },
       "writtenOn": "2019-12-06T22:22:04Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a7f8faa0_ea684fdd",
+      "range": {
+        "startLine": 2244,
+        "startChar": 0,
+        "endLine": 2244,
+        "endChar": 46
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "480d4425_f720913f",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2244,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-12T15:05:39Z",
       "side": 1,
       "message": "Done",
       "parentUuid": "a7f8faa0_ea684fdd",
@@ -237,6 +333,30 @@
     },
     {
       "key": {
+        "uuid": "42609b5a_1f404731",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2256,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-12T15:05:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e018fe92_4cc18fac",
+      "range": {
+        "startLine": 2256,
+        "startChar": 0,
+        "endLine": 2256,
+        "endChar": 8
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bc779e58_8ad3bc0c",
         "filename": "avbtool",
         "patchSetId": 4
@@ -271,6 +391,30 @@
       "writtenOn": "2019-12-06T22:22:04Z",
       "side": 1,
       "message": "Done",
+      "parentUuid": "bc779e58_8ad3bc0c",
+      "range": {
+        "startLine": 2565,
+        "startChar": 0,
+        "endLine": 2565,
+        "endChar": 46
+      },
+      "revId": "82b920a993ce9a31b4587f6a1dc7a0b34efd14fe",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "a4fa3bf1_1a86ffdc",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2565,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-12T15:05:39Z",
+      "side": 1,
+      "message": "Ah, you\u0027re right. I was thinking of another test I had here before. This is the success case.",
       "parentUuid": "bc779e58_8ad3bc0c",
       "range": {
         "startLine": 2565,
