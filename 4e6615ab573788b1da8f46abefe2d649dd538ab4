@@ -1,0 +1,9 @@
+Verified+1: Dan Austin <danielaustin@google.com>
+Code-Review+1: Jan Monsch <jpm@google.com>
+Code-Review+2: Darren Krahn <dkrahn@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Dan Austin <danielaustin@google.com>
+Submitted-at: Thu, 12 Dec 2019 18:07:28 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/external/avb/+/1180381
+Project: platform/external/avb
+Branch: refs/heads/master
