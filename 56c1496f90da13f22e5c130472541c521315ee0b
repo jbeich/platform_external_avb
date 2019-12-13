@@ -2,6 +2,75 @@
   "comments": [
     {
       "key": {
+        "uuid": "cfdfb014_cddb3d0a",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2324,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T22:49:23Z",
+      "side": 1,
+      "message": "Raises:\n        AvbError: if invalid blob structure.\n\nLooks like some older code has creeped in again.",
+      "range": {
+        "startLine": 2324,
+        "startChar": 0,
+        "endLine": 2324,
+        "endChar": 46
+      },
+      "revId": "56c1496f90da13f22e5c130472541c521315ee0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf7c4307_588fe165",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2655,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T22:49:23Z",
+      "side": 1,
+      "message": "This should not fail. I think some older stuff creeped in again from a previous version.",
+      "range": {
+        "startLine": 2655,
+        "startChar": 0,
+        "endLine": 2655,
+        "endChar": 50
+      },
+      "revId": "56c1496f90da13f22e5c130472541c521315ee0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e896c3e3_b9804893",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 3679,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T22:49:23Z",
+      "side": 1,
+      "message": "s//AvbIcpBlob/",
+      "range": {
+        "startLine": 3679,
+        "startChar": 22,
+        "endLine": 3679,
+        "endChar": 31
+      },
+      "revId": "56c1496f90da13f22e5c130472541c521315ee0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e08f805a_464a268f",
         "filename": "proto/crypto/keyspb/keyspb_pb2.py",
         "patchSetId": 5
