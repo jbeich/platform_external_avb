@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "600c68b0_7616d136",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2904,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T18:57:38Z",
+      "side": 1,
+      "message": "Some left overs from rebasing.",
+      "range": {
+        "startLine": 2904,
+        "startChar": 0,
+        "endLine": 2904,
+        "endChar": 62
+      },
+      "revId": "0775e79a67bf25c6c284ef73eac45a6a65820c3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
