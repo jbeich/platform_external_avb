@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "56ffe7ca_0e2b8388",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 2259,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T15:08:50Z",
+      "side": 1,
+      "message": "@danielaustin: What did you want to do with the proof_hash_size here? Currently the variable is not used here.",
+      "range": {
+        "startLine": 2259,
+        "startChar": 6,
+        "endLine": 2259,
+        "endChar": 56
+      },
+      "revId": "75ed5509d2e90145565e1b8b527a2577eced335f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
