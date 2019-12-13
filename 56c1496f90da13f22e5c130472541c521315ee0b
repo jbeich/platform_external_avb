@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e08f805a_464a268f",
+        "filename": "proto/crypto/keyspb/keyspb_pb2.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-12-13T22:42:22Z",
+      "side": 1,
+      "message": "Is there a reason we need to check in auto-generated files instead of just building them every time? (Also applies to other files...)\n\nI guess the answer to this is slightly related to the following paragraph.\n\nThink I\u0027ve mentioned it before but I\u0027ve been wanting to split avbtool into multiple .py files and merge them together at build time to produce the \u0027avbtool\u0027 file which has no dependencies on other .py files. This would fit nicely with what\u0027s going on here.",
+      "range": {
+        "startLine": 3,
+        "startChar": 2,
+        "endLine": 3,
+        "endChar": 58
+      },
+      "revId": "56c1496f90da13f22e5c130472541c521315ee0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

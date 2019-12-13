@@ -49,6 +49,29 @@
     },
     {
       "key": {
+        "uuid": "26b54237_4212016e",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-12-13T22:42:22Z",
+      "side": 1,
+      "message": "I don\u0027t think we can do this. It breaks the existing feature of avbtool of a) minimum dependencies and b) that you can just copy the avbtool file around and it just works.\n\nAs for a), historically, we\u0027ve had a lot of pushback on dependencies. For example, at one point we used Crypto.PublicKey.RSA but that wasn\u0027t available on the builder and for reasons it was not in the cards to put it there (builders typically have minimal dependencies). So we ended up replacing six lines of Python with invoking the openssl(1) command (which we already require to be around).\n\nAs for b) this is an important feature since avbtool is integrated into a variety of environments and build tools. That may not be ideal, no, but it is the way it is and we can\u0027t really break it.\n\nHave you considered just putting all the AFTL stuff in a separate aftltool file (still living in the AVB repo)? This might be nicer since you get to decide when operational constraints, e.g. it\u0027s perfectly fine for you to require that python-grpc is available and that all the stuff in proto/ is on PYTHONPATH. You can also choose to use Python 3 instead of 2 etc.\n\nI actually thought this was the plan when originally talking to Jan about using the AVB repo for AFTL stuff. If you go down the path of keeping it in avbtool (e.g. no separate aftltool) that\u0027s fine too but at the very least you can\u0027t do \u0027import grpc\u0027 in the very beginning (instead, do it conditionally when an AFTL sub-command is being called).",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 25
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "078e702f_975c4eb7",
         "filename": "avbtool",
         "patchSetId": 4
