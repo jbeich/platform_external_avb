@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "c84891bd_62d60ab2",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "16cbcd9f_15eac510",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 11
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "078e702f_975c4eb7",
         "filename": "avbtool",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e060dcf_532a6339",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2155,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "078e702f_975c4eb7",
+      "range": {
+        "startLine": 2153,
+        "startChar": 0,
+        "endLine": 2155,
+        "endChar": 0
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ed0fb930_2413b8f2",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3531,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a5d9a53e_d6711ff0",
+      "range": {
+        "startLine": 3531,
+        "startChar": 28,
+        "endLine": 3531,
+        "endChar": 31
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ff01ba23_8a70a046",
         "filename": "avbtool",
         "patchSetId": 4
@@ -91,6 +163,30 @@
       "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98db08d9_3c22b178",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3532,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ff01ba23_8a70a046",
+      "range": {
+        "startLine": 3532,
+        "startChar": 0,
+        "endLine": 3532,
+        "endChar": 32
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "3b8b3db6_0564c898",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3534,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "57291acc_c3cb3d29",
+      "range": {
+        "startLine": 3534,
+        "startChar": 0,
+        "endLine": 3534,
+        "endChar": 12
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b84b5ea2_85b2a5e9",
         "filename": "avbtool",
         "patchSetId": 4
@@ -137,6 +257,30 @@
       "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ca16ea64_2579d596",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3540,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b84b5ea2_85b2a5e9",
+      "range": {
+        "startLine": 3540,
+        "startChar": 0,
+        "endLine": 3540,
+        "endChar": 68
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "8928ba8e_37068b4e",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3553,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecdad20d_209b73f6",
+      "range": {
+        "startLine": 3553,
+        "startChar": 0,
+        "endLine": 3553,
+        "endChar": 73
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1734f231_5e95c871",
         "filename": "avbtool",
         "patchSetId": 4
@@ -183,6 +351,30 @@
       "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60a8bd3a_ec4cfeb4",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3567,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1734f231_5e95c871",
+      "range": {
+        "startLine": 3567,
+        "startChar": 4,
+        "endLine": 3567,
+        "endChar": 8
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -232,6 +424,54 @@
     },
     {
       "key": {
+        "uuid": "5c32176b_55c4fce7",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3572,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61e12aad_ece075d4",
+      "range": {
+        "startLine": 3572,
+        "startChar": 6,
+        "endLine": 3572,
+        "endChar": 18
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ee5e172e_0225de37",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3572,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Max Timeout. Will put a reasonable value in here.",
+      "parentUuid": "90ad4547_d5661761",
+      "range": {
+        "startLine": 3572,
+        "startChar": 21,
+        "endLine": 3572,
+        "endChar": 47
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "d124156d_f7129a0b",
         "filename": "avbtool",
         "patchSetId": 4
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "6d258abd_2aec03f4",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3573,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d124156d_f7129a0b",
+      "range": {
+        "startLine": 3573,
+        "startChar": 0,
+        "endLine": 3573,
+        "endChar": 30
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "63881dcd_86d9cb53",
         "filename": "avbtool",
         "patchSetId": 4
@@ -266,6 +530,30 @@
       "writtenOn": "2019-12-13T21:37:57Z",
       "side": 1,
       "message": "I would not expose proto buf outside of this function. I would just return a tuple with the individual values from the afi_response proto and already have them \"casted\" the way it they are  used later by the rest of the functions you have implemented.",
+      "range": {
+        "startLine": 3579,
+        "startChar": 0,
+        "endLine": 3579,
+        "endChar": 23
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "691054da_d4ace325",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3579,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:30:58Z",
+      "side": 1,
+      "message": "Ack. Was working on this functionality anyway for another CL, will just add to this one.",
+      "parentUuid": "63881dcd_86d9cb53",
       "range": {
         "startLine": 3579,
         "startChar": 0,
