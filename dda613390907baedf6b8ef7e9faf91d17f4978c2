@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "16cbcd9f_15eac510",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "Pls replace tabs with spaces.",
+      "range": {
+        "startLine": 109,
+        "startChar": 0,
+        "endLine": 110,
+        "endChar": 11
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "078e702f_975c4eb7",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2155,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "In DOCSTRINGS the first description sentence must not go beyond 80 chars.\n\ns/.../Sets signed_root_blob and signed_root_blob_size./",
+      "range": {
+        "startLine": 2153,
+        "startChar": 0,
+        "endLine": 2155,
+        "endChar": 0
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5d9a53e_d6711ff0",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3531,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "One space only.",
+      "range": {
+        "startLine": 3531,
+        "startChar": 28,
+        "endLine": 3531,
+        "endChar": 31
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff01ba23_8a70a046",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3532,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "Indent 2 space more.",
+      "range": {
+        "startLine": 3532,
+        "startChar": 0,
+        "endLine": 3532,
+        "endChar": 32
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57291acc_c3cb3d29",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3534,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "Can also return None. Pls document when this happens.",
+      "range": {
+        "startLine": 3534,
+        "startChar": 0,
+        "endLine": 3534,
+        "endChar": 12
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b84b5ea2_85b2a5e9",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3540,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "I would only return a AvbError here and keep the gRPC stuff isolated to the method here.",
+      "range": {
+        "startLine": 3540,
+        "startChar": 0,
+        "endLine": 3540,
+        "endChar": 68
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecdad20d_209b73f6",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3553,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "This can also raise AvbError. Pls DOCSTRING.",
+      "range": {
+        "startLine": 3553,
+        "startChar": 0,
+        "endLine": 3553,
+        "endChar": 73
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1734f231_5e95c871",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3567,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "s/afir/request/",
+      "range": {
+        "startLine": 3567,
+        "startChar": 4,
+        "endLine": 3567,
+        "endChar": 8
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "90ad4547_d5661761",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3572,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "How long will the call wait for an answer to appear?",
+      "range": {
+        "startLine": 3572,
+        "startChar": 21,
+        "endLine": 3572,
+        "endChar": 47
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61e12aad_ece075d4",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3572,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "s/.../response/",
+      "range": {
+        "startLine": 3572,
+        "startChar": 6,
+        "endLine": 3572,
+        "endChar": 18
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d124156d_f7129a0b",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3573,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "except and re-raise as AvbError?",
+      "range": {
+        "startLine": 3573,
+        "startChar": 0,
+        "endLine": 3573,
+        "endChar": 30
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63881dcd_86d9cb53",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 3579,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "I would not expose proto buf outside of this function. I would just return a tuple with the individual values from the afi_response proto and already have them \"casted\" the way it they are  used later by the rest of the functions you have implemented.",
+      "range": {
+        "startLine": 3579,
+        "startChar": 0,
+        "endLine": 3579,
+        "endChar": 23
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b511b361_80073240",
+        "filename": "proto/README.md",
+        "patchSetId": 4
+      },
+      "lineNbr": 5,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T21:37:57Z",
+      "side": 1,
+      "message": "Can you remove the trailing whitespace in this file?",
+      "range": {
+        "startLine": 5,
+        "startChar": 0,
+        "endLine": 5,
+        "endChar": 75
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
