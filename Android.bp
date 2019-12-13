@@ -74,11 +74,36 @@ cc_defaults {
     ],
 }
 
+python_library_host {
+    name: "aftl_proto",
+    srcs: ["proto/aftl_google/api/annotations_pb2.py",	
+           "proto/aftl_google/api/http_pb2.py",
+           "proto/aftl_google/rpc/status_pb2.py",
+           "proto/aftl_pb2.py",
+           "proto/api_pb2_grpc.py",
+           "proto/api_pb2.py",
+           "proto/crypto/keyspb/keyspb_pb2.py",
+           "proto/crypto/sigpb/sigpb_pb2.py",
+           "proto/trillian_log_api_pb2.py",
+           "proto/trillian_pb2.py",],
+    required: ["py-grpc"],
+    version: {
+        py2: {
+            enabled: true,
+            embedded_launcher: true,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}
+
 python_binary_host {
     name: "avbtool",
     srcs: [":avbtool_py"],
     main: "avbtool.py",
     required: ["fec"],
+    libs: ["aftl_proto", "py-grpc"],
     version: {
         py2: {
             enabled: true,
