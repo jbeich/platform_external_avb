@@ -72,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "f1510b8d_a8209457",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:48:19Z",
+      "side": 1,
+      "message": "We did speak with the build and release teams, and grpc support (from AOSP, not an external source) was acceptable. That said, I understand your concerns, especially with third party ports of this. Will refactor this functionality out into a separate aftltool in this repo.",
+      "parentUuid": "26b54237_4212016e",
+      "range": {
+        "startLine": 41,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 25
+      },
+      "revId": "dda613390907baedf6b8ef7e9faf91d17f4978c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "078e702f_975c4eb7",
         "filename": "avbtool",
         "patchSetId": 4

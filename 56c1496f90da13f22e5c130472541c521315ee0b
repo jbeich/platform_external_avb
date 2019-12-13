@@ -22,6 +22,30 @@
       "revId": "56c1496f90da13f22e5c130472541c521315ee0b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1dc08263_94d565c2",
+        "filename": "proto/crypto/keyspb/keyspb_pb2.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T22:48:19Z",
+      "side": 1,
+      "message": "I was staying consistent with other generated protobuf processing code in AOSP. I agree with the merging idea, and will do that with aftltool.",
+      "parentUuid": "e08f805a_464a268f",
+      "range": {
+        "startLine": 3,
+        "startChar": 2,
+        "endLine": 3,
+        "endChar": 58
+      },
+      "revId": "56c1496f90da13f22e5c130472541c521315ee0b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
