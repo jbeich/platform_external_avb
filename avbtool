@@ -393,6 +393,33 @@ class RSAPublicKey(object):
     self.exponent = 65537
 
 
+# TODO(danielaustin): Should this be moved into the RSAPublicKey class?
+def rsa_key_read_pem_bytes(key_path):
+  """Reads the bytes out of the passed in PEM file.
+
+  Arguments:
+    key_path: A string containing the path to the PEM file.
+
+  Returns:
+    A bytearray containing the bytes in the PEM file.
+
+  Raises:
+    AvbError: If openssl cannot decode the PEM file.
+  """
+
+  # Use openssl to decode the PEM file.
+  args = ['openssl', 'rsa', '-in', key_path, '-pubout', '-outform', 'DER']
+  p = subprocess.Popen(args,
+                       stdin=subprocess.PIPE,
+                       stdout=subprocess.PIPE,
+                       stderr=subprocess.PIPE)
+  (pout, perr) = p.communicate()
+  retcode = p.wait()
+  if retcode != 0:
+    raise AvbError('Error decoding: {}'.format(perr))
+  return bytearray(pout)
+
+
 def encode_rsa_key(key_path):
   """Encodes a public RSA key in |AvbRSAPublicKeyHeader| format.
 
@@ -1964,7 +1991,7 @@ class AvbIcpHeader(object):
       data: If not None, must be a bytearray of size == 18.
 
     Raises:
-      AvbError if invalid structure for AvbIcpHeader.
+      AvbError: If invalid structure for AvbIcpHeader.
     """
     assert struct.calcsize(self.FORMAT_STRING) == self.SIZE
 
@@ -1979,7 +2006,7 @@ class AvbIcpHeader(object):
       self.algorithm = 0
       self.icp_count = 0
     if not self.is_valid():
-      raise AvbError('Invalid structure for AvbIcpHeader')
+      raise AvbError('Invalid structure for AvbIcpHeader.')
 
   def save(self, output):
     """Serializes the transparency header (18) to disk.
@@ -1987,7 +2014,7 @@ class AvbIcpHeader(object):
     Arguments:
       output: The object to write the header to.
 
-    Raises:
+    Raise:
       AvbError if invalid structure for AvbIcpHeader.
     """
     output.write(self.encode())
@@ -1999,10 +2026,10 @@ class AvbIcpHeader(object):
       A bytearray() with the encoded header.
 
     Raises:
-      AvbError if invalid structure for AvbIcpHeader.
+      AvbError: If invalid structure for AvbIcpHeader.
     """
     if not self.is_valid():
-      raise AvbError('Invalid structure for AvbIcpHeader')
+      raise AvbError('Invalid structure for AvbIcpHeader.')
     return struct.pack(self.FORMAT_STRING, self.magic,
                        self.required_icp_version_major,
                        self.required_icp_version_minor,
@@ -2058,8 +2085,7 @@ class AvbIcpEntry(object):
     proof_hash_count: Number of hashes comprising the inclusion proof.
     proof_size: The total size of the inclusion proof, in bytes.
     next_entry: 1 if there is a next entry, 0 otherwise.
-    log_url: The URL for the transparency log that generated this inclusion
-        proof.
+    log_url: The URL of the transparency log that produced the inclusion proof.
     signed_root_blob: The data comprising the signed tree head structure.
     proofs: The hashes comprising the inclusion proof.
 
@@ -2095,11 +2121,12 @@ class AvbIcpEntry(object):
         # There's more data. Ensure the data entry size is valid.
         if len(data) != self.get_expected_size():
           if self.next_entry == 0:
-            raise AvbError('ICP entry size is not valid {}/{}.'
-                           .format(len(data), self.get_expected_size()))
+            raise AvbError('ICP entry size invalid {}/{}.'.format(
+                len(data), self.get_expected_size()))
       # Deserialize ICP entry components from the data blob.
-      data_format_string = "{}s{}s{}s".format(
-          self.log_url_size, self.signed_root_blob_size, self.proof_size)
+      data_format_string = '{}s{}s{}s'.format(self.log_url_size,
+                                              self.signed_root_blob_size,
+                                              self.proof_size)
       (self.log_url, self.signed_root_blob, self.proofs) = struct.unpack(
           data_format_string, data[self.SIZE:self.get_expected_size()])
     else:
@@ -2109,7 +2136,7 @@ class AvbIcpEntry(object):
       self.proof_hash_count = 0
       self.proof_size = 0
       self.next_entry = 0
-      self.log_url = ""
+      self.log_url = ''
       self.signed_root_blob = bytearray()
       self.proofs = bytearray()
     if not self.is_valid():
@@ -2125,11 +2152,11 @@ class AvbIcpEntry(object):
     self.log_url_size = len(log_url)
 
   def set_signed_root_blob(self, signed_root_blob):
-    """Sets signed_root_blob and signed_root_blob_size.
+    """Sets the signed_root_blob and signed_root_blob_size.
 
     Arguments:
-      signed_root_blob: bytearray containing the SignedLogRoot for the
-          transparency log.
+      signed_root_blob: bytearray containing the SignedLogRoot
+          for the transparency log.
     """
     self.signed_root_blob = signed_root_blob
     self.signed_root_blob_size = len(signed_root_blob)
@@ -2152,7 +2179,7 @@ class AvbIcpEntry(object):
       output: The object to write the header to.
 
     Raises:
-      AvbError if invalid entry structure.
+      AvbError: If invalid entry structure.
     """
     output.write(self.encode())
 
@@ -2163,11 +2190,11 @@ class AvbIcpEntry(object):
       A bytearray() with the encoded header.
 
     Raises:
-      AvbError if invalid entry structure.
+      AvbError: if invalid entry structure.
     """
     if not self.is_valid():
       raise AvbError('Invalid AvbIcpEntry structure')
-    expected_format_string = "{}{}s{}s{}s".format(self.FORMAT_STRING,
+    expected_format_string = '{}{}s{}s{}s'.format(self.FORMAT_STRING,
                                                   self.log_url_size,
                                                   self.signed_root_blob_size,
                                                   self.proof_size)
@@ -2176,6 +2203,23 @@ class AvbIcpEntry(object):
                        self.signed_root_blob_size, self.proof_hash_count,
                        self.proof_size, self.next_entry, self.log_url,
                        str(self.signed_root_blob), str(self.proofs))
+
+  # TODO(danielaustin): Unit test on this.
+  def translate_response(self, transparency_log, afi_response, algorithm):
+    """Takes an AddFirmwareInfoReponse object and translates to an AvbIcpEntry.
+
+    Arguments:
+      transparency_log: String representing the transparency log URL.
+      afi_response: The AddFirmwareInfoResponse to translate.
+      algorithm: Algorithm ID from the AvbIcpHeader.
+    """
+    self.set_log_url(transparency_log)
+    self.leaf_index = afi_response.vbmeta_proof.proof.leaf_index
+    self.set_signed_root_blob(bytearray(afi_response.vbmeta_proof.sth))
+    # calculate the number of hashes
+    proof_hashes = bytearray(afi_response.vbmeta_proof.proof.hashes)
+    proof_count = len(proof_hashes) // lookup_hash_size_by_type(algorithm)
+    self.set_proofs(proof_count, proof_hashes)
 
   def get_expected_size(self):
     """Gets the expected size of the full entry out of the header.
@@ -2199,26 +2243,24 @@ class AvbIcpEntry(object):
       return False
 
     if self.leaf_index < 0:
-      sys.stderr.write('ICP entry: leaf index out of range: '
-                       '{}\n'.format(self.leaf_index))
+      err_msg = ('ICP entry: leaf index out of range: '
+                 '{}\n'.format(self.leaf_index))
+      sys.stderr.write(err_msg)
       return False
-
-    if ((self.signed_root_blob and self.signed_root_blob_size
-         != len(self.signed_root_blob))
-        or (not self.signed_root_blob and self.signed_root_blob_size != 0)):
-      sys.stderr.write('ICP entry: invalid signed root blob size: '
-                       '{}\n'.format(self.signed_root_blob_size))
+    if (self.signed_root_blob and self.signed_root_blob_size !=
+        len(self.signed_root_blob)):
+      sys.stderr.write('ICP entry: invalid signed root blob size: ')
+      sys.stderr.write('{}, {}\n'.format(self.signed_root_blob_size,
+                                         len(self.signed_root_blob)))
       return False
 
     if self.proof_hash_count < 0:
       sys.stderr.write('ICP entry: invalid proof count: {}\n'.format(
           self.proof_hash_count))
       return False
-
-    if ((self.proofs and self.proof_size != len(self.proofs))
-        or (not self.proofs and self.proof_size != 0)):
-      sys.stderr.write('ICP entry: invalid transparency log proof size: ')
-      sys.stderr.write('{}\n'.format(self.proof_size))
+    if self.proofs and self.proof_size != len(self.proofs):
+      sys.stderr.write('ICP entry: invalid proof size: {}\n'.format(
+          self.proof_size))
       return False
 
     if self.next_entry != 0 and self.next_entry != 1:
@@ -2229,15 +2271,11 @@ class AvbIcpEntry(object):
 
 
 class AvbIcpBlob(object):
-  """A class for the transparency log inclusion proof blob.
-
-  This encapsulates an AFTL ICP section with all information required to
-  validate an inclusion proof.
+  """A class including all information required to validate an inclusion proof.
 
   Attributes:
     icp_header: A header for the section.
-    icp_entries: A list of AvbIcpEntry objects representing the inclusion
-        proofs.
+    icp_entries: A list of AvbIcpEntry objects representing inclusion proofs.
   """
 
   def __init__(self, data=None):
@@ -2259,13 +2297,11 @@ class AvbIcpBlob(object):
       # TODO(danielaustin): make use of proof_hash_size.
       # pylint: disable=unused-variable
       proof_hash_size = lookup_hash_size_by_type(algorithm_id)
-
       # Jump past the header for entry deserialization.
       icp_index = AvbIcpHeader.SIZE
       # Validate each entry.
       self.icp_entries = []
-      # Add_icp_entry updates entries and header, so set header count to
-      # compensate.
+      # add_icp_entry updates entries and header, reset header count.
       self.icp_header.icp_count = 0
       for i in range(icp_count):
         # Get the entry header from the ICP blob.
@@ -2288,7 +2324,11 @@ class AvbIcpBlob(object):
       raise AvbError('Malformed ICP blob')
 
   def set_algorithm(self, algorithm_id):
-    """Sets algorithm to be used by the inclusion proofs in AvbIcpBlob."""
+    """Sets the algorithm to be used in the AvbIcpBlob structure.
+
+    Arguments:
+      algorithm_id: The algorithm to be used.
+    """
     self.icp_header.algorithm = algorithm_id
 
   def add_icp_entry(self, avb_icp_entry):
@@ -2311,18 +2351,18 @@ class AvbIcpBlob(object):
       output: The object to write the blob to.
 
     Raises:
-      AvbError if invalid blob structure.
+      AvbError: If invalid blob structure.
     """
     output.write(self.encode())
 
   def encode(self):
-    """Serialize the AvbIcpBlob to a bytearray()
+    """Serialize the AvbIcpBlob to a bytearray().
 
     Returns:
       A bytearray() with the encoded header.
 
     Raises:
-      AvbError if invalid blob structure.
+      AvbError: if invalid blob structure.
     """
     # The header and entries are guaranteed to be valid when encode is called.
     # Check the entire structure as a whole.
@@ -3137,6 +3177,72 @@ class Avb(object):
       raise AvbError('No hashtree descriptor in given image')
 
     return self._get_cmdline_descriptors_for_hashtree_descriptor(ht)
+
+  # TODO(danielaustin): Add unit tests once 1186416 is merged.
+  def request_inclusion_proof(self, transparency_log, vbmeta_blob,
+                              version_inc, manufacturer_key_path, algorithm):
+    """Packages and sends a request to a specified transparency log.
+
+    Arguments:
+      transparency_log: String containing the URL of a transparency log server.
+      vbmeta_blob: A bytearray() with the VBMeta blob.
+      version_inc: Subcomponent of the build fingerprint.
+      manufacturer_key_path: Path to key used to sign messages sent to the
+         transparency log servers.
+      algorithm: The algorithm ID from the AvbIcpHeader.
+
+    Returns:
+      An AvbIcpEntry with the inclusion proof for the log entry.
+
+    Raises:
+      AvbError: If grpc or the proto modules cannot be loaded, If there is an
+         error communicating with the log or if the manufacturer_key_path
+         cannot be decoded.
+    """
+    # Import grpc and proto.api_pb2_grpc now to avoid global dependencies.
+    try:
+      import grpc
+      import proto.api_pb2_grpc
+    except ImportError as e:
+      raise AvbError('Error: failed to import module: ({})'.format(e))
+    # Set up the gRPC channel with the transparency log.
+    channel = grpc.insecure_channel(transparency_log)
+    stub = proto.api_pb2_grpc.AFTLogStub(channel)
+
+    # Calculate the hash of the VBMeta image.
+    hasher = hashlib.sha256()
+    hasher.update(vbmeta_blob)
+    vbmeta_hash = hasher.digest()
+
+    # Extract the key data from the PEM file.
+    manufacturer_key_data = rsa_key_read_pem_bytes(manufacturer_key_path)
+
+    # Calculate the hash of the manufacturer key data.
+    hasher = hashlib.sha256()
+    hasher.update(manufacturer_key_data)
+    m_key_hash = hasher.digest()
+
+    # Create an AddFirmwareInfoRequest protobuf for transmission to the
+    # transparency log.
+    fw_info = proto.aftl_pb2.FirmwareInfo(vbmeta_hash=vbmeta_hash,
+                                          version_incremental=version_inc,
+                                          manufacturer_key_hash=m_key_hash)
+    # TODO(danielaustin): Sign the message with the manufacturer key.
+    sfw_info = proto.aftl_pb2.SignedFirmwareInfo(info=fw_info)
+    request = proto.api_pb2.AddFirmwareInfoRequest(vbmeta=bytes(
+        str(vbmeta_blob)), fw_info=sfw_info)
+
+    # Attempt to transmit to the transparency log.
+    try:
+      # TODO(danielaustin): set a reasonable timeout deadline here.
+      response = stub.AddFirmwareInfo(request)
+    except grpc.RpcError as e:
+      raise AvbError('Error: grpc failure ({})'.format(e))
+
+    # Return an AvbIcpEntry representing this response.
+    icp_entry = AvbIcpEntry()
+    icp_entry.translate_response(transparency_log, response, algorithm)
+    return icp_entry
 
   def make_vbmeta_image(self, output, chain_partitions, algorithm_name,
                         key_path, public_key_metadata_path, rollback_index,
