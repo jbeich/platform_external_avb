@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0383be71_a95563ea",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "Couldn\u0027t find a better place for this comment:\nThe .pyc can be removed from the CL.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 58
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dcc6ad09_f3518a33",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "Remove trailing tab.",
+      "range": {
+        "startLine": 79,
+        "startChar": 54,
+        "endLine": 79,
+        "endChar": 55
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "782916e9_d6521db7",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "Pls make multi-line:\n\nlibs: [\n    \"aftl_proto\",\n    \"py-grpc\",\n],",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 36
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e27edab4_8d32cd50",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "There is already a RSAPublicKey class in here. Maybe put this function into that class or try to use functionality already in RSAPublicKey.",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 399,
+        "endChar": 37
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0df923d_b3d658df",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2157,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "6 more space to be correctly formatted. Not sure why pylint did not pick that up.",
+      "range": {
+        "startLine": 2157,
+        "startChar": 0,
+        "endLine": 2157,
+        "endChar": 29
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "12658aab_17df278e",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3530,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "Just one space.",
+      "range": {
+        "startLine": 3530,
+        "startChar": 28,
+        "endLine": 3530,
+        "endChar": 30
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4c59d460_ded165be",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3536,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "Needs to 2 more space to indent.",
+      "range": {
+        "startLine": 3535,
+        "startChar": 0,
+        "endLine": 3536,
+        "endChar": 40
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d59e4f2a_89c14c8b",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3551,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "s/.../PEM/",
+      "range": {
+        "startLine": 3551,
+        "startChar": 36,
+        "endLine": 3551,
+        "endChar": 39
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5b8992c1_a13ee370",
+        "filename": "proto/aftl.proto",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "Open source headers?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 18
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf9f92bd_4c11b973",
+        "filename": "proto/aftl_google/api/http.proto",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "I guess this file comes from another repo?\n\nCan you add a comment below the header hear to document the URL/repo where it originally came from?\n\nSuggest for files with similar situation, pls do the same.\n\nOr maybe it would be better to document this in a README.md file/",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 29
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "07e18e3a_9c96ca66",
+        "filename": "proto/trillian.proto",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-13T19:28:39Z",
+      "side": 1,
+      "message": "Why do we need the Trillian proto in AVB? Is this because of the need to validate the STH?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 50
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
