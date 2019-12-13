@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "7637029b_1619c5f2",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0383be71_a95563ea",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 58
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dcc6ad09_f3518a33",
         "filename": "Android.bp",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "129a13ca_39347d97",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dcc6ad09_f3518a33",
+      "range": {
+        "startLine": 79,
+        "startChar": 54,
+        "endLine": 79,
+        "endChar": 55
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "99a2d89a_fcf978cf",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "782916e9_d6521db7",
+      "range": {
+        "startLine": 106,
+        "startChar": 0,
+        "endLine": 106,
+        "endChar": 36
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e27edab4_8d32cd50",
         "filename": "avbtool",
         "patchSetId": 2
@@ -82,6 +154,30 @@
       "writtenOn": "2019-12-13T19:28:39Z",
       "side": 1,
       "message": "There is already a RSAPublicKey class in here. Maybe put this function into that class or try to use functionality already in RSAPublicKey.",
+      "range": {
+        "startLine": 399,
+        "startChar": 0,
+        "endLine": 399,
+        "endChar": 37
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "75feaeb9_9714a43d",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "This seems like it would just be extra processing given our use case. I can add it there, but not sure if it really matches what we need.",
+      "parentUuid": "e27edab4_8d32cd50",
       "range": {
         "startLine": 399,
         "startChar": 0,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "40bbe51d_830a3afc",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2157,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d0df923d_b3d658df",
+      "range": {
+        "startLine": 2157,
+        "startChar": 0,
+        "endLine": 2157,
+        "endChar": 29
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "12658aab_17df278e",
         "filename": "avbtool",
         "patchSetId": 2
@@ -137,6 +257,30 @@
       "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fde22ea9_3455b9f9",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3530,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "12658aab_17df278e",
+      "range": {
+        "startLine": 3530,
+        "startChar": 28,
+        "endLine": 3530,
+        "endChar": 30
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "f1db18e3_8ad7641f",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3536,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c59d460_ded165be",
+      "range": {
+        "startLine": 3535,
+        "startChar": 0,
+        "endLine": 3536,
+        "endChar": 40
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d59e4f2a_89c14c8b",
         "filename": "avbtool",
         "patchSetId": 2
@@ -183,6 +351,30 @@
       "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1d12c5a9_f5a1f063",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3551,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d59e4f2a_89c14c8b",
+      "range": {
+        "startLine": 3551,
+        "startChar": 36,
+        "endLine": 3551,
+        "endChar": 39
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "df234477_7685a9ab",
+        "filename": "proto/aftl.proto",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5b8992c1_a13ee370",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 18
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf9f92bd_4c11b973",
         "filename": "proto/aftl_google/api/http.proto",
         "patchSetId": 2
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "2a76dccd_370227e8",
+        "filename": "proto/aftl_google/api/http.proto",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "bf9f92bd_4c11b973",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 29
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "07e18e3a_9c96ca66",
         "filename": "proto/trillian.proto",
         "patchSetId": 2
@@ -252,6 +492,30 @@
       "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "172ef13e_d7d63513",
+        "filename": "proto/trillian.proto",
+        "patchSetId": 2
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T21:06:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "07e18e3a_9c96ca66",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 50
+      },
+      "revId": "0fb4057efe96835ee59acd96f6c01452c0370f78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
