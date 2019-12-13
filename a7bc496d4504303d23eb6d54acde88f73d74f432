@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "33c7723d_4501cb9d",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 1999,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T17:32:19Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "0504892e_8158428a",
+      "range": {
+        "startLine": 1999,
+        "startChar": 4,
+        "endLine": 1999,
+        "endChar": 15
+      },
+      "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2bdb44c3_3f3fb8d3",
         "filename": "avbtool",
         "patchSetId": 5
@@ -39,6 +63,24 @@
       "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28793b3a_fc98aa3b",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2080,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-13T17:32:19Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2bdb44c3_3f3fb8d3",
+      "revId": "a7bc496d4504303d23eb6d54acde88f73d74f432",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
