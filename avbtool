@@ -1964,7 +1964,7 @@ class AvbIcpHeader(object):
       data: If not None, must be a bytearray of size == 18.
 
     Raises:
-      AvbError if invalid structure for AvbIcpHeader.
+      AvbError: If invalid structure for AvbIcpHeader.
     """
     assert struct.calcsize(self.FORMAT_STRING) == self.SIZE
 
@@ -1999,7 +1999,7 @@ class AvbIcpHeader(object):
       A bytearray() with the encoded header.
 
     Raises:
-      AvbError if invalid structure for AvbIcpHeader.
+      AvbError: If invalid structure for AvbIcpHeader.
     """
     if not self.is_valid():
       raise AvbError('Invalid structure for AvbIcpHeader')
@@ -2042,6 +2042,76 @@ class AvbIcpHeader(object):
       return False
     return True
 
+def check_signature(log_root_hash, log_root_sig, transparency_log_pub_key):
+  """Validates the signature provided by the transparency log.
+
+  Arguments:
+    log_root_hash: The root hash for the transparency log's Merkle tree.
+    log_root_sig: The signature of the root hash for the transparency log.
+    transparency_log_pub_key: The trusted public key of the transparency log.
+
+  Returns:
+    True if the signature check passes, otherwise False.
+  """
+  # TODO(danielaustin): put in openssl call.
+  return True
+
+
+class AvbIcpSignedRootBlob(object):
+  """A class for the components required to validate the incusion proof.
+
+  This class contains the signed tree root components required to verify
+  an inclusion proof given a list of hashes.
+
+  Attributes:
+    leaf_hash: The hash of the leaf corresponding with this log entry.
+    tree_size: The size of the Merkle tree.
+    root_hash: The calculated root hash of the Merkle tree.
+    log_root_sig: The signed root hash. Used to verify the ICP.
+  """
+  SIZE = 584
+  FORMAT_STRING = ('!32s' # The leaf hash corresponding to this vbmeta.
+                   'Q' # The Merkle tree size
+                   '32s' # The Merkle tree root hash.
+                   '512s') # The root hash signed with the transparency log key.
+
+  def __init__(self, data=None):
+    """Initializes a new signed_root_blob structure.
+
+    Arguments:
+      data: If not None, must be a bytearray of size |SIZE|.
+    """
+    if data:
+      (self.leaf_hash, self.tree_size,
+       self.root_hash, self.log_root_sig) = struct.unpack(
+           self.FORMAT_STRING, data)
+    else:
+      self.leaf_hash = bytearray()
+      self.tree_size = bytearray()
+      self.root_hash = bytearray()
+
+  def translate_signed_log_root(self, signed_log_root):
+    log_root = signed_log_root.log_root
+    # Partial format string to extract the tree_size and root_hash from
+    # the SignedLogRoot.
+    partial_log_format_string = ('!H' # Version (ignore)
+                                 'Q' # tree_size
+                                 'B' # hash_size, verify this is 32 for now
+                                 '32s') # The root_hash
+    (_, self.tree_size, root_hash_size, self.root_hash) = struct.unpack(
+        partial_log_root_format_string, log_root[0:43])
+    if not len(self.root_hash) == root_hash_size:
+      AvbError('Unsupported hash size.')
+    self.log_root_sig = signed_log_root.log_root_sig
+
+  def encode(self):
+    """Serializes the AvbSignedRootBlob structure (584) to a bytearray.
+
+    Returns:
+      A bytearray with the AvbSignedRootBlob.
+    """
+    return struct.pack(self.FORMAT_STRING, self.leaf_hash, self.tree_size,
+                       self.root_hash, self.log_root_sig)
 
 class AvbIcpEntry(object):
   """A class for the transparency log inclusion proof entries.
@@ -2098,7 +2168,7 @@ class AvbIcpEntry(object):
             raise AvbError('ICP entry size is not valid {}/{}.'
                            .format(len(data), self.get_expected_size()))
       # Deserialize ICP entry components from the data blob.
-      data_format_string = "{}s{}s{}s".format(
+      data_format_string = '{}s{}s{}s'.format(
           self.log_url_size, self.signed_root_blob_size, self.proof_size)
       (self.log_url, self.signed_root_blob, self.proofs) = struct.unpack(
           data_format_string, data[self.SIZE:self.get_expected_size()])
@@ -2109,7 +2179,7 @@ class AvbIcpEntry(object):
       self.proof_hash_count = 0
       self.proof_size = 0
       self.next_entry = 0
-      self.log_url = ""
+      self.log_url = ''
       self.signed_root_blob = bytearray()
       self.proofs = bytearray()
     if not self.is_valid():
@@ -2145,6 +2215,25 @@ class AvbIcpEntry(object):
     self.proofs = proofs
     self.proof_size = len(proofs)
 
+  def verify_icp(self, transparency_log_pub_key):
+    """Verifies the contained inclusion proof given the public log key.
+
+    Arguments:
+      transparency_log_pub_key: The trusted public key for the log.
+
+    Returns:
+      True if the calculated signature matches the one in the AvbIcpEntry.
+      False otherwise.
+    """
+    signed_root_blob = AvbIcpSignedRootBlob(self.signed_root_blob)
+    calc_root = root_from_icp(self.leaf_index, signed_root_blob.tree_size,
+                              self.proofs, signed_root_blob.leaf_hash)
+    if calc_root == signed_root_blob.root_hash:
+      if check_signature(calc_root, signed_root_blob.log_root_sig,
+                         transparency_log_pub_key):
+        return True
+    return False
+
   def save(self, output):
     """Serializes the transparency header (22) and data to disk.
 
@@ -2152,7 +2241,7 @@ class AvbIcpEntry(object):
       output: The object to write the header to.
 
     Raises:
-      AvbError if invalid entry structure.
+      AvbError: If invalid entry structure.
     """
     output.write(self.encode())
 
@@ -2163,11 +2252,11 @@ class AvbIcpEntry(object):
       A bytearray() with the encoded header.
 
     Raises:
-      AvbError if invalid entry structure.
+      AvbError: If invalid entry structure.
     """
     if not self.is_valid():
       raise AvbError('Invalid AvbIcpEntry structure')
-    expected_format_string = "{}{}s{}s{}s".format(self.FORMAT_STRING,
+    expected_format_string = '{}{}s{}s{}s'.format(self.FORMAT_STRING,
                                                   self.log_url_size,
                                                   self.signed_root_blob_size,
                                                   self.proof_size)
@@ -2176,6 +2265,15 @@ class AvbIcpEntry(object):
                        self.signed_root_blob_size, self.proof_hash_count,
                        self.proof_size, self.next_entry, self.log_url,
                        str(self.signed_root_blob), str(self.proofs))
+
+  def translate_response(self, transparency_Log, response):
+    self.set_log_url(transparency_log)
+    self.leaf_index = response.vbmeta_proof.proof.leaf_index
+    self.set_signed_root_blob(str(response.vbmeta_proof.sth))
+    # Calculate the number of hashes.
+    proof_hashes = response.vbmeta_proof.proof.hashes
+    proof_count = len(proof_hashes) // 32
+    self.set_proofs(proof_count, proof_hashes)
 
   def get_expected_size(self):
     """Gets the expected size of the full entry out of the header.
@@ -2311,18 +2409,18 @@ class AvbIcpBlob(object):
       output: The object to write the blob to.
 
     Raises:
-      AvbError if invalid blob structure.
+      AvbError: if invalid blob structure.
     """
     output.write(self.encode())
 
   def encode(self):
-    """Serialize the AvbIcpBlob to a bytearray()
+    """Serialize the AvbIcpBlob to a bytearray().
 
     Returns:
       A bytearray() with the encoded header.
 
     Raises:
-      AvbError if invalid blob structure.
+      AvbError: If invalid blob structure.
     """
     # The header and entries are guaranteed to be valid when encode is called.
     # Check the entire structure as a whole.
@@ -2351,6 +2449,111 @@ class AvbIcpBlob(object):
       if not icp_entry.is_valid():
         return False
     return True
+
+
+# AFTL Merkle Tree Functionality
+# TODO(danielaustin): Encapsulate this behavior in a class.
+def rfc6962_hash_leaf(leaf):
+  """RFC6962 hashing function for hashing leaves of a Merkle tree.
+
+  Arguments:
+    leaf: A bytearray containing the Merkle tree leaf to be hashed.
+
+  Returns:
+    A bytearray containing the RFC6962 SHA256 hash of the leaf.
+  """
+  hasher = hashlib.sha256()
+  # RFC6962 states a '0' byte should be prepended to the data.
+  # This is done in conjunction with the '1' byte for non-leaf
+  # nodes for 2nd preimage attack resistance.
+  hasher.update(b'\x00')
+  hasher.update(leaf)
+  return hasher.digest()
+
+
+def rfc6962_hash_children(l, r):
+  """Calculates the inner Merkle tree node hash of child nodes l and r.
+
+  Arguments:
+    l: A bytearray containing the left child node to be hashed.
+    r: A bytearray containing the right child node to be hashed.
+
+  Returns:
+    A bytearray containing the RFC6962 SHA256 hash of 1|l|r.
+  """
+  hasher = hashlib.sha256()
+  # RFC6962 states a '1' byte should be prepended to the concatenated data.
+  # This is done in conjunction with the '0' byte for leaf
+  # nodes for 2nd preimage attack resistance.
+  hasher.update(b'\x01')
+  hasher.update(l)
+  hasher.update(r)
+  return hasher.digest()
+
+
+def chain_border_right(seed, proof):
+  """Computes a subtree hash along the left-side tree border.
+
+  Arguments:
+    seed: A bytearray containing the starting hash.
+    proof: A list of bytearrays representing the hashes in the inclusion proof.
+
+  Returns:
+    A bytearray containing the left-side subtree hash.
+  """
+  for h in proof:
+    seed = rfc6962_hash_children(h, seed)
+  return seed
+
+
+def chain_inner(seed, proof, leaf_index):
+  """Computes a subtree hash on or below the tree's right border.
+
+  Arguments:
+    seed: A bytearray containing the starting hash.
+    proof: A list of bytearrays representing the hashes in the inclusion proof.
+    leaf_index: The current leaf index.
+
+  Returns:
+    A bytearray containing the subtree hash.
+  """
+  for i, h in enumerate(proof):
+    if leaf_index >> i & 1 == 0:
+      seed = rfc6962_hash_children(seed, h)
+    else:
+      seed = rfc6962_hash_children(h, seed)
+  return seed
+
+
+def root_from_icp(leaf_index, tree_size, proof, leaf_hash):
+  """Calculates the expected Merkle tree root hash.
+
+  Arguments:
+    leaf_index: The current leaf index.
+    tree_size: The number of nodes in the Merkle tree.
+    proof: A list of bytearrays containing the inclusion proof.
+    leaf_hash: A bytearray containing the initial leaf hash.
+
+  Returns:
+    A bytearray containing the calculated Merkle tree root hash.
+
+  Raises:
+    AvbError: If invalid parameters are passed in.
+  """
+  if leaf_index < 0:
+    raise AvbError('Invalid leaf_index value: {}'.format(leaf_index))
+  if tree_size < 0:
+    raise AvbError('Invalid tree_size value: {}'.format(tree_size))
+  if leaf_index >= tree_size:
+    err_str = 'leaf_index cannot be equal or larger than tree_size: {}, {}'
+    raise AvbError(err_str.format(leaf_index, tree_size))
+
+  # Calculate the point to split the proof into two parts.
+  # The split is where the paths to leaves diverge.
+  inner = (leaf_index ^ (tree_size - 1)).bit_length()
+  result = chain_inner(leaf_hash, proof[:inner], leaf_index)
+  result = chain_border_right(result, proof[inner:])
+  return result
 
 
 class AvbVBMetaHeader(object):
@@ -3212,6 +3415,95 @@ class Avb(object):
       padded_size = round_to_multiple(len(vbmeta_blob), padding_size)
       padding_needed = padded_size - len(vbmeta_blob)
       output.write('\0' * padding_needed)
+
+
+  def make_icp_from_vbmeta(self, vbmeta_image_path, output, algorithm,
+                           key, signing_helper, signing_helper_with_files,
+                           version_incremental, transparency_log_servers,
+                           transparency_log_pub_keys, manufacturer_key):
+    """Generates an ICP blob given a vbmeta image.
+
+    This blob (struct AvbIcBlob) contains the information required to
+    validate an inclusion proof for a specific vbmeta image. It consists
+    of a header (struct AvbIcpHeader) and zero or more entry structures
+    (struct AvbIcpEntry) that contain the vbmeta leaf hash, tree size,
+    root hash, inclusion proof hashes, and the signature for the root hash.
+
+    The vbmeta image, its hash, the version_incremental part of the build
+    fingerprint, and the hash of the manufacturer key are sent to the
+    transparency log, with the message signed by the manufacturer key.
+    An inclusion proof is calculated and returned. This inclusion proof is
+    then packaged in a AvbIcpBlob structure and added to the end of the
+    vbmeta image. Validation of the inclusion proof does not require
+    communication with the transparency log.
+
+    Arguments:
+      vbmeta_image_path: Path to a vbmeta image file.
+      output: File to write the results to.
+      algorithm: The algorithm ID to use (see ALGORITHMS).
+      key: Path to the key that was used to sign the vbmeta image.
+      signing_helper: Program which signs a hash and returns a signature.
+      signing_helper_with_files: Same as signing_helper but uses files instead.
+      version_incremental: A string representing the subcomponent of the
+        build fingerprint used to identify the vbmeta in the transparency log.
+      transparency_log_servers: List of strings containing URLs of transparency
+        log servers where inclusion proofs are requested from.
+      transparency_log_pub_keys: List of paths to trusted public keys that
+        correspond with the transparency_logs.
+      manufacturer_key: Path to key used to sign messages sent to the
+        transparency log servers.
+
+    Returns:
+      True if the inclusion proofs could be fetched from the transparency log
+      servers and could be successfully validated, False otherwise.
+
+    Raises:
+      AvbError if communication with the log fails or the structures are
+      malformed.
+    """
+    # pylint: disable=unused-argument
+
+    image = ImageHandler(vbmeta_image_path)
+    (footer, header, _, _) = self._parse_image(image)
+    offset = 0
+    if footer:
+      offset = footer.vbmeta_offset
+    image.seek(offset)
+    vbmeta_blob = image.read(header.SIZE +
+                             header.authentication_data_block_size +
+                             header.auxiliary_data_block_size)
+    icp_entries = []
+    for i, transparency_log in enumerate(transparency_log_servers):
+      try:
+        icp_entry = self.request_inclusion_proof(transparency_log, vbmeta_blob,
+                                                 version_incremental,
+                                                 manufacturer_key)
+        if not icp_entry.verify_icp(transparency_log_pub_keys[i]):
+          sys.stderr.write('The ICP from {} was not able to be verified'.format(
+              transparency_log))
+          icp_entries.append(icp_entry)
+      except AvbError:
+        # The inclusion proof request failed.
+        # Continue and see if another will succeed.
+        continue
+    if not icp_entries:
+      sys.stderr.write('No valid ICPs.')
+      return False
+
+    icp_blob = AvbIcpBlob()
+    icp_blob.set_algorithm(algorithm)
+    for icp_entry in icp_entries:
+      icp_blob.add_icp_entry(icp_entry)
+
+    if not icp_blob.is_valid():
+      sys.stderr.write('Resulting AvbIcpBlob structure is malformed.')
+      return False
+
+    # Write the original vbmeta blob, followed by the AvbIcpBlob.
+    output.seek(0)
+    output.write(vbmeta_blob)
+    output.write(icp_blob.encode())
+    return True
 
   def _generate_vbmeta_blob(self, algorithm_name, key_path,
                             public_key_metadata_path, descriptors,
