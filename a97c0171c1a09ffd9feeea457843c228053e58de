@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d857386a_ecf1f51f",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1966,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-14T08:41:57Z",
+      "side": 1,
+      "message": "Looks like this file here needs to be rebased against the most current version.",
+      "range": {
+        "startLine": 1966,
+        "startChar": 0,
+        "endLine": 1966,
+        "endChar": 10
+      },
+      "revId": "a97c0171c1a09ffd9feeea457843c228053e58de",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
