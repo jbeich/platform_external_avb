@@ -186,6 +186,29 @@
     },
     {
       "key": {
+        "uuid": "b03f23f6_2748e81f",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3420,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T22:02:10Z",
+      "side": 1,
+      "message": "I\u0027d like an additional command line option to dump the ICP of a given partition to help debugging issues. I am not sure if it makes sense to have this as part of the info_image cmd line option or if this should be its separate cmd line option.",
+      "range": {
+        "startLine": 3420,
+        "startChar": 6,
+        "endLine": 3420,
+        "endChar": 26
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "1373bc05_67b8542a",
         "filename": "avbtool",
         "patchSetId": 2
