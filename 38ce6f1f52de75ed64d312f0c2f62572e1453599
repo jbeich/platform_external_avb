@@ -1,0 +1,188 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7e2b00b2_3aecaab7",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 2181,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T19:50:48Z",
+      "side": 1,
+      "message": "s/Raise/Raises",
+      "range": {
+        "startLine": 2181,
+        "startChar": 4,
+        "endLine": 2181,
+        "endChar": 9
+      },
+      "revId": "38ce6f1f52de75ed64d312f0c2f62572e1453599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "991d221f_e73c3280",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 2182,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T19:50:48Z",
+      "side": 1,
+      "message": "AvbError: if invalid entry structure.",
+      "range": {
+        "startLine": 2182,
+        "startChar": 0,
+        "endLine": 2182,
+        "endChar": 42
+      },
+      "revId": "38ce6f1f52de75ed64d312f0c2f62572e1453599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0f90b05b_099644a6",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 2208,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T19:50:48Z",
+      "side": 1,
+      "message": "Pls add DOCSTRING.",
+      "range": {
+        "startLine": 2208,
+        "startChar": 0,
+        "endLine": 2208,
+        "endChar": 63
+      },
+      "revId": "38ce6f1f52de75ed64d312f0c2f62572e1453599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1b041977_421a73ef",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 2211,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T19:50:48Z",
+      "side": 1,
+      "message": "Shouldn\u0027t that be wrapped as bytearray()?",
+      "range": {
+        "startLine": 2211,
+        "startChar": 30,
+        "endLine": 2211,
+        "endChar": 33
+      },
+      "revId": "38ce6f1f52de75ed64d312f0c2f62572e1453599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9f9c4886_b32963aa",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 2213,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T19:50:48Z",
+      "side": 1,
+      "message": "Does this need to be converted to bytearray() or is that already a bytearray?",
+      "range": {
+        "startLine": 2213,
+        "startChar": 19,
+        "endLine": 2213,
+        "endChar": 57
+      },
+      "revId": "38ce6f1f52de75ed64d312f0c2f62572e1453599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3235d937_93953d39",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 2214,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T19:50:48Z",
+      "side": 1,
+      "message": "Wouldn\u0027t that be derived from AvbIcpHeader.algorithm?",
+      "range": {
+        "startLine": 2214,
+        "startChar": 38,
+        "endLine": 2214,
+        "endChar": 40
+      },
+      "revId": "38ce6f1f52de75ed64d312f0c2f62572e1453599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e6e68d8_3a9e1155",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 3189,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T19:50:48Z",
+      "side": 1,
+      "message": "AvbIcpEntry instead of AddFirmwareInfoResponse is returned now. Pls update docstring here.",
+      "range": {
+        "startLine": 3187,
+        "startChar": 0,
+        "endLine": 3189,
+        "endChar": 42
+      },
+      "revId": "38ce6f1f52de75ed64d312f0c2f62572e1453599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6fb2f5f_b09e2841",
+        "filename": "avbtool",
+        "patchSetId": 8
+      },
+      "lineNbr": 3197,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T19:50:48Z",
+      "side": 1,
+      "message": "I would add a try/catch block around this and catch the ImportError in case loading the module fails. I would then wrap the error in an AvbError and raise it.",
+      "range": {
+        "startLine": 3196,
+        "startChar": 0,
+        "endLine": 3197,
+        "endChar": 29
+      },
+      "revId": "38ce6f1f52de75ed64d312f0c2f62572e1453599",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
