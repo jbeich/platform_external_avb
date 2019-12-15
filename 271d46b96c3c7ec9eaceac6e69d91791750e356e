@@ -22,6 +22,30 @@
       "revId": "271d46b96c3c7ec9eaceac6e69d91791750e356e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "64e24150_5aefd0b5",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3648,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2019-12-15T15:02:33Z",
+      "side": 1,
+      "message": "First part ack, will fix. \n\nThe plan was originally to store it in a separate partition, but after discussions, we decided that the additional overhead for OEMs to generate a new partition, especially a smaller one, was not optimal. It was suggested to us to store it at the end of the vbmeta partition in a way that would not interfere with the integrity of the vbmeta information. \n\nWill update the readme to include AFTL affected flow. :)",
+      "parentUuid": "8c4886f3_51225f8d",
+      "range": {
+        "startLine": 3646,
+        "startChar": 51,
+        "endLine": 3648,
+        "endChar": 17
+      },
+      "revId": "271d46b96c3c7ec9eaceac6e69d91791750e356e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
