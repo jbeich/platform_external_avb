@@ -1,0 +1,297 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "6ac7ccb0_8835fbc5",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2060,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "Suggest you add a is_valid function similar to what you have in the other classes.",
+      "range": {
+        "startLine": 2060,
+        "startChar": 6,
+        "endLine": 2060,
+        "endChar": 29
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9e937c7b_2575c0e7",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2060,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "Pls add unit test.",
+      "range": {
+        "startLine": 2060,
+        "startChar": 0,
+        "endLine": 2060,
+        "endChar": 35
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e582e05d_48f3297b",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2078,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "Pls also initialize log_root_sig in __init__.",
+      "range": {
+        "startLine": 2078,
+        "startChar": 0,
+        "endLine": 2078,
+        "endChar": 32
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df6773b6_f5eae15c",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2084,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "Add the assert you also had in the other classes you added.",
+      "range": {
+        "startLine": 2084,
+        "startChar": 0,
+        "endLine": 2084,
+        "endChar": 12
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da7e0bb6_1f712261",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2097,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "I think you should check the version here. If the server updates the structure this will break uncontrolled. At least I would add a TODO for this.",
+      "range": {
+        "startLine": 2097,
+        "startChar": 33,
+        "endLine": 2097,
+        "endChar": 56
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ab2dbd0_c37a12f2",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2233,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "Would merge the two ifs statements into one.",
+      "range": {
+        "startLine": 2231,
+        "startChar": 1,
+        "endLine": 2233,
+        "endChar": 51
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "08b809dc_467c2bcf",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2269,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "1) Pls add DOCSTRING.\n2) Pls add unittest.",
+      "range": {
+        "startLine": 2269,
+        "startChar": 0,
+        "endLine": 2269,
+        "endChar": 59
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cd90fdee_529976b5",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2412,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "s/if/If/",
+      "range": {
+        "startLine": 2412,
+        "startChar": 16,
+        "endLine": 2412,
+        "endChar": 18
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1373bc05_67b8542a",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3441,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "Will this work with VBMeta structures which are embedded in chained partitions?\nhttps://android.googlesource.com/platform/external/avb/+/master#the-vbmeta-struct",
+      "range": {
+        "startLine": 3441,
+        "startChar": 0,
+        "endLine": 3441,
+        "endChar": 53
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e81ea301_414621a4",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3461,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "AvbError: If",
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a17af13b_ad8da0d0",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3483,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "When this fails you probably want to abort the flow here either with a \"return False\" or raising an AvbError.",
+      "range": {
+        "startLine": 3482,
+        "startChar": 1,
+        "endLine": 3483,
+        "endChar": 32
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6535f26f_369dfccc",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3484,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "Indentation issue? You probably only want ICP entries added when these have been successfully verified.",
+      "range": {
+        "startLine": 3484,
+        "startChar": 0,
+        "endLine": 3484,
+        "endChar": 39
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a70679fa_8376790b",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 3490,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T20:22:06Z",
+      "side": 1,
+      "message": "AvbIcpSignedRootBlob could be retrieved from the log.",
+      "range": {
+        "startLine": 3490,
+        "startChar": 24,
+        "endLine": 3490,
+        "endChar": 37
+      },
+      "revId": "fcdab5401ae0c4b6671865f1c48c190dd35b6e90",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
