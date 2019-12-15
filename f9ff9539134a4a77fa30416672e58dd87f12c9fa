@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "35b0b2dd_ff139088",
+        "filename": "avbtool",
+        "patchSetId": 9
+      },
+      "lineNbr": 2219,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T21:44:05Z",
+      "side": 1,
+      "message": "# Calculate the number of hashes.",
+      "range": {
+        "startLine": 2219,
+        "startChar": 0,
+        "endLine": 2219,
+        "endChar": 36
+      },
+      "revId": "f9ff9539134a4a77fa30416672e58dd87f12c9fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b405ed2_bc17df58",
+        "filename": "avbtool",
+        "patchSetId": 9
+      },
+      "lineNbr": 2223,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-15T21:44:05Z",
+      "side": 1,
+      "message": "Suggest you add a validation check at the end. Keeps it also consistent behavior with what is happening in __init__().\n\n    if not self.is_valid():\n      raise AvbError(\u0027Invalid structure for AvbIcpEntry\u0027)",
+      "revId": "f9ff9539134a4a77fa30416672e58dd87f12c9fa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
