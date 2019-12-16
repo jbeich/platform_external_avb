@@ -37,9 +37,13 @@ class AvbtoolTest(unittest.TestCase):
 
   def setUp(self):
     """Sets up the test bed for the unit tests."""
-    self.test_url = "test"
-    self.test_sth = "sth"
-    self.test_proofs = "proofs"
+    self.test_url = 'test'
+    self.test_sth = avbtool.AvbIcpSignedRootBlob()
+    self.test_sth.leaf_hash = bytearray('leaf' * 8)
+    self.test_sth.tree_size = 2
+    self.test_sth.root_hash = bytearray('root' * 8)
+    self.test_sth.log_root_sig = bytearray('root_sig' * 64)
+    self.test_proofs = 'proofs'
 
     # Redirects the stderr to /dev/null when running the unittests. The reason
     # is that soong interprets any output on stderr as an error and marks the
@@ -104,6 +108,20 @@ class AvbtoolTest(unittest.TestCase):
     icp_entry.next_entry = next_entry
     return icp_entry.is_valid()
 
+  def _validate_icp_signed_root_blob(self, leaf_hash, tree_size,
+                                     root_hash, log_root_sig):
+    """Create an ICP SignedRootBlob and attempt to validate it.
+
+    Returns:
+      True if the tests pass, False otherwise.
+    """
+    icp_signed_root_blob = avbtool.AvbIcpSignedRootBlob()
+    icp_signed_root_blob.leaf_hash = leaf_hash
+    icp_signed_root_blob.tree_size = tree_size
+    icp_signed_root_blob.root_hash = root_hash
+    icp_signed_root_blob.log_root_sig = log_root_sig
+    return icp_signed_root_blob.is_valid()
+
   def test_default_icp_header(self):
     """Tests default ICP header structure."""
     icp_header = avbtool.AvbIcpHeader()
@@ -130,7 +148,7 @@ class AvbtoolTest(unittest.TestCase):
     self.assertTrue(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), 2, self.test_sth,
-            len(self.test_sth), 2, self.test_proofs, len(self.test_proofs), 0))
+            self.test_sth.SIZE, 2, self.test_proofs, len(self.test_proofs), 0))
 
     self.assertTrue(
         self._validate_icp_entry_with_setters(
@@ -139,7 +157,7 @@ class AvbtoolTest(unittest.TestCase):
     self.assertTrue(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), 2, self.test_sth,
-            len(self.test_sth), 2, self.test_proofs, len(self.test_proofs), 1))
+            self.test_sth.SIZE, 2, self.test_proofs, len(self.test_proofs), 1))
 
     self.assertTrue(
         self._validate_icp_entry_with_setters(
@@ -149,30 +167,30 @@ class AvbtoolTest(unittest.TestCase):
     """Tests ICP entry with invalid log_url / log_url_size combination."""
     self.assertFalse(
         self._validate_icp_entry_without_setters(
-            None, 10, 2, self.test_sth, len(self.test_sth),
+            None, 10, 2, self.test_sth, self.test_sth.SIZE,
             2, self.test_proofs, len(self.test_proofs), 0))
 
     self.assertFalse(
         self._validate_icp_entry_without_setters(
-            '', 10, 2, self.test_sth, len(self.test_sth),
+            '', 10, 2, self.test_sth, self.test_sth.SIZE,
             2, self.test_proofs, len(self.test_proofs), 0))
 
     self.assertFalse(
         self._validate_icp_entry_without_setters(
-            self.test_url, -2, 2, self.test_sth, len(self.test_sth),
+            self.test_url, -2, 2, self.test_sth, self.test_sth.SIZE,
             2, self.test_proofs, len(self.test_proofs), 0))
 
     self.assertFalse(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url) - 3, 2, self.test_sth,
-            len(self.test_sth), 2, self.test_proofs, len(self.test_proofs), 0))
+            self.test_sth.SIZE, 2, self.test_proofs, len(self.test_proofs), 0))
 
   def test_icp_entry_invalid_leaf_index(self):
     """Tests ICP entry with invalid leaf_index."""
     self.assertFalse(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), -1, self.test_sth,
-            len(self.test_sth), 2, self.test_proofs, len(self.test_proofs), 1))
+            self.test_sth.SIZE, 2, self.test_proofs, len(self.test_proofs), 1))
 
   def test_icp_entry_invalid_sth(self):
     """Tests ICP entry with invalid STH / STH length."""
@@ -199,7 +217,7 @@ class AvbtoolTest(unittest.TestCase):
     self.assertFalse(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), 2,
-            self.test_sth, len(self.test_sth) + 14,
+            self.test_sth, self.test_sth.SIZE + 14,
             2, self.test_proofs, len(self.test_proofs), 0))
 
   def test_icp_entry_invalid_proof_hash_count(self):
@@ -207,36 +225,57 @@ class AvbtoolTest(unittest.TestCase):
     self.assertFalse(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), 2, self.test_sth,
-            len(self.test_sth), -2, self.test_proofs, len(self.test_proofs), 1))
+            self.test_sth.SIZE, -2, self.test_proofs, len(self.test_proofs), 1))
 
   def test_icp_entry_invalid_proofs(self):
     """Tests ICP entry with invalid proofs / proof size."""
     self.assertFalse(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), 2, self.test_sth,
-            len(self.test_sth), 2, None, len(self.test_proofs), 0))
+            self.test_sth.SIZE, 2, None, len(self.test_proofs), 0))
 
     self.assertFalse(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), 2, self.test_sth,
-            len(self.test_sth), 2, '', len(self.test_proofs), 0))
+            self.test_sth.SIZE, 2, '', len(self.test_proofs), 0))
 
     self.assertFalse(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), 2, self.test_sth,
-            len(self.test_sth), 2, bytearray(), len(self.test_proofs), 0))
+            self.test_sth.SIZE, 2, bytearray(), len(self.test_proofs), 0))
 
     self.assertFalse(
         self._validate_icp_entry_without_setters(
             self.test_url, len(self.test_url), 2, self.test_sth,
-            len(self.test_sth), 2, self.test_proofs,
+            self.test_sth.SIZE, 2, self.test_proofs,
             len(self.test_proofs) - 3, 0))
 
   def test_icp_entry_invalid_next_entry(self):
     """Tests ICP entry with invalid next_entry."""
     self.assertFalse(self._validate_icp_entry_without_setters(
-        self.test_url, len(self.test_url), 2, self.test_sth, len(self.test_sth),
+        self.test_url, len(self.test_url), 2, self.test_sth, self.test_sth.SIZE,
         2, self.test_proofs, len(self.test_proofs), 2))
+
+  def test_icp_signed_root_blob(self):
+    """Tests ICP SignedRootBlob."""
+    self.assertTrue(self._validate_icp_signed_root_blob(
+        self.test_sth.leaf_hash, self.test_sth.tree_size,
+        self.test_sth.root_hash, self.test_sth.log_root_sig))
+    self.assertTrue(self._validate_icp_signed_root_blob(bytearray(), 0,
+                                                        bytearray(),
+                                                        bytearray()))
+    self.assertFalse(self._validate_icp_signed_root_blob(
+        bytearray(), self.test_sth.tree_size, self.test_sth.root_hash,
+        self.test_sth.log_root_sig))
+    self.assertFalse(self._validate_icp_signed_root_blob(
+        self.test_sth.leaf_hash, -2, self.test_sth.root_hash,
+        self.test_sth.log_root_sig))
+    self.assertFalse(self._validate_icp_signed_root_blob(
+        self.test_sth.leaf_hash, self.test_sth.tree_size, bytearray(),
+        self.test_sth.log_root_sig))
+    self.assertFalse(self._validate_icp_signed_root_blob(
+        self.test_sth.leaf_hash, self.test_sth.tree_size,
+        self.test_sth.root_hash, bytearray()))
 
   def test_generate_icp_images(self):
     """Test cases for full AFTL ICP structure generation."""
@@ -256,14 +295,17 @@ class AvbtoolTest(unittest.TestCase):
     self.assertTrue(icp_header.is_valid())
 
     tl_url = 'aftl-test-server.google.com'
-    sth = bytearray()
+    sth = avbtool.AvbIcpSignedRootBlob()
+    sth.leaf_hash = bytearray('a' * 32)
+    sth.tree_size = 2
+    sth.root_hash = bytearray('f' * 32)
+    sth.log_root_sig = bytearray('g' * 512) #bytearray('g' * 512)
     # Fill each structure with an easily observable pattern for easy validation.
-    sth.extend('a' * 160)
-    proof_hashes = bytearray()
-    proof_hashes.extend('b' * 32)
-    proof_hashes.extend('c' * 32)
-    proof_hashes.extend('d' * 32)
-    proof_hashes.extend('e' * 32)
+    proof_hashes = []
+    proof_hashes.append(bytearray('b' * 32))
+    proof_hashes.append(bytearray('c' * 32))
+    proof_hashes.append(bytearray('d' * 32))
+    proof_hashes.append(bytearray('e' * 32))
     self.assertTrue(self._validate_icp_entry_with_setters(
         tl_url, 1, sth, 4, proof_hashes, 0))
 
@@ -274,6 +316,8 @@ class AvbtoolTest(unittest.TestCase):
     icp_entry.set_signed_root_blob(sth)
     icp_entry.set_proofs(4, proof_hashes)
     icp_entry.next_entry = 0
+    icp_bytes = icp_entry.encode()
+
     expected_entry_bytes = bytearray(b'\x00\x00\x00\x1b\x00\x00\x00\x00\x00\x00'
                                      '\x00\x01\x00\x00\x00\xa0\x04\x00\x00\x00'
                                      '\x80\x00\x61\x66\x74\x6c\x2d\x74\x65\x73'
@@ -282,33 +326,77 @@ class AvbtoolTest(unittest.TestCase):
                                      '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
                                      '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
                                      '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x61'
-                                     '\x61\x61\x61\x61\x61\x61\x61\x61\x61\x62'
+                                     '\x61\x00\x00\x00\x00\x00\x00\x00\x02\x66'
+                                     '\x66\x66\x66\x66\x66\x66\x66\x66\x66\x66'
+                                     '\x66\x66\x66\x66\x66\x66\x66\x66\x66\x66'
+                                     '\x66\x66\x66\x66\x66\x66\x66\x66\x66\x66'
+                                     '\x66\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x67\x67\x67\x67\x67\x67\x67'
+                                     '\x67\x67\x67\x62\x62\x62\x62\x62\x62\x62'
                                      '\x62\x62\x62\x62\x62\x62\x62\x62\x62\x62'
                                      '\x62\x62\x62\x62\x62\x62\x62\x62\x62\x62'
-                                     '\x62\x62\x62\x62\x62\x62\x62\x62\x62\x62'
-                                     '\x62\x63\x63\x63\x63\x63\x63\x63\x63\x63'
+                                     '\x62\x62\x62\x62\x62\x63\x63\x63\x63\x63'
                                      '\x63\x63\x63\x63\x63\x63\x63\x63\x63\x63'
                                      '\x63\x63\x63\x63\x63\x63\x63\x63\x63\x63'
-                                     '\x63\x63\x63\x64\x64\x64\x64\x64\x64\x64'
+                                     '\x63\x63\x63\x63\x63\x63\x63\x64\x64\x64'
                                      '\x64\x64\x64\x64\x64\x64\x64\x64\x64\x64'
                                      '\x64\x64\x64\x64\x64\x64\x64\x64\x64\x64'
-                                     '\x64\x64\x64\x64\x64\x65\x65\x65\x65\x65'
+                                     '\x64\x64\x64\x64\x64\x64\x64\x64\x64\x65'
                                      '\x65\x65\x65\x65\x65\x65\x65\x65\x65\x65'
                                      '\x65\x65\x65\x65\x65\x65\x65\x65\x65\x65'
-                                     '\x65\x65\x65\x65\x65\x65\x65')
-    self.assertEqual(icp_entry.encode(), expected_entry_bytes)
+                                     '\x65\x65\x65\x65\x65\x65\x65\x65\x65\x65'
+                                     '\x65')
+
+    self.assertEqual(icp_bytes, expected_entry_bytes)
 
     # Tests ICP entry decoding.
     icp_entry = avbtool.AvbIcpEntry(expected_entry_bytes)
@@ -323,8 +411,12 @@ class AvbtoolTest(unittest.TestCase):
 
     # Now add a 2nd entry (this should fail).
     tl_url2 = 'aftl-test-server.google.ch'
-    sth2 = bytearray()
-    sth2.extend('f' * 192)
+    sth2 = avbtool.AvbIcpSignedRootBlob()
+    sth2.leaf_hash = bytearray('f' * 32)
+    sth2.tree_size = 4
+    sth2.root_hash = bytearray('e' * 32)
+    sth2.log_root_sig = bytearray('d' * 512)
+
     proof_hashes2 = bytearray()
     proof_hashes2.extend('g' * 32)
     proof_hashes2.extend('h' * 32)
