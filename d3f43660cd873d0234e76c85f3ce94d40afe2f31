@@ -375,6 +375,29 @@
     },
     {
       "key": {
+        "uuid": "e1b58556_53fdc610",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3599,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T15:59:43Z",
+      "side": 1,
+      "message": "s/.../Generates a vbmeta image with inclusion proof given a vbmeta image./",
+      "range": {
+        "startLine": 3599,
+        "startChar": 7,
+        "endLine": 3599,
+        "endChar": 50
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "18ab1bf4_dfb18073",
         "filename": "avbtool",
         "patchSetId": 3
@@ -460,6 +483,29 @@
         "startChar": 0,
         "endLine": 3629,
         "endChar": 69
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5c179b0e_3a4c6594",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3647,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T15:59:43Z",
+      "side": 1,
+      "message": "1) ImageHandler will break if the vbmeta image contains an ICP. That also breaks the \"avbtool info_image\" command.\n\n\u003d\u003d\u003d\u003d Test case 1 \u003d\u003d\u003d\u003d \n$ ./avbtool make_icp_from_vbmeta   --vbmeta_image_path vbmeta_icp.img   --output ./vbmeta_icp.img   --version_incremental only_for_testing   --transparency_log_servers [REDACTED_DOMAIN]:80 [REDACTED_DOMAIN]:80   --transparency_log_pub_keys transparency_key.pub transparency_key.pub   --key ~/android/aosp-libavb/external/avb/test/data/testkey_rsa4096.pem   --manufacturer_key manufacturer_key_4096.rsa   --algorithm SHA256_RSA4096\nTraceback (most recent call last):\n  File \"./avbtool\", line 5551, in \u003cmodule\u003e\n    tool.run(sys.argv)\n  File \"./avbtool\", line 5366, in run\n    args.func(args)\n  File \"./avbtool\", line 5406, in make_icp_from_vbmeta\n    args.manufacturer_key)\n  File \"./avbtool\", line 3647, in make_icp_from_vbmeta\n    image \u003d ImageHandler(vbmeta_image_path)\n  File \"./avbtool\", line 757, in __init__\n    self._read_header()\n  File \"./avbtool\", line 779, in _read_header\n    _) \u003d struct.unpack(self.HEADER_FORMAT, header_bin)\nstruct.error: unpack requires a string argument of length 28\n\n\u003d\u003d\u003d\u003d Test case 2 \u003d\u003d\u003d\u003d\njpm@jpm-android:~/android/aosp-libavb/external/avb$ ./avbtool info_image --image vbmeta_icp.img\nTraceback (most recent call last):\n  File \"./avbtool\", line 5551, in \u003cmodule\u003e\n    tool.run(sys.argv)\n  File \"./avbtool\", line 5366, in run\n    args.func(args)\n  File \"./avbtool\", line 5495, in info_image\n    self.avb.info_image(args.image.name, args.output)\n  File \"./avbtool\", line 3070, in info_image\n    image \u003d ImageHandler(image_filename)\n  File \"./avbtool\", line 757, in __init__\n    self._read_header()\n  File \"./avbtool\", line 779, in _read_header\n    _) \u003d struct.unpack(self.HEADER_FORMAT, header_bin)\nstruct.error: unpack requires a string argument of length 28",
+      "range": {
+        "startLine": 3647,
+        "startChar": 0,
+        "endLine": 3647,
+        "endChar": 43
       },
       "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
