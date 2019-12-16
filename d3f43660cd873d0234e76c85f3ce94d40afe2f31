@@ -2,6 +2,546 @@
   "comments": [
     {
       "key": {
+        "uuid": "d5c1465d_cb2df602",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2086,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "This variable is not really used in the rest of this function.",
+      "range": {
+        "startLine": 2086,
+        "startChar": 2,
+        "endLine": 2086,
+        "endChar": 9
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ab605cb4_6653e0d8",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2101,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "What does pout represent? If you are going to keep this, then give this a better name so folks understand what they are seeing.",
+      "range": {
+        "startLine": 2101,
+        "startChar": 11,
+        "endLine": 2101,
+        "endChar": 15
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "989c9933_754e1c3e",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2105,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "A return False is somewhere missing in this function. At the moment invalid signatures pass. Also I would put the \"return True\" into the branch which actually indicates valid verification.",
+      "range": {
+        "startLine": 2105,
+        "startChar": 0,
+        "endLine": 2105,
+        "endChar": 13
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5e04bd26_65844c34",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2144,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "call is_valid() after initialization just like the other AvbIcp* classes.",
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "50ec12d4_b13edf03",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2173,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Before this line add:\n    if not self.is_valid():\n      raise AvbError(\u0027Invalid structure for AvbIcpSignedRootBlob\u0027)",
+      "range": {
+        "startLine": 2173,
+        "startChar": 0,
+        "endLine": 2173,
+        "endChar": 74
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40aa509d_971230e0",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2182,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "# All structures being of size 0 is valid.",
+      "range": {
+        "startLine": 2182,
+        "startChar": 0,
+        "endLine": 2182,
+        "endChar": 45
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e63ddc95_27a89808",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2184,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "You don\u0027t need the parentheses since not as well as \u003d\u003d have higher precedence than the and operator: https://www.mathcs.emory.edu/~valerie/courses/fall10/155/resources/op_precedence.html",
+      "range": {
+        "startLine": 2183,
+        "startChar": 0,
+        "endLine": 2184,
+        "endChar": 56
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57a70976_f2e690ff",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2199,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "I run into this error:\n\n\n$ ./avbtool make_icp_from_vbmeta --vbmeta_image_path /u[REDACTED]/android/factory/coral-qd1a.190821.011.c4/vbmeta.img --transparency_log_servers [REDACTED]:80 --manufacturer_key manufacturer_key_4096.rsa --algorithm SHA256_RSA4096 --transparency_log_pub_keys transparency_key.pub --version_incremental test\nE1216 14:42:36.690245983   40197 fork_posix.cc:63]           Fork support is only compatible with the epoll1 and poll polling strategies\nE1216 14:42:42.237772760   40197 fork_posix.cc:63]           Fork support is only compatible with the epoll1 and poll polling strategies\n0\npout is 6ebb255fcc306becadbf3b20db8c5e6a51594de96384adfb9335105536b679cc1c6d549347cb4b04fc8c258461e7e711cb99d351095e7ca5e1838bb4752af00e019e3057841290af61080e02fd2b60a88157e3b5e03eeeb49580eb84f88e55c50c8eeb23f2de57c5ab3ffa073a4665f6d3c2c90457ef5a04fb3705e7a361286a786b73ded2080c1d9d5d5117ee76113d69633636b42c238fa7a6a04d0b79ecdf16231b0fd872c3695b634cd16976d7c2ca5226b7b4d4eebac9fca07330c892937144e83936fb42aaa63259368e5ee4d64dbaeb16bef848471b7314553c146d426a16bf93a710a127d00197c7675710fd584b4c98cd1dd0a99cfdbb661c9a4fc45cb0c22247451c4d6fbecb523b80467e66298279effcd380bf780d483e82eb1f04627241d99a5e6c8221e4ddbcde897b8aec54396a14bb26b513065813814a42e76ca15076ff6ad1d060ad10536aac7af3cd7a89b0acba0a03159f7ba6402c823ce13876f94436f244bd69113d358331f9481d61f48a1f407da7fb79030cf7dad32c9ce7ab54ad444c12097d709f8d810bd6ff67b67c4caa43f3d32b1ba440079f0606086b2a6be38a76ffd864cd0b9293441b46d2fb93e581ac7c881066855583c2224b60a42a9cce86c3b96765e70fc2124cb1e0f30ef3f5e2c396bfc0507924d41afe8b160620049bda3d16423f695628dd0bfaf4a5f5e22d3686216146a8\nhash is 0001ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff003031300d06096086480165030402010500042077d07f8783167a6c7c25454c04e3398c2983f94d7da91bfac2053be7abdc52ef\nAvbIcpSignedRootBlob: Bad log_root_sig size 72ICP entry: invalid AvbIcpSignedRootBlob\nResulting AvbIcpBlob structure is malformed",
+      "range": {
+        "startLine": 2199,
+        "startChar": 0,
+        "endLine": 2199,
+        "endChar": 79
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "892ae80a_09269653",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2259,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Looks like a left-over suggest removal.",
+      "range": {
+        "startLine": 2259,
+        "startChar": 0,
+        "endLine": 2259,
+        "endChar": 62
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e7ca44a9_00752dc0",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2294,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "avbtool_test.py fails:\n\n\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\nERROR: test_generate_icp_images (__main__.AvbtoolTest)\nTest cases for full AFTL ICP structure generation.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"./avbtool_test.py\", line 268, in test_generate_icp_images\n    tl_url, 1, sth, 4, proof_hashes, 0))\n  File \"./avbtool_test.py\", line 83, in _validate_icp_entry_with_setters\n    icp_entry.set_signed_root_blob(signed_root_blob)\n  File \"/[REDACTED]/android/aosp-libavb/external/avb/avbtool.py\", line 2294, in set_signed_root_blob\n    self.signed_root_blob_size \u003d signed_root_blob.SIZE\nAttributeError: \u0027bytearray\u0027 object has no attribute \u0027SIZE\u0027",
+      "range": {
+        "startLine": 2294,
+        "startChar": 0,
+        "endLine": 2294,
+        "endChar": 54
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1568b716_0dd0f804",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2314,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "DOCSTRING algorithm parameter.",
+      "range": {
+        "startLine": 2314,
+        "startChar": 0,
+        "endLine": 2314,
+        "endChar": 14
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "537abd23_f751c701",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2319,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Should fit on previous line.",
+      "range": {
+        "startLine": 2319,
+        "startChar": 0,
+        "endLine": 2319,
+        "endChar": 20
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8b9a1f68_7c1259ec",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2354,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Why? Pls document.",
+      "range": {
+        "startLine": 2354,
+        "startChar": 49,
+        "endLine": 2354,
+        "endChar": 76
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40524891_dbdf79e6",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2363,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Let the encode() function in AvbIcpSignedRootBlob() take care of this.",
+      "range": {
+        "startLine": 2360,
+        "startChar": 0,
+        "endLine": 2363,
+        "endChar": 58
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f51b958_6691e01f",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2412,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\nERROR: test_icp_entry_valid (__main__.AvbtoolTest)\nTests valid ICP entry structures.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"./avbtool_test.py\", line 133, in test_icp_entry_valid\n    len(self.test_sth), 2, self.test_proofs, len(self.test_proofs), 0))\n  File \"./avbtool_test.py\", line 105, in _validate_icp_entry_without_setters\n    return icp_entry.is_valid()\n  File \"/[REDACTED]/android/aosp-libavb/external/avb/avbtool.py\", line 2412, in is_valid\n    not self.signed_root_blob_size \u003d\u003d self.signed_root_blob.SIZE):\nAttributeError: \u0027str\u0027 object has no attribute \u0027SIZE\u0027",
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a5b717ca_95ff2907",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3481,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "I did not have the grpc debian package installed and got this error message. It be good to make this error message actionable by the user by telling them that the need to install the GRPC \"python-grpcio\" package. In order to install grpc I had to run following command: \"sudo apt-get install python-grpcio\"\n\n$:~/android/aosp-libavb/external/avb$ ./avbtool make_icp_from_vbmeta --vbmeta_image_path /[REDACTED]/factory/coral-qd1a.190821.011.c4/vbmeta.img --transparency_log_servers [REDACTED_DOMAIN]:80\nAvbError: Error: failed to import module: (No module named grpc)No inclusion proofs could be validated from any log.",
+      "range": {
+        "startLine": 3481,
+        "startChar": 0,
+        "endLine": 3481,
+        "endChar": 17
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "18ab1bf4_dfb18073",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3601,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "s/.../AvbIcpBlob/",
+      "range": {
+        "startLine": 3601,
+        "startChar": 22,
+        "endLine": 3601,
+        "endChar": 31
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "498290aa_ee68e048",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3619,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Playing around with it, it looks like this is the signing algorithm to use with the manufacturer_key. I think this should be clarified here.",
+      "range": {
+        "startLine": 3619,
+        "startChar": 0,
+        "endLine": 3619,
+        "endChar": 58
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36c4aa60_dcd9be10",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3627,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "1) Please clarify if these are path to files or the caller points it to a set of directories which contains keys?\n\n2) Clarify which file formats are accepted: PEM and/or DER?\n\n3) Clarify that the order in the list here must align with the order of the transparency_log_servers.\n\n4) Please add clarifications also to the command line help for the particular parameters.",
+      "range": {
+        "startLine": 3627,
+        "startChar": 41,
+        "endLine": 3627,
+        "endChar": 46
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e24d276_67a490a3",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3629,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "1) s/key/key file/\n2) Clarify which data format for the key is expected: PEM and/or DER?\n3) Please add clarifications also to the command line help for the particular parameters.",
+      "range": {
+        "startLine": 3629,
+        "startChar": 0,
+        "endLine": 3629,
+        "endChar": 69
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c048646_1263f30a",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3657,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Add a check that transparency_log_servers is not None and output an error message in case it does. At the moment if caller forgets transparency_log_servers they get a stack trace.\n\n$:~/android/aosp-libavb/external/avb$ ./avbtool make_icp_from_vbmeta --vbmeta_image_path /[REDACTED]/factory/coral-qd1a.190821.011.c4/vbmeta.img \nTraceback (most recent call last):\n  File \"./avbtool\", line 5551, in \u003cmodule\u003e\n    tool.run(sys.argv)\n  File \"./avbtool\", line 5366, in run\n    args.func(args)\n  File \"./avbtool\", line 5406, in make_icp_from_vbmeta\n    args.manufacturer_key)\n  File \"./avbtool\", line 3657, in make_icp_from_vbmeta\n    for i, transparency_log in enumerate(transparency_log_servers):\nTypeError: \u0027NoneType\u0027 object is not iterable",
+      "range": {
+        "startLine": 3657,
+        "startChar": 41,
+        "endLine": 3657,
+        "endChar": 65
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25fb9090_e70a1fba",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3661,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "1) Check manufacturer_key_path is defined and points to existing file. See below:\n\n2) Suggest you validate the arguments passed on the command line in general and give meaningful error message to the user.\n\n$:~/android/aosp-libavb/external/avb$ ./avbtool make_icp_from_vbmeta --vbmeta_image_path /[REDACTED]/android/factory/coral-qd1a.190821.011.c4/vbmeta.img --transparency_log_servers [REDACTED]:80\nE1216 13:11:23.763314216   14600 fork_posix.cc:63]           Fork support is only compatible with the epoll1 and poll polling strategies\nTraceback (most recent call last):\n  File \"./avbtool\", line 5551, in \u003cmodule\u003e\n    tool.run(sys.argv)\n  File \"./avbtool\", line 5366, in run\n    args.func(args)\n  File \"./avbtool\", line 5406, in make_icp_from_vbmeta\n    args.manufacturer_key)\n  File \"./avbtool\", line 3662, in make_icp_from_vbmeta\n    algorithm_id)\n  File \"./avbtool\", line 3494, in request_inclusion_proof\n    manufacturer_key_data \u003d rsa_key_read_pem_bytes(manufacturer_key_path)\n  File \"./avbtool\", line 414, in rsa_key_read_pem_bytes\n    stderr\u003dsubprocess.PIPE)\n  File \"/usr/lib/python2.7/subprocess.py\", line 394, in __init__\n    errread, errwrite)\n  File \"/usr/lib/python2.7/subprocess.py\", line 1047, in _execute_child\n    raise child_exception\nTypeError: execv() arg 2 must contain only strings",
+      "range": {
+        "startLine": 3661,
+        "startChar": 49,
+        "endLine": 3661,
+        "endChar": 65
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af9ee623_7c1f5d1f",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3663,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Add a check cmd line parameter check that transparency_log_pub_keys is not None and has the same number of elements in the list as transparency_log_servers. Otherwise at least for the None case one runs into the following error:\n\n$ ./avbtool make_icp_from_vbmeta --vbmeta_image_path /[REDACTED]/android/factory/coral-qd1a.190821.011.c4/vbmeta.img --transparency_log_servers [REDACTED]:80 --manufacturer_key manufacturer_key.pri --algorithm SHA256_RSA2048\nE1216 14:01:34.319469196   29071 fork_posix.cc:63]           Fork support is only compatible with the epoll1 and poll polling strategies\nTraceback (most recent call last):\n  File \"./avbtool\", line 5551, in \u003cmodule\u003e\n    tool.run(sys.argv)\n  File \"./avbtool\", line 5366, in run\n    args.func(args)\n  File \"./avbtool\", line 5406, in make_icp_from_vbmeta\n    args.manufacturer_key)\n  File \"./avbtool\", line 3663, in make_icp_from_vbmeta\n    if not icp_entry.verify_icp(transparency_log_pub_keys[i], algorithm_id):\nTypeError: \u0027NoneType\u0027 object has no attribute \u0027__getitem__\u0027",
+      "range": {
+        "startLine": 3663,
+        "startChar": 36,
+        "endLine": 3663,
+        "endChar": 61
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bed1c938_267760a4",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 4997,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T14:27:29Z",
+      "side": 1,
+      "message": "Please document the expected format: \u0027List of transparency log servers in host:port format.\u0027",
+      "range": {
+        "startLine": 4997,
+        "startChar": 0,
+        "endLine": 4997,
+        "endChar": 73
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "2b063b51_662f2444",
         "filename": "proto/README.md",
         "patchSetId": 3
