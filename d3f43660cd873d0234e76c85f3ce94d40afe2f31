@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "2b063b51_662f2444",
+        "filename": "proto/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-16T09:37:11Z",
+      "side": 1,
+      "message": "I created https://github.com/google/trillian/pull/2010 to remove this direct dependency. Just FYI for now.",
+      "range": {
+        "startLine": 26,
+        "startChar": 2,
+        "endLine": 26,
+        "endChar": 18
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
