@@ -318,6 +318,23 @@
     },
     {
       "key": {
+        "uuid": "a76bffd7_aafd314f",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2364,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T15:43:01Z",
+      "side": 1,
+      "message": "str() causes the list to be converted into a python code compatible string. However, you want a binaryarray here.\n\nPython 2.7.17rc1 (default, Oct 10 2019, 10:26:01) \n[GCC 8.3.0] on linux2\nType \"help\", \"copyright\", \"credits\" or \"license\" for more information.\n\u003e\u003e\u003e a \u003d [\u0027abc\u0027, \u0027xyz\u0027]\n\u003e\u003e\u003e str(a)\n\"[\u0027abc\u0027, \u0027xyz\u0027]\"\n\nThis leads to the proofs being appearing like this in the hexdump:\n00000b90: 0000 0000 5b27 5f5c 7864 635c 7863 655c  ....[\u0027_\\xdc\\xce\\\n00000ba0: 7861 385c 7839 365c 7861 305c 7862 3136  xa8\\x96\\xa0\\xb16\n00000bb0: 5c78 3862 5c78 6231 5c78 6437 7e3a 5e5c  \\x8b\\xb1\\xd7~:^\\\n00000bc0: 7865 305c 7861 645c 7838 375c 7863 645c  xe0\\xad\\x87\\xcd\\\n00000bd0: 7861 315c 7866 365c 7863 625c 7862 325c  xa1\\xf6\\xcb\\xb2\\\n00000be0: 5c5c 7863 335c 7864 6141 555c 7839 3973  \\\\xc3\\xdaAU\\x99s\n00000bf0: 5c78 6639 455c 7862 6127 2c20 275c 7865  \\xf9E\\xba\u0027, \u0027\\xe\n00000c00: 395c 7866 385c 7837 665c 7864 3452 3b43  9\\xf8\\x7f\\xd4R;C\n00000c10: 5c78 6337 495c 7866 335c 7830 625c 7864  \\xc7I\\xf3\\x0b\\xd\n00000c20: 335c 7865 3441 5c78 3035 5c78 6235 6c5c  3\\xe4A\\x05\\xb5l\\",
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6f51b958_6691e01f",
         "filename": "avbtool",
         "patchSetId": 3
@@ -512,6 +529,29 @@
         "startChar": 36,
         "endLine": 3663,
         "endChar": 61
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9271a8ee_9655e1e6",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3685,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T15:43:01Z",
+      "side": 1,
+      "message": "1) After this line you also need to pad the new vbmeta image up to the original length of the vbmeta that you used as an input.\n\n2) There should also be a check that the new vbmeta image with ICP has the same length as the one from the input vbmeta.",
+      "range": {
+        "startLine": 3685,
+        "startChar": 0,
+        "endLine": 3685,
+        "endChar": 35
       },
       "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
