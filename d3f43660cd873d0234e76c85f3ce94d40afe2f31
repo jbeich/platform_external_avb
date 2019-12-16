@@ -513,6 +513,30 @@
     },
     {
       "key": {
+        "uuid": "12e11c4c_c9d3d19d",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3647,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-16T16:20:58Z",
+      "side": 1,
+      "message": "Also breaks avbtool verify_image command again im ImageHandler.\n\n\u003d\u003d\u003d\u003d Test case 3 \u003d\u003d\u003d\u003d\n\n$ ~/android/aosp-libavb/external/avb/avbtool verify_image --image vbmeta_icp.img --follow_chain_partitions\nVerifying image vbmeta_icp.img using embedded public key\nTraceback (most recent call last):\n  File \"/[REDACTED]/android/aosp-libavb/external/avb/avbtool\", line 5551, in \u003cmodule\u003e\n    tool.run(sys.argv)\n  File \"/[REDACTED]/android/aosp-libavb/external/avb/avbtool\", line 5366, in run\n    args.func(args)\n  File \"/[REDACTED]/android/aosp-libavb/external/avb/avbtool\", line 5502, in verify_image\n    args.accept_zeroed_hashtree)\n  File \"/[REDACTED]/android/aosp-libavb/external/avb/avbtool\", line 3155, in verify_image\n    image \u003d ImageHandler(image_filename)\n  File \"/[REDACTED]/jpm/android/aosp-libavb/external/avb/avbtool\", line 757, in __init__\n    self._read_header()\n  File \"/[REDACTED]/jpm/android/aosp-libavb/external/avb/avbtool\", line 779, in _read_header\n    _) \u003d struct.unpack(self.HEADER_FORMAT, header_bin)\nstruct.error: unpack requires a string argument of length 28",
+      "parentUuid": "5c179b0e_3a4c6594",
+      "range": {
+        "startLine": 3647,
+        "startChar": 0,
+        "endLine": 3647,
+        "endChar": 43
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6c048646_1263f30a",
         "filename": "avbtool",
         "patchSetId": 3
