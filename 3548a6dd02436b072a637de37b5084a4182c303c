@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "31e763e4_0a0ead3a",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2163,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T17:44:47Z",
+      "side": 1,
+      "message": "Nevermind. I think vbmeta_leaf is correct.",
+      "parentUuid": "0e5ba80e_91556520",
+      "range": {
+        "startLine": 2163,
+        "startChar": 39,
+        "endLine": 2163,
+        "endChar": 63
+      },
+      "revId": "3548a6dd02436b072a637de37b5084a4182c303c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "df016922_5d70e91c",
         "filename": "avbtool",
         "patchSetId": 5
