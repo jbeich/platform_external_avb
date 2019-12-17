@@ -1,0 +1,257 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a4a3c754_23bb2772",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 2091,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "This can now be removed since we have found the error.",
+      "range": {
+        "startLine": 2085,
+        "startChar": 0,
+        "endLine": 2091,
+        "endChar": 21
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cc248931_522cbc37",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 2157,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "Raises:\n  AvbError: If ...",
+      "range": {
+        "startLine": 2157,
+        "startChar": 0,
+        "endLine": 2157,
+        "endChar": 7
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80d60d04_6dd1f772",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 2164,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "1) Pls put a link to the documentation for log_root:\nhttps://github.com/google/trillian/blob/master/trillian.proto#L255\n\n2) This should be made into its own class and have it parsed fully. At least put a TODO if you want to defer to later.",
+      "range": {
+        "startLine": 2164,
+        "startChar": 0,
+        "endLine": 2164,
+        "endChar": 47
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "000452ed_feb0a139",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 2168,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "Replace this with a check after this following line:\n   if log_root_version !\u003d 1:\n      raise AvbError(\u0027Unsupported log root version: {}\u0027.format(log_root_version))",
+      "range": {
+        "startLine": 2168,
+        "startChar": 0,
+        "endLine": 2168,
+        "endChar": 75
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27b47d46_5e011da6",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 2172,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "raise AvbError(\u0027Unsupported hash size.\u0027)",
+      "range": {
+        "startLine": 2172,
+        "startChar": 0,
+        "endLine": 2172,
+        "endChar": 40
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bd4e5342_24d2a620",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3516,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "Add a new line before this comment to make better readable.",
+      "range": {
+        "startLine": 3516,
+        "startChar": 0,
+        "endLine": 3516,
+        "endChar": 56
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c611c1c_400832b5",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3679,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "Add a comment above:\n\n# Validates command line parameters.",
+      "range": {
+        "startLine": 3679,
+        "startChar": 0,
+        "endLine": 3679,
+        "endChar": 29
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bce4ed0a_452297a9",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3697,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "Add comment above:\n# Retrieves vbmeta structure from given partition image.",
+      "range": {
+        "startLine": 3697,
+        "startChar": 0,
+        "endLine": 3697,
+        "endChar": 43
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "81bbc327_dfcc1d6b",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3706,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "Add comment above:\n\n# Fetches inclusion proofs for vbmeta structure from all transparency logs.",
+      "range": {
+        "startLine": 3706,
+        "startChar": 0,
+        "endLine": 3706,
+        "endChar": 20
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e75be155_85942cd1",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3725,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "Add comment above:\n# Prepares the inclusion proof blog that will be appended to the vbmeta image.",
+      "range": {
+        "startLine": 3725,
+        "startChar": 0,
+        "endLine": 3725,
+        "endChar": 27
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "22c4afc0_a308879b",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3740,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:20:30Z",
+      "side": 1,
+      "message": "Add comment above:\n# Writes vbmeta image with inclusion proof into a new vbmeta image.",
+      "range": {
+        "startLine": 3740,
+        "startChar": 0,
+        "endLine": 3740,
+        "endChar": 18
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
