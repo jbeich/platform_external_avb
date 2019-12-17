@@ -180,6 +180,30 @@
     },
     {
       "key": {
+        "uuid": "c2f643c4_2eb56c8d",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2199,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T13:54:09Z",
+      "side": 1,
+      "message": "Ignore this one. I had the incorrect transparency log pub key.",
+      "parentUuid": "57a70976_f2e690ff",
+      "range": {
+        "startLine": 2199,
+        "startChar": 0,
+        "endLine": 2199,
+        "endChar": 79
+      },
+      "revId": "d3f43660cd873d0234e76c85f3ce94d40afe2f31",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "892ae80a_09269653",
         "filename": "avbtool",
         "patchSetId": 3
