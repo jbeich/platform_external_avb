@@ -186,6 +186,29 @@
     },
     {
       "key": {
+        "uuid": "96d36248_8b23045c",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3697,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:41:25Z",
+      "side": 1,
+      "message": "This is still broken:\n\njpm@jpm-android:~/android/aosp-libavb/external/avb$ ./avbtool make_icp_from_vbmeta   --vbmeta_image_path vbmeta_icp.img   --output ./vbmeta_icp.img   --version_incremental only_for_testing   --transparency_log_servers log.endpoints.aftl-dev.cloud.goog:80   --transparency_log_pub_keys transparency_key2.pub   --key ~/android/aosp-libavb/external/avb/test/data/testkey_rsa4096.pem   --manufacturer_key manufacturer_key_4096.rsa   --algorithm SHA256_RSA4096\nTraceback (most recent call last):\n  File \"./avbtool\", line 5638, in \u003cmodule\u003e\n    tool.run(sys.argv)\n  File \"./avbtool\", line 5452, in run\n    args.func(args)\n  File \"./avbtool\", line 5493, in make_icp_from_vbmeta\n    args.padding_size)\n  File \"./avbtool\", line 3699, in make_icp_from_vbmeta\n    image \u003d ImageHandler(vbmeta_image_path)\n  File \"./avbtool\", line 757, in __init__\n    self._read_header()\n  File \"./avbtool\", line 779, in _read_header\n    _) \u003d struct.unpack(self.HEADER_FORMAT, header_bin)\nstruct.error: unpack requires a string argument of length 28",
+      "range": {
+        "startLine": 3697,
+        "startChar": 12,
+        "endLine": 3697,
+        "endChar": 43
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "81bbc327_dfcc1d6b",
         "filename": "avbtool",
         "patchSetId": 7
