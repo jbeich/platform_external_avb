@@ -140,6 +140,29 @@
     },
     {
       "key": {
+        "uuid": "bef3cdfd_ae559411",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3654,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:45:52Z",
+      "side": 1,
+      "message": "These are currently flagged by linter as:\nW:3629,27: Unused argument \u0027signing_helper\u0027 (unused-argument)\nW:3629,43: Unused argument \u0027signing_helper_with_files\u0027 (unused-argument)\n\nI suggest you an implement a check for these params and raise an AvbError saying that these parameters are currently not supported.",
+      "range": {
+        "startLine": 3653,
+        "startChar": 0,
+        "endLine": 3654,
+        "endChar": 79
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "6c611c1c_400832b5",
         "filename": "avbtool",
         "patchSetId": 7
