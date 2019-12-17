@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "df016922_5d70e91c",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2193,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T13:52:45Z",
+      "side": 1,
+      "message": "The self.tree_size needs to be above self.root_hash according to FORMAT_STRING in line 2127.\n\nTraceback (most recent call last):\n  File \"./avbtool\", line 5616, in \u003cmodule\u003e\n    tool.run(sys.argv)\n  File \"./avbtool\", line 5431, in run\n    args.func(args)\n  File \"./avbtool\", line 5471, in make_icp_from_vbmeta\n    args.manufacturer_key)\n  File \"./avbtool\", line 3738, in make_icp_from_vbmeta\n    output.write(icp_blob.encode())\n  File \"./avbtool\", line 2582, in encode\n    icp_blob.extend(icp_entry.encode())\n  File \"./avbtool\", line 2393, in encode\n    self.signed_root_blob.encode(),\n  File \"./avbtool\", line 2194, in encode\n    str(self.log_root_sig))\nstruct.error: cannot convert argument to integer",
+      "range": {
+        "startLine": 2193,
+        "startChar": 0,
+        "endLine": 2193,
+        "endChar": 38
+      },
+      "revId": "3548a6dd02436b072a637de37b5084a4182c303c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3f174e62_03f55ccc",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 3700,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T13:52:45Z",
+      "side": 1,
+      "message": "image_size to make the padding work. See my suggestion towards the end of this method.",
+      "range": {
+        "startLine": 3700,
+        "startChar": 24,
+        "endLine": 3700,
+        "endChar": 25
+      },
+      "revId": "3548a6dd02436b072a637de37b5084a4182c303c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "564ca533_15f569c8",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 3734,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T13:52:45Z",
+      "side": 1,
+      "message": "You need to handled chained partition separately. Suggest handling for the moment: \n\n    if footer:  # Checks if it is a chained partition.\n      # TODO(danielaustin): Add support for chained paritions like system.img\n      # using similar functionality as implemented in append_vbmeta_image().\n      print(\u0027Image has a footer and ICP for this format is not implemented\u0027)\n      return False",
+      "range": {
+        "startLine": 3734,
+        "startChar": 0,
+        "endLine": 3734,
+        "endChar": 65
+      },
+      "revId": "3548a6dd02436b072a637de37b5084a4182c303c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fdc4990a_75025ba2",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 3739,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T13:52:45Z",
+      "side": 1,
+      "message": "Here the code to pad the vbmeta image correctly to the original one and checking that the resulting image is not larger than the original.\n\n    # Write vbmeta images for non-chained partitions.\n    encoded_icp_blob \u003d icp_blob.encode()\n    output.seek(0)\n    output.write(vbmeta_blob)\n    output.write(encoded_icp_blob)\n    output.write(\u0027\\00\u0027* (image_size - len(vbmeta_blob) - len(encoded_icp_blob)))\n    written_bytes \u003d output.tell()\n    \n    # The resulting vbmeta image cannot be larger than the original one.\n    if output.tell() !\u003d image_size:\n      print(\u0027Resulting vbmeta image ({} bytes) with ICP is larger than the \u0027\n            \u0027original vbmeta image ({} bytes).\u0027.format(image_size,\n                                                       output.tell()))\n      return False\n    return True",
+      "range": {
+        "startLine": 3735,
+        "startChar": 1,
+        "endLine": 3739,
+        "endChar": 0
+      },
+      "revId": "3548a6dd02436b072a637de37b5084a4182c303c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
