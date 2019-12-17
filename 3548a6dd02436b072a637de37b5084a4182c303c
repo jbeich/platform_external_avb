@@ -2,6 +2,29 @@
   "comments": [
     {
       "key": {
+        "uuid": "0e5ba80e_91556520",
+        "filename": "avbtool",
+        "patchSetId": 5
+      },
+      "lineNbr": 2163,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T14:35:27Z",
+      "side": 1,
+      "message": "I think this should be afi_response.fw_info_leaf and not vbmeta_leaf since the server sends the inclusion proof for fw_info_leaf.",
+      "range": {
+        "startLine": 2163,
+        "startChar": 39,
+        "endLine": 2163,
+        "endChar": 63
+      },
+      "revId": "3548a6dd02436b072a637de37b5084a4182c303c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "df016922_5d70e91c",
         "filename": "avbtool",
         "patchSetId": 5
