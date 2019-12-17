@@ -209,6 +209,52 @@
     },
     {
       "key": {
+        "uuid": "02197df9_68ca7347",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3707,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:28:17Z",
+      "side": 1,
+      "message": "At times it can take a while for ICP to be fetched.\n\nWe should to give some output to the user that inclusion proofs are now request and it might take up to 30 seconds.\n\nI\u0027d like to avoid that users think that the command is dead and unnecessarily abort the request.",
+      "range": {
+        "startLine": 3707,
+        "startChar": 0,
+        "endLine": 3707,
+        "endChar": 67
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ffb752c4_58e19652",
+        "filename": "avbtool",
+        "patchSetId": 7
+      },
+      "lineNbr": 3709,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-17T19:28:17Z",
+      "side": 1,
+      "message": "Add user output that ICP is now request from transparency log with domain XYZ.",
+      "range": {
+        "startLine": 3709,
+        "startChar": 0,
+        "endLine": 3709,
+        "endChar": 79
+      },
+      "revId": "03c10437ff757aa15a48123acfa551fcf923b470",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e75be155_85942cd1",
         "filename": "avbtool",
         "patchSetId": 7
