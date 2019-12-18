@@ -23,10 +23,6 @@ follows:
    For trillian.proto, contains the DigitallySigned message used by Tree and
    SignedEntryTimestamp. For aftl.proto, contains the DigitallySigned message
    used by SignedFirmwareInfo.
-* trillian_log_api.proto XXX
-   From https://github.com/google/trillian
-   Dependency of aftl.proto
-   Contains message definitions for Proof
 * trillian.proto
    From https://github.com/google/trillian
    Dependency of trillian_log_api.proto and aftl.proto

@@ -26,7 +26,6 @@ package aftl;
 option go_package = "proto";
 
 import "trillian.proto";
-import "trillian_log_api.proto";
 import "crypto/sigpb/sigpb.proto";
 import "google/protobuf/timestamp.proto";
 
