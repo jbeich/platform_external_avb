@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "150375e6_3e2fccb7",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-18T20:07:47Z",
+      "side": 1,
+      "message": "environment",
+      "range": {
+        "startLine": 28,
+        "startChar": 39,
+        "endLine": 28,
+        "endChar": 51
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3e2f015d_df7cf849",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-18T20:07:47Z",
+      "side": 1,
+      "message": "In the doc, it is AFTL_PUB_KEY (note the extra underscore). Please fix here or in the doc. Thanks",
+      "range": {
+        "startLine": 54,
+        "startChar": 39,
+        "endLine": 54,
+        "endChar": 50
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a6df9b8_8d0511d3",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-18T20:07:47Z",
+      "side": 1,
+      "message": "s/manufactuer_key/manufacturer_key (and below)",
+      "range": {
+        "startLine": 56,
+        "startChar": 9,
+        "endLine": 56,
+        "endChar": 24
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56760a3c_dcf80c79",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-18T20:07:47Z",
+      "side": 1,
+      "message": "and delete the output_file?",
+      "range": {
+        "startLine": 78,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 20
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bf125788_19dc0da5",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-18T20:07:47Z",
+      "side": 1,
+      "message": "What\u0027s the logic here? Why are you rewinding to the beginning of this file?",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 19
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "65017918_915e0314",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-18T20:07:47Z",
+      "side": 1,
+      "message": "Isn\u0027t there a way to know how much you should be reading?",
+      "range": {
+        "startLine": 103,
+        "startChar": 27,
+        "endLine": 103,
+        "endChar": 33
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
