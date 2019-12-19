@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a5c07eed_b54e4aa3",
+        "filename": "avbtool",
+        "patchSetId": 10
+      },
+      "lineNbr": 5375,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-12-19T14:21:19Z",
+      "side": 1,
+      "message": "Does it make sense to store ICPs in a footer though? I think \u0027avbtool make_icp_from_vbmeta\u0027 only works on vbmeta.img which never has a footer... so we can probably remove the footer part of this comment and the corresponding code in info_image_icp() above...",
+      "range": {
+        "startLine": 5375,
+        "startChar": 56,
+        "endLine": 5375,
+        "endChar": 67
+      },
+      "revId": "92c2ea98f80b6d3d0f5186ad4dfdb452a7519f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
