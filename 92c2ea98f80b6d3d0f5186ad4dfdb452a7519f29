@@ -22,6 +22,30 @@
       "revId": "92c2ea98f80b6d3d0f5186ad4dfdb452a7519f29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd1fe521_83887488",
+        "filename": "avbtool",
+        "patchSetId": 10
+      },
+      "lineNbr": 5375,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T14:27:54Z",
+      "side": 1,
+      "message": "Yes the make_icp_from_vbmeta command only works for vbmeta partitions at the moment.\nHowever, eventually there should also be inclusion proofs on chained partitions but Dan did not yet implement that.",
+      "parentUuid": "a5c07eed_b54e4aa3",
+      "range": {
+        "startLine": 5375,
+        "startChar": 56,
+        "endLine": 5375,
+        "endChar": 67
+      },
+      "revId": "92c2ea98f80b6d3d0f5186ad4dfdb452a7519f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
