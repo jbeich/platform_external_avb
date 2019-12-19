@@ -46,6 +46,30 @@
       "revId": "92c2ea98f80b6d3d0f5186ad4dfdb452a7519f29",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d7eb1c4c_29984372",
+        "filename": "avbtool",
+        "patchSetId": 10
+      },
+      "lineNbr": 5375,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2019-12-19T14:29:16Z",
+      "side": 1,
+      "message": "ICPs on chained partitions make a lot of sense, I didn\u0027t consider that. Makes sense then to keep the footer stuff in then.",
+      "parentUuid": "dd1fe521_83887488",
+      "range": {
+        "startLine": 5375,
+        "startChar": 56,
+        "endLine": 5375,
+        "endChar": 67
+      },
+      "revId": "92c2ea98f80b6d3d0f5186ad4dfdb452a7519f29",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
