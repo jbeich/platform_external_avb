@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "334e4220_19abe5cc",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T13:21:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a51edcdc_cfc095a3",
+      "range": {
+        "startLine": 112,
+        "startChar": 25,
+        "endLine": 112,
+        "endChar": 28
+      },
+      "revId": "a54acf4b5d82a71de003d6820d07cffdd612d857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "067fa3eb_c486cd0b",
         "filename": "aftl_integration_test.py",
         "patchSetId": 6
@@ -39,6 +63,24 @@
       "revId": "a54acf4b5d82a71de003d6820d07cffdd612d857",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e2335780_06182cd7",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T13:21:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "067fa3eb_c486cd0b",
+      "revId": "a54acf4b5d82a71de003d6820d07cffdd612d857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
