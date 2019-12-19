@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "ea50bd24_c5b8d56e",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3204,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-19T13:53:24Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7b2c5145_11091f34",
+      "range": {
+        "startLine": 3204,
+        "startChar": 58,
+        "endLine": 3204,
+        "endChar": 69
+      },
+      "revId": "7bca4415f1a65f73e7178bc77848049f3d7bb78a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3c208569_33115257",
         "filename": "avbtool",
         "patchSetId": 3
