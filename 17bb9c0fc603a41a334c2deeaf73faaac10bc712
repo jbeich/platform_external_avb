@@ -214,6 +214,30 @@
     },
     {
       "key": {
+        "uuid": "832c0aac_e268af6e",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T13:21:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2d93dcf2_fa1fdbac",
+      "range": {
+        "startLine": 78,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 20
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bf125788_19dc0da5",
         "filename": "aftl_integration_test.py",
         "patchSetId": 4
@@ -285,6 +309,30 @@
     },
     {
       "key": {
+        "uuid": "c7818209_f25b21d5",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T13:21:39Z",
+      "side": 1,
+      "message": "Clean up this up based on our discussion.",
+      "parentUuid": "7b1c3c67_189ec981",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 19
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "65017918_915e0314",
         "filename": "aftl_integration_test.py",
         "patchSetId": 4
@@ -343,6 +391,30 @@
       "writtenOn": "2019-12-19T13:05:20Z",
       "side": 1,
       "message": "Ack",
+      "parentUuid": "36f99dfd_4b909a25",
+      "range": {
+        "startLine": 103,
+        "startChar": 27,
+        "endLine": 103,
+        "endChar": 33
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "ef8bedf3_20e0512e",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T13:21:39Z",
+      "side": 1,
+      "message": "Done",
       "parentUuid": "36f99dfd_4b909a25",
       "range": {
         "startLine": 103,
