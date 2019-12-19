@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "06cd2afd_40735793",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3204,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-19T12:59:03Z",
+      "side": 1,
+      "message": "\"filename\" sounds like a string and not a file object. Rename the variable?",
+      "range": {
+        "startLine": 3204,
+        "startChar": 58,
+        "endLine": 3204,
+        "endChar": 69
+      },
+      "revId": "7bca4415f1a65f73e7178bc77848049f3d7bb78a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3c208569_33115257",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 3222,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-19T12:59:03Z",
+      "side": 1,
+      "message": "This check should also be true when size \u003c 4, maybe change to:\n\nif not icp_bytes or len(icp_bytes) \u003c 4 or icp_bytes[0:4] !\u003d \u0027AFTL\u0027:",
+      "range": {
+        "startLine": 3222,
+        "startChar": 4,
+        "endLine": 3222,
+        "endChar": 70
+      },
+      "revId": "7bca4415f1a65f73e7178bc77848049f3d7bb78a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
