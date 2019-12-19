@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "6dffe8c9_7729a184",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T10:53:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "150375e6_3e2fccb7",
+      "range": {
+        "startLine": 28,
+        "startChar": 39,
+        "endLine": 28,
+        "endChar": 51
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3e2f015d_df7cf849",
         "filename": "aftl_integration_test.py",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7da4b2f7_35371ee1",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T10:53:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3e2f015d_df7cf849",
+      "range": {
+        "startLine": 54,
+        "startChar": 39,
+        "endLine": 54,
+        "endChar": 50
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "ba6b2c1d_4942c1b4",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T10:53:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a6df9b8_8d0511d3",
+      "range": {
+        "startLine": 56,
+        "startChar": 9,
+        "endLine": 56,
+        "endChar": 24
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "56760a3c_dcf80c79",
         "filename": "aftl_integration_test.py",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2019-12-18T20:07:47Z",
       "side": 1,
       "message": "and delete the output_file?",
+      "range": {
+        "startLine": 78,
+        "startChar": 9,
+        "endLine": 78,
+        "endChar": 20
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2d93dcf2_fa1fdbac",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T10:53:12Z",
+      "side": 1,
+      "message": "I want to keep the file for inspection.",
+      "parentUuid": "56760a3c_dcf80c79",
       "range": {
         "startLine": 78,
         "startChar": 9,
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "7b1c3c67_189ec981",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T10:53:12Z",
+      "side": 1,
+      "message": "The way the command line tool is working is that make_icp_from_vbmeta takes a open file descriptor for output. So once the command is executed all the content is there but the file position is at the very end.\n\nThe seek(0) hear make sure that the method here reads from the beginning again.",
+      "parentUuid": "bf125788_19dc0da5",
+      "range": {
+        "startLine": 90,
+        "startChar": 4,
+        "endLine": 90,
+        "endChar": 19
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "65017918_915e0314",
         "filename": "aftl_integration_test.py",
         "patchSetId": 4
@@ -128,6 +248,30 @@
       "writtenOn": "2019-12-18T20:07:47Z",
       "side": 1,
       "message": "Isn\u0027t there a way to know how much you should be reading?",
+      "range": {
+        "startLine": 103,
+        "startChar": 27,
+        "endLine": 103,
+        "endChar": 33
+      },
+      "revId": "17bb9c0fc603a41a334c2deeaf73faaac10bc712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "36f99dfd_4b909a25",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 4
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2019-12-19T10:53:12Z",
+      "side": 1,
+      "message": "Not at the moment. It is a limitation of the AvbIcpBlob at the moment. I added a TODO.",
+      "parentUuid": "65017918_915e0314",
       "range": {
         "startLine": 103,
         "startChar": 27,
