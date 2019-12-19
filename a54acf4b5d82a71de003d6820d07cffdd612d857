@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a51edcdc_cfc095a3",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 112,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-19T13:05:20Z",
+      "side": 1,
+      "message": "one?",
+      "range": {
+        "startLine": 112,
+        "startChar": 25,
+        "endLine": 112,
+        "endChar": 28
+      },
+      "revId": "a54acf4b5d82a71de003d6820d07cffdd612d857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "067fa3eb_c486cd0b",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2019-12-19T13:05:20Z",
+      "side": 1,
+      "message": "This is the same comment as test_make_icp_with_one_transparency_log. Rephrase?",
+      "revId": "a54acf4b5d82a71de003d6820d07cffdd612d857",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
