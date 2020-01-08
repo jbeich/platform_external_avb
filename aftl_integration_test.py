@@ -38,16 +38,17 @@ need to be set:
 import os
 import unittest
 
+import aftltool
 import avbtool
 
 
 class AFTLIntegrationTest(unittest.TestCase):
-  """Test suite for testing avbtool with a AFTL."""
+  """Test suite for testing aftltool with a AFTL."""
 
   def setUp(self):
     """Sets up the test bed for the unit tests."""
     super(AFTLIntegrationTest, self).setUp()
-    self.avbtool = avbtool.Avb()
+    self.aftltool = aftltool.Aftl()
     self.output_filename = 'vbmeta_icp.img'
 
     self.aftl_host = os.environ.get('AFTL_HOST')
@@ -63,7 +64,6 @@ class AFTLIntegrationTest(unittest.TestCase):
     self.make_icp_default_params = {
         'vbmeta_image_path': self.vbmeta_image,
         'output': None,
-        'algorithm': 'SHA256_RSA4096',
         'signing_helper': None,
         'signing_helper_with_files': None,
         'version_incremental': '1',
@@ -90,7 +90,7 @@ class AFTLIntegrationTest(unittest.TestCase):
     image = avbtool.ImageHandler(self.output_filename)
 
     # pylint: disable=protected-access
-    (footer, header, _, _) = self.avbtool._parse_image(image)
+    (footer, header, _, _) = self.aftltool._parse_image(image)
     offset = 0
     if footer:
       offset = footer.vbmeta_offset
@@ -104,7 +104,7 @@ class AFTLIntegrationTest(unittest.TestCase):
     icp_bytes = image.read(100000)
     self.assertGreater(len(icp_bytes), 0)
 
-    icp_blob = avbtool.AvbIcpBlob(icp_bytes)
+    icp_blob = aftltool.AvbIcpBlob(icp_bytes)
     self.assertTrue(icp_blob.is_valid())
     return icp_blob
 
@@ -116,11 +116,12 @@ class AFTLIntegrationTest(unittest.TestCase):
     """
     with open(self.output_filename, 'wb') as output_file:
       self.make_icp_default_params['output'] = output_file
-      result = self.avbtool.make_icp_from_vbmeta(**self.make_icp_default_params)
+      result = self.aftltool.make_icp_from_vbmeta(
+          **self.make_icp_default_params)
     return result
 
   def test_make_icp_with_one_transparency_log(self):
-    """Tests integration of avbtool with one AFTL."""
+    """Tests integration of aftltool with one AFTL."""
     # Submits vbmeta to AFTL and fetches ICP.
     result = self._make_icp_from_vbmeta()
     self.assertTrue(result)
@@ -140,7 +141,7 @@ class AFTLIntegrationTest(unittest.TestCase):
       self.assertTrue(icp.verify_icp(self.aftl_pubkey))
 
   def test_make_icp_with_two_transparency_log(self):
-    """Tests integration of avbtool with two AFTLs."""
+    """Tests integration of aftltool with two AFTLs."""
     # Reconfigures default parameters with two transparency logs.
     self.make_icp_default_params['transparency_log_servers'] = [
         self.aftl_host, self.aftl_host]

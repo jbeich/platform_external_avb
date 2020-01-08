@@ -90,12 +90,32 @@ python_binary_host {
     },
 }
 
+python_binary_host {
+    name: "aftltool",
+    srcs: [
+    	":aftltool_py",
+    	":avbtool_py",	
+    ],
+    main: "aftltool.py",
+    required: ["fec"],
+    version: {
+        py2: {
+            enabled: true,
+            embedded_launcher: true,
+        },
+        py3: {
+            enabled: false,
+        },
+    },
+}
+
 python_test_host {
-    name: "avbtool_test",
-    main: "avbtool_test.py",
+    name: "aftltool_test",
+    main: "aftltool_test.py",
     srcs: [
         ":avbtool_py",
-        "avbtool_test.py",
+	":aftltool_py",
+        "aftltool_test.py",
     ],
     test_suites: ["general-tests"],
     version: {
@@ -107,6 +127,13 @@ python_test_host {
             enabled: false,
         },
     },
+}
+
+genrule {
+  name: "aftltool_py",
+  srcs: ["aftltool",],
+  out: ["aftltool.py"],
+  cmd: "cp $(in) $(out)",
 }
 
 genrule {
