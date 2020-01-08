@@ -1,0 +1,320 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "518e3923_1980a613",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "Replace tabs with spaces and remove trailing whitespace.",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 97,
+        "endChar": 20
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ecd2b368_e57f282a",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "This is not required IMO since it is already included in the dependency on the next line.",
+      "range": {
+        "startLine": 116,
+        "startChar": 0,
+        "endLine": 116,
+        "endChar": 22
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "27565ad0_b0bbacb8",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "Replace tab with spaces.",
+      "range": {
+        "startLine": 117,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 1
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee454856_19429f1c",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "s/AvbIcpHeader/AftlIcpHeader/g throughout the file.",
+      "range": {
+        "startLine": 77,
+        "startChar": 6,
+        "endLine": 77,
+        "endChar": 18
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3b5713d3_070836c0",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "Should this also be separated from AVB?",
+      "range": {
+        "startLine": 109,
+        "startChar": 40,
+        "endLine": 109,
+        "endChar": 65
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d7a8fbc_1e853ff5",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 184,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "I suggest we move this in vicinity of rsa_key_read_pem_bytes since both are automation around openssl.",
+      "range": {
+        "startLine": 184,
+        "startChar": 0,
+        "endLine": 184,
+        "endChar": 43
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c6c734be_4583b589",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "s/AvbIcpSignedRootBlob/AftlIcpSignedRootDescriptor/g",
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "77fc0753_45a31dd9",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 349,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "s/AvbIcpEntry/AftlIcpEntry/g throughout the file.",
+      "range": {
+        "startLine": 349,
+        "startChar": 6,
+        "endLine": 349,
+        "endChar": 17
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2749abb2_430812b2",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 744,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "I would get rid of the word \"blob\" in general and replace it with descriptor. Blob is usually used in the context when the thing inside a blob is not known.\ns/AvbIcpBlob/AftlDescriptor/g\n\nPlease also fix up other instances of \"blob\" in the file.",
+      "range": {
+        "startLine": 744,
+        "startChar": 6,
+        "endLine": 744,
+        "endChar": 16
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b1a73fb8_2f270acd",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 861,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "1) Let\u0027s move these functions earlier in the file next to the functions that make use of openssl.\n\n2) I don\u0027t see a good use of embedding this into a class. Suggest to remove the TODO below.",
+      "range": {
+        "startLine": 861,
+        "startChar": 0,
+        "endLine": 861,
+        "endChar": 32
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ee7aa7d_05b97983",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1006,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "Fix indentation of this TODO.",
+      "range": {
+        "startLine": 1006,
+        "startChar": 0,
+        "endLine": 1006,
+        "endChar": 45
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eea1f38b_fc276dce",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1013,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "s/vbmeta_blog/vbmeta_image/g to keep things consistent.",
+      "range": {
+        "startLine": 1013,
+        "startChar": 6,
+        "endLine": 1013,
+        "endChar": 17
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cadd5856_956f107b",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1080,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "The AFTLDescriptor",
+      "range": {
+        "startLine": 1080,
+        "startChar": 4,
+        "endLine": 1080,
+        "endChar": 34
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4ea10cc2_d83304c2",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1253,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-08T19:28:38Z",
+      "side": 1,
+      "message": "Let\u0027s put this section after the the ones for make_icp_from_vbmeta to have the same order as the previous functions.",
+      "range": {
+        "startLine": 1242,
+        "startChar": 0,
+        "endLine": 1253,
+        "endChar": 53
+      },
+      "revId": "61333f69bc55b507f7c073d44e6a92f61e2c3b97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
