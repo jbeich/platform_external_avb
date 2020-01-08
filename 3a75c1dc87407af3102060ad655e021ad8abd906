@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "4d69730d_7ddaa66c",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2559,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-08T16:50:54Z",
+      "side": 1,
+      "message": "s/existance/existence",
+      "range": {
+        "startLine": 2559,
+        "startChar": 57,
+        "endLine": 2559,
+        "endChar": 66
+      },
+      "revId": "3a75c1dc87407af3102060ad655e021ad8abd906",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "779ddf1b_0c9253d5",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2572,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-08T16:50:54Z",
+      "side": 1,
+      "message": "s/existance/existence",
+      "range": {
+        "startLine": 2572,
+        "startChar": 50,
+        "endLine": 2572,
+        "endChar": 59
+      },
+      "revId": "3a75c1dc87407af3102060ad655e021ad8abd906",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
