@@ -1,0 +1,464 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "7765b4d6_015f3f48",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "It is this bug here:\nBug: 147213942",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 14
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3bccd78d_fe8505a2",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 117,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "Replace tab with spaces.",
+      "range": {
+        "startLine": 117,
+        "startChar": 0,
+        "endLine": 117,
+        "endChar": 15
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e111fadb_999aab4f",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 124,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "Running \"atest --host aftltool_test\" fails at the moment because of b/146057182#comment5. This value here must be false in order for atest to work properly.\n\nI suggest you add a comment to mention this and point to the bug. I hope that will prevent future developers wondering.",
+      "range": {
+        "startLine": 124,
+        "startChar": 31,
+        "endLine": 124,
+        "endChar": 35
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "757ef0ae_76a6e6f1",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "Should we rename this file to aftltool_integration_test.py?",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 21
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d695f1e8_1b5dbc5d",
+        "filename": "aftl_integration_test.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "s/.../aftltool/",
+      "range": {
+        "startLine": 25,
+        "startChar": 25,
+        "endLine": 25,
+        "endChar": 32
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "de1d677e_e86878e8",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "A bytearray containing the DER encoded bytes from the PEM file.",
+      "range": {
+        "startLine": 60,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 53
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "55d9652a_343f9629",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "The file path to the trusted transparency log public key.",
+      "range": {
+        "startLine": 85,
+        "startChar": 30,
+        "endLine": 85,
+        "endChar": 77
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a96c2a6_1ae44a11",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "sys.stderr.write(\u0027Error validating log_root signature with openssl: {}\u0027.format(openssl_err))",
+      "range": {
+        "startLine": 109,
+        "startChar": 20,
+        "endLine": 109,
+        "endChar": 34
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ec58db49_74b87ceb",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 194,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "Add input validation (not being None and the list not being empty) for these two params or at least a TODO.",
+      "range": {
+        "startLine": 192,
+        "startChar": 0,
+        "endLine": 194,
+        "endChar": 0
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "79f34d71_2538682b",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "It should be 14 and not 18. I suggest to just replace s/size \u003d\u003d 18/size |SIZE|/ similar as it is done in other places in avbtool to avoid that this gets out of sync in future.",
+      "range": {
+        "startLine": 236,
+        "startChar": 48,
+        "endLine": 236,
+        "endChar": 58
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "42e9a1b8_c3915626",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 256,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "Same issue here: s/.../|SIZE| bytes/",
+      "range": {
+        "startLine": 256,
+        "startChar": 42,
+        "endLine": 256,
+        "endChar": 46
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a1b6146_670fa708",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 262,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "AftlError:",
+      "range": {
+        "startLine": 262,
+        "startChar": 6,
+        "endLine": 262,
+        "endChar": 15
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "117a4ebb_5b7baf4e",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 267,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "s/.../|SIZE| bytes/",
+      "range": {
+        "startLine": 267,
+        "startChar": 29,
+        "endLine": 267,
+        "endChar": 33
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ac45d376_074be911",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 303,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "if self.icp_count \u003c 0 or self.icp_count \u003e 65535:",
+      "range": {
+        "startLine": 303,
+        "startChar": 0,
+        "endLine": 303,
+        "endChar": 26
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "da3ac69a_4cba8cdb",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 340,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "Looking at the definition of log_root, the structure is not static in size. Suggest to add a TODO to get this fixed.",
+      "range": {
+        "startLine": 340,
+        "startChar": 0,
+        "endLine": 340,
+        "endChar": 67
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6f73a009_d384d7b9",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 392,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "s/.../|SIZE| bytes/",
+      "range": {
+        "startLine": 392,
+        "startChar": 56,
+        "endLine": 392,
+        "endChar": 61
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0b2c3cdf_0fb2448a",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 596,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "s/.../|SIZE| bytes/",
+      "range": {
+        "startLine": 596,
+        "startChar": 42,
+        "endLine": 596,
+        "endChar": 46
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0aad8fff_98cbf37e",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 607,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "s/.../|SIZE| bytes/",
+      "range": {
+        "startLine": 607,
+        "startChar": 29,
+        "endLine": 607,
+        "endChar": 33
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e46eb6ae_55dc49d6",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 910,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "s/ICP/AftlDescriptor/",
+      "range": {
+        "startLine": 910,
+        "startChar": 33,
+        "endLine": 910,
+        "endChar": 47
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a8dd31dd_9d665e3d",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1306,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T09:56:55Z",
+      "side": 1,
+      "message": "1) Is this necessary at all? I would keep it to the original way how it is handled in avbtool.\n\n2) Also if this fails you need to sys.exit(1) to signal to the calling tooling that things have failed.",
+      "range": {
+        "startLine": 1305,
+        "startChar": 0,
+        "endLine": 1306,
+        "endChar": 21
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
