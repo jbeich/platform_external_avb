@@ -485,6 +485,29 @@
     },
     {
       "key": {
+        "uuid": "47ef51b1_ebe2fdda",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1172,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T13:27:31Z",
+      "side": 1,
+      "message": "There needs to be a counter check that the vbmeta_image from line 1161 actually aligns with the inclusion proof.\n\nThis is similar to the situation where you would implement a validator command for aftltool where you have a vbmeta_image and the ICP and you wanted to check that the vbmeta_image is actually aligning with the ICP.\n\nThere is a piece of information missing that needs to be persisted in the AftlIcpEntry to make the link between the vbmeta_image hash and the leaf_hash. IMO that piece missing is the fw_info blob which contains the vbmeta_image hash.",
+      "range": {
+        "startLine": 1172,
+        "startChar": 0,
+        "endLine": 1172,
+        "endChar": 66
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "a8dd31dd_9d665e3d",
         "filename": "aftltool",
         "patchSetId": 3
