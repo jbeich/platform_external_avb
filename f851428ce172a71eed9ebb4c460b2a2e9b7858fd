@@ -71,6 +71,29 @@
     },
     {
       "key": {
+        "uuid": "0420d03f_1d1a26e3",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T11:47:05Z",
+      "side": 1,
+      "message": "Would move this section just after the avbtool ones and before the aftltool ones.",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 144,
+        "endChar": 1
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "757ef0ae_76a6e6f1",
         "filename": "aftl_integration_test.py",
         "patchSetId": 3
@@ -340,6 +363,29 @@
         "startChar": 0,
         "endLine": 340,
         "endChar": 67
+      },
+      "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4a195789_c81d1c14",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-09T11:47:05Z",
+      "side": 1,
+      "message": "Currently tree_size and root_hash are encoded twice into the AftlDescriptor now. I think we should get rid of these duplicate fields and just wire things through directly to the TrillianLogRootDescriptor using some getters. Suggest to add a TODO for this and address this in an upcoming CL.\n\nThe question is even if the AftlIcpSignedRootDescriptor class is needed at all or it should become part of the the AftlIcpEntry record.\n\n~/android/aosp-libavb/external/avb$ ./aftltool info_image_icp --image vbmeta_icp.img \nAndroid Firmware Transparency Descriptor:\n  Header:\n    Major version:      1\n    Minor version:      1\n    ICP entries count:  1\n  Entry #1:\n    Transparency Log:   [REDACTED]:9000\n    Leaf index:         760\n    Next entry:         1\n    ICP hashes:         5ed9cff3dc8b7ba3c012d25acdb3c269820ddd5c1454773342835bcba5254dca\n                        a1d667a06e5c545293c3b31bb63abcc7c780574ab86375158e352bf780a70d80\n                        cbdba445e8a7c508de9943b84c1aeefabbf0fc367ed507733c7b1d510f8aa3f6\n                        04d379de0aa8a5e4d9f04d661cc9c3f4ca39cf90e93ab15ecfb0686eceb40e03\n                        9e9bd247077d7291e388f2eb607589425dd828de6bc04e66570b4b9337365d2f\n                        13c90cecae18e5946c3253f2b7c668f2f8900f9491fa226853d337bad5418b72\n    Signed Root Descriptor:\n      Leaf hash:        4109e9dc6c166055e5fedb6d30f5bf41d2af04e8fb0bf72ae1cfae973039b06e\n      Tree size:        761\n      Log root:\n        Version:          1\n        Tree size:        761\n        Root hash size:   32\n        Root hash:        886e4f21e9e0462ad5a30901abc6e277f9190f994d4a226b35bbf490c4518ed8\n        Timestamp (ns):   1578565334012191413\n        Revision:         760\n        Metadata size:    0\n      Root hash:        886e4f21e9e0462ad5a30901abc6e277f9190f994d4a226b35bbf490c4518ed8",
+      "range": {
+        "startLine": 388,
+        "startChar": 0,
+        "endLine": 388,
+        "endChar": 44
       },
       "revId": "f851428ce172a71eed9ebb4c460b2a2e9b7858fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
