@@ -472,6 +472,30 @@
     },
     {
       "key": {
+        "uuid": "d48588d7_5b6a6030",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-23T22:56:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f41b144e_397c55e3",
+      "range": {
+        "startLine": 42,
+        "startChar": 42,
+        "endLine": 42,
+        "endChar": 54
+      },
+      "revId": "525d5eb130835a7ab44c9733cf4d3c8514bd5afb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9c9cff4_f487785d",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 2
