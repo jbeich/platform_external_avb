@@ -325,6 +325,8 @@ class AftlIcpHeader(object):
     Arguments:
       o: The object to write the output to.
     """
+    o.write('    Magic string:       {}\n'.format(
+        self.magic))
     o.write('    Major version:      {}\n'.format(
         self.required_icp_version_major))
     o.write('    Minor version:      {}\n'.format(
@@ -1477,7 +1479,8 @@ class AftlTool(avbtool.AvbTool):
         'info_image_icp',
         help='Show information about AFTL ICPs in vbmeta or footer.')
     sub_parser.add_argument('--vbmeta_image_path',
-                            help='Path to vbmeta image to show AFTL information about.',
+                            help='Path to vbmeta image to show AFTL information'
+                            ' about.',
                             type=argparse.FileType('rb'),
                             required=True)
     sub_parser.add_argument('--output',

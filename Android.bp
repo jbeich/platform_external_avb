@@ -128,7 +128,7 @@ python_test_host {
     version: {
         py2: {
             enabled: true,
-           //TODO: This is needed due to b/146057182#comment5.
+            // This is needs to be false due to b/146057182#comment5.
             embedded_launcher: false,
         },
         py3: {
