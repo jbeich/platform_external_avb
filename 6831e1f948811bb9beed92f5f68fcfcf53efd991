@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e8142f47_7947af9b",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-24T09:55:07Z",
+      "side": 1,
+      "message": "Add a comment to make clear what it does:\n\n/* The total size in bytes of all AftlIcpEntry descriptors to follow */",
+      "range": {
+        "startLine": 47,
+        "startChar": 11,
+        "endLine": 47,
+        "endChar": 35
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f9541d9f_29f3c6de",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-24T09:55:07Z",
+      "side": 1,
+      "message": "FirmwareImageInfo is not relevant for device level enforcement as this is part of the second stage where the build is submitted to the AFTL. You need to implement the FirmwareInfo structure here.",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 34
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "008e1886_6ac5561c",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-24T09:55:07Z",
+      "side": 1,
+      "message": "s/FirmwareImageInfo/FirmwareInfo/ once you fixed the type definition.",
+      "range": {
+        "startLine": 87,
+        "startChar": 2,
+        "endLine": 87,
+        "endChar": 19
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "188d4fed_357f9af8",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-24T09:55:07Z",
+      "side": 1,
+      "message": "I think you have a potential overflow situation here. Don\u0027t you need a check before this avb_memcmp to make sure that icp_entry-\u003efw_info_leaf.vbmeta_hash_size is not larger than AFTL_HASH_SIZE of the receiving variable vbmeta_hash?",
+      "range": {
+        "startLine": 44,
+        "startChar": 21,
+        "endLine": 44,
+        "endChar": 61
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "359283f5_1f96b51d",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-24T09:55:07Z",
+      "side": 1,
+      "message": "s/FirmwareImageInfo/FirmwareInfo/ once you fixed the type definition.",
+      "range": {
+        "startLine": 47,
+        "startChar": 34,
+        "endLine": 47,
+        "endChar": 51
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "39558ff8_a144dfa9",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-24T09:55:07Z",
+      "side": 1,
+      "message": "Isn\u0027t that just a hash of the whole TrillianLogRootDescriptor structure as that is signed by the transparency log key?",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 72
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

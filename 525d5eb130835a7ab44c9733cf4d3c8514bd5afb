@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "c722abaf_2fa79089",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-24T09:55:07Z",
+      "side": 1,
+      "message": "Still one more up; just after test/avb_ab_flow_unittest.cc",
+      "parentUuid": "c1b7cf46_ce98abfb",
+      "range": {
+        "startLine": 307,
+        "startChar": 0,
+        "endLine": 307,
+        "endChar": 45
+      },
+      "revId": "525d5eb130835a7ab44c9733cf4d3c8514bd5afb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "c482b526_6a1430f8",
         "filename": "libavb_aftl/avb_aftl_types.h",
         "patchSetId": 2
@@ -1151,6 +1175,30 @@
       "revId": "525d5eb130835a7ab44c9733cf4d3c8514bd5afb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3642616_dd3c9637",
+        "filename": "libavb_aftl/avb_ops_aftl.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-24T09:55:07Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "28748b27_969c7408",
+      "range": {
+        "startLine": 47,
+        "startChar": 0,
+        "endLine": 47,
+        "endChar": 2
+      },
+      "revId": "525d5eb130835a7ab44c9733cf4d3c8514bd5afb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
