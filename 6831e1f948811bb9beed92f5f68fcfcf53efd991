@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "fa0c0369_60174e0a",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "Also why not make use of aftl.proto? and trillian.proto for these types definition?",
+      "parentUuid": "f9541d9f_29f3c6de",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 34
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "008e1886_6ac5561c",
         "filename": "libavb_aftl/avb_aftl_types.h",
         "patchSetId": 5
@@ -71,6 +95,52 @@
     },
     {
       "key": {
+        "uuid": "329936a3_332882b6",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "note https://google.github.io/styleguide/cppguide.html#Function_Comments for guidance re function declaration and definition.\n\nin general i\u0027d prefer more descriptive declaration comments, especially with regards to what params are expected and what failure/success cases look like. there are lot of cases here where you return fast on invalid input - so it would be nice to have a clear understanding of what to check for valid execution.",
+      "range": {
+        "startLine": 33,
+        "startChar": 1,
+        "endLine": 33,
+        "endChar": 12
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "98b92a46_eae88138",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "I\u0027ve noticed you seem to prefer /* this style of comments */\n\nhttps://google.github.io/styleguide/cppguide.html#Comment_Style, notes that // is more common. Up to you to choose your preferred flavour, please be consistent, though.\n\nI realise it\u0027s a big change, so I\u0027m fine with the format of comments being changed in a subsequent change of its own.",
+      "range": {
+        "startLine": 41,
+        "startChar": 2,
+        "endLine": 41,
+        "endChar": 4
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "188d4fed_357f9af8",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 5
@@ -82,6 +152,30 @@
       "writtenOn": "2020-01-24T09:55:07Z",
       "side": 1,
       "message": "I think you have a potential overflow situation here. Don\u0027t you need a check before this avb_memcmp to make sure that icp_entry-\u003efw_info_leaf.vbmeta_hash_size is not larger than AFTL_HASH_SIZE of the receiving variable vbmeta_hash?",
+      "range": {
+        "startLine": 44,
+        "startChar": 21,
+        "endLine": 44,
+        "endChar": 61
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb427aa4_069c1cd4",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "also why not use avb_safe_memcmp here?",
+      "parentUuid": "188d4fed_357f9af8",
       "range": {
         "startLine": 44,
         "startChar": 21,
@@ -117,6 +211,29 @@
     },
     {
       "key": {
+        "uuid": "f6265221_25b2f118",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "s/Check if/Return whether/\n\nhere and elsewhere",
+      "range": {
+        "startLine": 85,
+        "startChar": 5,
+        "endLine": 85,
+        "endChar": 13
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "39558ff8_a144dfa9",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 5
@@ -133,6 +250,259 @@
         "startChar": 0,
         "endLine": 139,
         "endChar": 72
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "135a7c51_58466a66",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 142,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "would these sizes and offset benefit being called out as consts?",
+      "range": {
+        "startLine": 142,
+        "startChar": 45,
+        "endLine": 142,
+        "endChar": 48
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3786b9f_70b01aab",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 157,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "a diagram of the data blocks would be really helpful to follow along.",
+      "range": {
+        "startLine": 145,
+        "startChar": 2,
+        "endLine": 157,
+        "endChar": 39
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3ccc76f9_55be3aa3",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 171,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "this comment might fit better at the function level?",
+      "range": {
+        "startLine": 171,
+        "startChar": 2,
+        "endLine": 171,
+        "endChar": 80
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bc7266f_17881a8b",
+        "filename": "libavb_aftl/avb_aftl_validate.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "nit: up to you and the general style of the codebase, but i\u0027d prefer a more descriptive name (despite it being longer)",
+      "range": {
+        "startLine": 99,
+        "startChar": 13,
+        "endLine": 99,
+        "endChar": 16
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "485dbab0_1b1c1345",
+        "filename": "libavb_aftl/avb_ops_aftl.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "can you add a link to the example you\u0027re referring to?",
+      "range": {
+        "startLine": 43,
+        "startChar": 42,
+        "endLine": 43,
+        "endChar": 54
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "21751799_f147a63b",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "Note from the style guide for the file name: https://google.github.io/styleguide/cppguide.html#File_Names",
+      "range": {
+        "startLine": 1,
+        "startChar": 1,
+        "endLine": 1,
+        "endChar": 2
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fa05b9ec_29e96024",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "presumably Base does more (or can do more) than just memory leak checking. How about rewording to just mention that it takes advantage of some common checks and tooling?",
+      "range": {
+        "startLine": 33,
+        "startChar": 29,
+        "endLine": 33,
+        "endChar": 50
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40317e27_cfaf4e70",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "can you have a helper function that will setup a test icp_entry with default values? this way, it will be easier to read what is specifically overridden in each test.\n\nwhen i\u0027m reading the tests, it\u0027s not clear to me whether the variations in values are intentional and necessary for the test.",
+      "range": {
+        "startLine": 150,
+        "startChar": 2,
+        "endLine": 151,
+        "endChar": 46
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d569580_3f698c16",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "any reason not to use AFTL_HASH_SIZE here as well?",
+      "range": {
+        "startLine": 152,
+        "startChar": 49,
+        "endLine": 152,
+        "endChar": 51
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7b5c5d0d_ad62ebd9",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "would this make sense to be a member of AvbAftValidateTest? Consider consistency of usage of * in varied tests too.",
+      "range": {
+        "startLine": 174,
+        "startChar": 2,
+        "endLine": 174,
+        "endChar": 23
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2c9dd9c6_31d4d178",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 5
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-24T15:00:07Z",
+      "side": 1,
+      "message": "I\u0027d suggest to use the TEST_F(AvbAftlValidateTest, ChainInner_\u003cflavour\u003e) pattern, though I can see that it might prove a it too heavy, so you might prefer to leave as is.\n\nIn any case, i\u0027d suggest to use a clarification string to each case, like\n` EXPECT_EQ(x[i], y[i]) \u003c\u003c \"Vectors x and y differ at index \" \u003c\u003c i;`",
+      "range": {
+        "startLine": 359,
+        "startChar": 1,
+        "endLine": 360,
+        "endChar": 1
       },
       "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
