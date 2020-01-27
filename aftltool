@@ -647,7 +647,6 @@ class AftlIcpEntry(object):
                        self.signed_root_descriptor.encode(),
                        str(proof_bytes))
 
-  # TODO(danielaustin): Add unit test.
   def translate_response(self, transparency_log, afi_response):
     """Translates an AddFirmwareInfoResponse object to an AftlIcpEntry.
 
