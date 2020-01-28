@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52658de7_613ca3e7",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "Suggest adding a link to point to the proto where this is defined actually:\nhttps://android.googlesource.com/platform/external/avb/+/master/proto/aftl.proto",
+      "range": {
+        "startLine": 66,
+        "startChar": 0,
+        "endLine": 66,
+        "endChar": 23
+      },
+      "revId": "ce306d5091e93fb3d207a9d51da432adef8a4e16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "01911963_11495341",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "There can also be SHA512 hashes. Thus, I would check here for \"not equal\".",
+      "range": {
+        "startLine": 45,
+        "startChar": 47,
+        "endLine": 45,
+        "endChar": 48
+      },
+      "revId": "ce306d5091e93fb3d207a9d51da432adef8a4e16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0ff783cf_f4477831",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 178,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "I would put these constants just next to the definition of TrillianLogRootDescriptor. The reason is that when somebody updates the TrillianLogRootDescriptor the see next to it that they also need to update these values.",
+      "range": {
+        "startLine": 178,
+        "startChar": 0,
+        "endLine": 178,
+        "endChar": 52
+      },
+      "revId": "ce306d5091e93fb3d207a9d51da432adef8a4e16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}

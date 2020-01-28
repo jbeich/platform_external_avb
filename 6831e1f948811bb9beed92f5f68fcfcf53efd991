@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ba9eb63e_00adf826",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e8142f47_7947af9b",
+      "range": {
+        "startLine": 47,
+        "startChar": 11,
+        "endLine": 47,
+        "endChar": 35
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "f9541d9f_29f3c6de",
         "filename": "libavb_aftl/avb_aftl_types.h",
         "patchSetId": 5
@@ -72,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "566699cf_b2eba243",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "@nataliedoduc: FYI. We did not want to include protobuf into code that runs in the bootloader of a device.",
+      "parentUuid": "fa0c0369_60174e0a",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 34
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "008e1886_6ac5561c",
         "filename": "libavb_aftl/avb_aftl_types.h",
         "patchSetId": 5
@@ -92,6 +140,30 @@
       "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "969ef260_d1979bed",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "008e1886_6ac5561c",
+      "range": {
+        "startLine": 87,
+        "startChar": 2,
+        "endLine": 87,
+        "endChar": 19
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -188,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "d01a33a9_ae06abbb",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fb427aa4_069c1cd4",
+      "range": {
+        "startLine": 44,
+        "startChar": 21,
+        "endLine": 44,
+        "endChar": 61
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "359283f5_1f96b51d",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 5
@@ -208,6 +304,30 @@
       "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "0996e906_0dcf35ac",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 47,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "359283f5_1f96b51d",
+      "range": {
+        "startLine": 47,
+        "startChar": 34,
+        "endLine": 47,
+        "endChar": 51
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -245,6 +365,30 @@
       "writtenOn": "2020-01-24T09:55:07Z",
       "side": 1,
       "message": "Isn\u0027t that just a hash of the whole TrillianLogRootDescriptor structure as that is signed by the transparency log key?",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 72
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7a95db5a_b8c93df8",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "Ping. Can you also respond or send out the responses to the other unresolved comments?",
+      "parentUuid": "39558ff8_a144dfa9",
       "range": {
         "startLine": 139,
         "startChar": 0,
@@ -346,6 +490,30 @@
       "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2489ceaa_471156ff",
+        "filename": "libavb_aftl/avb_aftl_validate.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bc7266f_17881a8b",
+      "range": {
+        "startLine": 99,
+        "startChar": 13,
+        "endLine": 99,
+        "endChar": 16
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {

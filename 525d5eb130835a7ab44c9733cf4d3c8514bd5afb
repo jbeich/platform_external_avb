@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "970eb710_81e9e197",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 307,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:19:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c722abaf_2fa79089",
+      "range": {
+        "startLine": 307,
+        "startChar": 0,
+        "endLine": 307,
+        "endChar": 45
+      },
+      "revId": "525d5eb130835a7ab44c9733cf4d3c8514bd5afb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c482b526_6a1430f8",
         "filename": "libavb_aftl/avb_aftl_types.h",
         "patchSetId": 2
