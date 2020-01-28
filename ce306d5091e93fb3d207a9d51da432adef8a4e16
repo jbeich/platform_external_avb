@@ -68,6 +68,29 @@
       "revId": "ce306d5091e93fb3d207a9d51da432adef8a4e16",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a4cba16_e00fdeea",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T11:29:56Z",
+      "side": 1,
+      "message": "Apart from the unit test here, I suggest we have a little test binary using the libavb_aftl that takes a vbmeta image with icp and a transparency pub key as parameters and performs the validation.\n\nThat way we can easily (integration)test if a vbmeta image with ICP that we generated with the aftltool validates with the libavb without having to deploy it to a device. We could then also integrate this binary in the aftl_integration_test.py script.",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 2
+      },
+      "revId": "ce306d5091e93fb3d207a9d51da432adef8a4e16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
