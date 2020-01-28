@@ -48,6 +48,30 @@
     },
     {
       "key": {
+        "uuid": "860854bc_6243d7ae",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 6
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-28T16:56:07Z",
+      "side": 1,
+      "message": "agreed for consistency with the proto, and aftltool",
+      "parentUuid": "533e2dc6_4874463c",
+      "range": {
+        "startLine": 82,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 29
+      },
+      "revId": "ce306d5091e93fb3d207a9d51da432adef8a4e16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "01911963_11495341",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 6

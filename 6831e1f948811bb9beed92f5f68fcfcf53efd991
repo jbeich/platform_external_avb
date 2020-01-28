@@ -120,6 +120,30 @@
     },
     {
       "key": {
+        "uuid": "93be75e1_2135ecf3",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-28T16:56:07Z",
+      "side": 1,
+      "message": "Thanks for that clarification - as you mention in the separate comment, a link to the source proto mirrored would be a useful reference.",
+      "parentUuid": "566699cf_b2eba243",
+      "range": {
+        "startLine": 67,
+        "startChar": 0,
+        "endLine": 67,
+        "endChar": 34
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "008e1886_6ac5561c",
         "filename": "libavb_aftl/avb_aftl_types.h",
         "patchSetId": 5
@@ -389,6 +413,30 @@
       "side": 1,
       "message": "Ping. Can you also respond or send out the responses to the other unresolved comments?",
       "parentUuid": "39558ff8_a144dfa9",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 72
+      },
+      "revId": "6831e1f948811bb9beed92f5f68fcfcf53efd991",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9fc61e44_8ec68ae0",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-28T16:56:07Z",
+      "side": 1,
+      "message": "yes, I\u0027m also confused as to why the extra gymnastics are required. I had a look into https://android.googlesource.com/platform/external/avb/+/master/aftltool to compare, but could not quite clarify. While here, can you add some details to the function declaration comments to ensure it\u0027s clear to the reader.",
+      "parentUuid": "7a95db5a_b8c93df8",
       "range": {
         "startLine": 139,
         "startChar": 0,
