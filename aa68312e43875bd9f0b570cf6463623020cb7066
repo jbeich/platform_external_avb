@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "c304717e_71f2b326",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T10:11:05Z",
+      "side": 1,
+      "message": "s/.../147415508/",
+      "range": {
+        "startLine": 12,
+        "startChar": 5,
+        "endLine": 12,
+        "endChar": 14
+      },
+      "revId": "aa68312e43875bd9f0b570cf6463623020cb7066",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd2d6cff_715bc2da",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1082,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T10:11:05Z",
+      "side": 1,
+      "message": "This needs to be callable even if there is no signing_helper or signing_helper_with_files in order that we can make use of the openssl signing that raw_sign implements:\nhttps://android.googlesource.com/platform/external/avb/+/master/avbtool#504\n\nThus, the if check can be removed.",
+      "range": {
+        "startLine": 1082,
+        "startChar": 0,
+        "endLine": 1082,
+        "endChar": 75
+      },
+      "revId": "aa68312e43875bd9f0b570cf6463623020cb7066",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8cc79190_f6e930f2",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1083,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T10:11:05Z",
+      "side": 1,
+      "message": "s/.../SHA256_RSA4096/",
+      "range": {
+        "startLine": 1083,
+        "startChar": 22,
+        "endLine": 1083,
+        "endChar": 29
+      },
+      "revId": "aa68312e43875bd9f0b570cf6463623020cb7066",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2991f03a_609e3ea1",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1085,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T10:11:05Z",
+      "side": 1,
+      "message": "Suggest you use avbtool.ALGORITHMS to look up the specs for the algorithm. The Algorithm.signature_num_bytes contains what you need here.",
+      "range": {
+        "startLine": 1085,
+        "startChar": 0,
+        "endLine": 1085,
+        "endChar": 29
+      },
+      "revId": "aa68312e43875bd9f0b570cf6463623020cb7066",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "33207cec_bcaad6f8",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1089,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T10:11:05Z",
+      "side": 1,
+      "message": "Please handle the AvbError that gets thrown in raw_sign() in case of failure. You can just catch the AvbError and raise a AftlError:\n\nAftlError(\u0027Failed to sign FirmwareInfo with --manufacturer_key\u0027.format(e))",
+      "range": {
+        "startLine": 1089,
+        "startChar": 0,
+        "endLine": 1089,
+        "endChar": 55
+      },
+      "revId": "aa68312e43875bd9f0b570cf6463623020cb7066",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "710d9ad8_911fd5d8",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1182,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T10:11:05Z",
+      "side": 1,
+      "message": "This needs to be removed as otherwise it will not work with the signer_helpers",
+      "range": {
+        "startLine": 1179,
+        "startChar": 0,
+        "endLine": 1182,
+        "endChar": 76
+      },
+      "revId": "aa68312e43875bd9f0b570cf6463623020cb7066",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
