@@ -22,6 +22,30 @@
       "revId": "630af65a6a6eabc16f406976e6ceec2e301ccf5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "41fa8832_c95f20a2",
+        "filename": "aftltool",
+        "patchSetId": 2
+      },
+      "lineNbr": 940,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-28T17:41:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "25f71629_c8a0647a",
+      "range": {
+        "startLine": 940,
+        "startChar": 0,
+        "endLine": 940,
+        "endChar": 60
+      },
+      "revId": "630af65a6a6eabc16f406976e6ceec2e301ccf5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
