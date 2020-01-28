@@ -186,6 +186,30 @@
       "revId": "ce306d5091e93fb3d207a9d51da432adef8a4e16",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4d51d9e9_2d9a729f",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 6
+      },
+      "lineNbr": 1,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-28T22:31:50Z",
+      "side": 1,
+      "message": "ACK, good idea, will implement in a future CL.",
+      "parentUuid": "8a4cba16_e00fdeea",
+      "range": {
+        "startLine": 1,
+        "startChar": 0,
+        "endLine": 1,
+        "endChar": 2
+      },
+      "revId": "ce306d5091e93fb3d207a9d51da432adef8a4e16",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
