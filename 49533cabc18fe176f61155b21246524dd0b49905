@@ -25,6 +25,29 @@
     },
     {
       "key": {
+        "uuid": "1dac9bae_678bb9af",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T14:00:40Z",
+      "side": 1,
+      "message": "You need to run atest --host aftltool_test to ensure that the tests will actually work in the hermetic environment.",
+      "range": {
+        "startLine": 12,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 22
+      },
+      "revId": "49533cabc18fe176f61155b21246524dd0b49905",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "247ec65c_a7cca7c7",
         "filename": "aftltool",
         "patchSetId": 1
