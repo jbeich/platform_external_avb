@@ -49,6 +49,30 @@
     },
     {
       "key": {
+        "uuid": "96294bd1_0803b4c3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T20:47:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c7424ab3_cef0b187",
+      "range": {
+        "startLine": 12,
+        "startChar": 5,
+        "endLine": 12,
+        "endChar": 14
+      },
+      "revId": "aa68312e43875bd9f0b570cf6463623020cb7066",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dd2d6cff_715bc2da",
         "filename": "aftltool",
         "patchSetId": 1
