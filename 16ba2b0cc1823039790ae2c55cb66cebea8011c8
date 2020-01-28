@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "184248b0_ad9a14e1",
+        "filename": "aftltool",
+        "patchSetId": 3
+      },
+      "lineNbr": 1095,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T18:53:14Z",
+      "side": 1,
+      "message": "str() returns the human readable form of the protobuf:\nhttps://developers.google.com/protocol-buffers/docs/pythontutorial#standard-message-methods\n\nI think we want binary format and there fore use SerializeToString():\nhttps://developers.google.com/protocol-buffers/docs/pythontutorial#parsing-and-serialization",
+      "range": {
+        "startLine": 1095,
+        "startChar": 0,
+        "endLine": 1095,
+        "endChar": 31
+      },
+      "revId": "16ba2b0cc1823039790ae2c55cb66cebea8011c8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
