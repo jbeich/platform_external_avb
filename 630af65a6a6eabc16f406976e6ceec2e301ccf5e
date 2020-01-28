@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "25f71629_c8a0647a",
+        "filename": "aftltool",
+        "patchSetId": 2
+      },
+      "lineNbr": 940,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-01-28T17:14:54Z",
+      "side": 1,
+      "message": "1) I would rather make this a sys.stderr.write and not put it in the regular output stream.\n2) You need a return to stop execution at this point.",
+      "range": {
+        "startLine": 940,
+        "startChar": 0,
+        "endLine": 940,
+        "endChar": 60
+      },
+      "revId": "630af65a6a6eabc16f406976e6ceec2e301ccf5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
