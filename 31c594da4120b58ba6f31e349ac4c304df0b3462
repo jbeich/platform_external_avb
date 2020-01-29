@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f9a3367f_d3b7a523",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-29T14:49:14Z",
+      "side": 1,
+      "message": "I can see that you\u0027re mirroring PART_1 and PART_2 as per aftltool. i have a readability and a consistency comment:\n  - PART_1 and PART_2 are not that descriptive, is it possible to find a better name?\n  - if you prefer ^^ to keep PART_x, can you use that name here for consistency?",
+      "range": {
+        "startLine": 70,
+        "startChar": 18,
+        "endLine": 70,
+        "endChar": 23
+      },
+      "revId": "31c594da4120b58ba6f31e349ac4c304df0b3462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb89d99c_9c15b32b",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-29T14:49:14Z",
+      "side": 1,
+      "message": "promote this to the function comment - it occurs to me that a helper to get the TrillianLogRootDescriptor size would greatly simplify and aid readability?",
+      "revId": "31c594da4120b58ba6f31e349ac4c304df0b3462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37e9501c_aaeaeb52",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-29T14:49:14Z",
+      "side": 1,
+      "message": "are you checking for log_root_descriptor validity? could you collect these check into a isValid() helper? also - why the coupling in the validity checks? is checking for (!root_hash || !metadata || corresponding sizes \u003d\u003d 0 ) not enough for validity?\n\nfurthermore, can you check validity when you construct log_root_descriptor in icp_entry? would it be useful to fail fast at that point, rather than downstream here? (maybe I\u0027m missing some use cases, though)",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 11
+      },
+      "revId": "31c594da4120b58ba6f31e349ac4c304df0b3462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
