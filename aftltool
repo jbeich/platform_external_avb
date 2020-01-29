@@ -1033,8 +1033,12 @@ class Aftl(avbtool.Avb):
 
   def request_inclusion_proof(self, transparency_log, vbmeta_descriptor,
                               version_inc, manufacturer_key_path,
+<<<<<<< HEAD   (6614c4 Added unittest for Aftl.request_inclusion_proof().)
                               signing_helper, signing_helper_with_files,
                               aftl_comms=None):
+=======
+                              signing_helper, signing_helper_with_files):
+>>>>>>> BRANCH (e5eeed Add signing_helper support to AFTL.)
     """Packages and sends a request to the specified transparency log.
 
     Arguments:
@@ -1042,12 +1046,18 @@ class Aftl(avbtool.Avb):
       vbmeta_descriptor: A bytearray with the vbmeta descriptor.
       version_inc: Subcomponent of the build fingerprint.
       manufacturer_key_path: Path to key used to sign messages sent to the
+<<<<<<< HEAD   (6614c4 Added unittest for Aftl.request_inclusion_proof().)
         transparency log servers.
       signing_helper: Program which signs a hash and returns a signature.
       signing_helper_with_files: Same as signing_helper but uses files instead.
       aftl_comms: A subclass of the AftlCommunication class. The default is
         to use AftlGrpcCommunication.
 
+=======
+         transparency log servers.
+      signing_helper: Program which signs a hash and returns a signature.
+      signing_helper_with_files: Same as signing_helper but uses files instead.
+>>>>>>> BRANCH (e5eeed Add signing_helper support to AFTL.)
     Returns:
       An AftlIcpEntry with the inclusion proof for the log entry.
 
@@ -1056,6 +1066,25 @@ class Aftl(avbtool.Avb):
          error communicating with the log, if the manufacturer_key_path
          cannot be decoded, or if the log submission cannot be signed.
     """
+<<<<<<< HEAD   (6614c4 Added unittest for Aftl.request_inclusion_proof().)
+=======
+    # Import grpc and proto.api_pb2_grpc now to avoid global dependencies.
+    try:
+      import grpc
+      import proto.api_pb2_grpc
+      import proto.crypto.sigpb
+    except ImportError as e:
+      err_str = 'grpc can be installed with python pip install grpcio.\n'
+      raise AftlError('Failed to import module: ({}).\n{}'.format(e, err_str))
+
+    # Set up the gRPC channel with the transparency log.
+    sys.stdout.write('Preparing to request inclusion proof from {}. This could '
+                     'take ~30 seconds for the process to complete.\n'.format(
+                         transparency_log))
+    channel = grpc.insecure_channel(transparency_log)
+    stub = proto.api_pb2_grpc.AFTLogStub(channel)
+
+>>>>>>> BRANCH (e5eeed Add signing_helper support to AFTL.)
     # Calculate the hash of the vbmeta image.
     hasher = hashlib.sha256()
     hasher.update(vbmeta_descriptor)
