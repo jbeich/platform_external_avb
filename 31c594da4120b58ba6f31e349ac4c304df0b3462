@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "8f34ed4c_7c03ae02",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-29T20:41:52Z",
+      "side": 1,
+      "message": "Yeah, I agree. Let me think of a better name for both cases for consistency.",
+      "parentUuid": "f9a3367f_d3b7a523",
+      "range": {
+        "startLine": 70,
+        "startChar": 18,
+        "endLine": 70,
+        "endChar": 23
+      },
+      "revId": "31c594da4120b58ba6f31e349ac4c304df0b3462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "fb89d99c_9c15b32b",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 7
@@ -42,6 +66,24 @@
     },
     {
       "key": {
+        "uuid": "7e8810b8_3de93e58",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-29T20:41:52Z",
+      "side": 1,
+      "message": "Done. I had the size calculation here as it\u0027s the only place it is really used in the validation code. Do you think breaking it out is worthwhile?",
+      "parentUuid": "fb89d99c_9c15b32b",
+      "revId": "31c594da4120b58ba6f31e349ac4c304df0b3462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "37e9501c_aaeaeb52",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 7
@@ -53,6 +95,30 @@
       "writtenOn": "2020-01-29T14:49:14Z",
       "side": 1,
       "message": "are you checking for log_root_descriptor validity? could you collect these check into a isValid() helper? also - why the coupling in the validity checks? is checking for (!root_hash || !metadata || corresponding sizes \u003d\u003d 0 ) not enough for validity?\n\nfurthermore, can you check validity when you construct log_root_descriptor in icp_entry? would it be useful to fail fast at that point, rather than downstream here? (maybe I\u0027m missing some use cases, though)",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 11
+      },
+      "revId": "31c594da4120b58ba6f31e349ac4c304df0b3462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "28fb818e_e42375fd",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-29T20:41:52Z",
+      "side": 1,
+      "message": "Added some comments for clarification. These coupled checks are to see if the fields are present and if they aren\u0027t, ensure that the size is 0 so that the data to be hashed stays accurate. I tend to favor duplicate checks in general for these things, but I agree this may not be needed.",
+      "parentUuid": "37e9501c_aaeaeb52",
       "range": {
         "startLine": 199,
         "startChar": 0,
