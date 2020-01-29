@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "98479d16_a960f734",
+        "filename": "aftltool_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 548,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-01-29T16:41:19Z",
+      "side": 1,
+      "message": "nit: s/weather/whether",
+      "revId": "513614708595e2ffbd691c241c0b7d12655156ab",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
