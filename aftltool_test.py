@@ -52,8 +52,6 @@ class AftltoolTestCase(unittest.TestCase):
     sys.stderr = self.null
 
     # Sets up test data.
-    # TODO(jpm): Once the aftltool is rewriten to use fw_info_proof, change
-    # the code below to s/vbmeta_proof/fw_info_proof/.
     # pylint: disable=no-member
     self.test_afi_resp = proto.api_pb2.AddFirmwareInfoResponse()
     self.test_afi_resp.fw_info_proof.proof.leaf_index = 6263
@@ -602,8 +600,8 @@ class AftlMockCommunication(aftltool.AftlCommunication):
 
     Arguments:
       transparency_log: String containing the URL of a transparency log server.
-      canned_response: AddFirmwareInfoResponse to return once
-        AddFirmwareInfo was called.
+      canned_response: AddFirmwareInfoResponse to return or the Exception to
+        raise.
     """
     super(AftlMockCommunication, self).__init__(transparency_log)
     self.request = None
@@ -612,6 +610,9 @@ class AftlMockCommunication(aftltool.AftlCommunication):
   def AddFirmwareInfo(self, request):
     """Records the request and returns the canned response."""
     self.request = request
+
+    if isinstance(self.canned_response, aftltool.AftlError):
+      raise self.canned_response
     return self.canned_response
 
 
@@ -622,6 +623,7 @@ class AftlTest(AftltoolTestCase):
     super(AftlTest, self).setUp()
     self.mock_aftl_host = 'test.foo.bar:9000'
 
+  # pylint: disable=no-member
   def test_request_inclusion_proof(self):
     """Tests the request_inclusion_proof method."""
     aftl_comms = AftlMockCommunication(self.mock_aftl_host, self.test_afi_resp)
@@ -631,8 +633,38 @@ class AftlTest(AftltoolTestCase):
                                        'test/data/testkey_rsa4096.pem',
                                        None, None,
                                        aftl_comms=aftl_comms)
-    self.assertEqual(aftl_comms.transparency_log, self.mock_aftl_host)
-    self.assertIsNotNone(icp)
+    self.assertEqual(icp.leaf_index,
+                     self.test_afi_resp.fw_info_proof.proof.leaf_index)
+    self.assertEqual(icp.proof_hash_count,
+                     len(self.test_afi_resp.fw_info_proof.proof.hashes))
+    self.assertEqual(icp.log_url, self.mock_aftl_host)
+    self.assertEqual(
+        icp.log_root_descriptor.root_hash, binascii.unhexlify(
+            '53b182b55dc1377197c938637f50093131daea4d0696b1eae5b8a014bfde884a'))
+
+    self.assertEqual(icp.fw_info_leaf.version_incremental, 'version_inc')
+    # To calculate the hash of the a RSA key use the following command:
+    # openssl rsa -in test/data/testkey_rsa4096.pem -pubout \
+    #    -outform DER | sha256sum
+    self.assertEqual(icp.fw_info_leaf.manufacturer_key_hash, binascii.unhexlify(
+        '9841073d16a7abbe21059e026da71976373d8f74fdb91cc46aa0a7d622b925b9'))
+
+    self.assertEqual(icp.log_root_signature,
+                     self.test_afi_resp.fw_info_proof.sth.log_root_signature)
+    self.assertEqual(icp.proofs, self.test_afi_resp.fw_info_proof.proof.hashes)
+
+  # pylint: disable=no-member
+  def test_request_inclusion_proof_failure(self):
+    """Tests the request_inclusion_proof_method in case of a comms problem."""
+    aftl_comms = AftlMockCommunication(self.mock_aftl_host,
+                                       aftltool.AftlError('Comms error'))
+    aftl = aftltool.Aftl()
+    with self.assertRaises(aftltool.AftlError):
+      aftl.request_inclusion_proof(self.mock_aftl_host,
+                                   'a'*1024, 'version_inc',
+                                   'test/data/testkey_rsa4096.pem',
+                                   None, None,
+                                   aftl_comms=aftl_comms)
 
 if __name__ == '__main__':
   unittest.main(verbosity=2)
