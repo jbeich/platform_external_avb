@@ -84,6 +84,24 @@
     },
     {
       "key": {
+        "uuid": "2543bfc5_34e83053",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-30T23:58:36Z",
+      "side": 1,
+      "message": "if L196 (or within a validation function) is the only place, then I suppose it\u0027s not worth pulling out.",
+      "parentUuid": "7e8810b8_3de93e58",
+      "revId": "31c594da4120b58ba6f31e349ac4c304df0b3462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "37e9501c_aaeaeb52",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 7
@@ -119,6 +137,30 @@
       "side": 1,
       "message": "Added some comments for clarification. These coupled checks are to see if the fields are present and if they aren\u0027t, ensure that the size is 0 so that the data to be hashed stays accurate. I tend to favor duplicate checks in general for these things, but I agree this may not be needed.",
       "parentUuid": "37e9501c_aaeaeb52",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 205,
+        "endChar": 11
+      },
+      "revId": "31c594da4120b58ba6f31e349ac4c304df0b3462",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bbc2948b_ef4d3b0b",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 205,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-01-30T23:58:36Z",
+      "side": 1,
+      "message": "Thanks for the clarifications. I think you\u0027re still missing the checks for whether the root_has and metadata exist. I\u0027d still recommend a is_valid() helper as it might simplify the inline checks that you do L217 and L230.",
+      "parentUuid": "28fb818e_e42375fd",
       "range": {
         "startLine": 199,
         "startChar": 0,
