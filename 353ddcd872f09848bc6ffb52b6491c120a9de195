@@ -222,6 +222,30 @@
       "revId": "353ddcd872f09848bc6ffb52b6491c120a9de195",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5af2091a_04ce14a9",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-03T18:10:59Z",
+      "side": 1,
+      "message": "Ah ha. Makes sense!\n\nFine to do in another change, but a reference to https://github.com/google/trillian/blob/master/merkle/log_verifier.go would help, also carrying over the descriptive comments for the companion functions when applies.",
+      "parentUuid": "799f2ac7_bf7429e5",
+      "range": {
+        "startLine": 324,
+        "startChar": 43,
+        "endLine": 324,
+        "endChar": 62
+      },
+      "revId": "353ddcd872f09848bc6ffb52b6491c120a9de195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
