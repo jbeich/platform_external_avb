@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "4d0c9e1d_cf8e4593",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-03T16:37:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2053e5c4_8678dee8",
+      "range": {
+        "startLine": 44,
+        "startChar": 13,
+        "endLine": 44,
+        "endChar": 22
+      },
+      "revId": "353ddcd872f09848bc6ffb52b6491c120a9de195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "258be97b_7738e1da",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 9
@@ -39,6 +63,24 @@
       "revId": "353ddcd872f09848bc6ffb52b6491c120a9de195",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9590b38d_5bc4d2fd",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-03T16:37:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "258be97b_7738e1da",
+      "revId": "353ddcd872f09848bc6ffb52b6491c120a9de195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -65,6 +107,30 @@
     },
     {
       "key": {
+        "uuid": "b95dcc0e_cb9447d4",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 229,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-03T16:37:16Z",
+      "side": 1,
+      "message": "It is.",
+      "parentUuid": "0a2c9fc1_e5866067",
+      "range": {
+        "startLine": 229,
+        "startChar": 23,
+        "endLine": 229,
+        "endChar": 35
+      },
+      "revId": "353ddcd872f09848bc6ffb52b6491c120a9de195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b88fd356_7518b5fd",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 9
@@ -88,6 +154,30 @@
     },
     {
       "key": {
+        "uuid": "5bea9c49_63bcf021",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 297,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-03T16:37:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b88fd356_7518b5fd",
+      "range": {
+        "startLine": 297,
+        "startChar": 37,
+        "endLine": 297,
+        "endChar": 46
+      },
+      "revId": "353ddcd872f09848bc6ffb52b6491c120a9de195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9b8bd68b_52d5da9c",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 9
@@ -99,6 +189,30 @@
       "writtenOn": "2020-01-30T23:58:36Z",
       "side": 1,
       "message": "this name and description along with the companion \"border_right\" is confusing. i\u0027d recommend you use the `left` and `right` nomenclature throughout.",
+      "range": {
+        "startLine": 324,
+        "startChar": 43,
+        "endLine": 324,
+        "endChar": 62
+      },
+      "revId": "353ddcd872f09848bc6ffb52b6491c120a9de195",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "799f2ac7_bf7429e5",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-03T16:37:16Z",
+      "side": 1,
+      "message": "Agree, was trying to match the Trillian code.",
+      "parentUuid": "9b8bd68b_52d5da9c",
       "range": {
         "startLine": 324,
         "startChar": 43,
