@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "b3550f40_502c95fe",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 63,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-04T16:07:12Z",
+      "side": 1,
+      "message": "I can remove the AVB_ATTR_PACKED parts, there are going to be things that are dynamically allocated. The allocation and free logic is coming in a future cl.",
+      "parentUuid": "8d26322b_4d21abff",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 63,
+        "endChar": 17
+      },
+      "revId": "8866bfe29c40fed85adde37897dd963520cd1d5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "097c3e11_a13fb330",
         "filename": "libavb_aftl/avb_aftl_validate.h",
         "patchSetId": 11
@@ -36,6 +60,30 @@
       "writtenOn": "2020-02-04T16:00:48Z",
       "side": 1,
       "message": "This seems like it should be a private function and not visible to libavb_aftl users? I mean, I take it you don\u0027t expect libavb_aftl users to call this? (My guess is that they just need to call aftl_verify_vbmeta_hash() and then aftl_verify_icp_root_hash() and that\u0027s it.)\n\nDitto for the functions below since they\u0027re not prefix with aftl_ and thus pollutes the global namespace ... and thus may conflict with whatever else a libavb*-using bootloader already has.",
+      "range": {
+        "startLine": 57,
+        "startChar": 0,
+        "endLine": 60,
+        "endChar": 80
+      },
+      "revId": "8866bfe29c40fed85adde37897dd963520cd1d5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "214a8eb7_7efe1c4a",
+        "filename": "libavb_aftl/avb_aftl_validate.h",
+        "patchSetId": 11
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-04T16:07:12Z",
+      "side": 1,
+      "message": "good point, there is no reason for libavb_aftl users to call these, so will switch these to private.",
+      "parentUuid": "097c3e11_a13fb330",
       "range": {
         "startLine": 57,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "9cc9b75c_3b581e59",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 61,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-04T16:07:12Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f1490bfc_1e6c263a",
+      "range": {
+        "startLine": 61,
+        "startChar": 4,
+        "endLine": 61,
+        "endChar": 14
+      },
+      "revId": "8866bfe29c40fed85adde37897dd963520cd1d5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "6ba49eda_04785670",
         "filename": "test/avb_aftl_validate_unittest.cc",
         "patchSetId": 11
@@ -82,6 +154,30 @@
       "writtenOn": "2020-02-04T16:00:48Z",
       "side": 1,
       "message": "Did you consider storing this in test/data/ and load it from there? IIRC, we do this from other tests.",
+      "range": {
+        "startLine": 139,
+        "startChar": 13,
+        "endLine": 139,
+        "endChar": 79
+      },
+      "revId": "8866bfe29c40fed85adde37897dd963520cd1d5b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "38e9cf4c_da08236d",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 11
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-04T16:07:12Z",
+      "side": 1,
+      "message": "Coming in a future CL, especially since there are more like this in the allocation/free test suite.",
+      "parentUuid": "6ba49eda_04785670",
       "range": {
         "startLine": 139,
         "startChar": 13,
