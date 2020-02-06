@@ -1,0 +1,303 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0631efc4_7c608dcd",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "As discussed nothing in this file will ever be used by the bootloader so it should be hidden the same way avb_rsa.h and avb_sha.h is hidden.",
+      "range": {
+        "startLine": 25,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 6
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "691d3c3c_003bef93",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 13
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "It\u0027s not clear to me where this struct (or the ones below) comes from... I\u0027m assuming it is loaded from disk and the code to load it will come later?\n\nIf so, you have to treat the contents as untrusted... right now we don\u0027t do that and I left a comment or two about that in avb_aftl_validate.c, for example how",
+      "range": {
+        "startLine": 54,
+        "startChar": 15,
+        "endLine": 54,
+        "endChar": 40
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e24aee1f_d9a5ad18",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "Since you\u0027re using all these functions (this one and e.g. rfc_6962_leaf and so on) from both here and the unit tests... but they\u0027re not going to be used by the library user (e.g. the bootloader)... I suggest to put them in avb_aftl_util.c (or aftl_aftl_private.c or whatever) and their headers in avb_aftl_util.h and make that header private (similar to how avb_rsa.h is a private header).\n\nAlso please prefix with avb_aftl_ to avoid collisions with whatever the library user (bootloader) is doing. The only place you\u0027re exempt from this is for a static functions in a translation unit...",
+      "range": {
+        "startLine": 39,
+        "startChar": 5,
+        "endLine": 39,
+        "endChar": 29
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "47d170fe_375c5c1b",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 94,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "I think it\u0027s clear from the header file that it\u0027s a programming error to pass nullptr for either vbmeta or icp_entry. But from here it appears to be treated as a recoverable error since you return false... use avb_assert() for this instead which will print a nice message and abort the program if the contract is violated.\n\nDitto for other pre-condition checks below.",
+      "range": {
+        "startLine": 94,
+        "startChar": 2,
+        "endLine": 94,
+        "endChar": 42
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b6d26ef8_0c72ea2a",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 100,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "This can indeed happen if e.g. a new image is used on a device with an old bootloader (e.g. old copy of libavb_aftl). Would be helpful for whoever runs into this with some diagnostics so use avb_error() to do that.",
+      "range": {
+        "startLine": 100,
+        "startChar": 66,
+        "endLine": 100,
+        "endChar": 79
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7656c85f_8925c31b",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "Would use avb_error() to convey this to the user to help them realize why their device isn\u0027t booting. In general, the approach taken by libavb is to produce helpful log messages whenever a failure / abnormal path is taken. I think it would be helpful to do the same here. (Ditto elsewhere.)\n\n(Also, small nit: you don\u0027t need parenthesis around this - return is an operator, not a function.)",
+      "range": {
+        "startLine": 104,
+        "startChar": 47,
+        "endLine": 104,
+        "endChar": 48
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cbe51c75_df2b5755",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "I think we need to pass the size of the buffer in to avoid overflows. And also use the size below...",
+      "range": {
+        "startLine": 108,
+        "startChar": 59,
+        "endLine": 108,
+        "endChar": 74
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "359c6410_7859e0aa",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "Is this a pointer, a boolean, or an integer value? 😊... The reader would probably need to consult the header file to convince themselves. No need to have them do that, just add \"!\u003d nullptr\" or \"!\u003d 0\" if pointer or integer and leave it as is if it\u0027s a boolean. (Spoiler: it\u0027s not a boolean.)\n\n(This is kind of a personal style thing so take this just as a suggestion!)",
+      "range": {
+        "startLine": 115,
+        "startChar": 6,
+        "endLine": 115,
+        "endChar": 41
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c7bbfee9_8c3ae054",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "Need to handle overflow here. See avb_safe_add(). Elsewhere too.",
+      "range": {
+        "startLine": 126,
+        "startChar": 11,
+        "endLine": 126,
+        "endChar": 13
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "584b2345_217b66eb",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 159,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "Isn\u0027t icp_entry inherently untrusted? If so, should sanity check that fw_info_leaf_size is less than some huge number otherwise an attacker can blow you up by just putting in a really big number here.",
+      "range": {
+        "startLine": 159,
+        "startChar": 32,
+        "endLine": 159,
+        "endChar": 60
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "63f90019_385da40e",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 399,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "Bit weird to use uint32_t for a counter variable. Suggest size_t instead. Also elsewhere.",
+      "range": {
+        "startLine": 399,
+        "startChar": 2,
+        "endLine": 399,
+        "endChar": 13
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "eb19e31d_618863b5",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 422,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "I would just use unsigned int or size_t. uint8_t is distracting.",
+      "range": {
+        "startLine": 422,
+        "startChar": 0,
+        "endLine": 422,
+        "endChar": 7
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "56b3376e_422de843",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 13
+      },
+      "lineNbr": 480,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-06T21:33:24Z",
+      "side": 1,
+      "message": "This is a lot of memory to allocate on the stack and will probably blow up some boot loaders. Use the heap instead.",
+      "range": {
+        "startLine": 479,
+        "startChar": 2,
+        "endLine": 480,
+        "endChar": 58
+      },
+      "revId": "158dccf42a352a6bd0b16e35e964ccbb79787058",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
