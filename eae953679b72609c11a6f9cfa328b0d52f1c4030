@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "3be2aae8_9e2890db",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-07T19:46:44Z",
+      "side": 1,
+      "message": "I added a test for the null case. It seems to calculate it correctly, so I would rather leave it in.",
+      "parentUuid": "f2165cf1_c34be919",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 46
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "2efd175a_2d1a4dc5",
         "filename": "libavb_aftl/avb_aftl_util.c",
         "patchSetId": 14
@@ -45,6 +69,30 @@
       "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "60712c48_dab500b7",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-07T19:46:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2efd175a_2d1a4dc5",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 4
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "3085f1a6_fbb00032",
+        "filename": "libavb_aftl/avb_aftl_util.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-07T19:46:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0338ef6_512eaab3",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 6
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "69a7ec09_dbc98357",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 14
@@ -94,6 +166,30 @@
     },
     {
       "key": {
+        "uuid": "46352028_4658b633",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-07T19:46:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "69a7ec09_dbc98357",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 11
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "d3aa81ed_587f3334",
         "filename": "libavb_aftl/avb_aftl_validate.c",
         "patchSetId": 14
@@ -114,6 +210,30 @@
       "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d954df49_fbfa8f3b",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-07T19:46:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d3aa81ed_587f3334",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 67,
+        "endChar": 64
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
