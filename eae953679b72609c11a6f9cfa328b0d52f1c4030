@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f2165cf1_c34be919",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-07T18:34:35Z",
+      "side": 1,
+      "message": "I would just assert() here and say callers shouldn\u0027t call it with a nullptr for data. If not, you should at least set hash correctly.",
+      "range": {
+        "startLine": 40,
+        "startChar": 0,
+        "endLine": 41,
+        "endChar": 46
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2efd175a_2d1a4dc5",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 56,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-07T18:34:35Z",
+      "side": 1,
+      "message": "Convey failure using a bool (also in other places).",
+      "range": {
+        "startLine": 56,
+        "startChar": 0,
+        "endLine": 56,
+        "endChar": 4
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e0338ef6_512eaab3",
+        "filename": "libavb_aftl/avb_aftl_util.h",
+        "patchSetId": 14
+      },
+      "lineNbr": 31,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-07T18:34:35Z",
+      "side": 1,
+      "message": "Looks like these are all private functions not expected to be used by the library-user (bootloader)? If so, do the same as in e.g. avb_rsa.h",
+      "range": {
+        "startLine": 24,
+        "startChar": 0,
+        "endLine": 31,
+        "endChar": 6
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "69a7ec09_dbc98357",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-07T18:34:35Z",
+      "side": 1,
+      "message": "Return a bool so the caller can check for failure.",
+      "range": {
+        "startLine": 57,
+        "startChar": 7,
+        "endLine": 57,
+        "endChar": 11
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d3aa81ed_587f3334",
+        "filename": "libavb_aftl/avb_aftl_validate.c",
+        "patchSetId": 14
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-07T18:34:35Z",
+      "side": 1,
+      "message": "Need to handle overflow for each of these additions. Is the idea with calc_fw_image_size to check ahead of time that things don\u0027t overflow? If so, do all the avb_safe_add() here and no need to do it below. Or you can do it all below, that\u0027s fine too.\n\nAlso, still need to pass something like size_t buffer_size so you can check that you don\u0027t memcpy() outside the allocated buffer.",
+      "range": {
+        "startLine": 63,
+        "startChar": 2,
+        "endLine": 67,
+        "endChar": 64
+      },
+      "revId": "eae953679b72609c11a6f9cfa328b0d52f1c4030",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
