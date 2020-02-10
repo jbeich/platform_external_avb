@@ -40,8 +40,10 @@ extern "C" {
 #endif
 
 /* Hash and signature size supported. Hash is SHA256, signature is RSA4096. */
-#define AFTL_HASH_SIZE 32
-#define AFTL_SIGNATURE_SIZE 512
+#define AVB_AFTL_HASH_SIZE 32ul
+#define AVB_AFTL_SIGNATURE_SIZE 512ul
+/* Raw key size used for signature validation. */
+#define AVB_AFTL_PUB_KEY_SIZE 1032ul
 
 /* Data structure containing AFTL header information. */
 typedef struct AftlIcpHeader {
@@ -50,7 +52,7 @@ typedef struct AftlIcpHeader {
   uint32_t required_icp_version_minor;
   uint32_t aftl_descriptor_size; /* Total size of the AftlDescriptor. */
   uint16_t icp_count;
-} AftlIcpHeader;
+} AVB_ATTR_PACKED AftlIcpHeader;
 
 /* Data structure containing a Trillian LogRootDescriptor, from
    https://github.com/google/trillian/blob/master/trillian.proto#L255
@@ -66,6 +68,11 @@ typedef struct TrillianLogRootDescriptor {
   uint8_t* metadata;
 } TrillianLogRootDescriptor;
 
+#define AVB_AFTL_MAX_METADATA_SIZE (4096)
+#define AVB_AFTL_MIN_TLRD_SIZE                                     \
+  (sizeof(uint16_t) * 2 + sizeof(uint64_t) * 3 + sizeof(uint8_t) + \
+   AVB_AFTL_HASH_SIZE)
+#define AVB_AFTL_MAX_TLRD_SIZE (65536 - sizeof(AftlIcpHeader))
 /* Data structure containing the firmware image info stored in the
    transparency log. This is defined in
    https://android.googlesource.com/platform/external/avb/+/master/proto/aftl.proto
@@ -83,6 +90,11 @@ typedef struct FirmwareInfo {
   uint8_t* description;
 } FirmwareInfo;
 
+#define AVB_AFTL_MAX_VERSION_INCREMENTAL_SIZE (256)
+#define AVB_AFTL_MIN_FW_INFO_SIZE \
+  (AVB_AFTL_HASH_SIZE * 2 + AVB_AFTL_PUB_KEY_SIZE)
+#define AVB_AFTL_MAX_FW_INFO_SIZE (65536 - sizeof(AftlIcpHeader))
+
 /* Data structure containing AFTL inclusion proof data from a single
    transparency log. */
 typedef struct AftlIcpEntry {
@@ -97,14 +109,23 @@ typedef struct AftlIcpEntry {
   TrillianLogRootDescriptor log_root_descriptor;
   FirmwareInfo fw_info_leaf;
   uint8_t* log_root_signature;
-  uint8_t proofs[/*proof_hash_count*/][AFTL_HASH_SIZE];
+  uint8_t proofs[/*proof_hash_count*/][AVB_AFTL_HASH_SIZE];
 } AftlIcpEntry;
+
+#define AVB_AFTL_MIN_AFTL_ICP_ENTRY_SIZE                       \
+  (sizeof(uint32_t) * 5 + sizeof(uint64_t) + sizeof(uint8_t) + \
+   AVB_AFTL_MIN_TLRD_SIZE + AVB_AFTL_MIN_FW_INFO_SIZE +        \
+   AVB_AFTL_SIGNATURE_SIZE)
+#define AVB_AFTL_MAX_AFTL_ICP_ENTRY_SIZE (65536 - sizeof(AftlIcpHeader))
+#define AVB_AFTL_MAX_URL_SIZE 2048
 
 /* Main data structure for an AFTL descriptor. */
 typedef struct AftlDescriptor {
   AftlIcpHeader header;
-  AftlIcpEntry entries[/*icp_count*/];
-} AftlDescriptor;
+  AftlIcpEntry** entries;
+} AVB_ATTR_PACKED AftlDescriptor;
+/* Limit AftlDescriptor size to 64KB for now. */
+#define AVB_AFTL_MAX_AFTL_DESCRIPTOR_SIZE 65536
 
 #ifdef __cplusplus
 }

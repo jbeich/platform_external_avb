@@ -34,7 +34,7 @@
 /* Performs a SHA256 hash operation on data. */
 bool avb_aftl_sha256(uint8_t* data,
                      uint64_t length,
-                     uint8_t hash[AFTL_HASH_SIZE]) {
+                     uint8_t hash[AVB_AFTL_HASH_SIZE]) {
   AvbSHA256Ctx context;
   uint8_t* tmp;
 
@@ -43,7 +43,7 @@ bool avb_aftl_sha256(uint8_t* data,
   avb_sha256_init(&context);
   avb_sha256_update(&context, data, length);
   tmp = avb_sha256_final(&context);
-  avb_memcpy(hash, tmp, AFTL_HASH_SIZE);
+  avb_memcpy(hash, tmp, AVB_AFTL_HASH_SIZE);
   return true;
 }
 
@@ -65,7 +65,7 @@ bool avb_aftl_hash_log_root_descriptor(AftlIcpEntry* icp_entry, uint8_t* hash) {
   /* Size of the non-pointer elements of the TrillianLogRootDescriptor. */
   tlrd_size = sizeof(uint16_t) * 2 + sizeof(uint64_t) * 3 + sizeof(uint8_t);
   /* Ensure the log_root_descriptor size is correct. */
-  if (icp_entry->log_root_descriptor_size > AFTL_MAX_LOG_ROOT_DESCRIPTOR_SIZE) {
+  if (icp_entry->log_root_descriptor_size > AVB_AFTL_MAX_TLRD_SIZE) {
     avb_error("Invalid log root descriptor size.\n");
     return false;
   }
@@ -149,7 +149,7 @@ bool avb_aftl_rfc6962_hash_leaf(uint8_t* leaf,
   bool retval;
 
   avb_assert(leaf != NULL && hash != NULL);
-  avb_assert(leaf_size != AFTL_ULONG_MAX);
+  avb_assert(leaf_size != AVB_AFTL_ULONG_MAX);
 
   buffer = (uint8_t*)avb_malloc(leaf_size + 1);
 
@@ -180,7 +180,7 @@ bool avb_aftl_rfc6962_hash_children(uint8_t* left_child,
   avb_assert(left_child != NULL && right_child != NULL && hash != NULL);
 
   /* Check for integer overflow. */
-  avb_assert(left_child_size < AFTL_ULONG_MAX - right_child_size);
+  avb_assert(left_child_size < AVB_AFTL_ULONG_MAX - right_child_size);
 
   data_size = left_child_size + right_child_size + 1;
   buffer = (uint8_t*)avb_malloc(data_size);
@@ -215,28 +215,27 @@ bool avb_aftl_chain_border_right(uint8_t* seed,
   uint8_t* tmp_hash;
   bool retval;
 
-  avb_assert(seed_size == AFTL_HASH_SIZE);
+  avb_assert(seed_size == AVB_AFTL_HASH_SIZE);
   avb_assert(seed != NULL && proof != NULL && hash != NULL);
 
+  retval = true;
   tmp = seed;
-  tmp_hash = (uint8_t*)avb_malloc(AFTL_HASH_SIZE);
+  tmp_hash = (uint8_t*)avb_malloc(AVB_AFTL_HASH_SIZE);
   if (tmp_hash == NULL) {
     avb_error("Allocation failure in avb_aftl_chain_border_right.\n");
     return false;
   }
   for (i = 0; i < proof_entry_count; i++) {
-    retval = avb_aftl_rfc6962_hash_children(proof + (i * AFTL_HASH_SIZE),
-                                            AFTL_HASH_SIZE,
+    retval = avb_aftl_rfc6962_hash_children(proof + (i * AVB_AFTL_HASH_SIZE),
+                                            AVB_AFTL_HASH_SIZE,
                                             tmp,
-                                            AFTL_HASH_SIZE,
+                                            AVB_AFTL_HASH_SIZE,
                                             tmp_hash);
-    if (!retval) {
-      avb_error("Failed to hash Merkle tree children.\n");
-    }
+    if (!retval) avb_error("Failed to hash Merkle tree children.\n");
     tmp = tmp_hash;
   }
 
-  if (retval) avb_memcpy(hash, tmp, AFTL_HASH_SIZE);
+  if (retval) avb_memcpy(hash, tmp, AVB_AFTL_HASH_SIZE);
 
   avb_free(tmp_hash);
   return retval;
@@ -254,11 +253,12 @@ bool avb_aftl_chain_inner(uint8_t* seed,
   uint8_t* tmp_hash;
   bool retval;
 
-  avb_assert(seed_size == AFTL_HASH_SIZE);
+  avb_assert(seed_size == AVB_AFTL_HASH_SIZE);
   avb_assert(seed != NULL && proof != NULL && hash != NULL);
 
   tmp = seed;
-  tmp_hash = (uint8_t*)avb_malloc(AFTL_HASH_SIZE);
+  retval = true;
+  tmp_hash = (uint8_t*)avb_malloc(AVB_AFTL_HASH_SIZE);
   if (tmp_hash == NULL) {
     avb_error("Allocation failure in avb_aftl_chain_inner.\n");
     return false;
@@ -267,12 +267,12 @@ bool avb_aftl_chain_inner(uint8_t* seed,
     if ((leaf_index >> i & 1) == 0) {
       retval = avb_aftl_rfc6962_hash_children(tmp,
                                               seed_size,
-                                              proof + (i * AFTL_HASH_SIZE),
-                                              AFTL_HASH_SIZE,
+                                              proof + (i * AVB_AFTL_HASH_SIZE),
+                                              AVB_AFTL_HASH_SIZE,
                                               tmp_hash);
     } else {
-      retval = avb_aftl_rfc6962_hash_children(proof + (i * AFTL_HASH_SIZE),
-                                              AFTL_HASH_SIZE,
+      retval = avb_aftl_rfc6962_hash_children(proof + (i * AVB_AFTL_HASH_SIZE),
+                                              AVB_AFTL_HASH_SIZE,
                                               tmp,
                                               seed_size,
                                               tmp_hash);
@@ -283,7 +283,7 @@ bool avb_aftl_chain_inner(uint8_t* seed,
     }
     tmp = tmp_hash;
   }
-  if (retval) avb_memcpy(hash, tmp, AFTL_HASH_SIZE);
+  if (retval) avb_memcpy(hash, tmp, AVB_AFTL_HASH_SIZE);
   avb_free(tmp_hash);
   return retval;
 }
@@ -323,7 +323,7 @@ unsigned int avb_aftl_count_leading_zeros(uint64_t val) {
 /* Calculates the expected Merkle tree hash. */
 bool avb_aftl_root_from_icp(uint64_t leaf_index,
                             uint64_t tree_size,
-                            uint8_t proof[][AFTL_HASH_SIZE],
+                            uint8_t proof[][AVB_AFTL_HASH_SIZE],
                             uint32_t proof_entry_count,
                             uint8_t* leaf_hash,
                             uint64_t leaf_hash_size,
@@ -331,7 +331,7 @@ bool avb_aftl_root_from_icp(uint64_t leaf_index,
   uint64_t inner_proof_size;
   uint64_t border_proof_size;
   size_t i;
-  uint8_t hash[AFTL_HASH_SIZE];
+  uint8_t hash[AVB_AFTL_HASH_SIZE];
   uint8_t* inner_proof;
   uint8_t* border_proof;
   bool retval;
@@ -343,7 +343,6 @@ bool avb_aftl_root_from_icp(uint64_t leaf_index,
   /* This cannot overflow. */
   inner_proof_size =
       64 - avb_aftl_count_leading_zeros(leaf_index ^ (tree_size - 1));
-
   /* Check for integer underflow.*/
   if ((proof_entry_count - inner_proof_size) > proof_entry_count) {
     avb_error("Invalid proof entry count value.\n");
@@ -351,25 +350,25 @@ bool avb_aftl_root_from_icp(uint64_t leaf_index,
   }
   border_proof_size = proof_entry_count - inner_proof_size;
   /* Split the proof into two parts based on the calculated pivot point. */
-  inner_proof = (uint8_t*)avb_malloc(inner_proof_size * AFTL_HASH_SIZE);
+  inner_proof = (uint8_t*)avb_malloc(inner_proof_size * AVB_AFTL_HASH_SIZE);
   if (inner_proof == NULL) {
     avb_error("Allocation failure in avb_aftl_root_from_icp.\n");
     return false;
   }
-  border_proof = (uint8_t*)avb_malloc(border_proof_size * AFTL_HASH_SIZE);
+  border_proof = (uint8_t*)avb_malloc(border_proof_size * AVB_AFTL_HASH_SIZE);
   if (border_proof == NULL) {
     avb_free(inner_proof);
     avb_error("Allocation failure in avb_aftl_root_from_icp.\n");
     return false;
   }
-
   for (i = 0; i < inner_proof_size; i++) {
-    avb_memcpy(inner_proof + (AFTL_HASH_SIZE * i), proof[i], AFTL_HASH_SIZE);
+    avb_memcpy(
+        inner_proof + (AVB_AFTL_HASH_SIZE * i), proof[i], AVB_AFTL_HASH_SIZE);
   }
   for (i = 0; i < border_proof_size; i++) {
-    avb_memcpy(border_proof + (AFTL_HASH_SIZE * i),
+    avb_memcpy(border_proof + (AVB_AFTL_HASH_SIZE * i),
                proof[inner_proof_size + i],
-               AFTL_HASH_SIZE);
+               AVB_AFTL_HASH_SIZE);
   }
 
   /* Calculate the root hash and store it in root_hash. */
@@ -381,9 +380,512 @@ bool avb_aftl_root_from_icp(uint64_t leaf_index,
                                 hash);
   if (retval)
     retval = avb_aftl_chain_border_right(
-        hash, AFTL_HASH_SIZE, border_proof, border_proof_size, root_hash);
-
+        hash, AVB_AFTL_HASH_SIZE, border_proof, border_proof_size, root_hash);
   if (inner_proof != NULL) avb_free(inner_proof);
   if (border_proof != NULL) avb_free(border_proof);
   return retval;
+}
+
+/* Allocates and populates a TrillianLogRootDescriptor element in an
+   AftlIcpEntry from a binary blob.
+   The blob is expected to be pointing to the beginning of a
+   serialized TrillianLogRootDescriptor element of an AftlIcpEntry.
+   The aftl_blob argument is updated to point to the area after the
+   TrillianLogRootDescriptor. aftl_blob_remaining gives the amount of the
+   aftl_blob that is left to parse. */
+static bool parse_trillian_log_root_descriptor(AftlIcpEntry* icp_entry,
+                                               uint8_t** aftl_blob,
+                                               size_t aftl_blob_remaining) {
+  size_t parsed_size;
+
+  avb_assert(icp_entry);
+  avb_assert(aftl_blob);
+  avb_assert(aftl_blob_remaining >= AVB_AFTL_MIN_TLRD_SIZE);
+  /* Copy in the version field from the blob. */
+  avb_memcpy(&(icp_entry->log_root_descriptor.version),
+             *aftl_blob,
+             avb_aftl_member_size(TrillianLogRootDescriptor, version));
+  *aftl_blob += avb_aftl_member_size(TrillianLogRootDescriptor, version);
+  parsed_size = avb_aftl_member_size(TrillianLogRootDescriptor, version);
+  /* Copy in the tree size field from the blob. */
+  avb_memcpy(&(icp_entry->log_root_descriptor.tree_size),
+             *aftl_blob,
+             avb_aftl_member_size(TrillianLogRootDescriptor, tree_size));
+  *aftl_blob += avb_aftl_member_size(TrillianLogRootDescriptor, tree_size);
+  parsed_size += avb_aftl_member_size(TrillianLogRootDescriptor, tree_size);
+  /* Copy in the root hash size field from the blob. */
+  avb_memcpy(&(icp_entry->log_root_descriptor.root_hash_size),
+             *aftl_blob,
+             avb_aftl_member_size(TrillianLogRootDescriptor, root_hash_size));
+  if (icp_entry->log_root_descriptor.root_hash_size != AVB_AFTL_HASH_SIZE) {
+    avb_error("Invalid root hash size.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  *aftl_blob += avb_aftl_member_size(TrillianLogRootDescriptor, root_hash_size);
+  parsed_size +=
+      avb_aftl_member_size(TrillianLogRootDescriptor, root_hash_size);
+  /* Copy in the root hash from the blob. */
+  icp_entry->log_root_descriptor.root_hash =
+      (uint8_t*)avb_calloc(icp_entry->log_root_descriptor.root_hash_size);
+  if (!icp_entry->log_root_descriptor.root_hash) {
+    avb_error("Failure to allocate root hash.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+
+  avb_memcpy(icp_entry->log_root_descriptor.root_hash,
+             *aftl_blob,
+             icp_entry->log_root_descriptor.root_hash_size);
+  *aftl_blob += icp_entry->log_root_descriptor.root_hash_size;
+  parsed_size += icp_entry->log_root_descriptor.root_hash_size;
+  /* Copy in the timestamp field from the blob. */
+  avb_memcpy(&(icp_entry->log_root_descriptor.timestamp),
+             *aftl_blob,
+             avb_aftl_member_size(TrillianLogRootDescriptor, timestamp));
+  *aftl_blob += avb_aftl_member_size(TrillianLogRootDescriptor, timestamp);
+  parsed_size += avb_aftl_member_size(TrillianLogRootDescriptor, timestamp);
+  /* Copy in the revision field from the blob. */
+  avb_memcpy(&(icp_entry->log_root_descriptor.revision),
+             *aftl_blob,
+             avb_aftl_member_size(TrillianLogRootDescriptor, revision));
+  *aftl_blob += avb_aftl_member_size(TrillianLogRootDescriptor, revision);
+  parsed_size += avb_aftl_member_size(TrillianLogRootDescriptor, revision);
+  /* Copy in the metadata size field from the blob. */
+  avb_memcpy(&(icp_entry->log_root_descriptor.metadata_size),
+             *aftl_blob,
+             avb_aftl_member_size(TrillianLogRootDescriptor, metadata_size));
+  *aftl_blob += avb_aftl_member_size(TrillianLogRootDescriptor, metadata_size);
+  parsed_size += avb_aftl_member_size(TrillianLogRootDescriptor, metadata_size);
+  if (icp_entry->log_root_descriptor.metadata_size >
+      AVB_AFTL_MAX_METADATA_SIZE) {
+    avb_error("Invalid metadata size.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  if (icp_entry->log_root_descriptor.metadata_size + parsed_size >
+      aftl_blob_remaining) {
+    avb_error("Invalid AftlDescriptor.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  /* If it exists, copy in the metadata field from the blob. */
+  if (icp_entry->log_root_descriptor.metadata_size > 0) {
+    icp_entry->log_root_descriptor.metadata =
+        (uint8_t*)avb_calloc(icp_entry->log_root_descriptor.metadata_size);
+    if (!icp_entry->log_root_descriptor.metadata) {
+      avb_error("Failure to allocate metadata.\n");
+      free_aftl_icp_entry(icp_entry);
+      return false;
+    }
+    avb_memcpy(icp_entry->log_root_descriptor.metadata,
+               *aftl_blob,
+               icp_entry->log_root_descriptor.metadata_size);
+    *aftl_blob += icp_entry->log_root_descriptor.metadata_size;
+  } else {
+    icp_entry->log_root_descriptor.metadata = NULL;
+  }
+  return true;
+}
+
+/* Allocates and populates a FirmwareInfo element in an
+   AftlIcpEntry from a binary blob.
+   The blob is expected to be pointing to the beginning of a
+   serialized FirmwareInfo element of an AftlIcpEntry.
+   The aftl_blob argument is updated to point to the area after the
+   FirmwareInfo leaf. */
+static bool parse_firmware_info(AftlIcpEntry* icp_entry, uint8_t** aftl_blob) {
+  uint32_t cur_fw_info_leaf_size;
+
+  /* This should have been validated before getting here. */
+  cur_fw_info_leaf_size = icp_entry->fw_info_leaf_size;
+  /* Copy in the vbmeta_hash value from the blob. */
+  icp_entry->fw_info_leaf.vbmeta_hash_size = AVB_AFTL_HASH_SIZE;
+  icp_entry->fw_info_leaf.vbmeta_hash =
+      (uint8_t*)avb_calloc(icp_entry->fw_info_leaf.vbmeta_hash_size);
+  if (!icp_entry->fw_info_leaf.vbmeta_hash) {
+    avb_error("Failed to allocate vbmeta hash.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+
+  avb_memcpy(icp_entry->fw_info_leaf.vbmeta_hash,
+             *aftl_blob,
+             icp_entry->fw_info_leaf.vbmeta_hash_size);
+  *aftl_blob += icp_entry->fw_info_leaf.vbmeta_hash_size;
+  /* Update the amount of the FirmwareInfo leaf that has been parsed.
+     The size has already been checked against MIN_TLRD_SIZE. */
+  cur_fw_info_leaf_size -= icp_entry->fw_info_leaf.vbmeta_hash_size;
+
+  /* Calculate the version_incremental size from the blob. The
+     version_incremental is expected to be null terminated. */
+  icp_entry->fw_info_leaf.version_incremental_size =
+      avb_strlen((const char*)*aftl_blob) + 1;
+  if (icp_entry->fw_info_leaf.version_incremental_size >
+          AVB_AFTL_MAX_VERSION_INCREMENTAL_SIZE ||
+      icp_entry->fw_info_leaf.version_incremental_size == 0) {
+    avb_error("Invalid version.incremental size.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  /* Copy in the version_incremental value from the blob. */
+  icp_entry->fw_info_leaf.version_incremental =
+      (uint8_t*)avb_calloc(icp_entry->fw_info_leaf.version_incremental_size);
+  if (!icp_entry->fw_info_leaf.version_incremental) {
+    avb_error("Failed to allocate version.incremental.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  avb_memcpy(icp_entry->fw_info_leaf.version_incremental,
+             *aftl_blob,
+             icp_entry->fw_info_leaf.version_incremental_size);
+  *aftl_blob += icp_entry->fw_info_leaf.version_incremental_size;
+  /* Update the amount of the FirmwareInfo leaf that has been parsed. */
+  cur_fw_info_leaf_size -= icp_entry->fw_info_leaf.version_incremental_size;
+  if (cur_fw_info_leaf_size < AVB_AFTL_PUB_KEY_SIZE) {
+    avb_error("Invalid FirmwareInfo leaf.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  /* Copy in the platform key from the blob. */
+  icp_entry->fw_info_leaf.platform_key_size = AVB_AFTL_PUB_KEY_SIZE;
+  icp_entry->fw_info_leaf.platform_key =
+      (uint8_t*)avb_calloc(icp_entry->fw_info_leaf.platform_key_size);
+  if (!icp_entry->fw_info_leaf.platform_key) {
+    avb_error("Failure to allocate FirmwareInfo platform key.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  avb_memcpy(icp_entry->fw_info_leaf.platform_key,
+             *aftl_blob,
+             icp_entry->fw_info_leaf.platform_key_size);
+  *aftl_blob += icp_entry->fw_info_leaf.platform_key_size;
+  /* Update the amount of the FirmwareInfo leaf that has been parsed. */
+  cur_fw_info_leaf_size -= icp_entry->fw_info_leaf.platform_key_size;
+
+  if (cur_fw_info_leaf_size < AVB_AFTL_HASH_SIZE) {
+    avb_error("Invalid FirmwareInfo leaf.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  /* Copy in the manufacturer key hash from the blob. */
+  icp_entry->fw_info_leaf.manufacturer_key_hash_size = AVB_AFTL_HASH_SIZE;
+  icp_entry->fw_info_leaf.manufacturer_key_hash =
+      (uint8_t*)avb_calloc(icp_entry->fw_info_leaf.manufacturer_key_hash_size);
+  if (!icp_entry->fw_info_leaf.manufacturer_key_hash) {
+    avb_error("Failure to allocate manufacturer key hash.\n");
+    free_aftl_icp_entry(icp_entry);
+    return false;
+  }
+  avb_memcpy(icp_entry->fw_info_leaf.manufacturer_key_hash,
+             *aftl_blob,
+             icp_entry->fw_info_leaf.manufacturer_key_hash_size);
+  *aftl_blob += icp_entry->fw_info_leaf.manufacturer_key_hash_size;
+  /* Update the amount of the FirmwareInfo leaf that has been parsed. */
+  cur_fw_info_leaf_size -= icp_entry->fw_info_leaf.manufacturer_key_hash_size;
+
+  /* The rest of the FirmareInfo leaf is the description. Copy this amount
+     info the description size field. */
+  if (cur_fw_info_leaf_size > 0) {
+    icp_entry->fw_info_leaf.description_size = cur_fw_info_leaf_size;
+    /* Copy in the description from the blob. */
+    icp_entry->fw_info_leaf.description =
+        (uint8_t*)avb_calloc(icp_entry->fw_info_leaf.description_size);
+    if (!icp_entry->fw_info_leaf.description) {
+      avb_error("Invalid FirmwareInfo leaf.\n");
+      free_aftl_icp_entry(icp_entry);
+      return false;
+    }
+    avb_memcpy(icp_entry->fw_info_leaf.description,
+               *aftl_blob,
+               icp_entry->fw_info_leaf.description_size);
+    *aftl_blob += icp_entry->fw_info_leaf.description_size;
+  }
+  return true;
+}
+
+/* Allocates and populates an AftlIcpEntry from a binary blob.
+   The blob is expected to be pointing to the beginning of a
+   serialized AftlIcpEntry structure. */
+AftlIcpEntry* parse_icp_entry(uint8_t* aftl_blob, size_t* remaining_size) {
+  AftlIcpEntry *icp_entry, *tmp_icp_entry;
+  uint64_t parsed_size;
+  /* Make a temp AftlIcpEntry to get the inclusion proof size
+     for memory allocation purposes.*/
+  tmp_icp_entry = (AftlIcpEntry*)aftl_blob;
+  /* Ensure the calculated size is sane. */
+  if (tmp_icp_entry->inc_proof_size + AVB_AFTL_MIN_AFTL_ICP_ENTRY_SIZE <
+      tmp_icp_entry->inc_proof_size) {
+    avb_error("Invalid inclusion proof size.\n");
+    return NULL;
+  }
+
+  if (*remaining_size >=
+      tmp_icp_entry->inc_proof_size + AVB_AFTL_MIN_AFTL_ICP_ENTRY_SIZE) {
+    avb_error("Invalid AftlDescriptor\n");
+    return NULL;
+  }
+
+  icp_entry = (AftlIcpEntry*)avb_calloc(tmp_icp_entry->inc_proof_size +
+                                        sizeof(AftlIcpEntry));
+  if (!icp_entry) {
+    avb_error("Failure allocating AftlIcpEntry\n");
+    return NULL;
+  }
+  /* Copy in the log server URL size field. */
+  avb_memcpy(&(icp_entry->log_url_size),
+             aftl_blob,
+             avb_aftl_member_size(AftlIcpEntry, log_url_size));
+  if (icp_entry->log_url_size > AVB_AFTL_MAX_URL_SIZE) {
+    avb_error("Invalid log URL size.\n");
+    avb_free(icp_entry);
+    return NULL;
+  }
+  aftl_blob += avb_aftl_member_size(AftlIcpEntry, log_url_size);
+  parsed_size = avb_aftl_member_size(AftlIcpEntry, log_url_size);
+  /* Copy in the leaf index field. */
+  avb_memcpy(&(icp_entry->leaf_index),
+             aftl_blob,
+             avb_aftl_member_size(AftlIcpEntry, leaf_index));
+  aftl_blob += avb_aftl_member_size(AftlIcpEntry, leaf_index);
+  parsed_size += avb_aftl_member_size(AftlIcpEntry, leaf_index);
+  /* Copy in the TrillianLogRootDescriptor size field. */
+  avb_memcpy(&(icp_entry->log_root_descriptor_size),
+             aftl_blob,
+             avb_aftl_member_size(AftlIcpEntry, log_root_descriptor_size));
+  if (icp_entry->log_root_descriptor_size < AVB_AFTL_MIN_TLRD_SIZE ||
+      icp_entry->log_root_descriptor_size > AVB_AFTL_MAX_TLRD_SIZE) {
+    avb_error("Invalid TrillianLogRootDescriptor size.\n");
+    avb_free(icp_entry);
+    return NULL;
+  }
+  aftl_blob += avb_aftl_member_size(AftlIcpEntry, log_root_descriptor_size);
+  parsed_size += avb_aftl_member_size(AftlIcpEntry, log_root_descriptor_size);
+  /* Copy in the FirmwareInfo leaf size field. */
+  avb_memcpy(&(icp_entry->fw_info_leaf_size),
+             aftl_blob,
+             avb_aftl_member_size(AftlIcpEntry, fw_info_leaf_size));
+  if (icp_entry->fw_info_leaf_size < AVB_AFTL_MIN_FW_INFO_SIZE ||
+      icp_entry->fw_info_leaf_size > AVB_AFTL_MAX_FW_INFO_SIZE) {
+    avb_error("Invalid FirmwareInfo leaf size.\n");
+    avb_free(icp_entry);
+    return NULL;
+  }
+  aftl_blob += avb_aftl_member_size(AftlIcpEntry, fw_info_leaf_size);
+  parsed_size += avb_aftl_member_size(AftlIcpEntry, fw_info_leaf_size);
+  /* Copy the log root signature size field. */
+  avb_memcpy(&(icp_entry->log_root_sig_size),
+             aftl_blob,
+             avb_aftl_member_size(AftlIcpEntry, log_root_sig_size));
+  if (icp_entry->log_root_sig_size != AVB_AFTL_SIGNATURE_SIZE) {
+    avb_error("Invalid log root signature size.\n");
+    avb_free(icp_entry);
+    return NULL;
+  }
+  aftl_blob += avb_aftl_member_size(AftlIcpEntry, log_root_sig_size);
+  parsed_size += avb_aftl_member_size(AftlIcpEntry, log_root_sig_size);
+  /* Copy the inclusion proof hash count field. */
+  avb_memcpy(&(icp_entry->proof_hash_count),
+             aftl_blob,
+             avb_aftl_member_size(AftlIcpEntry, proof_hash_count));
+  aftl_blob += avb_aftl_member_size(AftlIcpEntry, proof_hash_count);
+  parsed_size += avb_aftl_member_size(AftlIcpEntry, proof_hash_count);
+  /* Copy the inclusion proof size field. */
+  avb_memcpy(&(icp_entry->inc_proof_size),
+             aftl_blob,
+             avb_aftl_member_size(AftlIcpEntry, inc_proof_size));
+  if (icp_entry->inc_proof_size !=
+      icp_entry->proof_hash_count * AVB_AFTL_HASH_SIZE) {
+    avb_error("Invalid inclusion proof size.\n");
+    avb_free(icp_entry);
+    return NULL;
+  }
+  aftl_blob += avb_aftl_member_size(AftlIcpEntry, inc_proof_size);
+  parsed_size += avb_aftl_member_size(AftlIcpEntry, inc_proof_size);
+  /* Copy in the log server URL from the blob. */
+  if (!avb_safe_add_to(&parsed_size, icp_entry->log_url_size)) {
+    avb_error("Invalid URL size.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  if (parsed_size > *remaining_size) {
+    avb_error("Invalid AftlDescriptor.\n");
+    avb_free(icp_entry);
+    return NULL;
+  }
+  icp_entry->log_url = (uint8_t*)avb_calloc(icp_entry->log_url_size);
+  if (!icp_entry->log_url) {
+    avb_error("Failure to allocate URL.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  avb_memcpy(icp_entry->log_url, aftl_blob, icp_entry->log_url_size);
+  aftl_blob += icp_entry->log_url_size;
+
+  /* Populate the TrillianLogRootDescriptor elements. */
+  if (!avb_safe_add_to(&parsed_size, icp_entry->log_root_descriptor_size)) {
+    avb_error("Invalid TrillianLogRootDescriptor size.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  if (parsed_size > *remaining_size) {
+    avb_error("Invalid AftlDescriptor.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  if (!parse_trillian_log_root_descriptor(
+          icp_entry, &aftl_blob, icp_entry->log_root_descriptor_size)) {
+    return NULL;
+  }
+
+  /* Populate the FirmwareInfo elements. */
+  if (!avb_safe_add_to(&parsed_size, icp_entry->fw_info_leaf_size)) {
+    avb_error("Invalid FirmwareInfo leaf size.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  if (parsed_size > *remaining_size) {
+    avb_error("Invalid AftlDescriptor.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  if (!parse_firmware_info(icp_entry, &aftl_blob)) return NULL;
+
+  /* Allocate and copy the log root signature from the blob. */
+  if (!avb_safe_add_to(&parsed_size, icp_entry->log_root_sig_size)) {
+    avb_error("Invalid log root signature size.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  if (parsed_size > *remaining_size) {
+    avb_error("Invalid AftlDescriptor.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+
+  icp_entry->log_root_signature =
+      (uint8_t*)avb_calloc(icp_entry->log_root_sig_size);
+  if (!icp_entry->log_root_signature) {
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  avb_memcpy(
+      icp_entry->log_root_signature, aftl_blob, icp_entry->log_root_sig_size);
+  aftl_blob += icp_entry->log_root_sig_size;
+
+  if (!avb_safe_add_to(&parsed_size, icp_entry->inc_proof_size)) {
+    avb_error("Invalid inclusion proof size.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+  if (parsed_size > *remaining_size) {
+    avb_error("Invalid AftlDescriptor.\n");
+    free_aftl_icp_entry(icp_entry);
+    return NULL;
+  }
+
+  /* Finally, copy the proof hash data from the blob to the AftlDescriptor. */
+  avb_memcpy(icp_entry->proofs, aftl_blob, icp_entry->inc_proof_size);
+  aftl_blob += icp_entry->inc_proof_size;
+  *remaining_size -= parsed_size;
+
+  return icp_entry;
+}
+
+/* Allocate and parse an AftlDescriptor object out of binary data. */
+AftlDescriptor* parse_aftl_descriptor(uint8_t* aftl_blob,
+                                      size_t aftl_blob_size) {
+  AftlDescriptor* aftl_descriptor;
+  AftlIcpHeader* icp_header;
+  size_t aftl_descriptor_size;
+  size_t i;
+  size_t remaining_size;
+
+  /* Ensure the blob is at least large enough for an AftlIcpHeader */
+  avb_assert(aftl_blob_size >= sizeof(AftlIcpHeader));
+  icp_header = (AftlIcpHeader*)aftl_blob;
+  /* Check for the magic value for an AftlIcpHeader. */
+  if (icp_header->magic != 0x4c544641) {
+    avb_error("Invalid magic number\n");
+    return NULL;
+  }
+  /* Extract the size out of the header. */
+  aftl_descriptor_size = icp_header->aftl_descriptor_size;
+
+  avb_assert(aftl_descriptor_size >= sizeof(AftlIcpHeader) &&
+             aftl_descriptor_size < AVB_AFTL_MAX_AFTL_DESCRIPTOR_SIZE);
+  aftl_descriptor = (AftlDescriptor*)avb_calloc(sizeof(AftlDescriptor));
+  if (!aftl_descriptor) {
+    avb_error("Failed allocation for AftlDescriptor.\n");
+    return NULL;
+  }
+  /* Copy the header bytes directly from the aftl_blob. */
+  avb_memcpy(&(aftl_descriptor->header), aftl_blob, sizeof(AftlIcpHeader));
+  /* Allocate memory for the entry array */
+  aftl_descriptor->entries = (AftlIcpEntry**)avb_calloc(
+      sizeof(AftlIcpEntry*) * aftl_descriptor->header.icp_count);
+  if (!aftl_descriptor->entries) {
+    avb_error("Failed allocation for AftlIcpEntry array.\n");
+    avb_free(aftl_descriptor);
+    return NULL;
+  }
+
+  /* Jump past the header and parse out each AftlIcpEntry. */
+  aftl_blob += sizeof(AftlIcpHeader);
+  remaining_size = aftl_blob_size - sizeof(AftlIcpHeader);
+  for (i = 0; i < aftl_descriptor->header.icp_count && remaining_size > 0;
+       i++) {
+    aftl_descriptor->entries[i] = parse_icp_entry(aftl_blob, &remaining_size);
+  }
+
+  return aftl_descriptor;
+}
+
+/* Free an AftlIcpEntry and each allocated sub-element. */
+void free_aftl_icp_entry(AftlIcpEntry* icp_entry) {
+  /* Ensure the AftlIcpEntry exists before attempting to free it. */
+  if (icp_entry) {
+    /* Free the log_url and log_root_signature elements if they exist. */
+    if (icp_entry->log_url) avb_free(icp_entry->log_url);
+    if (icp_entry->log_root_signature) avb_free(icp_entry->log_root_signature);
+    /* Free the FirmwareInfo elements if they exist. */
+    if (icp_entry->fw_info_leaf.description)
+      avb_free(icp_entry->fw_info_leaf.description);
+    if (icp_entry->fw_info_leaf.manufacturer_key_hash)
+      avb_free(icp_entry->fw_info_leaf.manufacturer_key_hash);
+    if (icp_entry->fw_info_leaf.platform_key)
+      avb_free(icp_entry->fw_info_leaf.platform_key);
+    if (icp_entry->fw_info_leaf.version_incremental)
+      avb_free(icp_entry->fw_info_leaf.version_incremental);
+    if (icp_entry->fw_info_leaf.vbmeta_hash)
+      avb_free(icp_entry->fw_info_leaf.vbmeta_hash);
+    /* Free the TrillianLogRoot elements if they exist. */
+    if (icp_entry->log_root_descriptor.metadata)
+      avb_free(icp_entry->log_root_descriptor.metadata);
+    if (icp_entry->log_root_descriptor.root_hash)
+      avb_free(icp_entry->log_root_descriptor.root_hash);
+    /* Finally, free the AftlIcpEntry. */
+    avb_free(icp_entry);
+  }
+}
+
+/* Free the AftlDescriptor and each allocated sub-element. */
+void free_aftl_descriptor(AftlDescriptor* aftl_descriptor) {
+  size_t i;
+
+  /* Ensure the descriptor exists before attempting to free it. */
+  if (!aftl_descriptor) {
+    return;
+  }
+  /* Free the entry array. */
+  if (aftl_descriptor->entries) {
+    /* Walk through each entry, freeing each one. */
+    for (i = 0; i < aftl_descriptor->header.icp_count; i++) {
+      if (aftl_descriptor->entries[i]) {
+        free_aftl_icp_entry(aftl_descriptor->entries[i]);
+      }
+    }
+    avb_free(aftl_descriptor->entries);
+  }
+  avb_free(aftl_descriptor);
 }
