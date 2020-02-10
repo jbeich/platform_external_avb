@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d5ce7c42_621ce5be",
+        "filename": "aftltool_test.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-10T17:27:34Z",
+      "side": 1,
+      "message": "Can we make the value explicit here (0x3d instead of \u003d) since it\u0027s a length field?",
+      "range": {
+        "startLine": 96,
+        "startChar": 0,
+        "endLine": 96,
+        "endChar": 71
+      },
+      "revId": "e7798917fe221a5d5dd5c88fb2f16c00b284b712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "87b76d37_c2ca4c4c",
+        "filename": "aftltool_test.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-10T17:27:34Z",
+      "side": 1,
+      "message": "same here (0x3f instead of ?)",
+      "revId": "e7798917fe221a5d5dd5c88fb2f16c00b284b712",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
