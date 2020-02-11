@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "548c4cd5_38109722",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-11T11:22:42Z",
+      "side": 1,
+      "message": "maybe worth pointing out that metadata is optional?",
+      "range": {
+        "startLine": 68,
+        "startChar": 2,
+        "endLine": 68,
+        "endChar": 20
+      },
+      "revId": "051eae7c8330da3a4197f2b3bc921091f5f6fa98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e93b8985_2fedbfc1",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-11T11:22:42Z",
+      "side": 1,
+      "message": "why the () notation here? also, why not denote the type like you do above for hash and key sizes?",
+      "range": {
+        "startLine": 71,
+        "startChar": 35,
+        "endLine": 71,
+        "endChar": 41
+      },
+      "revId": "051eae7c8330da3a4197f2b3bc921091f5f6fa98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "92856e46_ec27e4dc",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-11T11:22:42Z",
+      "side": 1,
+      "message": "(my c-fu is out of date, but) is it possible for you to express this in a less \"manual\" way? for example \n\n#define AVB_AFTL_MIN_TLRD_SIZE sizeof(TrillianLogRootDescriptor) + \\\nAVB_AFTL_HASH_SIZE - \\\n/* metadata is optional */\nsizeof(uint8_t)\n\nor perhaps a more exhaustive way (which would be more consistent with the other types:\n\n#define AVB_AFTL_MIN_TLRD_SIZE \\\n/* root_hash_size */\nsizeof(uint8_t) + \\\n/* version, metadata_size */\n2 * sizeof(unit16_t) + \\\n/* tree_size, timestamp, revision */\n3 * sizeof(uint64_t)\n\nI don\u0027t know whether there\u0027s a style guide for these macros, so I\u0027d refer to that and other reviewers\u0027 advice.",
+      "range": {
+        "startLine": 73,
+        "startChar": 2,
+        "endLine": 73,
+        "endChar": 64
+      },
+      "revId": "051eae7c8330da3a4197f2b3bc921091f5f6fa98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a9fbc461_12dfd048",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-11T11:22:42Z",
+      "side": 1,
+      "message": "what\u0027s the relationship with AftlIcpHeader? here and the other types?",
+      "range": {
+        "startLine": 75,
+        "startChar": 40,
+        "endLine": 75,
+        "endChar": 61
+      },
+      "revId": "051eae7c8330da3a4197f2b3bc921091f5f6fa98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "056365dc_39ec7cff",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-11T11:22:42Z",
+      "side": 1,
+      "message": "only 2?",
+      "range": {
+        "startLine": 95,
+        "startChar": 22,
+        "endLine": 95,
+        "endChar": 25
+      },
+      "revId": "051eae7c8330da3a4197f2b3bc921091f5f6fa98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d82a84c1_6fb213e4",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-11T11:22:42Z",
+      "side": 1,
+      "message": "I\u0027m not sure these max values will guard you to be ensured that the data will respect the MAX ICP_ENTRY size below.",
+      "range": {
+        "startLine": 96,
+        "startChar": 17,
+        "endLine": 96,
+        "endChar": 21
+      },
+      "revId": "051eae7c8330da3a4197f2b3bc921091f5f6fa98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "40910222_a0a6353c",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-11T11:22:42Z",
+      "side": 1,
+      "message": "can this here and for the MAX definitions above be pulled out as a const?",
+      "range": {
+        "startLine": 119,
+        "startChar": 42,
+        "endLine": 119,
+        "endChar": 47
+      },
+      "revId": "051eae7c8330da3a4197f2b3bc921091f5f6fa98",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
