@@ -22,6 +22,76 @@
       "revId": "aba5f0577a6af70d7010e9bb262548625a87b4c7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff08835a_aa3c5c55",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-02-11T18:08:29Z",
+      "side": 1,
+      "message": "+1. Please make things consitent between the different methods. Further down the init is done in the var declaration (L254).",
+      "parentUuid": "331083e4_429b2034",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 222,
+        "endChar": 13
+      },
+      "revId": "aba5f0577a6af70d7010e9bb262548625a87b4c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a8953bc_a0bdc872",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 235,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-02-11T18:08:29Z",
+      "side": 1,
+      "message": "Shouldn\u0027t there be a break statement to get out of the loop after this avb_error? Without that you keep looping and overwriting retval that might contain true although there was a false earlier on.",
+      "range": {
+        "startLine": 235,
+        "startChar": 0,
+        "endLine": 235,
+        "endChar": 58
+      },
+      "revId": "aba5f0577a6af70d7010e9bb262548625a87b4c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9438574f_9beb9208",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-02-11T18:08:29Z",
+      "side": 1,
+      "message": "tmp is already initialized in L254.",
+      "range": {
+        "startLine": 261,
+        "startChar": 0,
+        "endLine": 261,
+        "endChar": 13
+      },
+      "revId": "aba5f0577a6af70d7010e9bb262548625a87b4c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
