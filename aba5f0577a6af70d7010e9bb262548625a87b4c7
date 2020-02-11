@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "331083e4_429b2034",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 222,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-11T17:47:15Z",
+      "side": 1,
+      "message": "is there any reason to not do on L213 and L216:\n\nuint8_t* tmp \u003d seed;\nbool retval \u003d true;\n\nI\u0027ve had a look at (granted the c++) http://google.github.io/styleguide/cppguide.html#Variable_and_Array_Initialization and it does not specifically recommend against.",
+      "range": {
+        "startLine": 221,
+        "startChar": 0,
+        "endLine": 222,
+        "endChar": 13
+      },
+      "revId": "aba5f0577a6af70d7010e9bb262548625a87b4c7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
