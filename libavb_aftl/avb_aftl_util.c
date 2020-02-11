@@ -218,6 +218,7 @@ bool avb_aftl_chain_border_right(uint8_t* seed,
   avb_assert(seed_size == AFTL_HASH_SIZE);
   avb_assert(seed != NULL && proof != NULL && hash != NULL);
 
+  retval = true;
   tmp = seed;
   tmp_hash = (uint8_t*)avb_malloc(AFTL_HASH_SIZE);
   if (tmp_hash == NULL) {
@@ -258,6 +259,7 @@ bool avb_aftl_chain_inner(uint8_t* seed,
   avb_assert(seed != NULL && proof != NULL && hash != NULL);
 
   tmp = seed;
+  retval = true;
   tmp_hash = (uint8_t*)avb_malloc(AFTL_HASH_SIZE);
   if (tmp_hash == NULL) {
     avb_error("Allocation failure in avb_aftl_chain_inner.\n");
