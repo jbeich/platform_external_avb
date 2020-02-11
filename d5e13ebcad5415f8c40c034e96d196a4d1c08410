@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5070d6ff_fd24475b",
+        "filename": "aftltool_test.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1079886
+      },
+      "writtenOn": "2020-02-11T16:23:08Z",
+      "side": 1,
+      "message": "When kicking off atest from a non-root path, it fails to find the key. Not sure how concerned we are about that.",
+      "range": {
+        "startLine": 824,
+        "startChar": 0,
+        "endLine": 824,
+        "endChar": 71
+      },
+      "revId": "d5e13ebcad5415f8c40c034e96d196a4d1c08410",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
