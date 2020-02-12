@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "84bd30cb_6a1c9237",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-12T17:03:14Z",
+      "side": 1,
+      "message": "do you need description_size and the other sizes?",
+      "range": {
+        "startLine": 58,
+        "startChar": 3,
+        "endLine": 58,
+        "endChar": 14
+      },
+      "revId": "732dae42e51d7c42887025f505eaca152d0320b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1e2da692_7d3ecf60",
+        "filename": "libavb_aftl/avb_aftl_validate.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-02-12T17:03:14Z",
+      "side": 1,
+      "message": "any reason not to move this in types?",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 42
+      },
+      "revId": "732dae42e51d7c42887025f505eaca152d0320b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
