@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "5e0b1927_85965a4b",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-12T23:29:54Z",
+      "side": 1,
+      "message": "This implies that it\u0027s the same size as a long but what is sizeof(long)? It depends on the platform, I think the only guarantee you get is that sizeof(long) \u003e\u003d sizeof(int). So it could be 4 or it could be 8. Suggest to use AVB_AFTL_UINT64_MAX instead as well as integer types with well-defined size.\n\n(Looking at the rest of the code, looks like you only use it as a marker (for an invalid value) and indeed with integers that are 64 bit wide.)\n\n(It\u0027s tempting to just include \u003climits.h\u003e but that\u0027s part of the standard C library which we don\u0027t want to depend on ... because bootloaders.)",
+      "range": {
+        "startLine": 42,
+        "startChar": 8,
+        "endLine": 42,
+        "endChar": 26
+      },
+      "revId": "b242a1a10393f12b839e14655247a531b4eea4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "97310b38_4c513b04",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 353,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-02-12T23:29:54Z",
+      "side": 1,
+      "message": "(Nit: Pretty sure you don\u0027t need to cast here. Other places too.)",
+      "range": {
+        "startLine": 353,
+        "startChar": 16,
+        "endLine": 353,
+        "endChar": 26
+      },
+      "revId": "b242a1a10393f12b839e14655247a531b4eea4cd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
