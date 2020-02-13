@@ -36,6 +36,8 @@
 extern "C" {
 #endif
 
+#define AVB_AFTL_ULONG_MAX 0xfffffffffffffffful
+
 /* Verifies that the logged vbmeta hash matches the one on device. */
 bool avb_aftl_verify_vbmeta_hash(
     uint8_t* vbmeta,          /* Buffer containing the vbmeta data. */

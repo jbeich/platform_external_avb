@@ -46,7 +46,27 @@ class AvbAftlValidateTest : public BaseAvbToolTest {
   AvbAftlValidateTest() {}
   ~AvbAftlValidateTest() {}
   void SetUp() override {
-    uint32_t i;
+    uint8_t kAftlJsonData[] =
+        "{\"timestamp\":{\"seconds\":1581533076,\"nanos\":884246745},\"Value\":"
+        "{\"FwInfo\":{\"info\":{\"info\":{\"vbmeta_hash\":"
+        "\"mS461dkWuKtPENmqaVQpg/"
+        "xoHUPNsqRvnrh1uLUkKCQ=\",\"version_incremental\":\"1\",\"manufacturer_"
+        "key_hash\":\"JkjCeRzSiHsHxxiVVieHNEvd9bsehav59qmB4BRvYGs=\"},\"info_"
+        "signature\":{\"hash_algorithm\":4,\"signature_algorithm\":1,"
+        "\"signature\":\"YqMyK9rOly4dG+"
+        "QX3qXwkCedZK8w8iXHX90i0OXV4reCNS8xP51scQoh/"
+        "SINWjJQ3hDjIfveQ0SRtY748GeNfrajCDslRAce8f48M3B9Jf5RezbY/MA4ZE/"
+        "IfgTQp6sFLPp2xM+RoPd/GMHtEP0zc98+0/7hsDC7wZeGip7HoxGGiaWqpy+zkp/"
+        "NpD4aSEIz5gtvBisPI/blQbyPoH6cfNT9rJLvzfHIa6Cp/xpZoY7e2EUH/"
+        "XoG6cJGDC3ddPxuLISITQ6ddZkpyhTcA5+xSN8zJxjei1EQOk02Oo9Bqs4srIuO1o/"
+        "b91bTteykCK6ScCMt/rSsfxW6N9o/KvNSOr/"
+        "csXyIBkeHQZ952MaD8vGNX3NkE+FdOEXBr6AWdAwIuHsjVK1uSp+nR/"
+        "kQ2NuXnALXTsM1nB70rnUYdD0cC8OIHvJs9JvV4ATJ/"
+        "SQAoGIDdk1up7w6y7+QOtXC+Dd2Y6aul96xiqDRrdza0ZyEzOBPIssNq34dVR+k7+"
+        "jofkMsDD/"
+        "VT3Ngec17SeZUFfKj1Uv1z6bt6fusfv6Veb84ch0Yx5elLXNfnvvguF0z5qZp+"
+        "AjlkUEbhI5sRKrE9v1wV/IFiwYuHNMX3NBuKpx+8e7SXwZodXRBeocpSlA/"
+        "Qf8dtomxAALZrB30HSOzYavMs/4=\"}}}}}";
     BaseAvbToolTest::SetUp();
 
     /* Read in test data from the key and log_sig binaries. */
@@ -76,7 +96,7 @@ class AvbAftlValidateTest : public BaseAvbToolTest {
         icp_entry_->log_root_descriptor.root_hash_size +
         icp_entry_->log_root_descriptor.metadata_size + 29;
 
-    icp_entry_->fw_info_leaf_size = AVB_AFTL_HASH_SIZE * 2 + 16;
+    icp_entry_->fw_info_leaf_size = sizeof(kAftlJsonData);
     icp_entry_->fw_info_leaf.vbmeta_hash_size = AVB_AFTL_HASH_SIZE;
     icp_entry_->fw_info_leaf.vbmeta_hash =
         (uint8_t*)avb_malloc(AVB_AFTL_HASH_SIZE);
@@ -87,31 +107,7 @@ class AvbAftlValidateTest : public BaseAvbToolTest {
            "\x65\xec\x58\x83\x43\x62\x8e\x81\x4d\xc7\x75\xa8\xcb\x77\x1f\x46"
            "\x81\xcc\x79\x6f\xba\x32\xf0\x68\xc7\x17\xce\x2e\xe2\x14\x4d\x39",
            AVB_AFTL_HASH_SIZE);
-
-    icp_entry_->fw_info_leaf.version_incremental_size = 4;
-    icp_entry_->fw_info_leaf.version_incremental =
-        (uint8_t*)avb_malloc(icp_entry_->fw_info_leaf.version_incremental_size);
-    memcpy(icp_entry_->fw_info_leaf.version_incremental,
-           "test",
-           icp_entry_->fw_info_leaf.version_incremental_size);
-    icp_entry_->fw_info_leaf.platform_key_size = 8;
-    icp_entry_->fw_info_leaf.platform_key =
-        (uint8_t*)avb_malloc(icp_entry_->fw_info_leaf.platform_key_size);
-    memcpy(icp_entry_->fw_info_leaf.platform_key,
-           "aaaaaaaa",
-           icp_entry_->fw_info_leaf.platform_key_size);
-    icp_entry_->fw_info_leaf.manufacturer_key_hash_size = AVB_AFTL_HASH_SIZE;
-    icp_entry_->fw_info_leaf.manufacturer_key_hash =
-        (uint8_t*)avb_malloc(AVB_AFTL_HASH_SIZE);
-    icp_entry_->fw_info_leaf.description_size = 4;
-    icp_entry_->fw_info_leaf.description =
-        (uint8_t*)avb_malloc(icp_entry_->fw_info_leaf.description_size);
-    memcpy(icp_entry_->fw_info_leaf.description,
-           "test",
-           icp_entry_->fw_info_leaf.description_size);
-    for (i = 0; i < AVB_AFTL_HASH_SIZE; i++) {
-      icp_entry_->fw_info_leaf.manufacturer_key_hash[i] = 0;
-    }
+    icp_entry_->fw_info_leaf.json_data = kAftlJsonData;
     icp_entry_->leaf_index = 2;
 
     memcpy(icp_entry_->proofs[0],
@@ -132,14 +128,6 @@ class AvbAftlValidateTest : public BaseAvbToolTest {
     if (icp_entry_ != NULL) {
       if (icp_entry_->fw_info_leaf.vbmeta_hash != NULL)
         avb_free(icp_entry_->fw_info_leaf.vbmeta_hash);
-      if (icp_entry_->fw_info_leaf.version_incremental != NULL)
-        avb_free(icp_entry_->fw_info_leaf.version_incremental);
-      if (icp_entry_->fw_info_leaf.platform_key != NULL)
-        avb_free(icp_entry_->fw_info_leaf.platform_key);
-      if (icp_entry_->fw_info_leaf.manufacturer_key_hash != NULL)
-        avb_free(icp_entry_->fw_info_leaf.manufacturer_key_hash);
-      if (icp_entry_->fw_info_leaf.description != NULL)
-        avb_free(icp_entry_->fw_info_leaf.description);
       if (icp_entry_->log_root_descriptor.root_hash != NULL)
         avb_free(icp_entry_->log_root_descriptor.root_hash);
       avb_free(icp_entry_);
