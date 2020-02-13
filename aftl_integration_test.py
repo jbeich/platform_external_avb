@@ -76,7 +76,8 @@ class AFTLIntegrationTest(unittest.TestCase):
   def tearDown(self):
     """Tears down the test bed for the unit tests."""
     try:
-      os.remove(self.output_filename)
+      #os.remove(self.output_filename)
+      pass
     except IOError:
       pass
     super(AFTLIntegrationTest, self).tearDown()
