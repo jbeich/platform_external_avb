@@ -21,6 +21,7 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+#include <stdio.h>
 
 #include <libavb/avb_crypto.h>
 #include <libavb/avb_rsa.h>
@@ -53,116 +54,22 @@ bool avb_aftl_verify_vbmeta_hash(uint8_t* vbmeta,
                          AVB_AFTL_HASH_SIZE) == 0;
 }
 
-/* Extracts the raw data from the FirmwareInfo structure. */
-static bool get_raw_fw_image_info(AftlIcpEntry* icp_entry,
-                                  uint8_t* buffer,
-                                  size_t buffer_size) {
-  uint64_t offset;
-  uint64_t calc_fw_image_size;
-
-  avb_assert(icp_entry != NULL && buffer != NULL);
-
-  if (icp_entry->fw_info_leaf_size != buffer_size) {
-    avb_error("Invalid size passed to get_raw_fw_image_info.\n");
-    return false;
-  }
-  calc_fw_image_size = icp_entry->fw_info_leaf.vbmeta_hash_size;
-  if (calc_fw_image_size != AVB_AFTL_HASH_SIZE) {
-    avb_error("Invalid vbmeta hash size.\n");
-    return false;
-  }
-  if (!avb_safe_add_to(&calc_fw_image_size,
-                       icp_entry->fw_info_leaf.version_incremental_size)) {
-    avb_error("Invalid version incremental size.\n");
-    return false;
-  }
-  if (!avb_safe_add_to(&calc_fw_image_size,
-                       icp_entry->fw_info_leaf.platform_key_size)) {
-    avb_error("Invalid platform key size.\n");
-    return false;
-  }
-  if (!avb_safe_add_to(&calc_fw_image_size,
-                       icp_entry->fw_info_leaf.manufacturer_key_hash_size)) {
-    avb_error("Invalid manufacturer key hash size.\n");
-    return false;
-  }
-  if (!avb_safe_add_to(&calc_fw_image_size,
-                       icp_entry->fw_info_leaf.description_size)) {
-    avb_error("Invalid description size.\n");
-    return false;
-  }
-
-  offset = 0;
-
-  if (icp_entry->fw_info_leaf_size != calc_fw_image_size) {
-    avb_error("Invalid FirmwareInfo leaf size.\n");
-    return false;
-  }
-  if (icp_entry->fw_info_leaf.vbmeta_hash != NULL) {
-    avb_memcpy(buffer,
-               icp_entry->fw_info_leaf.vbmeta_hash,
-               icp_entry->fw_info_leaf.vbmeta_hash_size);
-    offset = icp_entry->fw_info_leaf.vbmeta_hash_size;
-  }
-
-  if (icp_entry->fw_info_leaf.version_incremental != NULL) {
-    avb_memcpy(buffer + offset,
-               icp_entry->fw_info_leaf.version_incremental,
-               icp_entry->fw_info_leaf.version_incremental_size);
-    offset += icp_entry->fw_info_leaf.version_incremental_size;
-  }
-
-  if (icp_entry->fw_info_leaf.platform_key != NULL) {
-    avb_memcpy(buffer + offset,
-               icp_entry->fw_info_leaf.platform_key,
-               icp_entry->fw_info_leaf.platform_key_size);
-    offset += icp_entry->fw_info_leaf.platform_key_size;
-  }
-
-  if (icp_entry->fw_info_leaf.manufacturer_key_hash != NULL) {
-    avb_memcpy(buffer + offset,
-               icp_entry->fw_info_leaf.manufacturer_key_hash,
-               icp_entry->fw_info_leaf.manufacturer_key_hash_size);
-    offset += icp_entry->fw_info_leaf.manufacturer_key_hash_size;
-  }
-
-  if (icp_entry->fw_info_leaf.description != NULL) {
-    avb_memcpy(buffer + offset,
-               icp_entry->fw_info_leaf.description,
-               icp_entry->fw_info_leaf.description_size);
-    offset += icp_entry->fw_info_leaf.description_size;
-  }
-  return true;
-}
-
 /* Verifies the Merkle tree root hash. */
 bool avb_aftl_verify_icp_root_hash(AftlIcpEntry* icp_entry) {
   uint8_t leaf_hash[AVB_AFTL_HASH_SIZE];
   uint8_t result_hash[AVB_AFTL_HASH_SIZE];
-  uint8_t* buffer;
 
   avb_assert(icp_entry != NULL);
   if (icp_entry->fw_info_leaf_size > AVB_AFTL_MAX_FW_INFO_SIZE) {
     avb_error("Invalid FirmwareInfo leaf size\n");
     return false;
   }
-  buffer = (uint8_t*)avb_malloc(icp_entry->fw_info_leaf_size);
-  if (buffer == NULL) {
-    avb_error("Allocation failure in avb_aftl_verify_icp_root_hash\n");
-    return false;
-  }
-  /* Extract the raw data from the FirmwareInfo leaf */
-  if (!get_raw_fw_image_info(icp_entry, buffer, icp_entry->fw_info_leaf_size)) {
-    avb_free(buffer);
-    return false;
-  }
   /* Calculate the RFC 6962 hash of the seed entry. */
-  if (!avb_aftl_rfc6962_hash_leaf(
-          buffer, icp_entry->fw_info_leaf_size, leaf_hash)) {
-    avb_free(buffer);
+  if (!avb_aftl_rfc6962_hash_leaf(icp_entry->fw_info_leaf.json_data,
+                                  icp_entry->fw_info_leaf_size,
+                                  leaf_hash)) {
     return false;
   }
-  avb_free(buffer);
   /* Calculate the Merkle tree's root hash. */
   if (!avb_aftl_root_from_icp(icp_entry->leaf_index,
                               icp_entry->log_root_descriptor.tree_size,
@@ -173,6 +80,13 @@ bool avb_aftl_verify_icp_root_hash(AftlIcpEntry* icp_entry) {
                               result_hash))
     return false;
   /* Return whether the calculated root hash matches the stored one. */
+  printf("root:\n");
+  for (int i = 0; i < 32; i++)
+    printf("%02x", icp_entry->log_root_descriptor.root_hash[i]);
+  printf("\ncalc:\n");
+  for (int i = 0; i < 32; i++)
+    printf("%02x", result_hash[i]);
+  printf("\n");
   return (avb_safe_memcmp(result_hash,
                           icp_entry->log_root_descriptor.root_hash,
                           AVB_AFTL_HASH_SIZE) == 0);
