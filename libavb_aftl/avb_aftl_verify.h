@@ -21,41 +21,36 @@
  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
 #if !defined(AVB_INSIDE_LIBAVB_AFTL_H) && !defined(AVB_COMPILATION)
-#error "Never include this file directly, include libavb_aftl/libavb_aftl.h."
+#error "Never include this file directly, include libavb_aftl.h instead."
 #endif
 
-#ifndef AVB_AFTL_VALIDATE_H_
-#define AVB_AFTL_VALIDATE_H_
-
-#include <libavb/libavb.h>
-#include "avb_aftl_types.h"
+#ifndef AVB_AFTL_VERIFY_H_
+#define AVB_AFTL_VERIFY_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+/* still need avb_aftl_slot_verify, take params from avb_slot_verify &
+   call find_aftl_descriptor and avb_aftl_verify_descriptor on them */
+// this probably should move to libavb_aftl.h as it is the public function
+AvbSlotVerifyResult aftl_slot_verify(AvbSlotVerifyData* asv_data,
+                                     uint8_t* key_bytes,
+                                     size_t key_size);
 
-#define AVB_AFTL_ULONG_MAX 0xfffffffffffffffful
+uint8_t* avb_aftl_find_aftl_descriptor(uint8_t* vbmeta_blob,
+                                       size_t* vbmeta_size);
 
-/* Verifies that the logged vbmeta hash matches the one on device. */
-bool avb_aftl_verify_vbmeta_hash(
-    uint8_t* vbmeta,          /* Buffer containing the vbmeta data. */
-    size_t vbmeta_size,       /* Size of the vbmeta buffer. */
-    AftlIcpEntry* icp_entry); /* Pointer to the AftlIcpEntry to verify. */
-
-/* Verifies the Merkle tree root hash. */
-bool avb_aftl_verify_icp_root_hash(
-    AftlIcpEntry* icp_entry); /* Pointer to the AftlIcpEntry to verify. */
-
-/* Verifies the log root signature for the transparency log submission. */
-bool avb_aftl_verify_entry_signature(
-    const uint8_t* key,       /* Transparency log public key data. */
-    size_t key_num_bytes,     /* Size of the key data. */
-    AftlIcpEntry* icp_entry); /* Pointer to the AftlIcpEntry to verify. */
+/* look at the flow in the readme and match that with error codes*/
+AvbSlotVerifyResult avb_aftl_verify_descriptor(uint8_t* cur_vbmeta_data,
+                                               size_t cur_vbmeta_size,
+                                               uint8_t* aftl_blob,
+                                               size_t aftl_size,
+                                               uint8_t* key_bytes,
+                                               size_t key_num_bytes);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* AVB_AFTL_VALIDATE_H_ */
+#endif /* AVB_AFTL_VERIFY_H_ */
