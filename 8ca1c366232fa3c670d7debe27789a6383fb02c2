@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d2f327ec_e8f33db2",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 261,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2020-02-14T22:52:11Z",
+      "side": 1,
+      "message": "Trailing whitespace.",
+      "range": {
+        "startLine": 261,
+        "startChar": 36,
+        "endLine": 261,
+        "endChar": 37
+      },
+      "revId": "8ca1c366232fa3c670d7debe27789a6383fb02c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37429aa4_0a8750f0",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 334,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2020-02-14T22:52:11Z",
+      "side": 1,
+      "message": "The rest of the lines use spaces instead of tabs.",
+      "range": {
+        "startLine": 334,
+        "startChar": 0,
+        "endLine": 334,
+        "endChar": 1
+      },
+      "revId": "8ca1c366232fa3c670d7debe27789a6383fb02c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "04949b44_4b25f0e7",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 411,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2020-02-14T22:52:11Z",
+      "side": 1,
+      "message": "This pattern repeats a lot, would be easier to read and spot potential issues if moved to a function (or a macro).",
+      "range": {
+        "startLine": 407,
+        "startChar": 0,
+        "endLine": 411,
+        "endChar": 73
+      },
+      "revId": "8ca1c366232fa3c670d7debe27789a6383fb02c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "df67d467_bf6a949d",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 509,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2020-02-14T22:52:11Z",
+      "side": 1,
+      "message": "Is there a chance input data could be invalid? If yes, make sure it\u0027s within expected range.",
+      "range": {
+        "startLine": 509,
+        "startChar": 27,
+        "endLine": 509,
+        "endChar": 35
+      },
+      "revId": "8ca1c366232fa3c670d7debe27789a6383fb02c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74c29ed0_a10614e6",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2020-02-14T22:52:11Z",
+      "side": 1,
+      "message": "Define as a constant?",
+      "range": {
+        "startLine": 809,
+        "startChar": 27,
+        "endLine": 809,
+        "endChar": 37
+      },
+      "revId": "8ca1c366232fa3c670d7debe27789a6383fb02c2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
