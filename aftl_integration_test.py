@@ -70,7 +70,8 @@ class AFTLIntegrationTest(unittest.TestCase):
         'transparency_log_servers': [self.aftl_host],
         'transparency_log_pub_keys': [self.aftl_pubkey],
         'manufacturer_key': self.manufacturer_key,
-        'padding_size': 0
+        'padding_size': 0,
+        'timeout': None
     }
 
     self.info_icp_default_params = {
@@ -138,6 +139,18 @@ class AFTLIntegrationTest(unittest.TestCase):
     # Prints the image details.
     result = self.aftltool.info_image_icp(**self.info_icp_default_params)
     self.assertTrue(result)
+
+  def test_make_icp_grpc_timeout(self):
+    """Tests make_icp_from_vbmeta command when running into GRPC timeout."""
+    # The timeout is set to 1 second which is way below the minimum processing
+    # time of the transparency log per load test results in b/139407814#2 where
+    # it was 3.43 seconds.
+    self.make_icp_default_params['timeout'] = 1
+    with open(self.output_filename, 'wb') as output_file:
+      self.make_icp_default_params['output'] = output_file
+      result = self.aftltool.make_icp_from_vbmeta(
+          **self.make_icp_default_params)
+      self.assertFalse(result)
 
 
 if __name__ == '__main__':
