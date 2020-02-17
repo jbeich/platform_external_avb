@@ -924,7 +924,7 @@ class AftlMockCommunication(aftltool.AftlCommunication):
       canned_response: AddFirmwareInfoResponse to return or the Exception to
         raise.
     """
-    super(AftlMockCommunication, self).__init__(transparency_log)
+    super(AftlMockCommunication, self).__init__(transparency_log, timeout=None)
     self.request = None
     self.canned_response = canned_response
 
@@ -954,7 +954,7 @@ class AftlTest(AftltoolTestCase):
     icp = aftl.request_inclusion_proof(self.mock_aftl_host,
                                        'a'*1024, '1',
                                        'test/data/testkey_rsa4096.pem',
-                                       None, None,
+                                       None, None, None,
                                        aftl_comms=aftl_comms)
     self.assertEqual(icp.leaf_index,
                      self.test_afi_resp.fw_info_proof.proof.leaf_index)
@@ -986,7 +986,7 @@ class AftlTest(AftltoolTestCase):
       aftl.request_inclusion_proof(self.mock_aftl_host,
                                    'a'*1024, 'version_inc',
                                    'test/data/testkey_rsa4096.pem',
-                                   None, None,
+                                   None, None, None,
                                    aftl_comms=aftl_comms)
 
 if __name__ == '__main__':
