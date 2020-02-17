@@ -1,0 +1,10 @@
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Verified+1: Dan Austin <danielaustin@google.com>
+Code-Review+2: Dan Austin <danielaustin@google.com>
+Autosubmit+1: Dan Austin <danielaustin@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Mon, 17 Feb 2020 23:52:32 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/external/avb/+/1237046
+Project: platform/external/avb
+Branch: refs/heads/master
