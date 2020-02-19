@@ -2577,6 +2577,9 @@ class Avb(object):
       AvbVBMetaHeader, the third argument is a list of
       AvbDescriptor-derived instances, and the fourth argument is the
       size of |image|.
+
+    Raises:
+      AvbError: In case the image cannot be parsed.
     """
     assert isinstance(image, ImageHandler)
     footer = None
