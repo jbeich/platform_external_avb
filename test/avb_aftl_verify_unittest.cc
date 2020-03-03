@@ -193,4 +193,12 @@ TEST_F(AvbAftlVerifyTest, AftlSlotVerify) {
   EXPECT_EQ(result, AVB_SLOT_VERIFY_RESULT_OK);
 }
 
+TEST_F(AvbAftlVerifyTest, AftlSlotVerifyFail) {
+  /* Truncate the image size to drop the AftlDescriptor */
+  asv_test_data_->vbmeta_images[0].vbmeta_size = aftl_vbmeta_blob_size_;
+  AvbSlotVerifyResult result =
+      aftl_slot_verify(asv_test_data_, key_bytes_, key_size_);
+  EXPECT_EQ(result, AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA);
+}
+
 } /* namespace avb */
