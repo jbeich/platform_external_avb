@@ -51,7 +51,8 @@ extern "C" {
    AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION otherwise.
 */
 
-AvbSlotVerifyResult aftl_slot_verify(AvbSlotVerifyData* asv_data,
+AvbSlotVerifyResult aftl_slot_verify(AvbOps* ops,
+                                     AvbSlotVerifyData* asv_data,
                                      uint8_t* key_bytes,
                                      size_t key_size);
 

@@ -32,10 +32,14 @@
 extern "C" {
 #endif
 
-/* Scans a vbmeta image for the AFTL descriptor's magic value.
-   Returns the offset of the AFTL descriptor if found, or NULL otherwise. */
-uint8_t* avb_aftl_find_aftl_descriptor(uint8_t* vbmeta_blob,
-                                       size_t* vbmeta_size);
+/* Read the vbmeta partition, after the AvbVBMetaImageHeader structure, to find
+ * the AftlDescriptor.
+ */
+AvbSlotVerifyResult avb_aftl_find_aftl_descriptor(AvbOps* ops,
+                                                  const char* part_name,
+                                                  size_t vbmeta_size,
+                                                  uint8_t** out_image_buf,
+                                                  size_t* out_image_size);
 
 /* Performs the three validation steps for an AFTL descriptor:
    1. Ensure the vbmeta image hash matches that in the descriptor.
