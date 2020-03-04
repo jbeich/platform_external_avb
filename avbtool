@@ -2577,6 +2577,9 @@ class Avb(object):
       AvbVBMetaHeader, the third argument is a list of
       AvbDescriptor-derived instances, and the fourth argument is the
       size of |image|.
+
+    Raises:
+      AvbError: In case the image cannot be parsed.
     """
     assert isinstance(image, ImageHandler)
     footer = None
@@ -2796,7 +2799,6 @@ class Avb(object):
       padded_size = round_to_multiple(len(vbmeta_blob), padding_size)
       padding_needed = padded_size - len(vbmeta_blob)
       output.write('\0' * padding_needed)
-
 
   def _generate_vbmeta_blob(self, algorithm_name, key_path,
                             public_key_metadata_path, descriptors,
@@ -3898,7 +3900,7 @@ def generate_hash_tree(image, image_size, block_size, hash_alg_name, salt,
   hash_src_size = image_size
   level_num = 0
   while hash_src_size > block_size:
-    level_output = ''
+    level_output_list = []
     remaining = hash_src_size
     while remaining > 0:
       hasher = hashlib.new(name=hash_alg_name, string=salt)
@@ -3915,9 +3917,11 @@ def generate_hash_tree(image, image_size, block_size, hash_alg_name, salt,
       remaining -= len(data)
       if len(data) < block_size:
         hasher.update('\0' * (block_size - len(data)))
-      level_output += hasher.digest()
+      level_output_list.append(hasher.digest())
       if digest_padding > 0:
-        level_output += '\0' * digest_padding
+        level_output_list.append('\0' * digest_padding)
+
+    level_output = ''.join(level_output_list)
 
     padding_needed = (round_to_multiple(
         len(level_output), block_size) - len(level_output))
@@ -4094,7 +4098,6 @@ class AvbTool(object):
                             default=0)
     self._add_common_args(sub_parser)
     sub_parser.set_defaults(func=self.make_vbmeta_image)
-
 
     sub_parser = subparsers.add_parser('add_hash_footer',
                                        help='Add hashes and footer to image.')

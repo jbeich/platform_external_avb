@@ -39,10 +39,14 @@
 extern "C" {
 #endif
 
+#define AVB_AFTL_MAGIC 0x4c544641
+#define avb_aftl_member_size(type, member) sizeof(((type*)0)->member)
+
 /* Performs a SHA256 hash operation on data. */
-bool avb_aftl_sha256(uint8_t* data,                 /* Data to be hashed. */
-                     uint64_t length,               /* Size of data. */
-                     uint8_t hash[AFTL_HASH_SIZE]); /* Resulting SHA256 hash. */
+bool avb_aftl_sha256(
+    uint8_t* data,                     /* Data to be hashed. */
+    uint64_t length,                   /* Size of data. */
+    uint8_t hash[AVB_AFTL_HASH_SIZE]); /* Resulting SHA256 hash. */
 
 /* Calculates a SHA256 hash of the TrillianLogRootDescriptor in icp_entry. */
 bool avb_aftl_hash_log_root_descriptor(
@@ -57,11 +61,12 @@ bool avb_aftl_rfc6962_hash_leaf(
 
 /* Computes an inner hash as detailed by https://tools.ietf.org/html/rfc6962. */
 bool avb_aftl_rfc6962_hash_children(
-    uint8_t* left_child,           /* The left child node data. */
-    uint64_t left_child_size,      /* Size of the left child node data. */
-    uint8_t* right_child,          /* The right child node data. */
-    uint64_t right_child_size,     /* Size of the right child node data. */
-    uint8_t hash[AFTL_HASH_SIZE]); /* Resulting RFC 6962 hash of the children.*/
+    uint8_t* left_child,       /* The left child node data. */
+    uint64_t left_child_size,  /* Size of the left child node data. */
+    uint8_t* right_child,      /* The right child node data. */
+    uint64_t right_child_size, /* Size of the right child node data. */
+    uint8_t
+        hash[AVB_AFTL_HASH_SIZE]); /* Resulting RFC 6962 hash of the children.*/
 
 /* Computes a subtree hash along the left-side tree border. */
 bool avb_aftl_chain_border_right(
@@ -86,13 +91,29 @@ unsigned int avb_aftl_count_leading_zeros(
 
 /* Calculates the expected Merkle tree hash. */
 bool avb_aftl_root_from_icp(
-    uint64_t leaf_index,             /* The leaf index in the Merkle tree.*/
-    uint64_t tree_size,              /* The size of the Merkle tree. */
-    uint8_t proof[][AFTL_HASH_SIZE], /* Inclusion proof hash data. */
-    uint32_t proof_entry_count,      /* Number of inclusion proof hashes. */
-    uint8_t* leaf_hash,              /* The leaf hash to prove inclusion of. */
-    uint64_t leaf_hash_size,         /* Size of the leaf hash. */
-    uint8_t* root_hash);             /* The resulting tree root hash. */
+    uint64_t leaf_index,                 /* The leaf index in the Merkle tree.*/
+    uint64_t tree_size,                  /* The size of the Merkle tree. */
+    uint8_t proof[][AVB_AFTL_HASH_SIZE], /* Inclusion proof hash data. */
+    uint32_t proof_entry_count,          /* Number of inclusion proof hashes. */
+    uint8_t* leaf_hash,      /* The leaf hash to prove inclusion of. */
+    uint64_t leaf_hash_size, /* Size of the leaf hash. */
+    uint8_t* root_hash);     /* The resulting tree root hash. */
+
+/* Allocates and populates an AftlDescriptor from a binary blob. */
+AftlDescriptor* parse_aftl_descriptor(uint8_t* aftl_blob,
+                                      size_t aftl_blob_size);
+
+/* Allocates and populates an AftlIcpEntry and all sub-fields from
+   a binary blob. It is assumed that the blob points to an AftlIcpEntry. */
+AftlIcpEntry* parse_icp_entry(uint8_t* aftl_blob, size_t* remaining_size);
+
+/* Frees an AftlIcpEntry and all sub-fields that were previously
+   allocated by a call to allocate_icp_entry. */
+void free_aftl_icp_entry(AftlIcpEntry* aftl_icp_entry);
+
+/* Frees an AftlDescriptor and all sub-fields that were previously
+   allocated by a call to allocate_aftl_descriptor. */
+void free_aftl_descriptor(AftlDescriptor* aftl_descriptor);
 
 #ifdef __cplusplus
 }

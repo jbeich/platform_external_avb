@@ -35,128 +35,32 @@
 bool avb_aftl_verify_vbmeta_hash(uint8_t* vbmeta,
                                  size_t vbmeta_size,
                                  AftlIcpEntry* icp_entry) {
-  uint8_t vbmeta_hash[AFTL_HASH_SIZE];
+  uint8_t vbmeta_hash[AVB_AFTL_HASH_SIZE];
 
   avb_assert(vbmeta != NULL && icp_entry != NULL);
-
   if (!avb_aftl_sha256(vbmeta, vbmeta_size, vbmeta_hash)) return false;
 
   /* Only SHA256 hashes are currently supported. If the vbmeta hash
-     size is not AFTL_HASH_SIZE, return false. */
-  if (icp_entry->fw_info_leaf.vbmeta_hash_size != AFTL_HASH_SIZE) {
+     size is not AVB_AFTL_HASH_SIZE, return false. */
+  if (icp_entry->fw_info_leaf.vbmeta_hash_size != AVB_AFTL_HASH_SIZE) {
     avb_error("Invalid VBMeta hash size.\n");
     return false;
   }
+
   /* Return whether the calculated VBMeta hash matches the stored one. */
   return avb_safe_memcmp(vbmeta_hash,
                          icp_entry->fw_info_leaf.vbmeta_hash,
-                         AFTL_HASH_SIZE) == 0;
-}
-
-/* Extracts the raw data from the FirmwareInfo structure. */
-static bool get_raw_fw_image_info(AftlIcpEntry* icp_entry,
-                                  uint8_t* buffer,
-                                  size_t buffer_size) {
-  uint64_t offset;
-  uint64_t calc_fw_image_size;
-
-  avb_assert(icp_entry != NULL && buffer != NULL);
-
-  if (icp_entry->fw_info_leaf_size != buffer_size) {
-    avb_error("Invalid size passed to get_raw_fw_image_info.\n");
-    return false;
-  }
-  calc_fw_image_size = icp_entry->fw_info_leaf.vbmeta_hash_size;
-  if (calc_fw_image_size != AFTL_HASH_SIZE) {
-    avb_error("Invalid vbmeta hash size.\n");
-    return false;
-  }
-  if (!avb_safe_add_to(&calc_fw_image_size,
-                       icp_entry->fw_info_leaf.version_incremental_size)) {
-    avb_error("Invalid version incremental size.\n");
-    return false;
-  }
-  if (!avb_safe_add_to(&calc_fw_image_size,
-                       icp_entry->fw_info_leaf.platform_key_size)) {
-    avb_error("Invalid platform key size.\n");
-    return false;
-  }
-  if (!avb_safe_add_to(&calc_fw_image_size,
-                       icp_entry->fw_info_leaf.manufacturer_key_hash_size)) {
-    avb_error("Invalid manufacturer key hash size.\n");
-    return false;
-  }
-  if (!avb_safe_add_to(&calc_fw_image_size,
-                       icp_entry->fw_info_leaf.description_size)) {
-    avb_error("Invalid description size.\n");
-    return false;
-  }
-
-  offset = 0;
-
-  if (icp_entry->fw_info_leaf_size != calc_fw_image_size) {
-    avb_error("Invalid FirmwareInfo leaf size.\n");
-    return false;
-  }
-  if (icp_entry->fw_info_leaf.vbmeta_hash != NULL) {
-    avb_memcpy(buffer,
-               icp_entry->fw_info_leaf.vbmeta_hash,
-               icp_entry->fw_info_leaf.vbmeta_hash_size);
-    offset = icp_entry->fw_info_leaf.vbmeta_hash_size;
-  }
-
-  if (icp_entry->fw_info_leaf.version_incremental != NULL) {
-    avb_memcpy(buffer + offset,
-               icp_entry->fw_info_leaf.version_incremental,
-               icp_entry->fw_info_leaf.version_incremental_size);
-    if (!avb_safe_add_to(&offset,
-                         icp_entry->fw_info_leaf.version_incremental_size)) {
-      avb_error("Invalid version incremental size.\n");
-      return false;
-    }
-  }
-
-  if (icp_entry->fw_info_leaf.platform_key != NULL) {
-    avb_memcpy(buffer + offset,
-               icp_entry->fw_info_leaf.platform_key,
-               icp_entry->fw_info_leaf.platform_key_size);
-    if (!avb_safe_add_to(&offset, icp_entry->fw_info_leaf.platform_key_size)) {
-      avb_error("Invalid platform key size.\n");
-      return false;
-    }
-  }
-
-  if (icp_entry->fw_info_leaf.manufacturer_key_hash != NULL) {
-    avb_memcpy(buffer + offset,
-               icp_entry->fw_info_leaf.manufacturer_key_hash,
-               icp_entry->fw_info_leaf.manufacturer_key_hash_size);
-    if (!avb_safe_add_to(&offset,
-                         icp_entry->fw_info_leaf.manufacturer_key_hash_size)) {
-      avb_error("Invalid manufacturer key hash size.\n");
-      return false;
-    }
-  }
-
-  if (icp_entry->fw_info_leaf.description != NULL) {
-    avb_memcpy(buffer + offset,
-               icp_entry->fw_info_leaf.description,
-               icp_entry->fw_info_leaf.description_size);
-    if (!avb_safe_add_to(&offset, icp_entry->fw_info_leaf.description_size)) {
-      avb_error("Invalid description size.\n");
-      return false;
-    }
-  }
-  return true;
+                         AVB_AFTL_HASH_SIZE) == 0;
 }
 
 /* Verifies the Merkle tree root hash. */
 bool avb_aftl_verify_icp_root_hash(AftlIcpEntry* icp_entry) {
-  uint8_t leaf_hash[AFTL_HASH_SIZE];
-  uint8_t result_hash[AFTL_HASH_SIZE];
+  uint8_t leaf_hash[AVB_AFTL_HASH_SIZE];
+  uint8_t result_hash[AVB_AFTL_HASH_SIZE];
   uint8_t* buffer;
 
   avb_assert(icp_entry != NULL);
-  if (icp_entry->fw_info_leaf_size > AFTL_MAX_FW_INFO_LEAF_SIZE) {
+  if (icp_entry->fw_info_leaf_size > AVB_AFTL_MAX_FW_INFO_SIZE) {
     avb_error("Invalid FirmwareInfo leaf size\n");
     return false;
   }
@@ -165,15 +69,10 @@ bool avb_aftl_verify_icp_root_hash(AftlIcpEntry* icp_entry) {
     avb_error("Allocation failure in avb_aftl_verify_icp_root_hash\n");
     return false;
   }
-  /* Extract the raw data from the FirmwareInfo leaf */
-  if (!get_raw_fw_image_info(icp_entry, buffer, icp_entry->fw_info_leaf_size)) {
-    avb_free(buffer);
-    return false;
-  }
   /* Calculate the RFC 6962 hash of the seed entry. */
-  if (!avb_aftl_rfc6962_hash_leaf(
-          buffer, icp_entry->fw_info_leaf_size, leaf_hash)) {
-    avb_free(buffer);
+  if (!avb_aftl_rfc6962_hash_leaf(icp_entry->fw_info_leaf.json_data,
+                                  icp_entry->fw_info_leaf_size,
+                                  leaf_hash)) {
     return false;
   }
   avb_free(buffer);
@@ -183,13 +82,14 @@ bool avb_aftl_verify_icp_root_hash(AftlIcpEntry* icp_entry) {
                               icp_entry->proofs,
                               icp_entry->proof_hash_count,
                               leaf_hash,
-                              AFTL_HASH_SIZE,
+                              AVB_AFTL_HASH_SIZE,
                               result_hash))
     return false;
+
   /* Return whether the calculated root hash matches the stored one. */
   return (avb_safe_memcmp(result_hash,
                           icp_entry->log_root_descriptor.root_hash,
-                          AFTL_HASH_SIZE) == 0);
+                          AVB_AFTL_HASH_SIZE) == 0);
 }
 
 /* Verifies the log root signature for the transparency log submission. */
@@ -198,7 +98,7 @@ bool avb_aftl_verify_entry_signature(const uint8_t* key,
                                      AftlIcpEntry* icp_entry) {
   uint8_t* sig;
   size_t sig_num_bytes;
-  uint8_t log_root_hash[AFTL_HASH_SIZE];
+  uint8_t log_root_hash[AVB_AFTL_HASH_SIZE];
   size_t log_root_hash_num_bytes;
   const AvbAlgorithmData* algorithm_data;
 
@@ -211,7 +111,7 @@ bool avb_aftl_verify_entry_signature(const uint8_t* key,
     return false;
   }
   sig_num_bytes = icp_entry->log_root_sig_size;
-  log_root_hash_num_bytes = AFTL_HASH_SIZE;
+  log_root_hash_num_bytes = AVB_AFTL_HASH_SIZE;
 
   /* Calculate the SHA256 of the TrillianLogRootDescriptor. */
   if (!avb_aftl_hash_log_root_descriptor(icp_entry, log_root_hash))
@@ -224,6 +124,7 @@ bool avb_aftl_verify_entry_signature(const uint8_t* key,
     avb_error("Failed to get algorithm data.\n");
     return false;
   }
+
   return avb_rsa_verify(key,
                         key_num_bytes,
                         sig,
