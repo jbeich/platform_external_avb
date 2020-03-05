@@ -2,6 +2,23 @@
   "comments": [
     {
       "key": {
+        "uuid": "2c8ed0a5_8c0087a5",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T04:28:06Z",
+      "side": 1,
+      "message": "+AftlDescriptor* aftl_descriptor;",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "e0de90b8_49f728a8",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 2
@@ -13,6 +30,74 @@
       "writtenOn": "2020-03-05T03:55:44Z",
       "side": 1,
       "message": "Should be \"AVB_AFTL_MAX_AFTL_DESCRIPTOR_SIZE - vbmeta_size\", otherwise \"AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION,\"",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e9851feb_4d9bbc90",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T04:28:06Z",
+      "side": 1,
+      "message": "aftl_descriptor \u003d (AftlDescriptor*)out_image_buf;\n*out_image_size \u003d avb_be32toh(aftl_descriptor-\u003eheader.aftl_descriptor_size);\n\nOtherwise \"avb_aftl_verify_descriptor()\" will get too large size to verify.",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b5d79583_a73a8797",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T04:28:06Z",
+      "side": 1,
+      "message": "avb_errorv(\n              \"AFTL signature verification failed on entry %d\\n\", i, NULL);",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff28872b_ebbb652a",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T04:28:06Z",
+      "side": 1,
+      "message": "avb_errorv(\n            \"AFTL root hash verification failed on entry %d\\n\", i, NULL);",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "acef9e8c_40514ef6",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T04:28:06Z",
+      "side": 1,
+      "message": "avb_errorv(\n          \"AFTL vbmeta hash verification failed on entry %d\\n\", i, NULL);",
       "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
