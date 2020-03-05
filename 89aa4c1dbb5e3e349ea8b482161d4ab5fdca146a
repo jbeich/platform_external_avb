@@ -101,6 +101,23 @@
       "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4b08874a_acb52689",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T06:03:28Z",
+      "side": 1,
+      "message": "Should every vbmeta have AftlDescriptor? If no, we should treat \"AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA\" as normal.\n\nOr using below:\nif (ret !\u003d AVB_SLOT_VERIFY_RESULT_OK) {\n    if (ret \u003d\u003d AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA) {\n        // treat as normal\n        avb_errorv(\n        pname, \": Unable to find the AftlDescriptor.\\n\", NULL);\n        continue;\n    }\n    avb_error(\"Something bad happened blah blah blah......\\n\");\n    break;\n}",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
