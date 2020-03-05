@@ -72,6 +72,24 @@
     },
     {
       "key": {
+        "uuid": "af98f01f_73fc7432",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T13:45:08Z",
+      "side": 1,
+      "message": "\"AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION\" happened while invalid start addrees or end address of reading partition.",
+      "parentUuid": "237c00bd_cb5f801c",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e9851feb_4d9bbc90",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 2
@@ -101,6 +119,24 @@
       "side": 1,
       "message": "This is done in parse_aftl_descriptor() from avb_aftl_util.h:\n\n  aftl_descriptor_size \u003d avb_htobe32(icp_header-\u003eaftl_descriptor_size);\n  if (aftl_descriptor_size \u003e AVB_AFTL_MAX_AFTL_DESCRIPTOR_SIZE) return NULL;\n\nIt make sense to return out_image_size here as it is how much we have been able to read. It\u0027s up to the parsing to decide if that should be truncated.\n\n(Note, it uses the wrong byte conversion function, I\u0027ll send a separate change to fix that.)",
       "parentUuid": "e9851feb_4d9bbc90",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "734ce486_1d6a2c04",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T13:45:08Z",
+      "side": 1,
+      "message": "Yes, I got the NULL because \"aftl_descriptor_size \u003e AVB_AFTL_MAX_AFTL_DESCRIPTOR_SIZE\".",
+      "parentUuid": "ba8cfa9d_41eb9d37",
       "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
