@@ -19,6 +19,24 @@
     },
     {
       "key": {
+        "uuid": "f112df9a_2179538b",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-03-05T13:18:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2c8ed0a5_8c0087a5",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "e0de90b8_49f728a8",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 2
@@ -33,6 +51,24 @@
       "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "237c00bd_cb5f801c",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-03-05T13:18:33Z",
+      "side": 1,
+      "message": "Done. According to the documentation of read_from_partition, this error should only be raised if offset was beyond the end of the partition, not if the size was too big. I\u0027ve added an assert to check that.\nDid you come across this error while testing? If so, can you share the steps to reproduce, it might be a bug somewhere else. Thanks",
+      "parentUuid": "e0de90b8_49f728a8",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -53,6 +89,24 @@
     },
     {
       "key": {
+        "uuid": "ba8cfa9d_41eb9d37",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-03-05T13:18:33Z",
+      "side": 1,
+      "message": "This is done in parse_aftl_descriptor() from avb_aftl_util.h:\n\n  aftl_descriptor_size \u003d avb_htobe32(icp_header-\u003eaftl_descriptor_size);\n  if (aftl_descriptor_size \u003e AVB_AFTL_MAX_AFTL_DESCRIPTOR_SIZE) return NULL;\n\nIt make sense to return out_image_size here as it is how much we have been able to read. It\u0027s up to the parsing to decide if that should be truncated.\n\n(Note, it uses the wrong byte conversion function, I\u0027ll send a separate change to fix that.)",
+      "parentUuid": "e9851feb_4d9bbc90",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b5d79583_a73a8797",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 2
@@ -67,6 +121,24 @@
       "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d0a4f59c_0f7214d3",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-03-05T13:18:33Z",
+      "side": 1,
+      "message": "This call was already incorrect. avb_errorv relies on avb_printv which is documented as (https://android.googlesource.com/platform/external/avb/+/master/libavb/avb_sysdeps.h#97):\n\n  /* Prints out a vector of strings. Each argument must point to a\n   * NUL-terminated UTF-8 string and NULL should be the last argument.\n   */\n\nThere is no automatic formatting available here. I\u0027ve drop the size_t in this call and the followings.",
+      "parentUuid": "b5d79583_a73a8797",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -87,6 +159,24 @@
     },
     {
       "key": {
+        "uuid": "3b274d1f_55626f0a",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-03-05T13:18:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "ff28872b_ebbb652a",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "acef9e8c_40514ef6",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 2
@@ -104,6 +194,24 @@
     },
     {
       "key": {
+        "uuid": "b60bab69_dd232617",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 121,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-03-05T13:18:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "acef9e8c_40514ef6",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "4b08874a_acb52689",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 2
@@ -118,6 +226,24 @@
       "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "37e27bdd_9f8d1db3",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 173,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-03-05T13:18:33Z",
+      "side": 1,
+      "message": "Yes, every vbmeta should have an AftlDescriptor.",
+      "parentUuid": "4b08874a_acb52689",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
