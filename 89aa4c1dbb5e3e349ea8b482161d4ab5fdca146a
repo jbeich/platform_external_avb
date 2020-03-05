@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e0de90b8_49f728a8",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 49,
+      "author": {
+        "id": 1378788
+      },
+      "writtenOn": "2020-03-05T03:55:44Z",
+      "side": 1,
+      "message": "Should be \"AVB_AFTL_MAX_AFTL_DESCRIPTOR_SIZE - vbmeta_size\", otherwise \"AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION,\"",
+      "revId": "89aa4c1dbb5e3e349ea8b482161d4ab5fdca146a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
