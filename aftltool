@@ -33,7 +33,7 @@ import hashlib
 import json
 import multiprocessing
 import os
-import Queue  # pylint: disable=bad-python3-import
+import queue
 import struct
 import subprocess
 import sys
@@ -41,10 +41,12 @@ import tempfile
 import time
 
 
-import avbtool
+# There are parts of avbtool that simply are not compatible with python3.
+#import avbtool
+import avbtool3
 from proto import aftl_pb2
 from proto import api_pb2
-from proto.crypto import sigpb
+from crypto.sigpb import sigpb_pb2 as crypto_dot_sigpb_dot_sigpb__pb2
 
 
 class AftlError(Exception):
@@ -261,8 +263,8 @@ class AftlIcpHeader(object):
        self.icp_count) = struct.unpack(self.FORMAT_STRING, data)
     else:
       self.magic = self.MAGIC
-      self.required_icp_version_major = avbtool.AVB_VERSION_MAJOR
-      self.required_icp_version_minor = avbtool.AVB_VERSION_MINOR
+      self.required_icp_version_major = avbtool3.AVB_VERSION_MAJOR
+      self.required_icp_version_minor = avbtool3.AVB_VERSION_MINOR
       self.aftl_descriptor_size = self.SIZE
       self.icp_count = 0
     if not self.is_valid():
@@ -307,12 +309,12 @@ class AftlIcpHeader(object):
           'ICP Header: magic value mismatch: {}\n'.format(self.magic))
       return False
 
-    if self.required_icp_version_major > avbtool.AVB_VERSION_MAJOR:
+    if self.required_icp_version_major > avbtool3.AVB_VERSION_MAJOR:
       sys.stderr.write('ICP header: major version mismatch: {}\n'.format(
           self.required_icp_version_major))
       return False
 
-    if self.required_icp_version_minor > avbtool.AVB_VERSION_MINOR:
+    if self.required_icp_version_minor > avbtool3.AVB_VERSION_MINOR:
       sys.stderr.write('ICP header: minor version mismatch: {}\n'.format(
           self.required_icp_version_minor))
       return False
@@ -1171,7 +1173,7 @@ class AftlGrpcCommunication(AftlCommunication):
     return response
 
 
-class Aftl(avbtool.Avb):
+class Aftl(avbtool3.Avb):
   """Business logic for aftltool command-line tool."""
 
   def get_vbmeta_image(self, image_filename):
@@ -1188,18 +1190,17 @@ class Aftl(avbtool.Avb):
     """
     # Reads and parses the vbmeta image.
     try:
-      image = avbtool.ImageHandler(image_filename)
+      image = avbtool3.ImageHandler(image_filename)
     except (IOError, ValueError) as e:
       sys.stderr.write('The image does not contain a valid VBMeta structure: '
                        '{}.\n'.format(e))
       return None, None
-
     try:
+      image.seek(0)
       (footer, header, _, _) = self._parse_image(image)
-    except avbtool.AvbError as e:
+    except avbtool3.AvbError as e:
       sys.stderr.write('The image cannot be parsed: {}.\n'.format(e))
       return None, None
-
     # Seeks for the start of the vbmeta image and calculates its size.
     offset = 0
     if footer:
@@ -1231,7 +1232,7 @@ class Aftl(avbtool.Avb):
       return None
 
     try:
-      image = avbtool.ImageHandler(image_filename)
+      image = avbtool3.ImageHandler(image_filename)
     except ValueError as e:
       sys.stderr.write('The image does not contain a valid VBMeta structure: '
                        '{}.\n'.format(e))
@@ -1351,7 +1352,7 @@ class Aftl(avbtool.Avb):
     vbmeta_hash = hashlib.sha256(vbmeta_descriptor).digest()
 
     # Extract the key data from the PEM file if of size 4096.
-    manufacturer_key = avbtool.RSAPublicKey(manufacturer_key_path)
+    manufacturer_key = avbtool3.RSAPublicKey(manufacturer_key_path)
     if manufacturer_key.num_bits != 4096:
       raise AftlError('Manufacturer keys not of size 4096: {}'.format(
           manufacturer_key.num_bits))
@@ -1370,33 +1371,35 @@ class Aftl(avbtool.Avb):
     sig_num_bytes = 0
     alg_padding = ''
     try:
-      alg = avbtool.ALGORITHMS[algorithm_name]
+      alg = avbtool3.ALGORITHMS[algorithm_name]
       sig_num_bytes = alg.signature_num_bytes
       alg_padding = alg.padding
     except KeyError:
       raise AftlError('Unknown algorithm with name {}'.format(algorithm_name))
 
     fw_info_hash = hashlib.sha256(fw_info.SerializeToString()).digest()
-    padding_and_hash = str(bytearray(alg_padding)) + fw_info_hash
+    padding_and_hash = bytearray(alg_padding) + fw_info_hash
     try:
-      signed_fw_info = avbtool.raw_sign(signing_helper,
-                                        signing_helper_with_files,
-                                        algorithm_name,
-                                        sig_num_bytes,
-                                        manufacturer_key_path,
-                                        padding_and_hash)
-    except avbtool.AvbError as e:
+      signed_fw_info = avbtool3.raw_sign(signing_helper,
+                                         signing_helper_with_files,
+                                         algorithm_name,
+                                         sig_num_bytes,
+                                         manufacturer_key_path,
+                                         padding_and_hash)
+    except avbtool3.AvbError as e:
       raise AftlError('Failed to sign FirmwareInfo with '
                       '--manufacturer_key: {}'.format(e))
-    fw_info_sig = sigpb.sigpb_pb2.DigitallySigned(
+    fw_info_sig = crypto_dot_sigpb_dot_sigpb__pb2.DigitallySigned(
         hash_algorithm='SHA256',
         signature_algorithm='RSA',
-        signature=str(signed_fw_info))
+        signature=bytes(signed_fw_info))
 
+    # change this to the protobuf generated name
     sfw_info = aftl_pb2.SignedFirmwareInfo(info=fw_info,
                                            info_signature=fw_info_sig)
+    sys.stderr.write('sfw_info is a {}\n'.format(repr(sfw_info.__class__)))
     request = api_pb2.AddFirmwareInfoRequest(vbmeta=bytes(
-        str(vbmeta_descriptor)), fw_info=sfw_info)
+        vbmeta_descriptor), fw_info=sfw_info)
 
     # Submit signed FirmwareInfo to the server.
     if not aftl_comms:
@@ -1407,6 +1410,7 @@ class Aftl(avbtool.Avb):
     icp_entry = AftlIcpEntry()
     icp_entry.translate_response(transparency_log, response)
     return icp_entry
+
 
   def make_icp_from_vbmeta(self, vbmeta_image_path, output,
                            signing_helper, signing_helper_with_files,
@@ -1503,13 +1507,28 @@ class Aftl(avbtool.Avb):
 
     # Write the original vbmeta descriptor, followed by the AftlDescriptor.
     if footer:  # Checks if it is a chained partition.
+      # if we have a footer, we need to keep the beginning of the partition
+      # read in.
       # TODO(b/147217370): Determine the best way to handle chained partitions
       # like the system.img. Currently, we only put the main vbmeta.img in the
       # transparency log.
-      sys.stderr.write('Image has a footer and ICP for this format is not '
-                       'implemented.\n')
-      return False
+      # Note, vbmeta_image is a bad name for this, as it represents
+      # the entire partition.
+      vbmeta_end_offset = footer.vbmeta_offset + footer.vbmeta_size
+      vbmeta_image.truncate(vbmeta_end_offset)
+      vbmeta_image.append_raw(aftl_descriptor.encode())
+      vbmeta_image.append_dont_care(vbmeta_image.image_size -
+                                    vbmeta_end_offset -
+                                    len(aftl_descriptor.encode()) -
+                                    1 * vbmeta_image.block_size)
+      footer_blob_with_padding = ('\0' * (vbmeta_image.block_size -
+                                          avbtool3.AvbFooter.SIZE) +
+                                  footer.encode())
+      vbmeta_image.append_raw(footer_blob_with_padding)
+      # Chained partition modifications complete, return true.
+      return True
 
+    # writing this stuff is only if no footer
     # Writes vbmeta image with inclusion proof into a new vbmeta image.
     output.seek(0)
     output.write(vbmeta_image)
@@ -1518,7 +1537,7 @@ class Aftl(avbtool.Avb):
 
     if padding_size > 0:
       descriptor_size = len(vbmeta_image) + len(encoded_aftl_descriptor)
-      padded_size = avbtool.round_to_multiple(descriptor_size, padding_size)
+      padded_size = avbtool3.round_to_multiple(descriptor_size, padding_size)
       padding_needed = padded_size - descriptor_size
       output.write('\0' * padding_needed)
 
@@ -1648,7 +1667,7 @@ class Aftl(avbtool.Avb):
                                                    version_incremental, result))
         execution_times.append(execution_time)
         results.append(result)
-      except Queue.Empty:
+      except queue.Empty:
         pass
 
       # Checks if processes are still alive; if not clean them up. join() would
@@ -1692,7 +1711,7 @@ class Aftl(avbtool.Avb):
     return True
 
 
-class AftlTool(avbtool.AvbTool):
+class AftlTool(avbtool3.AvbTool):
   """Object for aftltool command-line tool."""
 
   def __init__(self):
@@ -1785,14 +1804,14 @@ class AftlTool(avbtool.AvbTool):
                             metavar='NUMBER',
                             help='If non-zero, pads output with NUL bytes so '
                             'its size is a multiple of NUMBER (default: 0)',
-                            type=avbtool.parse_number,
+                            type=avbtool3.parse_number,
                             default=0)
     sub_parser.add_argument('--timeout',
                             metavar='SECONDS',
                             help='Timeout in seconds for transparency log '
                             'requests (default: 600 sec). A value of 0 means '
                             'no timeout.',
-                            type=avbtool.parse_number,
+                            type=avbtool3.parse_number,
                             default=600)
     self._add_common_args(sub_parser)
     sub_parser.set_defaults(func=self.make_icp_from_vbmeta)
@@ -1858,12 +1877,12 @@ class AftlTool(avbtool.AvbTool):
     sub_parser.add_argument('--processes',
                             help='Number of parallel processes to use for '
                             'testing (default: 1).',
-                            type=avbtool.parse_number,
+                            type=avbtool3.parse_number,
                             default=1)
     sub_parser.add_argument('--submissions',
                             help='Number of submissions to perform against the '
                             'log per process (default: 1).',
-                            type=avbtool.parse_number,
+                            type=avbtool3.parse_number,
                             default=1)
     sub_parser.add_argument('--stats_file',
                             help='Path to the stats file to write the raw '
@@ -1879,7 +1898,7 @@ class AftlTool(avbtool.AvbTool):
                             help='Timeout in seconds for transparency log '
                             'requests (default: 0). A value of 0 means '
                             'no timeout.',
-                            type=avbtool.parse_number,
+                            type=avbtool3.parse_number,
                             default=0)
     sub_parser.set_defaults(func=self.load_test_aftl)
 
