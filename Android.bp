@@ -90,6 +90,22 @@ python_binary_host {
     },
 }
 
+python_binary_host {
+    name: "avbtool3",
+    srcs: [":avbtool3_py"],
+    main: "avbtool3.py",
+    required: ["fec"],
+    version: {
+        py2: {
+            enabled: false,
+            embedded_launcher: false,
+        },
+        py3: {
+            enabled: true,
+        },
+    },
+}
+
 genrule {
   name: "aftltool_py",
   srcs: ["aftltool",],
@@ -104,12 +120,12 @@ python_library_host {
     ],
     version: {
         py2: {
-            enabled: true,
+            enabled: false,
             // This is needs to be false due to b/146057182#comment5.
             embedded_launcher: false,
         },
         py3: {
-            enabled: false,
+            enabled: true,
         },
     },
 }
@@ -118,20 +134,20 @@ python_binary_host {
     name: "aftltool",
     srcs: [
         ":aftltool_py",
-        ":avbtool_py",
+        ":avbtool3_py",
     ],
     libs: [
-        "aftl_proto",
+        "aftl_proto", "py-grpc", "libprotobuf-python", 
     ],
     main: "aftltool.py",
     required: ["fec"],
     version: {
         py2: {
-            enabled: true,
+            enabled: false,
             embedded_launcher: false,
         },
         py3: {
-            enabled: false,
+            enabled: true,
         },
     },
 }
@@ -141,7 +157,7 @@ python_test_host {
     main: "aftltool_test.py",
     srcs: [
         ":aftltool_py",
-        ":avbtool_py",
+        ":avbtool3_py",
         "aftltool_test.py",
     ],
     libs: [
@@ -153,12 +169,12 @@ python_test_host {
     test_suites: ["general-tests"],
     version: {
         py2: {
-            enabled: true,
+            enabled: false,
             // This is needs to be false due to b/146057182#comment5.
             embedded_launcher: false,
         },
         py3: {
-            enabled: false,
+            enabled: true,
         },
     },
 }
@@ -167,6 +183,13 @@ genrule {
   name: "avbtool_py",
   srcs: ["avbtool",],
   out: ["avbtool.py"],
+  cmd: "cp $(in) $(out)",
+}
+
+genrule {
+  name: "avbtool3_py",
+  srcs: ["avbtool3",],
+  out: ["avbtool3.py"],
   cmd: "cp $(in) $(out)",
 }
 
@@ -342,6 +365,7 @@ cc_test_host {
         "test/avb_util_unittest.cc",
         "test/avb_vbmeta_image_unittest.cc",
         "test/avbtool_unittest.cc",
+        "test/avbtool3_unittest.cc",	
         "test/fake_avb_ops.cc",
         "test/avb_sysdeps_posix_testing.cc",
     ],
