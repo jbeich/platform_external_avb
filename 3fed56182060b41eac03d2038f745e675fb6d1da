@@ -1,0 +1,92 @@
+{
+  "comments": [
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000002063529",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1264020?revision\u003d1",
+      "fixSuggestions": [
+        {
+          "fixId": "c8859ea5_c713cbbf",
+          "description": "Change to \"test/avbtool3_unittest.cc\"",
+          "replacements": [
+            {
+              "path": "test/avbtool3_unittest.cc",
+              "range": {
+                "startLine": 198,
+                "startChar": 55,
+                "endLine": 198,
+                "endChar": 63
+              },
+              "replacement": "existent"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "1b6b25c5_4495ee34",
+        "filename": "test/avbtool3_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 198,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-03-23T03:58:08Z",
+      "side": 1,
+      "message": "Common typo found: \"existant\" -- should it be \"existent\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line.",
+      "range": {
+        "startLine": 198,
+        "startChar": 55,
+        "endLine": 198,
+        "endChar": 63
+      },
+      "revId": "3fed56182060b41eac03d2038f745e675fb6d1da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "robotId": "ayeaye",
+      "robotRunId": "AR00000000000002063529",
+      "url": "https://android-build.googleplex.com/builds/treetop/android-review/1264020?revision\u003d1",
+      "fixSuggestions": [
+        {
+          "fixId": "e124bd92_508233b2",
+          "description": "Change to \"test/avbtool3_unittest.cc\"",
+          "replacements": [
+            {
+              "path": "test/avbtool3_unittest.cc",
+              "range": {
+                "startLine": 1535,
+                "startChar": 11,
+                "endLine": 1535,
+                "endChar": 18
+              },
+              "replacement": "without"
+            }
+          ]
+        }
+      ],
+      "key": {
+        "uuid": "d311185f_0bd5653b",
+        "filename": "test/avbtool3_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1535,
+      "author": {
+        "id": 1550585
+      },
+      "writtenOn": "2020-03-23T03:58:08Z",
+      "side": 1,
+      "message": "Common typo found: \"wihtout\" -- should it be \"without\"?\nNote: a line containing \"common_typos_disable\" or \"common_typos_enable\" will turn off or on (respectively) the linter for subsequent lines in the file. Alternatively include the token \"NOTYPO\" within a line to skip typo linting that line.",
+      "range": {
+        "startLine": 1535,
+        "startChar": 11,
+        "endLine": 1535,
+        "endChar": 18
+      },
+      "revId": "3fed56182060b41eac03d2038f745e675fb6d1da",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    }
+  ]
+}
