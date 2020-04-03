@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "85835193_e5009528",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-03T14:42:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ddf2aad0_c2da6682",
+      "range": {
+        "startLine": 14,
+        "startChar": 47,
+        "endLine": 14,
+        "endChar": 59
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7592a10e_3d655522",
         "filename": "/COMMIT_MSG",
         "patchSetId": 4
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "fb383b1d_93c51b70",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-03T14:42:16Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7592a10e_3d655522",
+      "range": {
+        "startLine": 17,
+        "startChar": 25,
+        "endLine": 17,
+        "endChar": 35
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfb5b3c9_395e4a1e",
         "filename": "avbtool",
         "patchSetId": 4
@@ -68,6 +116,30 @@
       "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8a355669_9143f7bc",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2121,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-03T14:42:16Z",
+      "side": 1,
+      "message": "Implemented it as an optional command line option.",
+      "parentUuid": "dfb5b3c9_395e4a1e",
+      "range": {
+        "startLine": 2121,
+        "startChar": 52,
+        "endLine": 2121,
+        "endChar": 62
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
