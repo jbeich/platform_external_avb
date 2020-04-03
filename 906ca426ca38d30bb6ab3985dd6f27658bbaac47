@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ddf2aad0_c2da6682",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-03T13:21:51Z",
+      "side": 1,
+      "message": "reproducing test cases",
+      "range": {
+        "startLine": 14,
+        "startChar": 47,
+        "endLine": 14,
+        "endChar": 59
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7592a10e_3d655522",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-03T13:21:51Z",
+      "side": 1,
+      "message": "scaffolding",
+      "range": {
+        "startLine": 17,
+        "startChar": 25,
+        "endLine": 17,
+        "endChar": 35
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dfb5b3c9_395e4a1e",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2121,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-03T13:21:51Z",
+      "side": 1,
+      "message": "This could be have the default value of 0? Here or in the command line option?",
+      "range": {
+        "startLine": 2121,
+        "startChar": 52,
+        "endLine": 2121,
+        "endChar": 62
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
