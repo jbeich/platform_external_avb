@@ -96,6 +96,29 @@
     },
     {
       "key": {
+        "uuid": "91c545cf_95bc91bd",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-03T15:15:59Z",
+      "side": 1,
+      "message": "Doesn\u0027t seem like a good idea to hard-code this file name (what happens if multiple invocations run at the same time?)... should use mkstemp or similar.",
+      "range": {
+        "startLine": 54,
+        "startChar": 27,
+        "endLine": 54,
+        "endChar": 54
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "dfb5b3c9_395e4a1e",
         "filename": "avbtool",
         "patchSetId": 4
@@ -140,6 +163,29 @@
       "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "9c451260_32d3c723",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2121,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-03T15:15:59Z",
+      "side": 1,
+      "message": "What\u0027s the rationale for this?\n\nAlso, I don\u0027t think it\u0027s a \"mock image\", if anything we should call it a \"test image\" so the sub-command would be \"generate_test_image\". But before we add it I\u0027d like to understand why it\u0027s necessary... thanks!",
+      "range": {
+        "startLine": 2121,
+        "startChar": 6,
+        "endLine": 2121,
+        "endChar": 25
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
