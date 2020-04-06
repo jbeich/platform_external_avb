@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "a3b7c340_89a78c98",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "That data is populated by avb_slot_verify. If it is null, the caller probably did not make sure that avb_slot_verify was succcessful. I\u0027ve added the precision in the documentation of that function. Changed to INVALID_ARGUMENT here.",
+      "parentUuid": "1171b0de_8259c4ce",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 54
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "693c6858_2f4f3b25",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 2
@@ -45,6 +69,30 @@
       "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c66052b6_663e3ea8",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "Agreed. Done.",
+      "parentUuid": "693c6858_2f4f3b25",
+      "range": {
+        "startLine": 158,
+        "startChar": 12,
+        "endLine": 158,
+        "endChar": 45
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "a0e364bb_a2bf2e5a",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "Done, I\u0027ve also rephrased a bit.",
+      "parentUuid": "816ad592_37051624",
+      "range": {
+        "startLine": 51,
+        "startChar": 62,
+        "endLine": 51,
+        "endChar": 68
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b9b00d94_45a2bdf4",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 2
@@ -91,6 +163,30 @@
       "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ee72bf9a_f9ca066b",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b9b00d94_45a2bdf4",
+      "range": {
+        "startLine": 59,
+        "startChar": 57,
+        "endLine": 59,
+        "endChar": 65
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "36d766da_a26f7e5c",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "No, it is done for all the VBMetas.",
+      "parentUuid": "f76588ee_8c459c02",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 67
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "b3d969ee_ec01aa5d",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 2
@@ -137,6 +257,30 @@
       "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e3bfc51c_78155257",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "Same, there can be multiple AftlImages.",
+      "parentUuid": "b3d969ee_ec01aa5d",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 62
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "0b644663_fb790f40",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "Done. I went for INVALID_IMAGE (word swap) instead.",
+      "parentUuid": "5bfcd492_e9787041",
+      "range": {
+        "startLine": 69,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 48
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fb353c04_f4a38dfb",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 2
@@ -183,6 +351,30 @@
       "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f2313e5c_253a338d",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "That\u0027s right, we validate all the vbmeta images, not just the one passed by.",
+      "parentUuid": "fb353c04_f4a38dfb",
+      "range": {
+        "startLine": 76,
+        "startChar": 10,
+        "endLine": 76,
+        "endChar": 16
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "e7fbf27e_e1c0b2bd",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "I tried to keep the style close to the comments on avb_slot_verify. The first paragraph gives a high-level overview and then another paragraph explain with more details how this function works. See https://android.googlesource.com/platform/external/avb/+/master/libavb/avb_slot_verify.h#331.\n\nI\u0027m expecting to change the definition of that function soon (to integrate the notion of grove). So the comment will be updated as well.",
+      "parentUuid": "1bd8ac3d_d8a16a23",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 75
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "beec96f7_226ffa35",
         "filename": "test/avb_aftl_verify_unittest.cc",
         "patchSetId": 2
@@ -229,6 +445,30 @@
       "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cb5099de_22f0ef92",
+        "filename": "test/avb_aftl_verify_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-06T14:08:49Z",
+      "side": 1,
+      "message": "Getting there.",
+      "parentUuid": "beec96f7_226ffa35",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 0
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
