@@ -119,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "0f707ba3_09437b1e",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T16:04:01Z",
+      "side": 1,
+      "message": "As discussed on IM changed it so logging can be activated by defining an environment variable.",
+      "parentUuid": "91c545cf_95bc91bd",
+      "range": {
+        "startLine": 54,
+        "startChar": 27,
+        "endLine": 54,
+        "endChar": 54
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "dfb5b3c9_395e4a1e",
         "filename": "avbtool",
         "patchSetId": 4
@@ -186,6 +210,30 @@
       "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7d31daa2_b5ef93e2",
+        "filename": "avbtool",
+        "patchSetId": 4
+      },
+      "lineNbr": 2121,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T16:04:01Z",
+      "side": 1,
+      "message": "As discussed on IM:\n- Changed the command to generate_test_image\".\n- Included description of the new command in the README.md.",
+      "parentUuid": "9c451260_32d3c723",
+      "range": {
+        "startLine": 2121,
+        "startChar": 6,
+        "endLine": 2121,
+        "endChar": 25
+      },
+      "revId": "906ca426ca38d30bb6ab3985dd6f27658bbaac47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
