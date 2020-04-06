@@ -357,14 +357,14 @@ class AftlImageTest(AftltoolTestCase):
     """Tests the constructor."""
     # Calls constructor without data.
     d = aftltool.AftlImage()
-    self.assertIsInstance(d.icp_header, aftltool.AftlIcpHeader)
+    self.assertIsInstance(d.icp_header, aftltool.AftlImageHeader)
     self.assertEqual(d.icp_header.icp_count, 0)
     self.assertEqual(d.icp_entries, [])
     self.assertTrue(d.is_valid())
 
     # Calls constructor with data.
     d = aftltool.AftlImage(self.test_expected_aftl_image_bytes)
-    self.assertIsInstance(d.icp_header, aftltool.AftlIcpHeader)
+    self.assertIsInstance(d.icp_header, aftltool.AftlImageHeader)
     self.assertEqual(d.icp_header.icp_count, 2)
     self.assertEqual(len(d.icp_entries), 2)
     for entry in d.icp_entries:
@@ -545,17 +545,17 @@ class AftlImageTest(AftltoolTestCase):
     self.assertIn('Log Root Descriptor:', desc)
 
 
-class AftlIcpHeaderTest(AftltoolTestCase):
-  """Test suite for testing the AftlIcpHeader descriptor."""
+class AftlImageHeaderTest(AftltoolTestCase):
+  """Test suite for testing the AftlImageHeader descriptor."""
 
   def setUp(self):
     """Sets up the test bed for the unit tests."""
-    super(AftlIcpHeaderTest, self).setUp()
+    super(AftlImageHeaderTest, self).setUp()
 
-    self.test_header_valid = aftltool.AftlIcpHeader()
+    self.test_header_valid = aftltool.AftlImageHeader()
     self.test_header_valid.icp_count = 1
 
-    self.test_header_invalid = aftltool.AftlIcpHeader()
+    self.test_header_invalid = aftltool.AftlImageHeader()
     self.test_header_invalid.icp_count = -34
 
     self.test_header_bytes = bytearray('\x41\x46\x54\x4c\x00\x00\x00\x01'
@@ -566,22 +566,22 @@ class AftlIcpHeaderTest(AftltoolTestCase):
     """Tests constructor."""
 
     # Calls constructor without data.
-    header = aftltool.AftlIcpHeader()
+    header = aftltool.AftlImageHeader()
     self.assertEqual(header.magic, 'AFTL')
     self.assertEqual(header.required_icp_version_major,
                      avbtool.AVB_VERSION_MAJOR)
     self.assertEqual(header.required_icp_version_minor,
                      avbtool.AVB_VERSION_MINOR)
-    self.assertEqual(header.aftl_image_size, aftltool.AftlIcpHeader.SIZE)
+    self.assertEqual(header.aftl_image_size, aftltool.AftlImageHeader.SIZE)
     self.assertEqual(header.icp_count, 0)
     self.assertTrue(header.is_valid())
 
     # Calls constructor with data.
-    header = aftltool.AftlIcpHeader(self.test_header_bytes)
+    header = aftltool.AftlImageHeader(self.test_header_bytes)
     self.assertEqual(header.magic, 'AFTL')
     self.assertEqual(header.required_icp_version_major, 1)
     self.assertEqual(header.required_icp_version_minor, 1)
-    self.assertEqual(header.aftl_image_size, aftltool.AftlIcpHeader.SIZE)
+    self.assertEqual(header.aftl_image_size, aftltool.AftlImageHeader.SIZE)
     self.assertTrue(header.icp_count, 1)
     self.assertTrue(header.is_valid())
 
@@ -604,11 +604,11 @@ class AftlIcpHeaderTest(AftltoolTestCase):
   def test_is_valid(self):
     """Tests is_valid method."""
     # Valid default record.
-    header = aftltool.AftlIcpHeader()
+    header = aftltool.AftlImageHeader()
     self.assertTrue(header.is_valid())
 
     # Invalid magic.
-    header = aftltool.AftlIcpHeader()
+    header = aftltool.AftlImageHeader()
     header.magic = 'YOLO'
     self.assertFalse(header.is_valid())
 
@@ -618,17 +618,17 @@ class AftlIcpHeaderTest(AftltoolTestCase):
     # Invalid ICP count.
     self.assertFalse(self.test_header_invalid.is_valid())
 
-    header = aftltool.AftlIcpHeader()
+    header = aftltool.AftlImageHeader()
     header.icp_count = 10000000
     self.assertFalse(header.is_valid())
 
     # Invalid ICP major version.
-    header = aftltool.AftlIcpHeader()
+    header = aftltool.AftlImageHeader()
     header.required_icp_version_major = avbtool.AVB_VERSION_MAJOR + 1
     self.assertFalse(header.is_valid())
 
     # Invalid ICP minor version.
-    header = aftltool.AftlIcpHeader()
+    header = aftltool.AftlImageHeader()
     header.required_icp_version_minor = avbtool.AVB_VERSION_MINOR + 1
     self.assertFalse(header.is_valid())
 
