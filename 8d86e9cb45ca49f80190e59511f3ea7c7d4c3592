@@ -1,0 +1,234 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1171b0de_8259c4ce",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 139,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "Sounds to me more like a AFTL_SLOT_VERIFY_RESULT_ERROR_IMAGE_NOT_FOUND though the definition only talks about missing AftlImage. Either we extend the description or introduce a new error code that there is no vbmeta image.",
+      "range": {
+        "startLine": 139,
+        "startChar": 0,
+        "endLine": 139,
+        "endChar": 54
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "693c6858_2f4f3b25",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "This is not an allocation error when reading the description of the enum strictly speaking. May be more like a AFTL_SLOT_VERIFY_RESULT_ERROR_VERIFICATION?",
+      "range": {
+        "startLine": 158,
+        "startChar": 12,
+        "endLine": 158,
+        "endChar": 45
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "816ad592_37051624",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "s/.../VBMeta image/",
+      "range": {
+        "startLine": 51,
+        "startChar": 62,
+        "endLine": 51,
+        "endChar": 68
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9b00d94_45a2bdf4",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "s/a known/the given/",
+      "range": {
+        "startLine": 59,
+        "startChar": 57,
+        "endLine": 59,
+        "endChar": 65
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f76588ee_8c459c02",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "The verify function is done per one VBMeta image, right? This, I would change to singular.\n\n// The given slot with VBMeta image did not have an AftlImage attached to it.",
+      "range": {
+        "startLine": 65,
+        "startChar": 0,
+        "endLine": 65,
+        "endChar": 67
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b3d969ee_ec01aa5d",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "Verification on one AFTLImage. \n\n// Some content of the AFTLImage was found to be corrupted.",
+      "range": {
+        "startLine": 68,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 62
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "5bfcd492_e9787041",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 69,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "s/AFTL_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA/AFTL_SLOT_VERIFY_RESULT_ERROR_IMAGE_INVALID/ ?",
+      "range": {
+        "startLine": 69,
+        "startChar": 2,
+        "endLine": 69,
+        "endChar": 48
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fb353c04_f4a38dfb",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "s/images/image/ ?\n\nI get the impression from the description that aftl_slot_verify verifies all the VBMeta images on the device.",
+      "range": {
+        "startLine": 76,
+        "startChar": 10,
+        "endLine": 76,
+        "endChar": 16
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1bd8ac3d_d8a16a23",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "This is already covered in the comment for the avb_aftl_verify_image. I feel here these details are more confusing then helpful to the user of the API. The steps here are all performed by the library and the user does not have to bother.\n\nWDYT?",
+      "range": {
+        "startLine": 78,
+        "startChar": 0,
+        "endLine": 78,
+        "endChar": 75
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "beec96f7_226ffa35",
+        "filename": "test/avb_aftl_verify_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-06T12:15:11Z",
+      "side": 1,
+      "message": "IMO there should be more test cases covering other error scenarios.",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 155,
+        "endChar": 0
+      },
+      "revId": "8d86e9cb45ca49f80190e59511f3ea7c7d4c3592",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
