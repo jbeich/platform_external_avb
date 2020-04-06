@@ -227,7 +227,7 @@ def root_from_icp(leaf_index, tree_size, proof, leaf_hash):
   return result
 
 
-class AftlIcpHeader(object):
+class AftlImageHeader(object):
   """A class for the transparency log inclusion proof header.
 
   Attributes:
@@ -251,7 +251,7 @@ class AftlIcpHeader(object):
       data: If not None, must be a bytearray of size |SIZE|.
 
     Raises:
-      AftlError: If invalid structure for AftlIcpHeader.
+      AftlError: If invalid structure for AftlImageHeader.
     """
     assert struct.calcsize(self.FORMAT_STRING) == self.SIZE
 
@@ -266,7 +266,7 @@ class AftlIcpHeader(object):
       self.aftl_image_size = self.SIZE
       self.icp_count = 0
     if not self.is_valid():
-      raise AftlError('Invalid structure for AftlIcpHeader')
+      raise AftlError('Invalid structure for AftlImageHeader')
 
   def save(self, output):
     """Serializes the transparency header |SIZE| to disk.
@@ -275,7 +275,7 @@ class AftlIcpHeader(object):
       output: The object to write the header to.
 
     Raises:
-      AftlError: If invalid structure for AftlIcpHeader.
+      AftlError: If invalid structure for AftlImageHeader.
     """
     output.write(self.encode())
 
@@ -286,10 +286,10 @@ class AftlIcpHeader(object):
       A bytearray() with the encoded header.
 
     Raises:
-      AftlError: If invalid structure for AftlIcpHeader.
+      AftlError: If invalid structure for AftlImageHeader.
     """
     if not self.is_valid():
-      raise AftlError('Invalid structure for AftlIcpHeader')
+      raise AftlError('Invalid structure for AftlImageHeader')
     return struct.pack(self.FORMAT_STRING, self.magic,
                        self.required_icp_version_major,
                        self.required_icp_version_minor,
@@ -297,12 +297,12 @@ class AftlIcpHeader(object):
                        self.icp_count)
 
   def is_valid(self):
-    """Ensures that values in an AftlIcpHeader structure are sane.
+    """Ensures that values in an AftlImageHeader structure are sane.
 
     Returns:
-      True if the values in the AftlIcpHeader are sane, False otherwise.
+      True if the values in the AftlImageHeader are sane, False otherwise.
     """
-    if self.magic != AftlIcpHeader.MAGIC:
+    if self.magic != AftlImageHeader.MAGIC:
       sys.stderr.write(
           'ICP Header: magic value mismatch: {}\n'.format(self.magic))
       return False
@@ -968,14 +968,14 @@ class AftlImage(object):
       AftlError: If the data does not represent a well-formed AftlImage.
     """
     if data:
-      icp_header_bytes = data[0:AftlIcpHeader.SIZE]
-      self.icp_header = AftlIcpHeader(icp_header_bytes)
+      icp_header_bytes = data[0:AftlImageHeader.SIZE]
+      self.icp_header = AftlImageHeader(icp_header_bytes)
       if not self.icp_header.is_valid():
         raise AftlError('Invalid ICP header.')
       icp_count = self.icp_header.icp_count
 
       # Jump past the header for entry deserialization.
-      icp_index = AftlIcpHeader.SIZE
+      icp_index = AftlImageHeader.SIZE
       # Validate each entry.
       self.icp_entries = []
       # Add_icp_entry updates entries and header, so set header count to
@@ -991,7 +991,7 @@ class AftlImage(object):
         self.add_icp_entry(cur_icp_entry)
         icp_index += cur_icp_entry_size
     else:
-      self.icp_header = AftlIcpHeader()
+      self.icp_header = AftlImageHeader()
       self.icp_entries = []
     if not self.is_valid():
       raise AftlError('Malformed AFTLDescriptor')
@@ -1246,13 +1246,13 @@ class Aftl(avbtool.Avb):
       return None
 
     # Parses the header for the AftlImage size.
-    tmp_header_bytes = image.read(AftlIcpHeader.SIZE)
-    if not tmp_header_bytes or len(tmp_header_bytes) != AftlIcpHeader.SIZE:
+    tmp_header_bytes = image.read(AftlImageHeader.SIZE)
+    if not tmp_header_bytes or len(tmp_header_bytes) != AftlImageHeader.SIZE:
       sys.stderr.write('This image does not contain an AftlImage.\n')
       return None
 
     try:
-      tmp_header = AftlIcpHeader(tmp_header_bytes)
+      tmp_header = AftlImageHeader(tmp_header_bytes)
     except AftlError as e:
       sys.stderr.write('This image does not contain a valid AftlImage: '
                        '{}.\n'.format(e))
@@ -1417,7 +1417,7 @@ class Aftl(avbtool.Avb):
 
     The AftlImage contains the information required to validate an inclusion
     proof for a specific vbmeta image. It consists of a header (struct
-    AftlIcpHeader) and zero or more entry structures (struct AftlIcpEntry) that
+    AftlImageHeader) and zero or more entry structures (struct AftlIcpEntry) that
     contain the vbmeta leaf hash, tree size, root hash, inclusion proof hashes,
     and the signature for the root hash.
 
