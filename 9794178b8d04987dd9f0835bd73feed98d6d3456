@@ -284,6 +284,30 @@
     },
     {
       "key": {
+        "uuid": "46634552_bd05077f",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-04-07T13:44:22Z",
+      "side": 1,
+      "message": "Ack\n\nYep - made more sense to not have them mirror each other once I had thought about it more + seen the rest of the code. It\u0027s not quite a pass through!",
+      "parentUuid": "ea8307e6_f45c7258",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11e3c148_a10ea4c5",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 3
@@ -328,6 +352,30 @@
       "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "51590ced_ed8977c1",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2020-04-07T13:44:22Z",
+      "side": 1,
+      "message": "makes sense. \n\ni\u0027ll leave this here for completeness/curiosity (and a fun-fact i\u0027ve learned), though i understand it might not be the simplest solution to the verbosity if not used consistently in the whole codebase. i particularly like the 2nd solution where the functions are defined statically: https://stackoverflow.com/questions/389827/namespaces-in-c",
+      "parentUuid": "e624c67e_2dfdbe9b",
+      "range": {
+        "startLine": 39,
+        "startChar": 18,
+        "endLine": 39,
+        "endChar": 25
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
