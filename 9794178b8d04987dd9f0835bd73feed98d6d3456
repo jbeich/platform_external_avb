@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "d93e3f7c_64397095",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "Good catch. I tried to enumerate the potential return errors (from the doc and implementation in libavb_user) and yes, 2 cases should be handled differently. Moved to a switch statement and added an extra case. The only case left that is not captured is AVB_IO_RESULT_ERROR_IO, capturing this one with default case.\n\nThanks!",
+      "parentUuid": "9bf22bcc_52618d8d",
+      "range": {
+        "startLine": 57,
+        "startChar": 35,
+        "endLine": 57,
+        "endChar": 43
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "36e637ed_330ed162",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 3
@@ -45,6 +69,30 @@
       "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "106d1105_a414141d",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": ":)\nThat\u0027s right. It could be that:\n- There is no AftlImage populated, we are reading garbage from the partition (more likely).\n- We are reading at the wrong place, somehow.\n- The AftlImage is corrupted (less likely).\n\nThe error returned correspond to the most likely case, the error message help diagnosed why we made that call.",
+      "parentUuid": "36e637ed_330ed162",
+      "range": {
+        "startLine": 63,
+        "startChar": 29,
+        "endLine": 64,
+        "endChar": 56
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "6f65f3e4_d5e13f8e",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "In theory, there should be some overlap (like ERROR_OOM). Although it is not the case currently. I prefer keeping them together if the implementation changes at some point? (avb_aftl_verify_icp_root_hash might be a candidate to return an OOM case, instead of just a boolean).",
+      "parentUuid": "550bf834_a6656234",
+      "range": {
+        "startLine": 75,
+        "startChar": 36,
+        "endLine": 75,
+        "endChar": 49
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "08b8c31d_4fef70e7",
         "filename": "libavb_aftl/avb_aftl_verify.c",
         "patchSetId": 3
@@ -91,6 +163,30 @@
       "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c8093c7_4ffc0fe8",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "That\u0027s right, and if no error occurred, then AFTL_SLOT_VERIFY_RESULT_OK is returned.\n\nWith the current design, we bail early as soon as something is not verified. This will change soon with the introduction of groves.",
+      "parentUuid": "08b8c31d_4fef70e7",
+      "range": {
+        "startLine": 120,
+        "startChar": 9,
+        "endLine": 120,
+        "endChar": 15
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "ffdce8b7_42569ea5",
+        "filename": "libavb_aftl/avb_aftl_verify.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "Right. That error type is really for the highly unexpected type of error and somewhat generic. This is where we make the cut between errors worth reporting and errors where something went terribly wrong along the way.\n\nI agree that having different default values here and above makes the reading more convoluted.  I\u0027ve changed the default to ERROR_VERIFICATION above and set the OK only when reaching the end of the for loop (see above). Thanks for the suggestion!",
+      "parentUuid": "7856ef63_b85436f3",
+      "range": {
+        "startLine": 133,
+        "startChar": 53,
+        "endLine": 133,
+        "endChar": 71
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "9f942077_49639af1",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 3
@@ -140,6 +260,30 @@
     },
     {
       "key": {
+        "uuid": "ea8307e6_f45c7258",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "I wouldn\u0027t call it a companion list: https://android.googlesource.com/platform/external/avb/+/refs/heads/master/libavb/avb_slot_verify.h#297 \nIt is more the output of avb_slot_verify (which is an input for us, aftl_slot_verify). There is no duplication between *Data and *Result. It\u0027s more, Data is valid only if the Result is OK (but again, for avb_slot_verify). I\u0027ve tried to capture that into the 2nd paragraph of the documentation for aftl_slot_verify (ie it is the caller responsability to verify the return value of a previous function before forwarding us its output).",
+      "parentUuid": "9f942077_49639af1",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 12
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "11e3c148_a10ea4c5",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 3
@@ -151,6 +295,30 @@
       "writtenOn": "2020-04-06T15:15:40Z",
       "side": 1,
       "message": "how about dropping the _RESULT? i\u0027m thinking _OK is your only success case?",
+      "range": {
+        "startLine": 39,
+        "startChar": 18,
+        "endLine": 39,
+        "endChar": 25
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e624c67e_2dfdbe9b",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "So I\u0027ve tried to stick to the current naming schema of libavb. The Result here is actually to match the full name of that enum (AftlSlotVerifyResult) and not just to indicate that it is a result.\n\nThat verbosity is somewhat excruciating but it\u0027s worth keeping in mind that this library may be included in a big chunk of the bootloader and long prefix is one way to avoid any kind of name conflict.\n\nWDYT?",
+      "parentUuid": "11e3c148_a10ea4c5",
       "range": {
         "startLine": 39,
         "startChar": 18,
@@ -186,6 +354,30 @@
     },
     {
       "key": {
+        "uuid": "18049efa_2f54b799",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "Ack. See previous comment.",
+      "parentUuid": "53477c60_9d14fd03",
+      "range": {
+        "startLine": 44,
+        "startChar": 18,
+        "endLine": 44,
+        "endChar": 25
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "272b82f0_d7b8863f",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 3
@@ -206,6 +398,30 @@
       "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "c0167f25_d8e277be",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 79,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "272b82f0_d7b8863f",
+      "range": {
+        "startLine": 79,
+        "startChar": 40,
+        "endLine": 79,
+        "endChar": 61
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -232,6 +448,30 @@
     },
     {
       "key": {
+        "uuid": "23829e7f_b2c93f33",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 88,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "Done. That\u0027s right.",
+      "parentUuid": "bbc51687_ece2b3b4",
+      "range": {
+        "startLine": 88,
+        "startChar": 57,
+        "endLine": 88,
+        "endChar": 69
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1793a53c_6563ec7b",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 3
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "0352fa98_906d8375",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "Added a note on why we need it, based on something similar as: https://android.googlesource.com/platform/external/avb/+/refs/heads/master/libavb/avb_slot_verify.h#331",
+      "parentUuid": "1793a53c_6563ec7b",
+      "range": {
+        "startLine": 95,
+        "startChar": 38,
+        "endLine": 95,
+        "endChar": 49
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "bd2f2fb6_919d9cea",
         "filename": "libavb_aftl/avb_aftl_verify.h",
         "patchSetId": 3
@@ -275,6 +539,30 @@
       "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "72f674d5_7a12f47a",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 3
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T12:53:30Z",
+      "side": 1,
+      "message": "Yes, I agree. Done here and in .c.",
+      "parentUuid": "bd2f2fb6_919d9cea",
+      "range": {
+        "startLine": 96,
+        "startChar": 57,
+        "endLine": 96,
+        "endChar": 60
+      },
+      "revId": "9794178b8d04987dd9f0835bd73feed98d6d3456",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
