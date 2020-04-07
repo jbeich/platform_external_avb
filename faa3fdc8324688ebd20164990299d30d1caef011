@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f3352c3e_4a68c3d6",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4187,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-07T09:15:10Z",
+      "side": 0,
+      "message": "The \u0027a\u0027 was for appending, that is the next write would be at the end of the file automatically. Is that captured somewhere else now? Or is it not necessary?",
+      "range": {
+        "startLine": 4187,
+        "startChar": 52,
+        "endLine": 4187,
+        "endChar": 55
+      },
+      "revId": "faa3fdc8324688ebd20164990299d30d1caef011",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
