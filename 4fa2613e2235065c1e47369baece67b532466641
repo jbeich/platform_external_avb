@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "1076fe4c_d335f4d8",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-08T16:30:51Z",
+      "side": 1,
+      "message": "I would prefer if you didn\u0027t change the output/error messages. Existing scripts etc. may depend on them and changes would break them. (Elsewhere too, also other CLs.)",
+      "range": {
+        "startLine": 687,
+        "startChar": 24,
+        "endLine": 687,
+        "endChar": 43
+      },
+      "revId": "4fa2613e2235065c1e47369baece67b532466641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
