@@ -46,6 +46,30 @@
       "revId": "faa3fdc8324688ebd20164990299d30d1caef011",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2623ef73_23a602d4",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4187,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-08T17:54:22Z",
+      "side": 0,
+      "message": "I checked the code for add_hashtree_footer and it makes use of seek() to jump to the right position in the file. The append property of mode \u0027a\u0027 is not utilized.",
+      "parentUuid": "056cf4db_bfa58f7a",
+      "range": {
+        "startLine": 4187,
+        "startChar": 52,
+        "endLine": 4187,
+        "endChar": 55
+      },
+      "revId": "faa3fdc8324688ebd20164990299d30d1caef011",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
