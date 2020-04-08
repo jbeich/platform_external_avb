@@ -22,6 +22,30 @@
       "revId": "4fa2613e2235065c1e47369baece67b532466641",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cced362b_7d85b9fb",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-08T19:14:12Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "1076fe4c_d335f4d8",
+      "range": {
+        "startLine": 687,
+        "startChar": 24,
+        "endLine": 687,
+        "endChar": 43
+      },
+      "revId": "4fa2613e2235065c1e47369baece67b532466641",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
