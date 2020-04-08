@@ -22,6 +22,30 @@
       "revId": "faa3fdc8324688ebd20164990299d30d1caef011",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "056cf4db_bfa58f7a",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 4187,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-08T16:31:12Z",
+      "side": 0,
+      "message": "I think we always seek to the end before writing. In our case it\u0027s probably the right thing to do as it\u0027s more explicit than relying on the file being opened that way...",
+      "parentUuid": "f3352c3e_4a68c3d6",
+      "range": {
+        "startLine": 4187,
+        "startChar": 52,
+        "endLine": 4187,
+        "endChar": 55
+      },
+      "revId": "faa3fdc8324688ebd20164990299d30d1caef011",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
