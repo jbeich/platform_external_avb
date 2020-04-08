@@ -1,0 +1,7 @@
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Jan Monsch <jpm@google.com>
+Submitted-at: Wed, 08 Apr 2020 19:14:17 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/external/avb/+/1282174
+Project: platform/external/avb
+Branch: refs/heads/master
