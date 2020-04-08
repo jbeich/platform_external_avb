@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "ab841844_daa7ef34",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-08T05:54:53Z",
+      "side": 1,
+      "message": "s/VBMeta/VBMetas/ to make clear that it is a plural.",
+      "range": {
+        "startLine": 65,
+        "startChar": 25,
+        "endLine": 65,
+        "endChar": 31
+      },
+      "revId": "33a17adff4e7e876b10d274599d2f2b53b8c0b10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13d9eb24_e8c4981a",
+        "filename": "libavb_aftl/avb_aftl_verify.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-08T05:54:53Z",
+      "side": 1,
+      "message": "s/AFTLImage/AFTLImages/ to make clear it is a plural",
+      "range": {
+        "startLine": 68,
+        "startChar": 32,
+        "endLine": 68,
+        "endChar": 41
+      },
+      "revId": "33a17adff4e7e876b10d274599d2f2b53b8c0b10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
