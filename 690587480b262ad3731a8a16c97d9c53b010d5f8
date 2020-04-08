@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "b16c799d_d666118b",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 482,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-08T08:07:58Z",
+      "side": 1,
+      "message": "s/bytes()/bytes, it is the type itself.",
+      "range": {
+        "startLine": 482,
+        "startChar": 21,
+        "endLine": 482,
+        "endChar": 26
+      },
+      "revId": "690587480b262ad3731a8a16c97d9c53b010d5f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "14d21564_35ef6751",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 528,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-08T08:07:58Z",
+      "side": 1,
+      "message": "as bytes or bytearray",
+      "range": {
+        "startLine": 527,
+        "startChar": 62,
+        "endLine": 528,
+        "endChar": 20
+      },
+      "revId": "690587480b262ad3731a8a16c97d9c53b010d5f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "05635e86_1c07db27",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 605,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-08T08:07:58Z",
+      "side": 1,
+      "message": "Optional: you could use these two NamedTemporaryFile as context managers (\"with\" statement).",
+      "range": {
+        "startLine": 605,
+        "startChar": 15,
+        "endLine": 605,
+        "endChar": 20
+      },
+      "revId": "690587480b262ad3731a8a16c97d9c53b010d5f8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
