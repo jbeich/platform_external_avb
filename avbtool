@@ -656,10 +656,10 @@ class ImageChunk(object):
       output_offset: Offset in de-sparsified file.
       output_size: Number of bytes in output.
       input_offset: Offset in sparse file if TYPE_RAW otherwise None.
-      fill_data: Blob with data to fill if TYPE_FILL otherwise None.
+      fill_data: Blob as bytes with data to fill if TYPE_FILL otherwise None.
 
     Raises:
-      ValueError: If data is not well-formed.
+      ValueError: If given chunk parameters are invalid.
     """
     self.chunk_type = chunk_type
     self.chunk_offset = chunk_offset
@@ -684,7 +684,7 @@ class ImageChunk(object):
       if self.input_offset:
         raise ValueError('DONT_CARE chunk cannot have input_offset set.')
     else:
-      raise ValueError('Invalid chunk type')
+      raise ValueError('Invalid chunk type.')
 
 
 class ImageHandler(object):
@@ -759,14 +759,14 @@ class ImageHandler(object):
       return
     if not (major_version == 1 and minor_version == 0):
       raise ValueError('Encountered sparse image format version {}.{} but '
-                       'only 1.0 is supported'.format(major_version,
-                                                      minor_version))
+                       'only 1.0 is supported.'
+                       .format(major_version,minor_version))
     if file_hdr_sz != struct.calcsize(self.HEADER_FORMAT):
-      raise ValueError('Unexpected file_hdr_sz value {}.'.
-                       format(file_hdr_sz))
+      raise ValueError('Unexpected file_hdr_sz value {}.'
+                       .format(file_hdr_sz))
     if chunk_hdr_sz != struct.calcsize(ImageChunk.FORMAT):
-      raise ValueError('Unexpected chunk_hdr_sz value {}.'.
-                       format(chunk_hdr_sz))
+      raise ValueError('Unexpected chunk_hdr_sz value {}.'
+                       .format(chunk_hdr_sz))
 
     self.block_size = block_size
 
@@ -789,8 +789,8 @@ class ImageHandler(object):
       if chunk_type == ImageChunk.TYPE_RAW:
         if data_sz != (chunk_sz * self.block_size):
           raise ValueError('Raw chunk input size ({}) does not match output '
-                           'size ({})'.
-                           format(data_sz, chunk_sz*self.block_size))
+                           'size ({}).'
+                           .format(data_sz, chunk_sz*self.block_size))
         self._chunks.append(ImageChunk(ImageChunk.TYPE_RAW,
                                        chunk_offset,
                                        output_offset,
@@ -802,7 +802,7 @@ class ImageHandler(object):
       elif chunk_type == ImageChunk.TYPE_FILL:
         if data_sz != 4:
           raise ValueError('Fill chunk should have 4 bytes of fill, but this '
-                           'has {}'.format(data_sz))
+                           'has {}.'.format(data_sz))
         fill_data = self._image.read(4)
         self._chunks.append(ImageChunk(ImageChunk.TYPE_FILL,
                                        chunk_offset,
@@ -812,8 +812,8 @@ class ImageHandler(object):
                                        fill_data))
       elif chunk_type == ImageChunk.TYPE_DONT_CARE:
         if data_sz != 0:
-          raise ValueError('Don\'t care chunk input size is non-zero ({})'.
-                           format(data_sz))
+          raise ValueError('Don\'t care chunk input size is non-zero ({}).'
+                           .format(data_sz))
         self._chunks.append(ImageChunk(ImageChunk.TYPE_DONT_CARE,
                                        chunk_offset,
                                        output_offset,
@@ -823,10 +823,10 @@ class ImageHandler(object):
       elif chunk_type == ImageChunk.TYPE_CRC32:
         if data_sz != 4:
           raise ValueError('CRC32 chunk should have 4 bytes of CRC, but '
-                           'this has {}'.format(data_sz))
+                           'this has {}.'.format(data_sz))
         self._image.read(4)
       else:
-        raise ValueError('Unknown chunk type {}'.format(chunk_type))
+        raise ValueError('Unknown chunk type {}.'.format(chunk_type))
 
       offset += chunk_sz
       output_offset += chunk_sz*self.block_size
@@ -837,7 +837,7 @@ class ImageHandler(object):
     # Now that we've traversed all chunks, sanity check.
     if self._num_total_blocks != offset:
       raise ValueError('The header said we should have {} output blocks, '
-                       'but we saw {}'.format(self._num_total_blocks, offset))
+                       'but we saw {}.'.format(self._num_total_blocks, offset))
     junk_len = len(self._image.read())
     if junk_len > 0:
       raise ValueError('There were {} bytes of extra data at the end of the '
@@ -901,7 +901,7 @@ class ImageHandler(object):
     The length of the given data must be a multiple of the block size.
 
     Arguments:
-      data: Data to append.
+      data: Data to append as bytes.
     """
     assert len(data) % self.block_size == 0
 
@@ -967,7 +967,7 @@ class ImageHandler(object):
       RuntimeError: If the given offset is negative.
     """
     if offset < 0:
-      raise RuntimeError('Seeking with negative offset: %d' % offset)
+      raise RuntimeError('Seeking with negative offset: {}.'.format(offset))
     self._file_pos = offset
 
   def read(self, size):
@@ -983,8 +983,7 @@ class ImageHandler(object):
       size: Number of bytes to read.
 
     Returns:
-      The data.
-
+      The data as bytes.
     """
     if not self.is_sparse:
       self._image.seek(self._file_pos)
@@ -1011,7 +1010,7 @@ class ImageHandler(object):
         data.extend(all_data[offset_mod:(offset_mod + chunk_pos_to_go)])
       else:
         assert chunk.chunk_type == ImageChunk.TYPE_DONT_CARE
-        data.extend('\0' * chunk_pos_to_go)
+        data.extend(b'\0' * chunk_pos_to_go)
 
       to_go -= chunk_pos_to_go
       self._file_pos += chunk_pos_to_go
@@ -1020,7 +1019,7 @@ class ImageHandler(object):
       if chunk_idx >= len(self._chunks):
         break
 
-    return data
+    return bytes(data)
 
   def tell(self):
     """Returns the file cursor position for reading from unsparsified file.
