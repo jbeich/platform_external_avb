@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "640c3922_dde5de38",
+        "filename": "avbtool",
+        "patchSetId": 1
+      },
+      "lineNbr": 419,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-09T07:53:59Z",
+      "side": 0,
+      "message": "You can now drop the pylint annotation, here and below. Thanks.",
+      "range": {
+        "startLine": 419,
+        "startChar": 16,
+        "endLine": 419,
+        "endChar": 22
+      },
+      "revId": "8347da9906429e7d08e5c24127aae5c5c995beb6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
