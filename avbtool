@@ -656,10 +656,10 @@ class ImageChunk(object):
       output_offset: Offset in de-sparsified file.
       output_size: Number of bytes in output.
       input_offset: Offset in sparse file if TYPE_RAW otherwise None.
-      fill_data: Blob with data to fill if TYPE_FILL otherwise None.
+      fill_data: Blob as bytes with data to fill if TYPE_FILL otherwise None.
 
     Raises:
-      ValueError: If data is not well-formed.
+      ValueError: If given chunk parameters are invalid.
     """
     self.chunk_type = chunk_type
     self.chunk_offset = chunk_offset
@@ -901,7 +901,7 @@ class ImageHandler(object):
     The length of the given data must be a multiple of the block size.
 
     Arguments:
-      data: Data to append.
+      data: Data to append as bytes.
     """
     assert len(data) % self.block_size == 0
 
@@ -967,7 +967,7 @@ class ImageHandler(object):
       RuntimeError: If the given offset is negative.
     """
     if offset < 0:
-      raise RuntimeError('Seeking with negative offset: %d' % offset)
+      raise RuntimeError('Seeking with negative offset: {}'.format(offset))
     self._file_pos = offset
 
   def read(self, size):
@@ -983,8 +983,7 @@ class ImageHandler(object):
       size: Number of bytes to read.
 
     Returns:
-      The data.
-
+      The data as bytes.
     """
     if not self.is_sparse:
       self._image.seek(self._file_pos)
@@ -1011,7 +1010,7 @@ class ImageHandler(object):
         data.extend(all_data[offset_mod:(offset_mod + chunk_pos_to_go)])
       else:
         assert chunk.chunk_type == ImageChunk.TYPE_DONT_CARE
-        data.extend('\0' * chunk_pos_to_go)
+        data.extend(b'\0' * chunk_pos_to_go)
 
       to_go -= chunk_pos_to_go
       self._file_pos += chunk_pos_to_go
@@ -1020,7 +1019,7 @@ class ImageHandler(object):
       if chunk_idx >= len(self._chunks):
         break
 
-    return data
+    return bytes(data)
 
   def tell(self):
     """Returns the file cursor position for reading from unsparsified file.
@@ -1350,7 +1349,7 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       self.salt = data[(self.SIZE + o):(self.SIZE + o + salt_len)]
       o += salt_len
       self.root_digest = data[(self.SIZE + o):(self.SIZE + o + root_digest_len)]
-      if root_digest_len != len(hashlib.new(name=self.hash_algorithm).digest()):
+      if root_digest_len != len(hashlib.new(self.hash_algorithm).digest()):
         if root_digest_len != 0:
           raise LookupError('root_digest_len doesn\'t match hash algorithm')
 
@@ -1441,7 +1440,7 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       image_filename = os.path.join(image_dir, self.partition_name + image_ext)
       image = ImageHandler(image_filename)
     # Generate the hashtree and checks that it matches what's in the file.
-    digest_size = len(hashlib.new(name=self.hash_algorithm).digest())
+    digest_size = len(hashlib.new(self.hash_algorithm).digest())
     digest_padding = round_to_pow2(digest_size) - digest_size
     (hash_level_offsets, tree_size) = calc_hash_level_offsets(
         self.image_size, self.data_block_size, digest_size + digest_padding)
@@ -1537,7 +1536,7 @@ class AvbHashDescriptor(AvbDescriptor):
       self.salt = data[(self.SIZE + o):(self.SIZE + o + salt_len)]
       o += salt_len
       self.digest = data[(self.SIZE + o):(self.SIZE + o + digest_len)]
-      if digest_len != len(hashlib.new(name=self.hash_algorithm).digest()):
+      if digest_len != len(hashlib.new(self.hash_algorithm).digest()):
         if digest_len != 0:
           raise LookupError('digest_len doesn\'t match hash algorithm')
 
@@ -2513,7 +2512,7 @@ class Avb(object):
     image.seek(offset)
     vbmeta_blob = image.read(size)
 
-    hasher = hashlib.new(name=hash_algorithm)
+    hasher = hashlib.new(hash_algorithm)
     hasher.update(vbmeta_blob)
 
     for desc in descriptors:
@@ -3264,7 +3263,7 @@ class Avb(object):
                        'size of {}.'.format(image.image_size, max_image_size,
                                             partition_size))
 
-      digest_size = len(hashlib.new(name=hash_algorithm).digest())
+      digest_size = len(hashlib.new(hash_algorithm).digest())
       if salt:
         salt = binascii.unhexlify(salt)
       elif salt is None and not use_persistent_digest:
@@ -3276,7 +3275,7 @@ class Avb(object):
       else:
         salt = ''
 
-      hasher = hashlib.new(name=hash_algorithm, string=salt)
+      hasher = hashlib.new(hash_algorithm, salt)
       # TODO(zeuthen): might want to read this in chunks to avoid
       # memory pressure, then again, this is only supposed to be used
       # on kernel/initramfs partitions. Possible optimization.
@@ -3426,7 +3425,7 @@ class Avb(object):
       print('1.{}'.format(required_libavb_version_minor))
       return
 
-    digest_size = len(hashlib.new(name=hash_algorithm).digest())
+    digest_size = len(hashlib.new(hash_algorithm).digest())
     digest_padding = round_to_pow2(digest_size) - digest_size
 
     # If |partition_size| is given (e.g. not 0), calculate the maximum image
@@ -3918,7 +3917,7 @@ def generate_hash_tree(image, image_size, block_size, hash_alg_name, salt,
     level_output_list = []
     remaining = hash_src_size
     while remaining > 0:
-      hasher = hashlib.new(name=hash_alg_name, string=salt)
+      hasher = hashlib.new(hash_alg_name, salt)
       # Only read from the file for the first level - for subsequent
       # levels, access the array we're building.
       if level_num == 0:
@@ -3950,7 +3949,7 @@ def generate_hash_tree(image, image_size, block_size, hash_alg_name, salt,
     hash_src_size = len(level_output)
     level_num += 1
 
-  hasher = hashlib.new(name=hash_alg_name, string=salt)
+  hasher = hashlib.new(hash_alg_name, salt)
   hasher.update(level_output)
   return hasher.digest(), hash_ret
 
@@ -4098,7 +4097,7 @@ class AvbTool(object):
                             default=0)
     sub_parser.add_argument('--output',
                             help='Output file name.',
-                            type=argparse.FileType('wt'),
+                            type=argparse.FileType('wb'),
                             default=sys.stdout)
     sub_parser.set_defaults(func=self.generate_test_image)
 
@@ -4136,7 +4135,7 @@ class AvbTool(object):
                                        help='Add hashes and footer to image.')
     sub_parser.add_argument('--image',
                             help='Image to add hashes to',
-                            type=argparse.FileType('rab+'))
+                            type=argparse.FileType('rb+'))
     sub_parser.add_argument('--partition_size',
                             help='Partition size',
                             type=parse_number)
@@ -4169,7 +4168,7 @@ class AvbTool(object):
                                        help='Append vbmeta image to image.')
     sub_parser.add_argument('--image',
                             help='Image to append vbmeta blob to',
-                            type=argparse.FileType('rab+'))
+                            type=argparse.FileType('rb+'))
     sub_parser.add_argument('--partition_size',
                             help='Partition size',
                             type=parse_number,
@@ -4184,7 +4183,7 @@ class AvbTool(object):
         help='Add hashtree and footer to image.')
     sub_parser.add_argument('--image',
                             help='Image to add hashtree to',
-                            type=argparse.FileType('rab+'))
+                            type=argparse.FileType('rb+'))
     sub_parser.add_argument('--partition_size',
                             help='Partition size',
                             default=0,
@@ -4248,7 +4247,7 @@ class AvbTool(object):
                                        help='Erase footer from an image.')
     sub_parser.add_argument('--image',
                             help='Image with a footer',
-                            type=argparse.FileType('rwb+'),
+                            type=argparse.FileType('rb+'),
                             required=True)
     sub_parser.add_argument('--keep_hashtree',
                             help='Keep the hashtree and FEC in the image',
@@ -4259,7 +4258,7 @@ class AvbTool(object):
                                        help='Zero out hashtree and FEC data.')
     sub_parser.add_argument('--image',
                             help='Image with a footer',
-                            type=argparse.FileType('rwb+'),
+                            type=argparse.FileType('rb+'),
                             required=True)
     sub_parser.set_defaults(func=self.zero_hashtree)
 
@@ -4286,7 +4285,7 @@ class AvbTool(object):
                                        help='Resize image with a footer.')
     sub_parser.add_argument('--image',
                             help='Image with a footer',
-                            type=argparse.FileType('rwb+'),
+                            type=argparse.FileType('rb+'),
                             required=True)
     sub_parser.add_argument('--partition_size',
                             help='New partition size',
