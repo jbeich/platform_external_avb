@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "dfaa6a0a_582cff0c",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2511,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-14T19:38:12Z",
+      "side": 1,
+      "message": "s/$/./\ns/print_as_json/as_json/",
+      "range": {
+        "startLine": 2511,
+        "startChar": 0,
+        "endLine": 2511,
+        "endChar": 55
+      },
+      "revId": "07cc70c4d5a16b67ea912f4300acde0c4bf07097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80c569b4_d2ff1842",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2519,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-14T19:38:12Z",
+      "side": 1,
+      "message": "Suggest you build a structure out of lista and dictionaries and then use json.dumps() to format the output:\n\nimport json\na \u003d {\u0027partitions\u0027: [ {\u0027name\u0027: \u0027boot\u0027, \u0027digest\u0027: \u002712345\u0027}, {\u0027name\u0027: \u0027system\u0027, \u0027digest\u0027: \u00275567\u0027}]}\nx \u003d json.dumps(a, indent\u003d4)\nprint x",
+      "range": {
+        "startLine": 2519,
+        "startChar": 0,
+        "endLine": 2519,
+        "endChar": 21
+      },
+      "revId": "07cc70c4d5a16b67ea912f4300acde0c4bf07097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3a53f3e8_8ee61675",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2530,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-14T19:38:12Z",
+      "side": 1,
+      "message": "Pls add DOCSTRING.",
+      "range": {
+        "startLine": 2530,
+        "startChar": 0,
+        "endLine": 2530,
+        "endChar": 63
+      },
+      "revId": "07cc70c4d5a16b67ea912f4300acde0c4bf07097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
