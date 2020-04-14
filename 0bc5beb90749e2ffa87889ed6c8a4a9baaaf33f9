@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "88852d35_c48ef761",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-14T15:14:40Z",
+      "side": 1,
+      "message": "Jan: what is the easiest way to update this example hash when making changes to the version numbers in vbmeta? It would be good to have comments/directions in the test on how to do this... thanks!",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 5
+      },
+      "revId": "0bc5beb90749e2ffa87889ed6c8a4a9baaaf33f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8d2b9fad_425643be",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 2798,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-14T15:14:40Z",
+      "side": 1,
+      "message": "Should probably add \"\u003e 0\" at the end to helper readers like me who are not Python experts. Also do this at other similar places below.\n\n(I had to scratch my head a bit and even write a small python test program to convince myself \"if foo:\" evaluates to False even if foo is 0 and not None.)",
+      "range": {
+        "startLine": 2798,
+        "startChar": 4,
+        "endLine": 2798,
+        "endChar": 30
+      },
+      "revId": "0bc5beb90749e2ffa87889ed6c8a4a9baaaf33f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
