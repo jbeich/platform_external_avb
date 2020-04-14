@@ -127,12 +127,12 @@ python_library_host {
     ],
     version: {
         py2: {
-            enabled: true,
+            enabled: false,
             // This is needs to be false due to b/146057182#comment5.
             embedded_launcher: false,
         },
         py3: {
-            enabled: false,
+            enabled: true,
         },
     },
 }
@@ -150,11 +150,11 @@ python_binary_host {
     required: ["fec"],
     version: {
         py2: {
-            enabled: true,
+            enabled: false,
             embedded_launcher: false,
         },
         py3: {
-            enabled: false,
+            enabled: true,
         },
     },
 }
@@ -176,12 +176,12 @@ python_test_host {
     test_suites: ["general-tests"],
     version: {
         py2: {
-            enabled: true,
+            enabled: false,
             // This is needs to be false due to b/146057182#comment5.
             embedded_launcher: false,
         },
         py3: {
-            enabled: false,
+            enabled: true,
         },
     },
 }
