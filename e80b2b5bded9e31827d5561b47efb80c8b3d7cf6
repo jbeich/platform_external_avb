@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "645d30ed_b4e354e2",
+        "filename": "avbtool",
+        "patchSetId": 3
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-14T12:59:30Z",
+      "side": 1,
+      "message": "\"The |AvbRSAPublicKeyHeader| followed by two large numbers as bytes.\" Or something similar.",
+      "range": {
+        "startLine": 406,
+        "startChar": 37,
+        "endLine": 406,
+        "endChar": 42
+      },
+      "revId": "e80b2b5bded9e31827d5561b47efb80c8b3d7cf6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
