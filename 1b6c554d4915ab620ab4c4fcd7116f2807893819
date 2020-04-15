@@ -187,6 +187,30 @@
       "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a2b9e8a4_8cf31114",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-15T11:06:42Z",
+      "side": 1,
+      "message": "Ah I see. In python3, you can simply use hex() on metadata (https://docs.python.org/3.9/library/stdtypes.html#bytes.hex):\nPython 3.7.6 (default, Dec 19 2019, 09:25:23) \n[GCC 9.2.1 20191109] on linux\nType \"help\", \"copyright\", \"credits\" or \"license\" for more information.\n\u003e\u003e\u003e metadata \u003d b\u0027123456\u0027\n\u003e\u003e\u003e metadata.hex()\n\u0027313233343536\u0027",
+      "parentUuid": "4e13b901_892a6e72",
+      "range": {
+        "startLine": 797,
+        "startChar": 57,
+        "endLine": 797,
+        "endChar": 63
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
