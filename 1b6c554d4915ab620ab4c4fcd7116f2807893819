@@ -211,6 +211,30 @@
       "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fcdc2ce1_1b66552b",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-15T11:16:08Z",
+      "side": 1,
+      "message": "Yeah, you can in python3 but not python2. Will address this in a future CL when we rework the descriptors anyway.",
+      "parentUuid": "a2b9e8a4_8cf31114",
+      "range": {
+        "startLine": 797,
+        "startChar": 57,
+        "endLine": 797,
+        "endChar": 63
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
