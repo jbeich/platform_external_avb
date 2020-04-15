@@ -235,6 +235,30 @@
       "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "e41f6084_0864565f",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-15T11:18:32Z",
+      "side": 1,
+      "message": "This change is already breaking the python2 compatibility and you are changing this line already. You may as well change it here.",
+      "parentUuid": "fcdc2ce1_1b66552b",
+      "range": {
+        "startLine": 797,
+        "startChar": 57,
+        "endLine": 797,
+        "endChar": 63
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
