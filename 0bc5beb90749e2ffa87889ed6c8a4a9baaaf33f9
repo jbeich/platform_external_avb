@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "5cc11237_a37464b6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-15T16:22:12Z",
+      "side": 1,
+      "message": "You have the permission to disable this test case. I filed b/154115873 to follow up on the problem and fix the test.",
+      "parentUuid": "88852d35_c48ef761",
+      "range": {
+        "startLine": 22,
+        "startChar": 0,
+        "endLine": 24,
+        "endChar": 5
+      },
+      "revId": "0bc5beb90749e2ffa87889ed6c8a4a9baaaf33f9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
         "uuid": "8d2b9fad_425643be",
         "filename": "avbtool",
         "patchSetId": 3
