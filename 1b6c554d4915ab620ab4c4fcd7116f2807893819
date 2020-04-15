@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "ade02766_d4ef9884",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-15T10:02:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "001ab6b1_cc193204",
+      "range": {
+        "startLine": 132,
+        "startChar": 12,
+        "endLine": 132,
+        "endChar": 29
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "1ea1f9e1_4b4a0912",
         "filename": "aftltool",
         "patchSetId": 4
@@ -45,6 +69,30 @@
       "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9c464884_d69e1bdc",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-15T10:02:06Z",
+      "side": 1,
+      "message": "Good catch! Both things we need are supported since Python 3.0: https://docs.python.org/3/library/__future__.html\n\nThough pylint is complaining if I don\u0027t have the future import for division when using the // operator. However, decided to solved it by disabling the pylint warning on the respective line.",
+      "parentUuid": "1ea1f9e1_4b4a0912",
+      "range": {
+        "startLine": 28,
+        "startChar": 5,
+        "endLine": 28,
+        "endChar": 15
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "edbdd2bd_c1ebe262",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-15T10:02:06Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a3ce2515_a1741192",
+      "range": {
+        "startLine": 51,
+        "startChar": 10,
+        "endLine": 51,
+        "endChar": 17
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "80d5aa8c_c7820976",
         "filename": "aftltool",
         "patchSetId": 4
@@ -82,6 +154,30 @@
       "writtenOn": "2020-04-15T08:28:43Z",
       "side": 1,
       "message": "I don\u0027t think that metadata should be decoded to ASCII (https://github.com/google/trillian/blob/master/types/logroot.go#L42), these\nare just bytes with no guarantee on its content.",
+      "range": {
+        "startLine": 797,
+        "startChar": 57,
+        "endLine": 797,
+        "endChar": 63
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "4e13b901_892a6e72",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-15T10:02:06Z",
+      "side": 1,
+      "message": "The purpose of this line is to translate the binary metadata blob into a hexstring that can be printed. Just doing binascii.hexlify results in a bytes() sequence and the decode it as ascii make it into a string.\n\n$ python\nPython 2.7.17 (default, Oct 19 2019, 23:36:22) \n[GCC 9.2.1 20190909] on linux2\nType \"help\", \"copyright\", \"credits\" or \"license\" for more information.\n\u003e\u003e\u003e metadata \u003d b\u002712346\u0027\n\u003e\u003e\u003e import binascii\n\u003e\u003e\u003e binascii.hexlify(metadata).decode(\u0027ascii\u0027)\nu\u00273132333436\u0027\n\u003e\u003e\u003e quit()\n\n$ python3\nPython 3.7.6 (default, Dec 19 2019, 09:25:23) \n[GCC 9.2.1 20191109] on linux\nType \"help\", \"copyright\", \"credits\" or \"license\" for more information.\n\u003e\u003e\u003e metadata \u003d b\u002712346\u0027\n\u003e\u003e\u003e import binascii\n\u003e\u003e\u003e binascii.hexlify(metadata).decode(\u0027ascii\u0027)\n\u00273132333436\u0027\n\u003e\u003e\u003e binascii.hexlify(metadata)                \nb\u00273132333436\u0027",
+      "parentUuid": "80d5aa8c_c7820976",
       "range": {
         "startLine": 797,
         "startChar": 57,
