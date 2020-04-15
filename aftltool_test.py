@@ -1091,7 +1091,7 @@ class AftlMockCommunication(aftltool.AftlCommunication):
     """Initializes the object.
 
     Arguments:
-      transparency_log: String containing the URL of a transparency log server.
+      transparency_log: An aftltool.TransparencyLog instance.
       canned_response: AddFirmwareInfoResponse to return or the Exception to
         raise.
     """
@@ -1148,6 +1148,8 @@ class AftlTestCase(AftltoolTestCase):
     self.set_up_environment()
 
     self.output_filename = 'vbmeta_icp.img'
+    self.transparency_log = aftltool.TransparencyLog(self.aftl_host,
+                                                     self.aftl_pubkey)
 
     self.make_icp_default_params = {
         'vbmeta_image_path': self.vbmeta_image,
@@ -1155,8 +1157,7 @@ class AftlTestCase(AftltoolTestCase):
         'signing_helper': None,
         'signing_helper_with_files': None,
         'version_incremental': '1',
-        'transparency_log_servers': [self.aftl_host],
-        'transparency_log_pub_keys': [self.aftl_pubkey],
+        'transparency_log_servers': [self.transparency_log],
         'manufacturer_key': self.manufacturer_key,
         'padding_size': 0,
         'timeout': None
@@ -1176,8 +1177,7 @@ class AftlTestCase(AftltoolTestCase):
     self.load_test_aftl_default_params = {
         'vbmeta_image_path': self.vbmeta_image,
         'output': io.StringIO(),
-        'transparency_log_server': self.aftl_host,
-        'transparency_log_pub_key': self.aftl_pubkey,
+        'transparency_log_server': self.transparency_log,
         'manufacturer_key': self.manufacturer_key,
         'process_count': 1,
         'submission_count': 1,
@@ -1231,11 +1231,6 @@ class AftlTestCase(AftltoolTestCase):
 
 
 class AftlTest(AftlTestCase):
-
-  def setUp(self):
-    """Sets up the test bed for the unit tests."""
-    super(AftlTest, self).setUp()
-    self.mock_aftl_host = 'test.foo.bar:9000'
 
   def set_up_environment(self):
     """Sets up the environment for unit testing without networking."""
@@ -1303,13 +1298,13 @@ class AftlTest(AftlTestCase):
     aftl = AftlMock(self.test_afi_resp)
 
     icp = aftl.request_inclusion_proof(
-        self.mock_aftl_host, b'a' * 1024, '1',
+        self.transparency_log, b'a' * 1024, '1',
         self.get_testdata_path('testkey_rsa4096.pem'), None, None, None)
     self.assertEqual(icp.leaf_index,
                      self.test_afi_resp.fw_info_proof.proof.leaf_index)
     self.assertEqual(icp.proof_hash_count,
                      len(self.test_afi_resp.fw_info_proof.proof.hashes))
-    self.assertEqual(icp.log_url, self.mock_aftl_host)
+    self.assertEqual(icp.log_url, self.aftl_host)
     self.assertEqual(
         icp.log_root_descriptor.root_hash, binascii.unhexlify(
             '53b182b55dc1377197c938637f50093131daea4d0696b1eae5b8a014bfde884a'))
@@ -1333,7 +1328,7 @@ class AftlTest(AftlTestCase):
 
     with self.assertRaises(aftltool.AftlError):
       aftl.request_inclusion_proof(
-          self.mock_aftl_host, b'a' * 1024, 'version_inc',
+          self.transparency_log, b'a' * 1024, 'version_inc',
           self.get_testdata_path('testkey_rsa4096.pem'), None, None, None)
 
   def test_request_inclusion_proof_manuf_key_not_4096(self):
@@ -1342,7 +1337,7 @@ class AftlTest(AftlTestCase):
     aftl = AftlMock(self.test_afi_resp)
     with self.assertRaises(aftltool.AftlError) as e:
       aftl.request_inclusion_proof(
-          self.mock_aftl_host, b'a' * 1024, 'version_inc',
+          self.transparency_log, b'a' * 1024, 'version_inc',
           self.get_testdata_path('testkey_rsa2048.pem'), None, None, None)
     self.assertIn('not of size 4096: 2048', str(e.exception))
 
@@ -1374,9 +1369,7 @@ class AftlTest(AftlTestCase):
 
     # Reconfigures default parameters with two transparency logs.
     self.make_icp_default_params['transparency_log_servers'] = [
-        self.aftl_host, self.aftl_host]
-    self.make_icp_default_params['transparency_log_pub_keys'] = [
-        self.aftl_pubkey, self.aftl_pubkey]
+        self.transparency_log, self.transparency_log]
 
     # Make a VBmeta image with ICP.
     with open(self.output_filename, 'wb') as output_file:
@@ -1531,6 +1524,20 @@ class AftlTest(AftlTestCase):
     self.assertRegex(output, 'Succeeded:.+?0\n')
     self.assertRegex(output, 'Failed:.+?1\n')
 
+
+class TransparencyLogTestCase(unittest.TestCase):
+
+  def test_from_argument(self):
+    log = aftltool.TransparencyLog.from_argument("example.com:8080,mykey.pub")
+    self.assertEqual(log.target, "example.com:8080")
+    self.assertEqual(log.pub_key, "mykey.pub")
+
+  def test_from_argument_with_api_key(self):
+    log = aftltool.TransparencyLog.from_argument(
+        "example.com:8080,mykey.pub,Aipl29gj3x9")
+    self.assertEqual(log.target, "example.com:8080")
+    self.assertEqual(log.pub_key, "mykey.pub")
+    self.assertEqual(log.api_key, "Aipl29gj3x9")
 
 if __name__ == '__main__':
   unittest.main(verbosity=2)
