@@ -791,8 +791,7 @@ class TrillianLogRootDescriptor(object):
     o.write(fmt.format(i, 'Revision:', self.revision))
     o.write(fmt.format(i, 'Metadata size:', self.metadata_size))
     if self.metadata_size > 0:
-      o.write(fmt.format(i, 'Metadata:',
-                         binascii.hexlify(self.metadata).decode('ascii')))
+      o.write(fmt.format(i, 'Metadata:', self.metadata.hex()))
 
 
 class FirmwareInfoLeaf(object):
