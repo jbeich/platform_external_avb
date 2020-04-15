@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "001ab6b1_cc193204",
+        "filename": "Android.bp",
+        "patchSetId": 4
+      },
+      "lineNbr": 132,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-15T08:28:43Z",
+      "side": 1,
+      "message": "Could you also drop that embedded_launcher attribute, if enabled is false? (here and below). Thanks",
+      "range": {
+        "startLine": 132,
+        "startChar": 12,
+        "endLine": 132,
+        "endChar": 29
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1ea1f9e1_4b4a0912",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 28,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-15T08:28:43Z",
+      "side": 1,
+      "message": "You should be able to remove both __future__ import here (as I think they were used to ease the transition).",
+      "range": {
+        "startLine": 28,
+        "startChar": 5,
+        "endLine": 28,
+        "endChar": 15
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a3ce2515_a1741192",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-15T08:28:43Z",
+      "side": 1,
+      "message": "Should that pylint directive be re-enabled after that block?",
+      "range": {
+        "startLine": 51,
+        "startChar": 10,
+        "endLine": 51,
+        "endChar": 17
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "80d5aa8c_c7820976",
+        "filename": "aftltool",
+        "patchSetId": 4
+      },
+      "lineNbr": 797,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-15T08:28:43Z",
+      "side": 1,
+      "message": "I don\u0027t think that metadata should be decoded to ASCII (https://github.com/google/trillian/blob/master/types/logroot.go#L42), these\nare just bytes with no guarantee on its content.",
+      "range": {
+        "startLine": 797,
+        "startChar": 57,
+        "endLine": 797,
+        "endChar": 63
+      },
+      "revId": "1b6c554d4915ab620ab4c4fcd7116f2807893819",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
