@@ -2970,17 +2970,15 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
       vbmeta_image_path_.value().c_str(),
       out_path.value().c_str());
   ASSERT_TRUE(base::ReadFileToString(out_path, &out));
-  // The trailing whitespace comes from python. If they fix that bug we need
-  // to update this test...
   EXPECT_EQ(
       "{\n"
       "  \"partitions\": [\n"
       "    {\n"
-      "      \"name\": \"system\", \n"
+      "      \"name\": \"system\",\n"
       "      \"digest\": \"d52d93c988d336a79abe1c05240ae9a79a9b7d61\"\n"
-      "    }, \n"
+      "    },\n"
       "    {\n"
-      "      \"name\": \"boot\", \n"
+      "      \"name\": \"boot\",\n"
       "      \"digest\": "
       "\"184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d\"\n"
       "    }\n"
