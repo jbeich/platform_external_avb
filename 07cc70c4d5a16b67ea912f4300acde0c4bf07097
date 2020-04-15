@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e43b3a5d_4f259706",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2511,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-15T14:33:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dfaa6a0a_582cff0c",
+      "range": {
+        "startLine": 2511,
+        "startChar": 0,
+        "endLine": 2511,
+        "endChar": 55
+      },
+      "revId": "07cc70c4d5a16b67ea912f4300acde0c4bf07097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "80c569b4_d2ff1842",
         "filename": "avbtool",
         "patchSetId": 2
@@ -48,6 +72,30 @@
     },
     {
       "key": {
+        "uuid": "d7f63c9a_a8e9d2f9",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2519,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-15T14:33:01Z",
+      "side": 1,
+      "message": "Done. I didn\u0027t initially do this as I wasn\u0027t sure whether json was in the standard Python distribution. Turns out it is. Much cleaner this way.",
+      "parentUuid": "80c569b4_d2ff1842",
+      "range": {
+        "startLine": 2519,
+        "startChar": 0,
+        "endLine": 2519,
+        "endChar": 21
+      },
+      "revId": "07cc70c4d5a16b67ea912f4300acde0c4bf07097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3a53f3e8_8ee61675",
         "filename": "avbtool",
         "patchSetId": 2
@@ -68,6 +116,30 @@
       "revId": "07cc70c4d5a16b67ea912f4300acde0c4bf07097",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "e8ca6293_280c326b",
+        "filename": "avbtool",
+        "patchSetId": 2
+      },
+      "lineNbr": 2530,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-15T14:33:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3a53f3e8_8ee61675",
+      "range": {
+        "startLine": 2530,
+        "startChar": 0,
+        "endLine": 2530,
+        "endChar": 63
+      },
+      "revId": "07cc70c4d5a16b67ea912f4300acde0c4bf07097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
