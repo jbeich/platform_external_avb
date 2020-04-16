@@ -1,0 +1,10 @@
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Code-Review+2: Thiébaud Weksteen <tweek@google.com>
+Autosubmit+1: Jan Monsch <jpm@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-by: Treehugger Robot <treehugger-gerrit@google.com>
+Submitted-at: Thu, 16 Apr 2020 09:32:20 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/external/avb/+/1285389
+Project: platform/external/avb
+Branch: refs/heads/master
