@@ -1,0 +1,372 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "31b73b8b_76245183",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "Please also run ./aftl_integration_test against one of our test logs servers.",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 32
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "bb05afee_4fdd94b2",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1637,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "s/TransparencyLog/TransparencyLogConfig/ or s/TransparencyLog/TransparencyLogParams/ ?",
+      "range": {
+        "startLine": 1637,
+        "startChar": 6,
+        "endLine": 1637,
+        "endChar": 21
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "95c56d52_fe4c4b44",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1641,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "s/server/transparency log/ or\ns/server/transparency log server/ ?",
+      "range": {
+        "startLine": 1641,
+        "startChar": 41,
+        "endLine": 1641,
+        "endChar": 47
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "25d85d21_a7d350da",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1641,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "s/target/host/ ?",
+      "range": {
+        "startLine": 1641,
+        "startChar": 4,
+        "endLine": 1641,
+        "endChar": 10
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "dd9789bb_44533538",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1641,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "s/.../The hostname and port of the server in hostname:port format./",
+      "range": {
+        "startLine": 1641,
+        "startChar": 12,
+        "endLine": 1641,
+        "endChar": 48
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b49647c6_860010ae",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1652,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "Is this really optional? We have not defined a default port AFAIK.",
+      "range": {
+        "startLine": 1652,
+        "startChar": 38,
+        "endLine": 1652,
+        "endChar": 45
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a6021774_33a3dd8b",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1655,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "s/built/instance/",
+      "range": {
+        "startLine": 1655,
+        "startChar": 26,
+        "endLine": 1655,
+        "endChar": 31
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "9ba09eec_2bf9ca8f",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1659,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "After the split you should still check if you have valid pieces since a target or pub_key could just be an empty string.\n\n\u003e\u003e\u003e log \u003d aftltool.TransparencyLog.from_argument(\"example.com:8080,\")\n\u003e\u003e\u003e log.__dict__\n{\u0027target\u0027: \u0027example.com:8080\u0027, \u0027pub_key\u0027: \u0027\u0027, \u0027api_key\u0027: None}\n\n\u003e\u003e\u003e log \u003d aftltool.TransparencyLog.from_argument(\",\")\n\u003e\u003e\u003e log.__dict__\n{\u0027target\u0027: \u0027\u0027, \u0027pub_key\u0027: \u0027\u0027, \u0027api_key\u0027: None}",
+      "range": {
+        "startLine": 1659,
+        "startChar": 0,
+        "endLine": 1659,
+        "endChar": 57
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "62d66209_6932cb62",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1661,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "except ValueError as e:\n      raise AftlError(\"Incorrect format for transparency log parameter: {}.\".format(e))",
+      "range": {
+        "startLine": 1660,
+        "startChar": 0,
+        "endLine": 1661,
+        "endChar": 62
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6d6b894b_638d3ed5",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1661,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "Please add AftlError to the Raises: section in the method DOCSTRING.",
+      "range": {
+        "startLine": 1661,
+        "startChar": 12,
+        "endLine": 1661,
+        "endChar": 21
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "142a6218_cc3325ac",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1666,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "Pls add DOCSTRING even if it is just a one-liner.",
+      "range": {
+        "startLine": 1666,
+        "startChar": 0,
+        "endLine": 1666,
+        "endChar": 52
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "468cec14_3460fddd",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1744,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "Please add to the help description that the pub key must be in PEM format.",
+      "range": {
+        "startLine": 1744,
+        "startChar": 39,
+        "endLine": 1744,
+        "endChar": 53
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "135826af_e7f79910",
+        "filename": "aftltool",
+        "patchSetId": 1
+      },
+      "lineNbr": 1814,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 1814,
+        "startChar": 39,
+        "endLine": 1814,
+        "endChar": 53
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f789f1eb_06c0e799",
+        "filename": "aftltool_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1235,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "This here method here and the same in ./aftl_integration_test.py need to be able to handle the API key. The latter should be able to get the API key from an environment variable if available.",
+      "range": {
+        "startLine": 1235,
+        "startChar": 0,
+        "endLine": 1235,
+        "endChar": 31
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b84c0786_5c84311b",
+        "filename": "aftltool_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1453,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "This also needs to be updated as the ./aftl_integration_test.py breaks at the moment.\n\n\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\nERROR: test_make_icp_with_invalid_grpc_service (__main__.AftlIntegrationTest)\nTests make_icp_from_vbmeta command with a host not supporting GRPC.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/jpm/android/aosp-1286672/external/avb/aftltool_test.py\", line 1457, in test_make_icp_with_invalid_grpc_service\n    **self.make_icp_default_params)\n  File \"/usr/local/google/home/jpm/android/aosp-1286672/external/avb/aftltool.py\", line 1425, in make_icp_from_vbmeta\n    timeout)\n  File \"/usr/local/google/home/jpm/android/aosp-1286672/external/avb/aftltool.py\", line 1366, in request_inclusion_proof\n    response \u003d aftl_comms.add_firmware_info(request)\n  File \"/usr/local/google/home/jpm/android/aosp-1286672/external/avb/aftltool.py\", line 1137, in add_firmware_info\n    self.transparency_log.target))\nAttributeError: \u0027str\u0027 object has no attribute \u0027target\u0027",
+      "range": {
+        "startLine": 1453,
+        "startChar": 0,
+        "endLine": 1453,
+        "endChar": 59
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "271d931a_533c5ec9",
+        "filename": "aftltool_test.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 1507,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-16T10:32:16Z",
+      "side": 1,
+      "message": "Needs to be updated as well since ./aftl_integration_test.py is now broken:\n\n\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\u003d\nERROR: test_load_test_invalid_grpc_service (__main__.AftlIntegrationTest)\nTests load_test_aftl command with a host that does not support GRPC.\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"/usr/local/google/home/jpm/android/aosp-1286672/external/avb/aftltool_test.py\", line 1508, in test_load_test_invalid_grpc_service\n    result \u003d aftl.load_test_aftl(**self.load_test_aftl_default_params)\n  File \"/usr/local/google/home/jpm/android/aosp-1286672/external/avb/aftltool.py\", line 1607, in load_test_aftl\n    median \u003d (executions[execution_count // 2 - 1]\nIndexError: list index out of range",
+      "range": {
+        "startLine": 1507,
+        "startChar": 37,
+        "endLine": 1507,
+        "endChar": 56
+      },
+      "revId": "71aed97e755bb2a2c417a98768f1c08e56d61b4a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
