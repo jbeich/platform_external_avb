@@ -162,7 +162,7 @@ class AftltoolTestCase(unittest.TestCase):
     self.test_entry_2.log_root_signature = b'd' * 512
     self.test_entry_2.proofs = self.test_proof_hashes_2
 
-    self.test_entry_2_bytes = bytearray(
+    self.test_entry_2_bytes = (
         b'\x00\x00\x00\x1a'                   # Transparency log url size.
         b'\x00\x00\x00\x00\x00\x00\x00\x02'   # Leaf index.
         b'\x00\x00\x00\x3f'                   # Log root descriptor size.
@@ -184,7 +184,7 @@ class AftltoolTestCase(unittest.TestCase):
     self.test_expected_aftl_image_bytes = (
         b'AFTL'                               # Magic.
         b'\x00\x00\x00\x01'                   # Major version.
-        b'\x00\x00\x00\x01'                   # Minor version.
+        b'\x00\x00\x00\x02'                   # Minor version.
         b'\x00\x00\x05\xb9'                   # Image size.
         b'\x00\x02'                           # Number of ICP entries.
         + self.test_entry_1_bytes
@@ -552,7 +552,7 @@ class AftlImageHeaderTest(AftltoolTestCase):
     self.test_header_invalid.icp_count = -34
 
     self.test_header_bytes = (b'\x41\x46\x54\x4c\x00\x00\x00\x01'
-                              b'\x00\x00\x00\x01\x00\x00\x00\x12'
+                              b'\x00\x00\x00\x02\x00\x00\x00\x12'
                               b'\x00\x01')
 
   def test__init__(self):
@@ -573,7 +573,7 @@ class AftlImageHeaderTest(AftltoolTestCase):
     header = aftltool.AftlImageHeader(self.test_header_bytes)
     self.assertEqual(header.magic, b'AFTL')
     self.assertEqual(header.required_icp_version_major, 1)
-    self.assertEqual(header.required_icp_version_minor, 1)
+    self.assertEqual(header.required_icp_version_minor, 2)
     self.assertEqual(header.aftl_image_size, aftltool.AftlImageHeader.SIZE)
     self.assertTrue(header.icp_count, 1)
     self.assertTrue(header.is_valid())
@@ -1476,7 +1476,6 @@ class AftlTest(AftlTestCase):
   def test_load_test_single_process_single_submission(self):
     """Tests load_test_aftl command with 1 process which does 1 submission."""
     aftl = self.get_aftl_implementation(self.test_afi_resp)
-
     result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
     self.assertTrue(result)
 

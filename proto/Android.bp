@@ -1,0 +1,31 @@
+python_library_host {
+    name: "aftl_proto",
+    srcs: [
+	"api.proto",
+        "aftl.proto",
+//	"aftl_google/rpc/status.proto",
+//	"aftl_google/api/annotations.proto",
+//	"aftl_google/api/http.proto",
+	"crypto/sigpb/sigpb.proto",
+	"crypto/keyspb/keyspb.proto",
+        "trillian.proto",
+    ],
+    libs: [
+        "libprotobuf-python",
+    ],
+    proto: {
+        include_dirs: [
+	    "external/protobuf/src",
+	],
+        canonical_path_from_root: false,
+    },
+    version: {
+        py2: {
+            enabled: false,
+        },
+        py3: {
+            enabled: true,
+        },
+    },
+}
+
