@@ -22,7 +22,7 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-"""Unit tests for aftltool."""
+"""Unit tests for  aftltool."""
 
 import base64
 import binascii
