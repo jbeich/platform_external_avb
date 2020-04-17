@@ -113,17 +113,35 @@ python_test_host {
     },
 }
 
-genrule {
-  name: "aftltool_py",
-  srcs: ["aftltool",],
-  out: ["aftltool.py"],
-  cmd: "cp $(in) $(out)",
-}
+//genrule {
+//  name: "aftltool_py",
+//  srcs: ["aftltool",],
+//  out: ["aftltool.py"],
+//  cmd: "cp $(in) $(out)",
+//  }
+
+//python_library_host {
+//    name: "aftl_proto",
+//    srcs: [
+//        "proto/**/*.proto",
+//    ],
+//    proto: {
+//        canonical_path_from_root: false,
+//    },
+//    version: {
+//        py2: {
+//            enabled: false,
+//        },
+//        py3: {
+//            enabled: true,
+//        },
+//    },
+//}
 
 python_library_host {
-    name: "aftl_proto",
+    name: "aftltool_lib",
     srcs: [
-        "proto/**/*.py",
+        "aftltool.py"
     ],
     version: {
         py2: {
@@ -138,8 +156,8 @@ python_library_host {
 python_binary_host {
     name: "aftltool",
     srcs: [
-        ":aftltool_py",
-        ":avbtool_py",
+        "aftltool.py",
+	":avbtool_py",
     ],
     libs: [
         "aftl_proto",
@@ -160,12 +178,12 @@ python_test_host {
     name: "aftltool_test",
     main: "aftltool_test.py",
     srcs: [
-        ":aftltool_py",
         ":avbtool_py",
         "aftltool_test.py",
     ],
     libs: [
         "aftl_proto",
+        "aftltool_lib",
     ],
     data: [
         "test/data/**/*.*",
