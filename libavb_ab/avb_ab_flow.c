@@ -325,7 +325,7 @@ AvbABFlowResult avb_ab_flow(AvbABOps* ab_ops,
       uint64_t a_rollback_index = slot_data[0]->rollback_indexes[n];
       uint64_t b_rollback_index = slot_data[1]->rollback_indexes[n];
       rollback_index_value =
-          (a_rollback_index < b_rollback_index ? a_rollback_index
+          (a_rollback_index > b_rollback_index ? a_rollback_index
                                                : b_rollback_index);
     } else if (slot_data[0] != NULL) {
       rollback_index_value = slot_data[0]->rollback_indexes[n];
