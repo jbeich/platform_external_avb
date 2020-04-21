@@ -22,6 +22,30 @@
       "revId": "183f831ac6c2e180a7af9f1d1484362d4e55c8b2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "89d29a7a_9697cdce",
+        "filename": "aftltool_test.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-21T06:11:31Z",
+      "side": 1,
+      "message": "For some reason the presubmit tests are still using the old version of aftltool_test.py although the fix for the breakage was checked in. I now removed the space here and see if presubmit now passes.",
+      "parentUuid": "5a54aa46_5135ad5a",
+      "range": {
+        "startLine": 25,
+        "startChar": 17,
+        "endLine": 25,
+        "endChar": 19
+      },
+      "revId": "183f831ac6c2e180a7af9f1d1484362d4e55c8b2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
