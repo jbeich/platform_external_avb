@@ -926,7 +926,7 @@ TEST_F(AvbABFlowTest, StoredRollbackIndexBumped) {
         14,
         0,
         1,                           // B: pri, tries, successful
-        MakeRollbackIndexes(4, 7));  // stored_rollback_indexes
+        MakeRollbackIndexes(5, 9));  // stored_rollback_indexes
   ASSERT_NE(nullptr, data);
   EXPECT_EQ("_a", std::string(data->ab_suffix));
   avb_slot_verify_data_free(data);
