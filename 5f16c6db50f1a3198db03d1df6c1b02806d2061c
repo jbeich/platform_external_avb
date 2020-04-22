@@ -22,6 +22,30 @@
       "revId": "5f16c6db50f1a3198db03d1df6c1b02806d2061c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2b7568cc_b0d4d492",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-04-22T22:49:34Z",
+      "side": 1,
+      "message": "Yeah, there\u0027s test coverage to check that the A/B stack does the right thing here... so I\u0027d be surprised if the tests pass. Please do let us know.\n\nFWIW, I was planning to look at this bug... but haven\u0027t had time yet.",
+      "parentUuid": "52b9d455_2e792506",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 80
+      },
+      "revId": "5f16c6db50f1a3198db03d1df6c1b02806d2061c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
