@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "52b9d455_2e792506",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 14,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-04-22T22:44:07Z",
+      "side": 1,
+      "message": "Additionally, please run inside of external/avb: atest :all",
+      "range": {
+        "startLine": 14,
+        "startChar": 0,
+        "endLine": 14,
+        "endChar": 80
+      },
+      "revId": "5f16c6db50f1a3198db03d1df6c1b02806d2061c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
