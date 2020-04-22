@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # Copyright 2016, The Android Open Source Project
 #
@@ -24,8 +24,6 @@
 #
 """Command-line tool for working with Android Verified Boot images."""
 
-from __future__ import print_function
-
 import argparse
 import binascii
 import bisect
@@ -38,6 +36,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import traceback
 
 # Keep in sync with libavb/avb_version.h.
 AVB_VERSION_MAJOR = 1
@@ -3725,6 +3724,7 @@ class Avb(object):
         image.append_raw(footer_blob_with_padding)
 
     except Exception as e:
+      traceback.print_exc(file=sys.stderr)
       # Truncate back to original size, then re-raise.
       image.truncate(original_image_size)
       raise AvbError('Adding hashtree_footer failed: {}.'.format(e))
