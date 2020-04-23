@@ -1,0 +1,8 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Code-Review+2: Jan Monsch <jpm@google.com>
+Submitted-by: Jan Monsch <jpm@google.com>
+Submitted-at: Thu, 23 Apr 2020 18:49:39 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/external/avb/+/1294114
+Project: platform/external/avb
+Branch: refs/heads/master
