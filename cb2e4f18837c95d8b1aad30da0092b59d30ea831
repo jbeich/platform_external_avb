@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "3aeb0d85_393433a1",
+        "filename": "aftltool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1495,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-24T14:59:53Z",
+      "side": 1,
+      "message": "Commenting here but valid for the whole change: Explicitly calling out $TMP seems misleading, \ngettempdir might be using that variable (https://docs.python.org/3.8/library/tempfile.html#tempfile.gettempdir), but not necessarily. I would suggest not being over specific and simply use \"temporary directory\".\n\nalso, \"should be preserved\".",
+      "range": {
+        "startLine": 1495,
+        "startChar": 61,
+        "endLine": 1495,
+        "endChar": 64
+      },
+      "revId": "cb2e4f18837c95d8b1aad30da0092b59d30ea831",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "74feddf7_2b77b0f6",
+        "filename": "aftltool_test.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 732,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-04-24T14:59:53Z",
+      "side": 1,
+      "message": "Could you please remove the commented line? Thanks.",
+      "range": {
+        "startLine": 732,
+        "startChar": 5,
+        "endLine": 732,
+        "endChar": 13
+      },
+      "revId": "cb2e4f18837c95d8b1aad30da0092b59d30ea831",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
