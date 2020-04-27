@@ -24,11 +24,14 @@
 #
 """Unit tests for aftltool."""
 
+import argparse
 import base64
 import binascii
 import io
 import os
+import struct
 import sys
+import tempfile
 import unittest
 
 import aftltool
@@ -162,7 +165,7 @@ class AftltoolTestCase(unittest.TestCase):
     self.test_entry_2.log_root_signature = b'd' * 512
     self.test_entry_2.proofs = self.test_proof_hashes_2
 
-    self.test_entry_2_bytes = bytearray(
+    self.test_entry_2_bytes = (
         b'\x00\x00\x00\x1a'                   # Transparency log url size.
         b'\x00\x00\x00\x00\x00\x00\x00\x02'   # Leaf index.
         b'\x00\x00\x00\x3f'                   # Log root descriptor size.
@@ -182,11 +185,11 @@ class AftltoolTestCase(unittest.TestCase):
     self.test_aftl_desc.add_icp_entry(self.test_entry_2)
 
     self.test_expected_aftl_image_bytes = (
-        b'AFTL'                               # Magic.
-        b'\x00\x00\x00\x01'                   # Major version.
-        b'\x00\x00\x00\x01'                   # Minor version.
-        b'\x00\x00\x05\xb9'                   # Image size.
-        b'\x00\x02'                           # Number of ICP entries.
+        b'AFTL'                                         # Magic.
+        + struct.pack('!L', avbtool.AVB_VERSION_MAJOR)  # Major version.
+        + struct.pack('!L', avbtool.AVB_VERSION_MINOR)  # Minor version.
+        + b'\x00\x00\x05\xb9'                           # Image size.
+        b'\x00\x02'                                     # Number of ICP entries.
         + self.test_entry_1_bytes
         + self.test_entry_2_bytes)
 
@@ -508,7 +511,7 @@ class AftlImageTest(AftltoolTestCase):
 
     # Force invalid ICP header.
     old_magic = d.image_header.magic
-    d.image_header.magic = 'YOLO'
+    d.image_header.magic = b'YOLO'
     self.assertFalse(d.is_valid())
     d.image_header.magic = old_magic
     self.assertTrue(d.is_valid())
@@ -551,9 +554,12 @@ class AftlImageHeaderTest(AftltoolTestCase):
     self.test_header_invalid = aftltool.AftlImageHeader()
     self.test_header_invalid.icp_count = -34
 
-    self.test_header_bytes = (b'\x41\x46\x54\x4c\x00\x00\x00\x01'
-                              b'\x00\x00\x00\x01\x00\x00\x00\x12'
-                              b'\x00\x01')
+    self.test_header_bytes = (
+        b'AFTL'                                         # Magic.
+        + struct.pack('!L', avbtool.AVB_VERSION_MAJOR)  # Major version.
+        + struct.pack('!L', avbtool.AVB_VERSION_MINOR)  # Minor version.
+        + b'\x00\x00\x00\x12'                           # Image size.
+        b'\x00\x01')                                    # Number of ICP entries.
 
   def test__init__(self):
     """Tests constructor."""
@@ -572,8 +578,10 @@ class AftlImageHeaderTest(AftltoolTestCase):
     # Calls constructor with data.
     header = aftltool.AftlImageHeader(self.test_header_bytes)
     self.assertEqual(header.magic, b'AFTL')
-    self.assertEqual(header.required_icp_version_major, 1)
-    self.assertEqual(header.required_icp_version_minor, 1)
+    self.assertEqual(header.required_icp_version_major,
+                     avbtool.AVB_VERSION_MAJOR)
+    self.assertEqual(header.required_icp_version_minor,
+                     avbtool.AVB_VERSION_MINOR)
     self.assertEqual(header.aftl_image_size, aftltool.AftlImageHeader.SIZE)
     self.assertTrue(header.icp_count, 1)
     self.assertTrue(header.is_valid())
@@ -721,25 +729,23 @@ class AftlIcpEntryTest(AftltoolTestCase):
 
   def test_verify_icp(self):
     """Tests verify_icp method."""
-    key_file = 'transparency_log_pub_key.pem'
-    with open(key_file, 'w') as f:
-      f.write(self.test_aftl_pub_key)
+    with tempfile.NamedTemporaryFile('wt+') as key_file:
+      key_file.write(self.test_aftl_pub_key)
+      key_file.flush()
 
-    # Valid ICP.
-    entry = aftltool.AftlIcpEntry()
-    entry.translate_response(self.test_tl_url_1, self.test_afi_resp)
-    self.assertTrue(entry.verify_icp(key_file))
+      # Valid ICP.
+      entry = aftltool.AftlIcpEntry()
+      entry.translate_response(self.test_tl_url_1, self.test_afi_resp)
+      self.assertTrue(entry.verify_icp(key_file.name))
 
-    # Invalid ICP where fw_info_leaf is not matching up with proofs.
-    # pylint: disable=protected-access
-    entry = aftltool.AftlIcpEntry()
-    entry.translate_response(self.test_tl_url_1, self.test_afi_resp)
-    fw_info_leaf_bytes = entry.fw_info_leaf._fw_info_leaf_bytes.replace(
-        b'ViNzEQS', b'1234567')
-    entry.fw_info_leaf._fw_info_leaf_bytes = fw_info_leaf_bytes
-    self.assertFalse(entry.verify_icp(key_file))
-
-    os.remove(key_file)
+      # Invalid ICP where fw_info_leaf is not matching up with proofs.
+      # pylint: disable=protected-access
+      entry = aftltool.AftlIcpEntry()
+      entry.translate_response(self.test_tl_url_1, self.test_afi_resp)
+      fw_info_leaf_bytes = entry.fw_info_leaf._fw_info_leaf_bytes.replace(
+          b'ViNzEQS', b'1234567')
+      entry.fw_info_leaf._fw_info_leaf_bytes = fw_info_leaf_bytes
+      self.assertFalse(entry.verify_icp(key_file.name))
 
   def test_verify_vbmeta_image(self):
     """Tests the verify_vbmeta_image method."""
@@ -842,11 +848,11 @@ class TrillianLogRootDescriptorTest(AftltoolTestCase):
     self.assertEqual(d.version, 1)
     self.assertEqual(d.tree_size, 0)
     self.assertEqual(d.root_hash_size, 0)
-    self.assertEqual(d.root_hash, bytearray())
+    self.assertEqual(d.root_hash, b'')
     self.assertEqual(d.timestamp, 0)
     self.assertEqual(d.revision, 0)
     self.assertEqual(d.metadata_size, 0)
-    self.assertEqual(d.metadata, bytearray())
+    self.assertEqual(d.metadata, b'')
 
     # Calls constructor with log_root w/o metadata
     d = aftltool.TrillianLogRootDescriptor(self.test_log_root_bytes_wo_metadata)
@@ -860,7 +866,7 @@ class TrillianLogRootDescriptorTest(AftltoolTestCase):
     self.assertEqual(d.timestamp, 1576762888554271289)
     self.assertEqual(d.revision, 740)
     self.assertEqual(d.metadata_size, 0)
-    self.assertEqual(d.metadata, bytearray())
+    self.assertEqual(d.metadata, b'')
 
     # Calls constructor with log_root with metadata
     d = aftltool.TrillianLogRootDescriptor(
@@ -933,9 +939,9 @@ class TrillianLogRootDescriptorTest(AftltoolTestCase):
     # Invalid/valid root_hash_size / root_hash combination.
     d = aftltool.TrillianLogRootDescriptor()
     d.root_hash_size = 4
-    d.root_hash = '123'
+    d.root_hash = b'123'
     self.assertFalse(d.is_valid())
-    d.root_hash = '1234'
+    d.root_hash = b'1234'
     self.assertTrue(d.is_valid())
 
     # Invalid timestamp.
@@ -958,9 +964,9 @@ class TrillianLogRootDescriptorTest(AftltoolTestCase):
     # Invalid/valid metadata_size / metadata combination.
     d = aftltool.TrillianLogRootDescriptor()
     d.metadata_size = 4
-    d.metadata = '123'
+    d.metadata = b'123'
     self.assertFalse(d.is_valid())
-    d.metadata = '1234'
+    d.metadata = b'1234'
     self.assertTrue(d.is_valid())
 
   def test_print_desc(self):
@@ -1149,7 +1155,6 @@ class AftlTestCase(AftltoolTestCase):
     self.manufacturer_key = None
     self.set_up_environment()
 
-    self.output_filename = 'vbmeta_icp.img'
     self.transparency_log_config = aftltool.TransparencyLogConfig(
         self.aftl_host, self.aftl_pubkey, self.aftl_apikey)
 
@@ -1166,12 +1171,12 @@ class AftlTestCase(AftltoolTestCase):
     }
 
     self.info_icp_default_params = {
-        'vbmeta_image_path': self.output_filename,
+        'vbmeta_image_path': None,
         'output': io.StringIO()
     }
 
     self.verify_icp_default_params = {
-        'vbmeta_image_path': self.output_filename,
+        'vbmeta_image_path': None,
         'transparency_log_pub_keys': [self.aftl_pubkey],
         'output': io.StringIO()
     }
@@ -1187,24 +1192,6 @@ class AftlTestCase(AftltoolTestCase):
         'preserve_icp_images': False,
         'timeout': None
     }
-
-    self.load_test_stats_file_p1_s1 = 'load_test_p1_s1.csv'
-    self.load_test_stats_file_p2_p2 = 'load_test_p2_s2.csv'
-
-    self.files_to_cleanup = [
-        self.output_filename,
-        self.load_test_stats_file_p1_s1,
-        self.load_test_stats_file_p2_p2
-    ]
-
-  def tearDown(self):
-    """Tears down the test bed for the unit tests."""
-    for filename in self.files_to_cleanup:
-      try:
-        os.remove(filename)
-      except OSError:
-        pass
-    super(AftlTestCase, self).tearDown()
 
   def set_up_environment(self):
     """Sets up member variables for the particular test environment.
@@ -1348,22 +1335,25 @@ class AftlTest(AftlTestCase):
     aftl = self.get_aftl_implementation(self.test_afi_resp)
 
     # Make a VBmeta image with ICP.
-    with open(self.output_filename, 'wb') as output_file:
+    with tempfile.NamedTemporaryFile('wb+') as output_file:
       self.make_icp_default_params['output'] = output_file
       result = aftl.make_icp_from_vbmeta(**self.make_icp_default_params)
-    self.assertTrue(result)
+      output_file.flush()
+      self.assertTrue(result)
 
-    # Checks that there is 1 ICP.
-    aftl_image = aftl.get_aftl_image(self.output_filename)
-    self.assertEqual(aftl_image.image_header.icp_count, 1)
+      # Checks that there is 1 ICP.
+      aftl_image = aftl.get_aftl_image(output_file.name)
+      self.assertEqual(aftl_image.image_header.icp_count, 1)
 
-    # Verifies the generated image.
-    result = aftl.verify_image_icp(**self.verify_icp_default_params)
-    self.assertTrue(result)
+      # Verifies the generated image.
+      self.verify_icp_default_params['vbmeta_image_path'] = output_file.name
+      result = aftl.verify_image_icp(**self.verify_icp_default_params)
+      self.assertTrue(result)
 
-    # Prints the image details.
-    result = aftl.info_image_icp(**self.info_icp_default_params)
-    self.assertTrue(result)
+      # Prints the image details.
+      self.info_icp_default_params['vbmeta_image_path'] = output_file.name
+      result = aftl.info_image_icp(**self.info_icp_default_params)
+      self.assertTrue(result)
 
   def test_make_and_verify_icp_with_2_logs(self):
     """Tests make_icp_from_vbmeta, verify_image_icp & info_image_icp."""
@@ -1374,23 +1364,26 @@ class AftlTest(AftlTestCase):
         self.transparency_log_config, self.transparency_log_config]
 
     # Make a VBmeta image with ICP.
-    with open(self.output_filename, 'wb') as output_file:
+    with tempfile.NamedTemporaryFile('wb+') as output_file:
       self.make_icp_default_params['output'] = output_file
       result = aftl.make_icp_from_vbmeta(
           **self.make_icp_default_params)
+      output_file.flush()
       self.assertTrue(result)
 
-    # Checks that there are 2 ICPs.
-    aftl_image = aftl.get_aftl_image(self.output_filename)
-    self.assertEqual(aftl_image.image_header.icp_count, 2)
+      # Checks that there are 2 ICPs.
+      aftl_image = aftl.get_aftl_image(output_file.name)
+      self.assertEqual(aftl_image.image_header.icp_count, 2)
 
-    # Verifies the generated image.
-    result = aftl.verify_image_icp(**self.verify_icp_default_params)
-    self.assertTrue(result)
+      # Verifies the generated image.
+      self.verify_icp_default_params['vbmeta_image_path'] = output_file.name
+      result = aftl.verify_image_icp(**self.verify_icp_default_params)
+      self.assertTrue(result)
 
-    # Prints the image details.
-    result = aftl.info_image_icp(**self.info_icp_default_params)
-    self.assertTrue(result)
+      # Prints the image details.
+      self.info_icp_default_params['vbmeta_image_path'] = output_file.name
+      result = aftl.info_image_icp(**self.info_icp_default_params)
+      self.assertTrue(result)
 
   def test_info_image_icp(self):
     """Tests info_image_icp with vbmeta image with 2 ICP."""
@@ -1453,7 +1446,7 @@ class AftlTest(AftlTestCase):
     aftl = self.get_aftl_implementation(aftltool.AftlError('Comms error'))
     self.make_icp_default_params[
         'transparency_log_configs'][0].target = 'www.google.com:80'
-    with open(self.output_filename, 'wb') as output_file:
+    with tempfile.NamedTemporaryFile('wb+') as output_file:
       self.make_icp_default_params['output'] = output_file
       result = aftl.make_icp_from_vbmeta(
           **self.make_icp_default_params)
@@ -1467,7 +1460,7 @@ class AftlTest(AftlTestCase):
     # time of the transparency log per load test results in b/139407814#2 where
     # it was 3.43 seconds.
     self.make_icp_default_params['timeout'] = 1
-    with open(self.output_filename, 'wb') as output_file:
+    with tempfile.NamedTemporaryFile('wb+') as output_file:
       self.make_icp_default_params['output'] = output_file
       result = aftl.make_icp_from_vbmeta(
           **self.make_icp_default_params)
@@ -1477,14 +1470,18 @@ class AftlTest(AftlTestCase):
     """Tests load_test_aftl command with 1 process which does 1 submission."""
     aftl = self.get_aftl_implementation(self.test_afi_resp)
 
-    result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
-    self.assertTrue(result)
+    with tempfile.TemporaryDirectory() as tmp_dir:
+      self.load_test_aftl_default_params[
+          'stats_filename'] = os.path.join(tmp_dir, 'load_test.csv')
+      result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
+      self.assertTrue(result)
 
-    output = self.load_test_aftl_default_params['output'].getvalue()
-    self.assertRegex(output, 'Succeeded:.+?1\n')
-    self.assertRegex(output, 'Failed:.+?0\n')
+      output = self.load_test_aftl_default_params['output'].getvalue()
+      self.assertRegex(output, 'Succeeded:.+?1\n')
+      self.assertRegex(output, 'Failed:.+?0\n')
 
-    self.assertTrue(os.path.exists(self.load_test_stats_file_p1_s1))
+      self.assertTrue(os.path.exists(
+          self.load_test_aftl_default_params['stats_filename']))
 
   def test_load_test_multi_process_multi_submission(self):
     """Tests load_test_aftl command with 2 processes and 2 submissions each."""
@@ -1492,14 +1489,18 @@ class AftlTest(AftlTestCase):
 
     self.load_test_aftl_default_params['process_count'] = 2
     self.load_test_aftl_default_params['submission_count'] = 2
-    result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
-    self.assertTrue(result)
+    with tempfile.TemporaryDirectory() as tmp_dir:
+      self.load_test_aftl_default_params[
+          'stats_filename'] = os.path.join(tmp_dir, 'load_test.csv')
+      result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
+      self.assertTrue(result)
 
-    output = self.load_test_aftl_default_params['output'].getvalue()
-    self.assertRegex(output, 'Succeeded:.+?4\n')
-    self.assertRegex(output, 'Failed:.+?0\n')
+      output = self.load_test_aftl_default_params['output'].getvalue()
+      self.assertRegex(output, 'Succeeded:.+?4\n')
+      self.assertRegex(output, 'Failed:.+?0\n')
 
-    self.assertTrue(os.path.exists(self.load_test_stats_file_p2_p2))
+      self.assertTrue(os.path.exists(
+          self.load_test_aftl_default_params['stats_filename']))
 
   def test_load_test_invalid_grpc_service(self):
     """Tests load_test_aftl command with a host that does not support GRPC."""
@@ -1535,10 +1536,10 @@ class TransparencyLogConfigTestCase(unittest.TestCase):
     self.assertEqual(log.target, "example.com:8080")
     self.assertEqual(log.pub_key, "mykey.pub")
 
-    with self.assertRaises(aftltool.AftlError):
+    with self.assertRaises(argparse.ArgumentTypeError):
       aftltool.TransparencyLogConfig.from_argument("example.com:8080,")
 
-    with self.assertRaises(aftltool.AftlError):
+    with self.assertRaises(argparse.ArgumentTypeError):
       aftltool.TransparencyLogConfig.from_argument(",")
 
   def test_from_argument_with_api_key(self):
