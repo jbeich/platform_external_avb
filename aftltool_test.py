@@ -266,6 +266,20 @@ class AftltoolTestCase(unittest.TestCase):
     rel_path_parts.extend(relative_path.split(os.path.sep))
     return os.path.join(TEST_EXEC_PATH, *rel_path_parts)
 
+  def copy_file(self, src, dest):
+    """Copies given file into the destination file object.
+
+    Arguments:
+      src: The source file name.
+      dest: The destination file object.
+
+    Raises:
+      IOError: If the source or destination could not be operated on.
+    """
+    with open(src, 'rb') as f:
+      dest.write(f.read())
+      dest.flush()
+
 
 class AftltoolTest(AftltoolTestCase):
 
@@ -393,10 +407,13 @@ class AftlImageTest(AftltoolTestCase):
     """Tests the verify_vbmeta_image method."""
     # Valid vbmeta image without footer with 1 ICP.
     tool = aftltool.Aftl()
-    image_path = self.get_testdata_path(
-        'aftltool/aftl_output_vbmeta_with_1_icp.img')
-    vbmeta_image, _ = tool.get_vbmeta_image(image_path)
-    desc = tool.get_aftl_image(image_path)
+
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(
+          self.get_testdata_path('aftltool/aftl_output_vbmeta_with_1_icp.img'),
+          modifiable_image)
+      vbmeta_image, _ = tool.get_vbmeta_image(modifiable_image.name)
+      desc = tool.get_aftl_image(modifiable_image.name)
 
     # Valid image checked against correct log key.
     self.assertTrue(desc.verify_vbmeta_image(
@@ -424,10 +441,14 @@ class AftlImageTest(AftltoolTestCase):
     """Tests the verify_vbmeta_image method."""
     # Valid vbmeta image without footer with 2 ICPs from same log.
     tool = aftltool.Aftl()
-    image_path = self.get_testdata_path(
-        'aftltool/aftl_output_vbmeta_with_2_icp_same_log.img')
-    vbmeta_image, _ = tool.get_vbmeta_image(image_path)
-    desc = tool.get_aftl_image(image_path)
+
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(
+          self.get_testdata_path(
+              'aftltool/aftl_output_vbmeta_with_2_icp_same_log.img'),
+          modifiable_image)
+      vbmeta_image, _ = tool.get_vbmeta_image(modifiable_image.name)
+      desc = tool.get_aftl_image(modifiable_image.name)
 
     # Valid image checked against correct log key.
     self.assertTrue(desc.verify_vbmeta_image(
@@ -452,10 +473,13 @@ class AftlImageTest(AftltoolTestCase):
     """Tests the verify_vbmeta_image method."""
     # Valid vbmeta image without footer with 2 ICPs from different logs.
     tool = aftltool.Aftl()
-    image_path = self.get_testdata_path(
-        'aftltool/aftl_output_vbmeta_with_2_icp_different_logs.img')
-    vbmeta_image, _ = tool.get_vbmeta_image(image_path)
-    desc = tool.get_aftl_image(image_path)
+
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path(
+          'aftltool/aftl_output_vbmeta_with_2_icp_different_logs.img'),
+                     modifiable_image)
+      vbmeta_image, _ = tool.get_vbmeta_image(modifiable_image.name)
+      desc = tool.get_aftl_image(modifiable_image.name)
 
     # Valid image checked against log keys from both logs.
     self.assertTrue(desc.verify_vbmeta_image(
@@ -751,10 +775,13 @@ class AftlIcpEntryTest(AftltoolTestCase):
     """Tests the verify_vbmeta_image method."""
     # Valid vbmeta image without footer with 1 ICP.
     tool = aftltool.Aftl()
-    image_path = self.get_testdata_path(
-        'aftltool/aftl_output_vbmeta_with_1_icp.img')
-    vbmeta_image, _ = tool.get_vbmeta_image(image_path)
-    desc = tool.get_aftl_image(image_path)
+
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(
+          self.get_testdata_path('aftltool/aftl_output_vbmeta_with_1_icp.img'),
+          modifiable_image)
+      vbmeta_image, _ = tool.get_vbmeta_image(modifiable_image.name)
+      desc = tool.get_aftl_image(modifiable_image.name)
 
     # Checks that there is 1 ICP.
     self.assertEqual(desc.image_header.icp_count, 1)
@@ -779,10 +806,13 @@ class AftlIcpEntryTest(AftltoolTestCase):
     """Tests the verify_vbmeta_image method."""
     # Valid vbmeta image without footer with 1 ICP.
     tool = aftltool.Aftl()
-    image_path = self.get_testdata_path(
-        'aftltool/aftl_output_vbmeta_with_1_icp.img')
-    vbmeta_image, _ = tool.get_vbmeta_image(image_path)
-    desc = tool.get_aftl_image(image_path)
+
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(
+          self.get_testdata_path('aftltool/aftl_output_vbmeta_with_1_icp.img'),
+          modifiable_image)
+      vbmeta_image, _ = tool.get_vbmeta_image(modifiable_image.name)
+      desc = tool.get_aftl_image(modifiable_image.name)
 
     self.assertEqual(desc.image_header.icp_count, 1)
     entry = desc.icp_entries[0]
@@ -1159,7 +1189,7 @@ class AftlTestCase(AftltoolTestCase):
         self.aftl_host, self.aftl_pubkey, self.aftl_apikey)
 
     self.make_icp_default_params = {
-        'vbmeta_image_path': self.vbmeta_image,
+        'vbmeta_image_path': None,
         'output': None,
         'signing_helper': None,
         'signing_helper_with_files': None,
@@ -1182,7 +1212,7 @@ class AftlTestCase(AftltoolTestCase):
     }
 
     self.load_test_aftl_default_params = {
-        'vbmeta_image_path': self.vbmeta_image,
+        'vbmeta_image_path': None,
         'output': io.StringIO(),
         'transparency_log_config': self.transparency_log_config,
         'manufacturer_key': self.manufacturer_key,
@@ -1237,22 +1267,29 @@ class AftlTest(AftlTestCase):
     tool = aftltool.Aftl()
 
     # Valid vbmeta image without footer and AftlImage.
-    image, footer = tool.get_vbmeta_image(
-        self.get_testdata_path('aftltool/aftl_input_vbmeta.img'))
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path('aftltool/aftl_input_vbmeta.img'),
+                     modifiable_image)
+      image, footer = tool.get_vbmeta_image(modifiable_image.name)
     self.assertIsNotNone(image)
     self.assertEqual(len(image), 4352)
     self.assertIsNone(footer)
 
     # Valid vbmeta image without footer but with AftlImage.
-    image, footer = tool.get_vbmeta_image(
-        self.get_testdata_path('aftltool/aftl_output_vbmeta_with_1_icp.img'))
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(
+          self.get_testdata_path('aftltool/aftl_output_vbmeta_with_1_icp.img'),
+          modifiable_image)
+      image, footer = tool.get_vbmeta_image(modifiable_image.name)
     self.assertIsNotNone(image)
     self.assertEqual(len(image), 4352)
     self.assertIsNone(footer)
 
     # Invalid vbmeta image.
-    image, footer = tool.get_vbmeta_image(
-        self.get_testdata_path('large_blob.bin'))
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path('large_blob.bin'),
+                     modifiable_image)
+      image, footer = tool.get_vbmeta_image(modifiable_image.name)
     self.assertIsNone(image)
     self.assertIsNone(footer)
 
@@ -1267,17 +1304,25 @@ class AftlTest(AftlTestCase):
     tool = aftltool.Aftl()
 
     # Valid vbmeta image without footer with AftlImage.
-    desc = tool.get_aftl_image(
-        self.get_testdata_path('aftltool/aftl_output_vbmeta_with_1_icp.img'))
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(
+          self.get_testdata_path('aftltool/aftl_output_vbmeta_with_1_icp.img'),
+          modifiable_image)
+      desc = tool.get_aftl_image(modifiable_image.name)
     self.assertIsInstance(desc, aftltool.AftlImage)
 
     # Valid vbmeta image without footer and AftlImage.
-    desc = tool.get_aftl_image(
-        self.get_testdata_path('aftltool/aftl_input_vbmeta.img'))
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path('aftltool/aftl_input_vbmeta.img'),
+                     modifiable_image)
+      desc = tool.get_aftl_image(modifiable_image.name)
     self.assertIsNone(desc)
 
     # Invalid vbmeta image.
-    desc = tool.get_aftl_image(self.get_testdata_path('large_blob.bin'))
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path('large_blob.bin'),
+                     modifiable_image)
+      desc = tool.get_aftl_image(modifiable_image.name)
     self.assertIsNone(desc)
 
   # pylint: disable=no-member
@@ -1336,10 +1381,15 @@ class AftlTest(AftlTestCase):
 
     # Make a VBmeta image with ICP.
     with tempfile.NamedTemporaryFile('wb+') as output_file:
-      self.make_icp_default_params['output'] = output_file
-      result = aftl.make_icp_from_vbmeta(**self.make_icp_default_params)
-      output_file.flush()
-      self.assertTrue(result)
+      with tempfile.NamedTemporaryFile() as modifiable_image:
+        self.copy_file(self.vbmeta_image, modifiable_image)
+
+        self.make_icp_default_params[
+            'vbmeta_image_path'] = modifiable_image.name
+        self.make_icp_default_params['output'] = output_file
+        result = aftl.make_icp_from_vbmeta(**self.make_icp_default_params)
+        output_file.flush()
+        self.assertTrue(result)
 
       # Checks that there is 1 ICP.
       aftl_image = aftl.get_aftl_image(output_file.name)
@@ -1365,11 +1415,14 @@ class AftlTest(AftlTestCase):
 
     # Make a VBmeta image with ICP.
     with tempfile.NamedTemporaryFile('wb+') as output_file:
-      self.make_icp_default_params['output'] = output_file
-      result = aftl.make_icp_from_vbmeta(
-          **self.make_icp_default_params)
-      output_file.flush()
-      self.assertTrue(result)
+      with tempfile.NamedTemporaryFile() as modifiable_image:
+        self.copy_file(self.vbmeta_image, modifiable_image)
+        self.make_icp_default_params[
+            'vbmeta_image_path'] = modifiable_image.name
+        self.make_icp_default_params['output'] = output_file
+        result = aftl.make_icp_from_vbmeta(**self.make_icp_default_params)
+        output_file.flush()
+        self.assertTrue(result)
 
       # Checks that there are 2 ICPs.
       aftl_image = aftl.get_aftl_image(output_file.name)
@@ -1390,81 +1443,97 @@ class AftlTest(AftlTestCase):
     # Always work with a mock independent if run as unit or integration tests.
     aftl = AftlMock(self.test_afi_resp)
 
-    image_path = self.get_testdata_path(
-        'aftltool/aftl_output_vbmeta_with_2_icp_different_logs.img')
-    self.info_icp_default_params['vbmeta_image_path'] = image_path
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path(
+          'aftltool/aftl_output_vbmeta_with_2_icp_different_logs.img'),
+                     modifiable_image)
+      self.info_icp_default_params['vbmeta_image_path'] = modifiable_image.name
 
-    # Verifies the generated image.
-    result = aftl.info_image_icp(**self.info_icp_default_params)
-    self.assertTrue(result)
+      # Verifies the generated image.
+      result = aftl.info_image_icp(**self.info_icp_default_params)
+      self.assertTrue(result)
 
   def test_info_image_icp_fail(self):
     """Tests info_image_icp with invalid vbmeta image."""
     # Always work with a mock independent if run as unit or integration tests.
     aftl = AftlMock(self.test_afi_resp)
 
-    image_path = self.get_testdata_path('large_blob.bin')
-    self.info_icp_default_params['vbmeta_image_path'] = image_path
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path('large_blob.bin'), modifiable_image)
+      self.info_icp_default_params['vbmeta_image_path'] = modifiable_image.name
 
-    # Verifies the generated image.
-    result = aftl.info_image_icp(**self.info_icp_default_params)
-    self.assertFalse(result)
+      # Verifies the generated image.
+      result = aftl.info_image_icp(**self.info_icp_default_params)
+      self.assertFalse(result)
 
   def test_verify_image_icp(self):
     """Tets verify_image_icp with 2 ICP with all matching log keys."""
     # Always work with a mock independent if run as unit or integration tests.
     aftl = AftlMock(self.test_afi_resp)
 
-    image_path = self.get_testdata_path(
-        'aftltool/aftl_output_vbmeta_with_2_icp_different_logs.img')
-    self.verify_icp_default_params['vbmeta_image_path'] = image_path
-    self.verify_icp_default_params['transparency_log_pub_keys'] = [
-        self.get_testdata_path('aftltool/aftl_pubkey_1.pub'),
-        self.get_testdata_path('aftltool/aftl_pubkey_2.pub')
-    ]
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path(
+          'aftltool/aftl_output_vbmeta_with_2_icp_different_logs.img'),
+                     modifiable_image)
+      self.verify_icp_default_params[
+          'vbmeta_image_path'] = modifiable_image.name
+      self.verify_icp_default_params['transparency_log_pub_keys'] = [
+          self.get_testdata_path('aftltool/aftl_pubkey_1.pub'),
+          self.get_testdata_path('aftltool/aftl_pubkey_2.pub')
+      ]
 
-    result = aftl.verify_image_icp(**self.verify_icp_default_params)
-    self.assertTrue(result)
+      result = aftl.verify_image_icp(**self.verify_icp_default_params)
+      self.assertTrue(result)
 
   def test_verify_image_icp_failure(self):
     """Tests verify_image_icp with 2 ICP but only one matching log key."""
     # Always work with a mock independent if run as unit or integration tests.
     aftl = AftlMock(self.test_afi_resp)
 
-    image_path = self.get_testdata_path(
-        'aftltool/aftl_output_vbmeta_with_2_icp_different_logs.img')
-    self.verify_icp_default_params['vbmeta_image_path'] = image_path
-    self.verify_icp_default_params['transparency_log_pub_keys'] = [
-        self.get_testdata_path('aftltool/aftl_pubkey_1.pub')
-    ]
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.get_testdata_path(
+          'aftltool/aftl_output_vbmeta_with_2_icp_different_logs.img'),
+                     modifiable_image)
+      self.verify_icp_default_params[
+          'vbmeta_image_path'] = modifiable_image.name
+      self.verify_icp_default_params['transparency_log_pub_keys'] = [
+          self.get_testdata_path('aftltool/aftl_pubkey_1.pub')
+      ]
 
-    result = aftl.verify_image_icp(**self.verify_icp_default_params)
-    self.assertFalse(result)
+      result = aftl.verify_image_icp(**self.verify_icp_default_params)
+      self.assertFalse(result)
 
   def test_make_icp_with_invalid_grpc_service(self):
     """Tests make_icp_from_vbmeta command with a host not supporting GRPC."""
     aftl = self.get_aftl_implementation(aftltool.AftlError('Comms error'))
-    self.make_icp_default_params[
-        'transparency_log_configs'][0].target = 'www.google.com:80'
-    with tempfile.NamedTemporaryFile('wb+') as output_file:
-      self.make_icp_default_params['output'] = output_file
-      result = aftl.make_icp_from_vbmeta(
-          **self.make_icp_default_params)
-      self.assertFalse(result)
+
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.vbmeta_image, modifiable_image)
+
+      self.make_icp_default_params['vbmeta_image_path'] = modifiable_image.name
+      self.make_icp_default_params[
+          'transparency_log_configs'][0].target = 'www.google.com:80'
+
+      with tempfile.NamedTemporaryFile('wb+') as output_file:
+        self.make_icp_default_params['output'] = output_file
+        result = aftl.make_icp_from_vbmeta(**self.make_icp_default_params)
+        self.assertFalse(result)
 
   def test_make_icp_grpc_timeout(self):
     """Tests make_icp_from_vbmeta command when running into GRPC timeout."""
     aftl = self.get_aftl_implementation(aftltool.AftlError('Comms error'))
 
-    # The timeout is set to 1 second which is way below the minimum processing
-    # time of the transparency log per load test results in b/139407814#2 where
-    # it was 3.43 seconds.
-    self.make_icp_default_params['timeout'] = 1
-    with tempfile.NamedTemporaryFile('wb+') as output_file:
-      self.make_icp_default_params['output'] = output_file
-      result = aftl.make_icp_from_vbmeta(
-          **self.make_icp_default_params)
-      self.assertFalse(result)
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.vbmeta_image, modifiable_image)
+      self.make_icp_default_params['vbmeta_image_path'] = modifiable_image.name
+      # The timeout is set to 1 second which is way below the minimum processing
+      # time of the transparency log per load test results in b/139407814#2
+      # where it was 3.43 seconds.
+      self.make_icp_default_params['timeout'] = 1
+      with tempfile.NamedTemporaryFile('wb+') as output_file:
+        self.make_icp_default_params['output'] = output_file
+        result = aftl.make_icp_from_vbmeta(**self.make_icp_default_params)
+        self.assertFalse(result)
 
   def test_load_test_single_process_single_submission(self):
     """Tests load_test_aftl command with 1 process which does 1 submission."""
@@ -1473,15 +1542,21 @@ class AftlTest(AftlTestCase):
     with tempfile.TemporaryDirectory() as tmp_dir:
       self.load_test_aftl_default_params[
           'stats_filename'] = os.path.join(tmp_dir, 'load_test.csv')
-      result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
-      self.assertTrue(result)
 
-      output = self.load_test_aftl_default_params['output'].getvalue()
-      self.assertRegex(output, 'Succeeded:.+?1\n')
-      self.assertRegex(output, 'Failed:.+?0\n')
+      with tempfile.NamedTemporaryFile() as modifiable_image:
+        self.copy_file(self.vbmeta_image, modifiable_image)
+        self.load_test_aftl_default_params[
+            'vbmeta_image_path'] = modifiable_image.name
 
-      self.assertTrue(os.path.exists(
-          self.load_test_aftl_default_params['stats_filename']))
+        result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
+        self.assertTrue(result)
+
+        output = self.load_test_aftl_default_params['output'].getvalue()
+        self.assertRegex(output, 'Succeeded:.+?1\n')
+        self.assertRegex(output, 'Failed:.+?0\n')
+
+        self.assertTrue(os.path.exists(
+            self.load_test_aftl_default_params['stats_filename']))
 
   def test_load_test_multi_process_multi_submission(self):
     """Tests load_test_aftl command with 2 processes and 2 submissions each."""
@@ -1492,15 +1567,21 @@ class AftlTest(AftlTestCase):
     with tempfile.TemporaryDirectory() as tmp_dir:
       self.load_test_aftl_default_params[
           'stats_filename'] = os.path.join(tmp_dir, 'load_test.csv')
-      result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
-      self.assertTrue(result)
 
-      output = self.load_test_aftl_default_params['output'].getvalue()
-      self.assertRegex(output, 'Succeeded:.+?4\n')
-      self.assertRegex(output, 'Failed:.+?0\n')
+      with tempfile.NamedTemporaryFile() as modifiable_image:
+        self.copy_file(self.vbmeta_image, modifiable_image)
+        self.load_test_aftl_default_params[
+            'vbmeta_image_path'] = modifiable_image.name
 
-      self.assertTrue(os.path.exists(
-          self.load_test_aftl_default_params['stats_filename']))
+        result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
+        self.assertTrue(result)
+
+        output = self.load_test_aftl_default_params['output'].getvalue()
+        self.assertRegex(output, 'Succeeded:.+?4\n')
+        self.assertRegex(output, 'Failed:.+?0\n')
+
+        self.assertTrue(os.path.exists(
+            self.load_test_aftl_default_params['stats_filename']))
 
   def test_load_test_invalid_grpc_service(self):
     """Tests load_test_aftl command with a host that does not support GRPC."""
@@ -1508,24 +1589,33 @@ class AftlTest(AftlTestCase):
 
     self.load_test_aftl_default_params[
         'transparency_log_config'].target = 'www.google.com:80'
-    result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
-    self.assertFalse(result)
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.vbmeta_image, modifiable_image)
+      self.load_test_aftl_default_params[
+          'vbmeta_image_path'] = modifiable_image.name
 
-    output = self.load_test_aftl_default_params['output'].getvalue()
-    self.assertRegex(output, 'Succeeded:.+?0\n')
-    self.assertRegex(output, 'Failed:.+?1\n')
+      result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
+      self.assertFalse(result)
+
+      output = self.load_test_aftl_default_params['output'].getvalue()
+      self.assertRegex(output, 'Succeeded:.+?0\n')
+      self.assertRegex(output, 'Failed:.+?1\n')
 
   def test_load_test_grpc_timeout(self):
     """Tests load_test_aftl command when running into timeout."""
     aftl = self.get_aftl_implementation(aftltool.AftlError('Comms error'))
 
     self.load_test_aftl_default_params['timeout'] = 1
-    result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
-    self.assertFalse(result)
+    with tempfile.NamedTemporaryFile() as modifiable_image:
+      self.copy_file(self.vbmeta_image, modifiable_image)
+      self.load_test_aftl_default_params[
+          'vbmeta_image_path'] = modifiable_image.name
+      result = aftl.load_test_aftl(**self.load_test_aftl_default_params)
+      self.assertFalse(result)
 
-    output = self.load_test_aftl_default_params['output'].getvalue()
-    self.assertRegex(output, 'Succeeded:.+?0\n')
-    self.assertRegex(output, 'Failed:.+?1\n')
+      output = self.load_test_aftl_default_params['output'].getvalue()
+      self.assertRegex(output, 'Succeeded:.+?0\n')
+      self.assertRegex(output, 'Failed:.+?1\n')
 
 
 class TransparencyLogConfigTestCase(unittest.TestCase):
