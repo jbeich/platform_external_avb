@@ -36,6 +36,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import traceback
 
 # Keep in sync with libavb/avb_version.h.
 AVB_VERSION_MAJOR = 1
@@ -3747,8 +3748,10 @@ class Avb(object):
 
     except Exception as e:
       # Truncate back to original size, then re-raise.
+      traceback.print_exception(type(e), e, e.__traceback__)
       image.truncate(original_image_size)
-      raise AvbError('Adding hashtree_footer failed: {}.'.format(e))
+      raise AvbError('Adding hashtree_footer failed: {}, {}.'.format(
+          e, sys.version_info))
 
   def make_atx_certificate(self, output, authority_key_path, subject_key_path,
                            subject_key_version, subject,
