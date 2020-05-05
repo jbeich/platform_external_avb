@@ -1,0 +1,8 @@
+Code-Review+2: Darren Krahn <dkrahn@google.com>
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Lint+1: Lint 🤖 <android-build-prod-ayeaye@system.gserviceaccount.com>
+Submitted-by: Varun Sharma <vars@google.com>
+Submitted-at: Tue, 05 May 2020 23:40:40 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/external/avb/+/1302089
+Project: platform/external/avb
+Branch: refs/heads/master
