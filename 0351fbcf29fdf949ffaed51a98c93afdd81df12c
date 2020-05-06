@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "e6c549bf_1d34fbfd",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 360,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4b985086_b09b97ca",
+      "range": {
+        "startLine": 360,
+        "startChar": 45,
+        "endLine": 360,
+        "endChar": 57
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "79aa5754_abf5b362",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -36,6 +60,30 @@
       "writtenOn": "2020-05-06T07:29:11Z",
       "side": 1,
       "message": "This comment looks like a left over from some previous stuff that was defined here. Thus, I think it can be deleted.",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 63
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af5bc018_97fce536",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "I think it is worth keeping as to be clear that the format string is only capturing the header. Rephrased that comment.",
+      "parentUuid": "79aa5754_abf5b362",
       "range": {
         "startLine": 373,
         "startChar": 0,
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "4f1e60ee_a9fed196",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "19c7274d_868cc79c",
+      "range": {
+        "startLine": 566,
+        "startChar": 21,
+        "endLine": 566,
+        "endChar": 44
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d06542e_96d72f1a",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -91,6 +163,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f0eeb0a8_91730493",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 570,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d06542e_96d72f1a",
+      "range": {
+        "startLine": 570,
+        "startChar": 24,
+        "endLine": 570,
+        "endChar": 43
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "6813c286_f1194394",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 575,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1aaf2849_4d4f680c",
+      "range": {
+        "startLine": 575,
+        "startChar": 12,
+        "endLine": 575,
+        "endChar": 15
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "85f952db_ab8d0bb7",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -137,6 +257,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7db136a9_07013e3c",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 817,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "85f952db_ab8d0bb7",
+      "range": {
+        "startLine": 817,
+        "startChar": 4,
+        "endLine": 817,
+        "endChar": 13
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "90f87d66_1f876091",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 854,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dca66b60_daa44fb4",
+      "range": {
+        "startLine": 854,
+        "startChar": 4,
+        "endLine": 854,
+        "endChar": 13
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "c6696375_c6e1e6d3",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -183,6 +351,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b9731208_ce8f4da8",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 882,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Ack. It is already referencing the enum class (I kept the exact case).",
+      "parentUuid": "c6696375_c6e1e6d3",
+      "range": {
+        "startLine": 882,
+        "startChar": 0,
+        "endLine": 882,
+        "endChar": 61
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "e11b312d_7f78df24",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 883,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "5e3b1354_0d5c5580",
+      "range": {
+        "startLine": 883,
+        "startChar": 0,
+        "endLine": 883,
+        "endChar": 53
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "28156164_e168be5a",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -229,6 +445,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3fe35e54_541e8fc3",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 899,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "That sounds good. This CL was getting quite large already but yes, having a consistent parsing throughout this file make sense.",
+      "parentUuid": "28156164_e168be5a",
+      "range": {
+        "startLine": 899,
+        "startChar": 0,
+        "endLine": 899,
+        "endChar": 36
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "abfd30e8_d224d7ff",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 909,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3b71978_edfe59f8",
+      "range": {
+        "startLine": 909,
+        "startChar": 6,
+        "endLine": 909,
+        "endChar": 15
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "086529fc_96da6328",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -275,6 +539,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "aca9e9cc_903135aa",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 961,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "086529fc_96da6328",
+      "range": {
+        "startLine": 961,
+        "startChar": 3,
+        "endLine": 961,
+        "endChar": 15
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "55ad3476_4794b92b",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 972,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5a9c8af_fe045fba",
+      "range": {
+        "startLine": 972,
+        "startChar": 6,
+        "endLine": 972,
+        "endChar": 15
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7beacb95_c57f1f16",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -324,6 +636,30 @@
     },
     {
       "key": {
+        "uuid": "d9b6a032_c30d3e90",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 983,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7beacb95_c57f1f16",
+      "range": {
+        "startLine": 983,
+        "startChar": 0,
+        "endLine": 983,
+        "endChar": 31
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "de8b153d_0aba9ef0",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -335,6 +671,30 @@
       "writtenOn": "2020-05-06T07:29:11Z",
       "side": 1,
       "message": "Why not make this part of the default values of the parametes?",
+      "range": {
+        "startLine": 1052,
+        "startChar": 0,
+        "endLine": 1052,
+        "endChar": 29
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "448da86a_5fee70da",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "With signature\u003dSignature(), the object would be created once at import time. Any call would reuse that object instead of creating a fresh one. See https://docs.python-guide.org/writing/gotchas/#mutable-default-arguments.",
+      "parentUuid": "de8b153d_0aba9ef0",
       "range": {
         "startLine": 1052,
         "startChar": 0,
@@ -370,6 +730,30 @@
     },
     {
       "key": {
+        "uuid": "67b8ef88_55a2fd01",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1058,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "7ff88b78_4094cc01",
+      "range": {
+        "startLine": 1058,
+        "startChar": 0,
+        "endLine": 1058,
+        "endChar": 15
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "95e6a6f1_b9dcfba4",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -390,6 +774,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1930a19f_a5df4271",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1082,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95e6a6f1_b9dcfba4",
+      "range": {
+        "startLine": 1082,
+        "startChar": 0,
+        "endLine": 1082,
+        "endChar": 26
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -416,6 +824,30 @@
     },
     {
       "key": {
+        "uuid": "941aac88_ae893a77",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1115,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6b36815_6370fb44",
+      "range": {
+        "startLine": 1115,
+        "startChar": 6,
+        "endLine": 1115,
+        "endChar": 15
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fbfa64eb_5fa95cf6",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -436,6 +868,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "a165053d_2395308c",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1131,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fbfa64eb_5fa95cf6",
+      "range": {
+        "startLine": 1131,
+        "startChar": 0,
+        "endLine": 1131,
+        "endChar": 18
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -462,6 +918,30 @@
     },
     {
       "key": {
+        "uuid": "5c3d7de7_bf585130",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1156,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "02723a97_0098d55a",
+      "range": {
+        "startLine": 1156,
+        "startChar": 0,
+        "endLine": 1156,
+        "endChar": 44
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "440c1c09_a3f4ea93",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -482,6 +962,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d53a5795_f78f2c5d",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1629,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-06T12:23:05Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "440c1c09_a3f4ea93",
+      "range": {
+        "startLine": 1629,
+        "startChar": 0,
+        "endLine": 1629,
+        "endChar": 47
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
