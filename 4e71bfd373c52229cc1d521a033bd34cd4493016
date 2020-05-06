@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "a493ccd2_64aa5d05",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 918,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-06T07:29:11Z",
+      "side": 0,
+      "message": "Pls keep a title in here but update the text. Also run ./aftltool --info_image_icp to validate that the output structure makes sense and has the right indentation.",
+      "range": {
+        "startLine": 918,
+        "startChar": 0,
+        "endLine": 918,
+        "endChar": 40
+      },
+      "revId": "4e71bfd373c52229cc1d521a033bd34cd4493016",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
