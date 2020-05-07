@@ -96,6 +96,30 @@
     },
     {
       "key": {
+        "uuid": "a113ea83_99263f4a",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 373,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-07T08:01:26Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af5bc018_97fce536",
+      "range": {
+        "startLine": 373,
+        "startChar": 0,
+        "endLine": 373,
+        "endChar": 63
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "19c7274d_868cc79c",
         "filename": "aftltool.py",
         "patchSetId": 2
@@ -704,6 +728,30 @@
       "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d2600f82_a43c404a",
+        "filename": "aftltool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 1052,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-07T08:01:26Z",
+      "side": 1,
+      "message": "TIL. Thanks for the details. A bit a surprising behavior that python exhibits here.",
+      "parentUuid": "448da86a_5fee70da",
+      "range": {
+        "startLine": 1052,
+        "startChar": 0,
+        "endLine": 1052,
+        "endChar": 29
+      },
+      "revId": "0351fbcf29fdf949ffaed51a98c93afdd81df12c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
