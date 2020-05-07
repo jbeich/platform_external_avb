@@ -292,6 +292,13 @@ cc_library_host_static {
     srcs: ["examples/things/avb_atx_slot_verify.c"],
 }
 
+//genrule {
+//    name: "libavb_host_unittest_simg2img",
+//    cmd: "cp $(in) $(out)",
+//    srcs: [":simg2img"],
+//    out: ["simg2img"],
+//}
+
 cc_test_host {
     name: "libavb_host_unittest",
     defaults: ["avb_defaults"],
@@ -299,12 +306,26 @@ cc_test_host {
         "simg2img",
         "img2simg",
         "avbtool",
+	"fec",
     ],
     data: [
         "avbtool",
+	":simg2img",
         "test/avbtool_signing_helper_*.py",
         "test/data/*",
     ],
+    compile_multilib: "64",
+    target: {
+        linux: {
+	    compile_multilib: "64",
+	},
+        windows: {
+            enabled: false,
+        },
+        darwin: {
+            enabled: false,
+        },
+    },
     test_config: "test/libavb_host_unittest.xml",
     test_suites: ["general-tests"],
     static_libs: [
@@ -340,6 +361,7 @@ cc_test_host {
         "test/fake_avb_ops.cc",
         "test/avb_sysdeps_posix_testing.cc",
     ],
+
 }
 
 cc_library_host_static {

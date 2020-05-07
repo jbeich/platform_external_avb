@@ -2178,6 +2178,7 @@ class Avb(object):
       start_byte: The integer value of the start byte to use for pattern
           generation.
     """
+    import time; time.sleep(60)
     pattern = bytearray([x & 0xFF for x in range(start_byte, start_byte + 256)])
     buf = bytearray()
     c = int(math.ceil(image_size / 256.0))
