@@ -46,6 +46,30 @@
       "revId": "74a6871e8c8f15911b94335f0a46bb9c830a7b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "13ffeada_3af3024c",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2020-05-08T06:58:05Z",
+      "side": 1,
+      "message": "The other thing I tried is to update system/core/libsparse/Android.bp\nfor cc_binary simg2img\nI also added:\n    target: {\n        windows: {\n            enabled: false,\n        },\n    },\n\nSomehow building libavb_host_unittest gave me the same output. simg2img has target windows disabled with above change, but somehow the build system think it still has variant  \"os:windows, arch:x86\"",
+      "parentUuid": "8952e6bd_d03b66f1",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 324,
+        "endChar": 10
+      },
+      "revId": "74a6871e8c8f15911b94335f0a46bb9c830a7b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
