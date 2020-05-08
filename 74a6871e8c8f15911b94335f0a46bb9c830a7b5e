@@ -70,6 +70,30 @@
       "revId": "74a6871e8c8f15911b94335f0a46bb9c830a7b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "304fdb52_4c1e634a",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2020-05-08T07:02:29Z",
+      "side": 1,
+      "message": "It seems that \"device_supported: false,\" can affect the available variant. With that change for simg2img, \"os:android\" won\u0027t show up in available variant.\nSomehow target.windows.enabled doesn\u0027t have the same effect.",
+      "parentUuid": "13ffeada_3af3024c",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 324,
+        "endChar": 10
+      },
+      "revId": "74a6871e8c8f15911b94335f0a46bb9c830a7b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
