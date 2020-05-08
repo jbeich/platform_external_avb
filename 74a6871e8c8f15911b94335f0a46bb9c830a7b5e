@@ -22,6 +22,30 @@
       "revId": "74a6871e8c8f15911b94335f0a46bb9c830a7b5e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8952e6bd_d03b66f1",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 324,
+      "author": {
+        "id": 1088076
+      },
+      "writtenOn": "2020-05-08T06:48:02Z",
+      "side": 1,
+      "message": "The approach seems can work for cc_test(?), based on this thread:\nhttps://groups.google.com/g/android-building/c/CSOUMOhFlhI\n\nCould it be that soong has a bug translating cc_test_host?\n\n+ccross",
+      "parentUuid": "9dd24a71_454785b8",
+      "range": {
+        "startLine": 322,
+        "startChar": 0,
+        "endLine": 324,
+        "endChar": 10
+      },
+      "revId": "74a6871e8c8f15911b94335f0a46bb9c830a7b5e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
