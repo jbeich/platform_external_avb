@@ -302,7 +302,8 @@ cc_test_host {
     ],
     data: [
         "avbtool",
-        "test/avbtool_signing_helper_*.py",
+	"test/avbtool_signing_helper_test.py",
+	"test/avbtool_signing_helper_with_files_test.py",
         "test/data/*",
     ],
     test_config: "test/libavb_host_unittest.xml",
