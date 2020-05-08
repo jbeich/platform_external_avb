@@ -3,6 +3,10 @@
     {
       "name": "aftltool_test",
       "host": true
+    },
+    {
+      "name": "image_handler_unittest",
+      "host": true
     }
   ],
   "postsubmit": [

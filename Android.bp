@@ -90,6 +90,29 @@ python_binary_host {
     },
 }
 
+python_test_host {
+    name: "image_handler_unittest",
+    main: "test/image_handler_unittest.py",
+    srcs: [
+        "test/image_handler_unittest.py",
+	"avbtool.py"],
+//    libs: [
+//        "avbtool",
+//    ],
+    data: [
+        "test/data/**/*.*",
+    ],
+    test_suites: ["general-tests"],
+    version: {
+        py2: {
+            enabled: false,
+        },
+        py3: {
+            enabled: true,
+        },
+    },
+}
+
 python_library_host {
     name: "aftl_proto",
     srcs: [

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 # Copyright 2016, The Android Open Source Project
 #
@@ -26,6 +26,8 @@
 """Unit-test for ImageHandler."""
 
 
+import warnings
+warnings.simplefilter("ignore", DeprecationWarning)
 import imp
 import os
 import sys
@@ -88,10 +90,9 @@ class ImageHandler(unittest.TestCase):
   TEST_FILE_BLOCK_SIZE = 4096
 
   def _file_contents_equal(self, path1, path2, size):
-    f1 = open(path1, 'r')
-    f2 = open(path2, 'r')
-    if f1.read(size) != f2.read(size):
-      return False
+    with open(path1, 'r') as f1, open(path2, 'r') as f2:
+      if f1.read(size) != f2.read(size):
+        return False
     return True
 
   def _file_size(self, f):
@@ -103,7 +104,8 @@ class ImageHandler(unittest.TestCase):
 
   def _clone_sparse_file(self):
     f = tempfile.NamedTemporaryFile()
-    f.write(open(self.TEST_FILE_SPARSE_PATH).read())
+    with open(self.TEST_FILE_SPARSE_PATH, 'rb') as sparse_file:
+      f.write(sparse_file.read())
     f.flush()
     return f
 
@@ -111,6 +113,12 @@ class ImageHandler(unittest.TestCase):
     f = tempfile.NamedTemporaryFile()
     os.system('simg2img {} {}'.format(path, f.name))
     return f
+
+  def setUp(self):
+    warnings.simplefilter("ignore", ResourceWarning)
+
+  def tearDown(self):
+    warnings.simplefilter("default", ResourceWarning)
 
   def testRead(self):
     """Checks that reading from a sparse file works as intended."""
@@ -120,92 +128,101 @@ class ImageHandler(unittest.TestCase):
     self.assertEqual(ih.tell(), 0)
 
     # Check that reading advances the cursor.
-    self.assertEqual(ih.read(14), bytearray('Barfoo43Barfoo'))
+    self.assertEqual(ih.read(14), b'Barfoo43Barfoo')
     self.assertEqual(ih.tell(), 14)
-    self.assertEqual(ih.read(2), bytearray('43'))
+    self.assertEqual(ih.read(2), b'43')
     self.assertEqual(ih.tell(), 16)
 
     # Check reading in the middle of a fill chunk gets the right data.
     ih.seek(0x6000 + 1)
-    self.assertEqual(ih.read(4), bytearray('\x02\x03\x04\x01'))
+    self.assertEqual(ih.read(4), b'\x02\x03\x04\x01')
 
     # Check we can cross the chunk boundary correctly.
     ih.seek(0x3000 - 10)
-    self.assertEqual(ih.read(12), bytearray('43Barfoo43\x00\x00'))
+    self.assertEqual(ih.read(12), b'43Barfoo43\x00\x00')
     ih.seek(0x9000 - 3)
-    self.assertEqual(ih.read(5), bytearray('\x02\x03\x04Fo'))
+    self.assertEqual(ih.read(5), b'\x02\x03\x04Fo')
 
     # Check reading at end of file is a partial read.
     ih.seek(0xf000 - 2)
-    self.assertEqual(ih.read(16), bytearray('\x00\x00'))
+    self.assertEqual(ih.read(16), b'\x00\x00')
+
+    ih._image.close()
 
   def testTruncate(self):
     """Checks that we can truncate a sparse file correctly."""
     # Check truncation at all possible boundaries (including start and end).
     for size in range(0, self.TEST_FILE_SIZE + self.TEST_FILE_BLOCK_SIZE,
                       self.TEST_FILE_BLOCK_SIZE):
-      sparse_file = self._clone_sparse_file()
-      ih = avbtool.ImageHandler(sparse_file.name)
-      ih.truncate(size)
-      unsparse_file = self._unsparsify(sparse_file.name)
-      self.assertEqual(self._file_size(unsparse_file), size)
-      self.assertTrue(self._file_contents_equal(unsparse_file.name,
-                                                self.TEST_FILE_PATH,
-                                                size))
+      with self._clone_sparse_file() as sparse_file:
+        ih = avbtool.ImageHandler(sparse_file.name)
+        ih.truncate(size)
+        #unsparse_file = self._unsparsify(sparse_file.name)
+        with self._unsparsify(sparse_file.name) as unsparse_file:
+          self.assertEqual(self._file_size(unsparse_file), size)
+          self.assertTrue(self._file_contents_equal(unsparse_file.name,
+                                                    self.TEST_FILE_PATH,
+                                                    size))
+        ih._image.close()
 
     # Check truncation to grow the file.
     grow_size = 8192
-    sparse_file = self._clone_sparse_file()
-    ih = avbtool.ImageHandler(sparse_file.name)
-    ih.truncate(self.TEST_FILE_SIZE + grow_size)
-    unsparse_file = self._unsparsify(sparse_file.name)
-    self.assertEqual(self._file_size(unsparse_file),
-                     self.TEST_FILE_SIZE + grow_size)
-    self.assertTrue(self._file_contents_equal(unsparse_file.name,
-                                              self.TEST_FILE_PATH,
-                                              self.TEST_FILE_SIZE))
-    unsparse_file.seek(self.TEST_FILE_SIZE)
-    self.assertEqual(unsparse_file.read(), '\0'*grow_size)
+    #sparse_file = self._clone_sparse_file()
+    with self._clone_sparse_file() as sparse_file:
+      ih = avbtool.ImageHandler(sparse_file.name)
+      ih.truncate(self.TEST_FILE_SIZE + grow_size)
+      with self._unsparsify(sparse_file.name) as unsparse_file:
+        self.assertEqual(self._file_size(unsparse_file),
+                         self.TEST_FILE_SIZE + grow_size)
+        self.assertTrue(self._file_contents_equal(unsparse_file.name,
+                                                  self.TEST_FILE_PATH,
+                                                  self.TEST_FILE_SIZE))
+        unsparse_file.seek(self.TEST_FILE_SIZE)
+        self.assertEqual(unsparse_file.read(), b'\0' * grow_size)
+      ih._image.close()
 
   def testAppendRaw(self):
     """Checks that we can append raw data correctly."""
     sparse_file = self._clone_sparse_file()
     ih = avbtool.ImageHandler(sparse_file.name)
-    data = 'SomeData'*4096
+    data = b'SomeData' * 4096
     ih.append_raw(data)
-    unsparse_file = self._unsparsify(sparse_file.name)
-    self.assertTrue(self._file_contents_equal(unsparse_file.name,
-                                              self.TEST_FILE_PATH,
-                                              self.TEST_FILE_SIZE))
-    unsparse_file.seek(self.TEST_FILE_SIZE)
-    self.assertEqual(unsparse_file.read(), data)
+    with self._unsparsify(sparse_file.name) as unsparse_file:
+      self.assertTrue(self._file_contents_equal(unsparse_file.name,
+                                                self.TEST_FILE_PATH,
+                                                self.TEST_FILE_SIZE))
+      unsparse_file.seek(self.TEST_FILE_SIZE)
+      self.assertEqual(unsparse_file.read(), data)
+    ih._image.close()
 
   def testAppendFill(self):
     """Checks that we can append fill data correctly."""
-    sparse_file = self._clone_sparse_file()
-    ih = avbtool.ImageHandler(sparse_file.name)
-    data = 'ABCD'*4096
-    ih.append_fill('ABCD', len(data))
-    unsparse_file = self._unsparsify(sparse_file.name)
-    self.assertTrue(self._file_contents_equal(unsparse_file.name,
-                                              self.TEST_FILE_PATH,
-                                              self.TEST_FILE_SIZE))
-    unsparse_file.seek(self.TEST_FILE_SIZE)
-    self.assertEqual(unsparse_file.read(), data)
+    with self._clone_sparse_file() as sparse_file:
+      ih = avbtool.ImageHandler(sparse_file.name)
+      data = b'ABCD' * 4096
+      ih.append_fill(b'ABCD', len(data))
+      with self._unsparsify(sparse_file.name) as unsparse_file:
+        self.assertTrue(self._file_contents_equal(unsparse_file.name,
+                                                  self.TEST_FILE_PATH,
+                                                  self.TEST_FILE_SIZE))
+        unsparse_file.seek(self.TEST_FILE_SIZE)
+        self.assertEqual(unsparse_file.read(), data)
+      ih._image.close()
 
   def testDontCare(self):
     """Checks that we can append DONT_CARE data correctly."""
-    sparse_file = self._clone_sparse_file()
-    ih = avbtool.ImageHandler(sparse_file.name)
-    data = '\0'*40960
-    ih.append_dont_care(len(data))
-    unsparse_file = self._unsparsify(sparse_file.name)
-    self.assertTrue(self._file_contents_equal(unsparse_file.name,
-                                              self.TEST_FILE_PATH,
-                                              self.TEST_FILE_SIZE))
-    unsparse_file.seek(self.TEST_FILE_SIZE)
-    self.assertEqual(unsparse_file.read(), data)
+    with self._clone_sparse_file() as sparse_file:
+      ih = avbtool.ImageHandler(sparse_file.name)
+      data = b'\0' * 40960
+      ih.append_dont_care(len(data))
+      with self._unsparsify(sparse_file.name) as unsparse_file:
+        self.assertTrue(self._file_contents_equal(unsparse_file.name,
+                                                  self.TEST_FILE_PATH,
+                                                  self.TEST_FILE_SIZE))
+        unsparse_file.seek(self.TEST_FILE_SIZE)
+        self.assertEqual(unsparse_file.read(), data)
+      ih._image.close()
 
 
 if __name__ == '__main__':
-  unittest.main()
+  unittest.main(verbosity=2)
