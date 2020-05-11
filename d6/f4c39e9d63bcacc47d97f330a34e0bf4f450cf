@@ -1,0 +1,7 @@
+Presubmit-Verified+1: Treehugger Robot <treehugger-gerrit@google.com>
+Code-Review+2: David Zeuthen <zeuthen@google.com>
+Submitted-by: Alex Legg <alexlegg@google.com>
+Submitted-at: Mon, 11 May 2020 04:41:21 +0000
+Reviewed-on: https://android-review.googlesource.com/c/platform/external/avb/+/1306535
+Project: platform/external/avb
+Branch: refs/heads/master
