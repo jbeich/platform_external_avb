@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "e904bf3b_313dd0d2",
+        "filename": "aftltool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 1045,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-11T05:51:31Z",
+      "side": 1,
+      "message": "Strictly speaking you would need to handle the UnicodeError here and declare a Raises: section in the DOCSTRING.\n\nAlso the method is pretty much what encode does. Thus, may be easier to just say:\nreturn len(self.encode()) ?",
+      "range": {
+        "startLine": 1045,
+        "startChar": 0,
+        "endLine": 1045,
+        "endChar": 79
+      },
+      "revId": "d866eb331a706604c06839a02373b58b05a762df",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
