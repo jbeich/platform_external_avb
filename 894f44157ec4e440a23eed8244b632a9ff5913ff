@@ -425,6 +425,30 @@
     },
     {
       "key": {
+        "uuid": "246cc451_6743f091",
+        "filename": "aftltool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1151,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-11T05:51:31Z",
+      "side": 1,
+      "message": "Hmmm, I see. No strong opinion at this point. Let\u0027s keep it as is for the moment.",
+      "parentUuid": "182a1c45_f8f61c7c",
+      "range": {
+        "startLine": 1151,
+        "startChar": 17,
+        "endLine": 1151,
+        "endChar": 21
+      },
+      "revId": "894f44157ec4e440a23eed8244b632a9ff5913ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "76e92caa_1ec37ebc",
         "filename": "aftltool.py",
         "patchSetId": 3
@@ -507,6 +531,30 @@
       "side": 1,
       "message": "The return value will depend on the implementation in the subclass. I\u0027ve documented what\u0027s generic but the doc of the subclass will add that precision.",
       "parentUuid": "76e92caa_1ec37ebc",
+      "range": {
+        "startLine": 1159,
+        "startChar": 0,
+        "endLine": 1159,
+        "endChar": 7
+      },
+      "revId": "894f44157ec4e440a23eed8244b632a9ff5913ff",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "391d7790_7878393b",
+        "filename": "aftltool.py",
+        "patchSetId": 3
+      },
+      "lineNbr": 1159,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-11T05:51:31Z",
+      "side": 1,
+      "message": "I would still document that it returns a thing. Here a suggestion:\n\n    Returns:\n      An object of the type of the particular subclass.",
+      "parentUuid": "ed45c3f3_ec32b474",
       "range": {
         "startLine": 1159,
         "startChar": 0,
