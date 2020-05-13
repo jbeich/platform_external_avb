@@ -1,0 +1,326 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "0dff4942_a0ffc069",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "This needs to be updated.",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 38
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "fd0b6949_b6c69551",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Maybe write that it is a host:port pair.",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 38
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "f6335716_17528a4e",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Add comment: // RSA with PKCS1v15",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 32
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7994a14d_1c86d95d",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Add comment: // ECDSA with P256 curve",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 34
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "61271c36_08ac2cef",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "aftl.proto was removed. Thus, comment needs to be updated.",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 83
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "582477d7_e775370b",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Document after this line what the bool return value means.",
+      "range": {
+        "startLine": 333,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 22
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f5b5246_1cd6b979",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Shouldn\u0027t there be a check after read_u8 to check that the value for hash_algorithm is within the bounds of the \"enum\"?",
+      "range": {
+        "startLine": 462,
+        "startChar": 0,
+        "endLine": 462,
+        "endChar": 68
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "3d8b889e_dc4460de",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Same here.",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 466,
+        "endChar": 73
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7bcc9fc5_42ee65c0",
+        "filename": "test/avb_aftl_util_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Ideally we could document how these images are generated. Though, I guess at the moment we still need an active log service to do that? If we haven\u0027t we should file a bug and then put a TODO(b/...) here.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 76
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8f0c4e8d_e5232b4e",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Same here on ideally documenting how these files were generated.",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 65
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "2f371cc5_d519d025",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Shouldn\u0027t we add manufacturer key here to test it properly?",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 49
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "af3ade1e_f9dcffe7",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Would add some metadata for testing.",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 60
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "d66e3d80_3f6a307d",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Where does this come from? Not obvious to me where I can get these raw bytes from.",
+      "range": {
+        "startLine": 95,
+        "startChar": 38,
+        "endLine": 95,
+        "endChar": 61
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ba05ff32_d6e6b7e2",
+        "filename": "test/avb_aftl_verify_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-13T16:12:51Z",
+      "side": 1,
+      "message": "Same here about document how to reproduce these files.",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 58
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
