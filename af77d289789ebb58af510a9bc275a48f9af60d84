@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "d14f3b82_5c78a84d",
+        "filename": "test/avb_aftl_util_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-14T11:27:50Z",
+      "side": 1,
+      "message": "TODO(b/154115873) and delete the \"See b/154115873\" at the bottom.",
+      "range": {
+        "startLine": 32,
+        "startChar": 3,
+        "endLine": 32,
+        "endChar": 7
+      },
+      "revId": "af77d289789ebb58af510a9bc275a48f9af60d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
