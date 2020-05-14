@@ -681,6 +681,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "7e19992f_98411056",
+        "filename": "test/avb_aftl_verify_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T17:03:22Z",
+      "side": 1,
+      "message": "Ack, done.",
+      "parentUuid": "6c7094cb_3b6d130b",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 58
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
