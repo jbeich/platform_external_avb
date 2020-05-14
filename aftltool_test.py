@@ -159,7 +159,7 @@ class AftltoolTestCase(unittest.TestCase):
     # unit test as failed although the test itself succeeded.
     self.stderr = sys.stderr
     self.null = open(os.devnull, 'wt')
-    sys.stderr = self.null
+    #sys.stderr = self.null
 
     # AFTL public key.
     self.test_aftl_pub_key = (
@@ -370,7 +370,8 @@ class AftltoolTestCase(unittest.TestCase):
             '5623731104bfa1cfdb275df2978d1f93f72f5f0f746f11d06f3091c601c32067'),
         version_incremental='only_for_testing',
         manufacturer_key_hash=bytes.fromhex(
-            '83ab3b109b73a1d32dce4153a2de57a1a0485052db8364f3180d98614749d7f7'))
+            '83ab3b109b73a1d32dce4153a2de57a1a0485052db8364f3180d98614749d7f7'),
+        description='description_for_testing')
     raw_signature = bytes.fromhex(
         '6a523021bc5b933bb58c38c8238be3a5fe1166002f5df8b77dee9dd22d353595'
         'be7996656d3824ebf4e1411a05ee3652d64669d3d62b167d3290dbdf4f2741ba'
@@ -840,6 +841,7 @@ class AftlIcpEntryTest(AftltoolTestCase):
 
       # Valid ICP.
       entry = aftltool.AftlIcpEntry()
+      import pdb; pdb.set_trace()
       entry.translate_response(self.test_tl_url_1, self.test_avbm_resp)
       self.assertTrue(entry.verify_icp(key_file.name))
 
@@ -848,8 +850,8 @@ class AftlIcpEntryTest(AftltoolTestCase):
       entry = aftltool.AftlIcpEntry()
       entry.translate_response(self.test_tl_url_1, self.test_avbm_resp)
       vbmeta_hash = entry.annotation_leaf.annotation.vbmeta_hash
-      vbmeta_hash = vbmeta_hash.replace(b"\x56\x23\x73\x11",
-                                        b"\x00\x00\x00\x00")
+      vbmeta_hash = vbmeta_hash.replace(b'\x56\x23\x73\x11',
+                                        b'\x00\x00\x00\x00')
       entry.annotation_leaf.annotation.vbmeta_hash = vbmeta_hash
       self.assertFalse(entry.verify_icp(key_file))
 
@@ -1194,14 +1196,14 @@ class AftlMock(aftltool.Aftl):
     self.mock_canned_response = canned_response
 
   def request_inclusion_proof(self, transparency_log_config, vbmeta_image,
-                              version_inc, manufacturer_key_path,
+                              version_inc, description, manufacturer_key_path,
                               signing_helper, signing_helper_with_files,
                               timeout, aftl_comms=None):
     """Mocked request_inclusion_proof function."""
     aftl_comms = AftlMockCommunication(transparency_log_config,
                                        self.mock_canned_response)
     return super(AftlMock, self).request_inclusion_proof(
-        transparency_log_config, vbmeta_image, version_inc,
+        transparency_log_config, vbmeta_image, version_inc, description,
         manufacturer_key_path, signing_helper, signing_helper_with_files,
         timeout, aftl_comms=aftl_comms)
 
@@ -1230,6 +1232,7 @@ class AftlTestCase(AftltoolTestCase):
         'signing_helper': None,
         'signing_helper_with_files': None,
         'version_incremental': '1',
+        'description': 'Free form description',
         'transparency_log_configs': [self.transparency_log_config],
         'manufacturer_key': self.manufacturer_key,
         'padding_size': 0,
@@ -1353,7 +1356,7 @@ class AftlTest(AftlTestCase):
     aftl = AftlMock(self.test_avbm_resp)
 
     icp = aftl.request_inclusion_proof(
-        self.transparency_log_config, b'a' * 1024, '1',
+        self.transparency_log_config, b'a' * 1024, '1', 'description',
         self.get_testdata_path('testkey_rsa4096.pem'), None, None, None)
     self.assertEqual(icp.leaf_index,
                      self.test_avbm_resp.annotation_proof.proof.leaf_index)
@@ -1366,6 +1369,8 @@ class AftlTest(AftlTestCase):
 
     self.assertEqual(icp.annotation_leaf.annotation.version_incremental,
                      'only_for_testing')
+    self.assertEqual(icp.annotation_leaf.annotation.description,
+                     'description_for_testing')
     # To calculate the hash of the a RSA key use the following command:
     # openssl rsa -in test/data/testkey_rsa4096.pem -pubout \
     #    -outform DER | sha256sum
@@ -1389,7 +1394,7 @@ class AftlTest(AftlTestCase):
 
     with self.assertRaises(aftltool.AftlError):
       aftl.request_inclusion_proof(
-          self.transparency_log_config, b'a' * 1024, 'version_inc',
+          self.transparency_log_config, b'a' * 1024, 'version_inc', 'description',
           self.get_testdata_path('testkey_rsa4096.pem'), None, None, None)
 
   def test_request_inclusion_proof_manuf_key_not_4096(self):
@@ -1398,7 +1403,7 @@ class AftlTest(AftlTestCase):
     aftl = AftlMock(self.test_avbm_resp)
     with self.assertRaises(aftltool.AftlError) as e:
       aftl.request_inclusion_proof(
-          self.transparency_log_config, b'a' * 1024, 'version_inc',
+          self.transparency_log_config, b'a' * 1024, 'version_inc', 'description',
           self.get_testdata_path('testkey_rsa2048.pem'), None, None, None)
     self.assertIn('not of size 4096: 2048', str(e.exception))
 

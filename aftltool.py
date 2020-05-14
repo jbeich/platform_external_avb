@@ -1671,7 +1671,7 @@ class Aftl(avbtool.Avb):
     return True
 
   def request_inclusion_proof(self, transparency_log_config, vbmeta_image,
-                              version_inc, manufacturer_key_path,
+                              version_inc, description, manufacturer_key_path,
                               signing_helper, signing_helper_with_files,
                               timeout, aftl_comms=None):
     """Packages and sends a request to the specified transparency log.
@@ -1680,6 +1680,9 @@ class Aftl(avbtool.Avb):
       transparency_log_config: A TransparencyLogConfig instance.
       vbmeta_image: A bytearray with the VBMeta image.
       version_inc: Subcomponent of the build fingerprint.
+      description: A string with a free form description field. It can be used
+        to annotate this message with further context on the build (e.g.,
+        carrier specific build).
       manufacturer_key_path: Path to key used to sign messages sent to the
         transparency log servers.
       signing_helper: Program which signs a hash and returns a signature.
@@ -1713,7 +1716,8 @@ class Aftl(avbtool.Avb):
     # Build VBMetaPrimaryAnnotation with that data.
     annotation = VBMetaPrimaryAnnotation(
         vbmeta_hash=vbmeta_hash, version_incremental=version_inc,
-        manufacturer_key_hash=m_key_hash)
+        manufacturer_key_hash=m_key_hash,
+        description=description)
 
     # Sign annotation and add it to the request.
     signed_annotation = annotation.sign(
@@ -1738,7 +1742,8 @@ class Aftl(avbtool.Avb):
 
   def make_icp_from_vbmeta(self, vbmeta_image_path, output,
                            signing_helper, signing_helper_with_files,
-                           version_incremental, transparency_log_configs,
+                           version_incremental, description,
+                           transparency_log_configs,
                            manufacturer_key, padding_size, timeout):
     """Generates a vbmeta image with inclusion proof given a vbmeta image.
 
@@ -1764,6 +1769,9 @@ class Aftl(avbtool.Avb):
       signing_helper_with_files: Same as signing_helper but uses files instead.
       version_incremental: A string representing the subcomponent of the
         build fingerprint used to identify the vbmeta in the transparency log.
+      description: A string with a free form description field. It can be used
+        to annotate this message with further context on the build (e.g.,
+        carrier specific build).
       transparency_log_configs: List of TransparencyLogConfig used to request
         the inclusion proofs.
       manufacturer_key: Path to PEM file containting the key file used to sign
@@ -1785,6 +1793,7 @@ class Aftl(avbtool.Avb):
       try:
         icp_entry = self.request_inclusion_proof(log_config, vbmeta_image,
                                                  version_incremental,
+                                                 description,
                                                  manufacturer_key,
                                                  signing_helper,
                                                  signing_helper_with_files,
@@ -1875,6 +1884,7 @@ class Aftl(avbtool.Avb):
           signing_helper=None,
           signing_helper_with_files=None,
           version_incremental=version_incremental,
+          description='Load test',
           transparency_log_configs=[transparency_log_config],
           manufacturer_key=manufacturer_key,
           padding_size=0,
@@ -2072,6 +2082,7 @@ class AftlTool(avbtool.AvbTool):
                                           args.signing_helper,
                                           args.signing_helper_with_files,
                                           args.version_incremental,
+                                          args.description,
                                           args.transparency_log_servers,
                                           args.manufacturer_key,
                                           args.padding_size,
@@ -2122,6 +2133,11 @@ class AftlTool(avbtool.AvbTool):
     sub_parser.add_argument('--version_incremental',
                             help='Current build ID.',
                             required=True)
+    sub_parser.add_argument('--description',
+                            help='Free form description field to annotate '
+                            'further context on the build (e.g., carrier '
+                            'specific build).',
+                            default='')
     sub_parser.add_argument('--manufacturer_key',
                             help='Path to the PEM file containing the '
                             'manufacturer key for use with the log.',
