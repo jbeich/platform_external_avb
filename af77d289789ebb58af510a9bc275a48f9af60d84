@@ -22,6 +22,30 @@
       "revId": "af77d289789ebb58af510a9bc275a48f9af60d84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "1a284105_66284fb0",
+        "filename": "test/avb_aftl_util_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T17:03:22Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d14f3b82_5c78a84d",
+      "range": {
+        "startLine": 32,
+        "startChar": 3,
+        "endLine": 32,
+        "endChar": 7
+      },
+      "revId": "af77d289789ebb58af510a9bc275a48f9af60d84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
