@@ -25,6 +25,30 @@
     },
     {
       "key": {
+        "uuid": "130417df_4f698a84",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 76,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "0dff4942_a0ffc069",
+      "range": {
+        "startLine": 76,
+        "startChar": 0,
+        "endLine": 76,
+        "endChar": 38
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "fd0b6949_b6c69551",
         "filename": "libavb_aftl/avb_aftl_types.h",
         "patchSetId": 1
@@ -45,6 +69,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8250af5c_75c87008",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "The whole library uses the term URL instead of host:port. This should be fixed in another cl.",
+      "parentUuid": "fd0b6949_b6c69551",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 80,
+        "endChar": 38
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -71,6 +119,30 @@
     },
     {
       "key": {
+        "uuid": "effb4fb2_74cc5cdd",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 122,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f6335716_17528a4e",
+      "range": {
+        "startLine": 122,
+        "startChar": 0,
+        "endLine": 122,
+        "endChar": 32
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "7994a14d_1c86d95d",
         "filename": "libavb_aftl/avb_aftl_types.h",
         "patchSetId": 1
@@ -91,6 +163,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "ff8c165a_328638c4",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7994a14d_1c86d95d",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 34
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -117,6 +213,30 @@
     },
     {
       "key": {
+        "uuid": "ed244f26_e6e0e521",
+        "filename": "libavb_aftl/avb_aftl_types.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 150,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "61271c36_08ac2cef",
+      "range": {
+        "startLine": 150,
+        "startChar": 0,
+        "endLine": 150,
+        "endChar": 83
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "582477d7_e775370b",
         "filename": "libavb_aftl/avb_aftl_util.c",
         "patchSetId": 1
@@ -137,6 +257,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "edd5b137_b088d49a",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 333,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "582477d7_e775370b",
+      "range": {
+        "startLine": 333,
+        "startChar": 0,
+        "endLine": 333,
+        "endChar": 22
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -163,6 +307,30 @@
     },
     {
       "key": {
+        "uuid": "abe5507c_b5c14c83",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 462,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done. Although, this is signature is not verified by the bootloader (as it is using the manufacturer key). I\u0027ve also updated the comment in _types.h to capture that.",
+      "parentUuid": "8f5b5246_1cd6b979",
+      "range": {
+        "startLine": 462,
+        "startChar": 0,
+        "endLine": 462,
+        "endChar": 68
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "3d8b889e_dc4460de",
         "filename": "libavb_aftl/avb_aftl_util.c",
         "patchSetId": 1
@@ -183,6 +351,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "333cbc8d_1878cc8f",
+        "filename": "libavb_aftl/avb_aftl_util.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d8b889e_dc4460de",
+      "range": {
+        "startLine": 466,
+        "startChar": 0,
+        "endLine": 466,
+        "endChar": 73
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -209,6 +401,30 @@
     },
     {
       "key": {
+        "uuid": "32315ff7_d11fcb19",
+        "filename": "test/avb_aftl_util_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7bcc9fc5_42ee65c0",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 76
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "8f0c4e8d_e5232b4e",
         "filename": "test/avb_aftl_validate_unittest.cc",
         "patchSetId": 1
@@ -229,6 +445,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "b4e066ea_ee521291",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "8f0c4e8d_e5232b4e",
+      "range": {
+        "startLine": 36,
+        "startChar": 0,
+        "endLine": 36,
+        "endChar": 65
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -255,6 +495,30 @@
     },
     {
       "key": {
+        "uuid": "cdfaee1d_19ed40b5",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "This part is not used in the validation function (verify_entry_signature, verify_icp_root_hash). It makes sense to test it more thoroughly, but this should probably happen in the _util_unittest.cc file (which tests parse_icp_entry).",
+      "parentUuid": "2f371cc5_d519d025",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 49
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "af3ade1e_f9dcffe7",
         "filename": "test/avb_aftl_validate_unittest.cc",
         "patchSetId": 1
@@ -275,6 +539,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "67391fe3_c8987067",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Same comment as above. This should be done in util\u0027s unittest.",
+      "parentUuid": "af3ade1e_f9dcffe7",
+      "range": {
+        "startLine": 90,
+        "startChar": 0,
+        "endLine": 90,
+        "endChar": 60
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     },
     {
       "key": {
@@ -301,6 +589,30 @@
     },
     {
       "key": {
+        "uuid": "45e23370_1afd4a42",
+        "filename": "test/avb_aftl_validate_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d66e3d80_3f6a307d",
+      "range": {
+        "startLine": 95,
+        "startChar": 38,
+        "endLine": 95,
+        "endChar": 61
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
         "uuid": "ba05ff32_d6e6b7e2",
         "filename": "test/avb_aftl_verify_unittest.cc",
         "patchSetId": 1
@@ -321,6 +633,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "6c56d4f5_18ae6505",
+        "filename": "test/avb_aftl_verify_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-14T11:16:31Z",
+      "side": 1,
+      "message": "You might be the best person to document this. This key was already in the test data.",
+      "parentUuid": "ba05ff32_d6e6b7e2",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 58
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
