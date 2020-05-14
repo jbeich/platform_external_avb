@@ -657,6 +657,30 @@
       "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "6c7094cb_3b6d130b",
+        "filename": "test/avb_aftl_verify_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-14T11:27:50Z",
+      "side": 1,
+      "message": "Sure. Though I not just meant this one here but also the test image that follows next.",
+      "parentUuid": "6c56d4f5_18ae6505",
+      "range": {
+        "startLine": 39,
+        "startChar": 0,
+        "endLine": 39,
+        "endChar": 58
+      },
+      "revId": "f21c65c069c6c220d9b5558c098972ea309fee36",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
