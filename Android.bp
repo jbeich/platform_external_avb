@@ -14,7 +14,10 @@
 // limitations under the License.
 //
 
-subdirs = ["test", "tools"]
+subdirs = [
+    "test",
+    "tools",
+]
 
 cc_defaults {
     name: "avb_defaults",
@@ -243,7 +246,8 @@ cc_library_static {
     name: "libavb_aftl",
     defaults: [
         "avb_defaults",
-        "avb_sources"],
+        "avb_sources",
+    ],
     host_supported: true,
     recovery_available: true,
     header_libs: ["avb_headers"],
@@ -252,9 +256,9 @@ cc_library_static {
         "-fno-stack-protector",
     ],
     srcs: [
-      "libavb_aftl/avb_aftl_util.c",
-      "libavb_aftl/avb_aftl_validate.c",
-      "libavb_aftl/avb_aftl_verify.c",
+        "libavb_aftl/avb_aftl_util.c",
+        "libavb_aftl/avb_aftl_validate.c",
+        "libavb_aftl/avb_aftl_verify.c",
     ],
 }
 
@@ -264,17 +268,23 @@ cc_fuzz {
     // The fuzzing entry point is declared and defined in the same file.
     // Overwrite the behaviour introduced by avb_defaults.
     cflags: [
-      "-Wno-missing-prototypes",
+        "-Wno-missing-prototypes",
     ],
     srcs: [
-      "test/avb_aftl_fuzz.cc",
+        "test/avb_aftl_fuzz.cc",
     ],
-    static_libs: ["libavb", "libavb_aftl"],
+    static_libs: [
+        "libavb",
+        "libavb_aftl",
+    ],
     host_supported: true,
     fuzz_config: {
-      cc: ["tweek@google.com", "jpm@google.com"],
-      componentid: 685985,
-    }
+        cc: [
+            "tweek@google.com",
+            "jpm@google.com",
+        ],
+        componentid: 685985,
+    },
 }
 
 cc_library_host_static {
@@ -341,8 +351,8 @@ cc_test_host {
         "libcrypto",
     ],
     cflags: [
-            "-Wno-missing-prototypes",
-            "-DAVB_AB_I_UNDERSTAND_LIBAVB_AB_IS_DEPRECATED",
+        "-Wno-missing-prototypes",
+        "-DAVB_AB_I_UNDERSTAND_LIBAVB_AB_IS_DEPRECATED",
     ],
     srcs: [
         "test/avb_ab_flow_unittest.cc",
