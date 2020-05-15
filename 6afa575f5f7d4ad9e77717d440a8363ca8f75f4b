@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "188e3ff1_f54e36af",
+        "filename": "test/avb_aftl_fuzz.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1451494
+      },
+      "writtenOn": "2020-05-15T21:11:09Z",
+      "side": 1,
+      "message": "I don\u0027t see where it is that test/corpus/icp.bin is defined for use with fuzzing.",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 60
+      },
+      "revId": "6afa575f5f7d4ad9e77717d440a8363ca8f75f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
