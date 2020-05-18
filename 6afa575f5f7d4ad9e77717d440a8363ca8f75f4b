@@ -22,6 +22,30 @@
       "revId": "6afa575f5f7d4ad9e77717d440a8363ca8f75f4b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "57ed320f_919e2a93",
+        "filename": "test/avb_aftl_fuzz.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2020-05-18T07:37:52Z",
+      "side": 1,
+      "message": "Good catch. Done in Android.bp cc_fuzz target.",
+      "parentUuid": "188e3ff1_f54e36af",
+      "range": {
+        "startLine": 32,
+        "startChar": 0,
+        "endLine": 32,
+        "endChar": 60
+      },
+      "revId": "6afa575f5f7d4ad9e77717d440a8363ca8f75f4b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
