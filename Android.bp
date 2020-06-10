@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2017 The Android Open Source Project
+// Copyright (C) 2017-2020 The Android Open Source Project
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,7 +14,10 @@
 // limitations under the License.
 //
 
-subdirs = ["test", "tools"]
+subdirs = [
+    "test",
+    "tools",
+]
 
 cc_defaults {
     name: "avb_defaults",
@@ -76,55 +79,37 @@ cc_defaults {
 
 python_binary_host {
     name: "avbtool",
-    srcs: [":avbtool_py"],
+    srcs: ["avbtool.py"],
     main: "avbtool.py",
     required: ["fec"],
     version: {
         py2: {
+            enabled: false,
+        },
+        py3: {
             enabled: true,
             embedded_launcher: true,
         },
-        py3: {
-            enabled: false,
-        },
     },
-}
-
-python_test_host {
-    name: "avbtool_test",
-    main: "avbtool_test.py",
-    srcs: [
-        ":avbtool_py",
-        "avbtool_test.py",
-    ],
-    data: [
-        "test/data/**/*.*",
-    ],
-    test_suites: ["general-tests"],
-    version: {
-        py2: {
-            enabled: true,
-            // This is needs to be false due to b/146057182#comment5.
-            embedded_launcher: false,
-        },
-        py3: {
-            enabled: false,
-        },
-    },
-}
-
-genrule {
-  name: "aftltool_py",
-  srcs: ["aftltool",],
-  out: ["aftltool.py"],
-  cmd: "cp $(in) $(out)",
 }
 
 python_library_host {
     name: "aftl_proto",
     srcs: [
-        "proto/**/*.py",
+        "proto/api.proto",
+        "proto/crypto/sigpb/sigpb.proto",
+        "proto/crypto/keyspb/keyspb.proto",
+        "proto/trillian.proto",
     ],
+    proto: {
+        include_dirs: [
+            "external/protobuf/src",
+        ],
+        local_include_dirs: [
+            "proto",
+        ],
+        canonical_path_from_root: false,
+    },
     version: {
         py2: {
             enabled: false,
@@ -138,14 +123,13 @@ python_library_host {
 python_binary_host {
     name: "aftltool",
     srcs: [
-        ":aftltool_py",
-        ":avbtool_py",
+        "aftltool.py",
+        "avbtool.py",
     ],
     libs: [
         "aftl_proto",
     ],
     main: "aftltool.py",
-    required: ["fec"],
     version: {
         py2: {
             enabled: false,
@@ -160,9 +144,9 @@ python_test_host {
     name: "aftltool_test",
     main: "aftltool_test.py",
     srcs: [
-        ":aftltool_py",
-        ":avbtool_py",
+        "aftltool.py",
         "aftltool_test.py",
+        "avbtool.py",
     ],
     libs: [
         "aftl_proto",
@@ -179,13 +163,6 @@ python_test_host {
             enabled: true,
         },
     },
-}
-
-genrule {
-  name: "avbtool_py",
-  srcs: ["avbtool",],
-  out: ["avbtool.py"],
-  cmd: "cp $(in) $(out)",
 }
 
 // Build libavb - this is a static library that depends
@@ -269,7 +246,8 @@ cc_library_static {
     name: "libavb_aftl",
     defaults: [
         "avb_defaults",
-        "avb_sources"],
+        "avb_sources",
+    ],
     host_supported: true,
     recovery_available: true,
     header_libs: ["avb_headers"],
@@ -278,10 +256,36 @@ cc_library_static {
         "-fno-stack-protector",
     ],
     srcs: [
-      "libavb_aftl/avb_aftl_util.c",
-      "libavb_aftl/avb_aftl_validate.c",
-      "libavb_aftl/avb_aftl_verify.c",
+        "libavb_aftl/avb_aftl_util.c",
+        "libavb_aftl/avb_aftl_validate.c",
+        "libavb_aftl/avb_aftl_verify.c",
     ],
+}
+
+cc_fuzz {
+    name: "libavb_aftl_fuzzer",
+    defaults: ["avb_defaults"],
+    // The fuzzing entry point is declared and defined in the same file.
+    // Overwrite the behaviour introduced by avb_defaults.
+    cflags: [
+        "-Wno-missing-prototypes",
+    ],
+    srcs: [
+        "test/avb_aftl_fuzz.cc",
+    ],
+    static_libs: [
+        "libavb",
+        "libavb_aftl",
+    ],
+    host_supported: true,
+    corpus: ["test/corpus/*"],
+    fuzz_config: {
+        cc: [
+            "tweek@google.com",
+            "jpm@google.com",
+        ],
+        componentid: 685985,
+    },
 }
 
 cc_library_host_static {
@@ -327,7 +331,8 @@ cc_test_host {
     ],
     data: [
         "avbtool",
-        "test/avbtool_signing_helper_*.py",
+        "test/avbtool_signing_helper_test.py",
+        "test/avbtool_signing_helper_with_files_test.py",
         "test/data/*",
     ],
     test_config: "test/libavb_host_unittest.xml",
@@ -347,8 +352,8 @@ cc_test_host {
         "libcrypto",
     ],
     cflags: [
-            "-Wno-missing-prototypes",
-            "-DAVB_AB_I_UNDERSTAND_LIBAVB_AB_IS_DEPRECATED",
+        "-Wno-missing-prototypes",
+        "-DAVB_AB_I_UNDERSTAND_LIBAVB_AB_IS_DEPRECATED",
     ],
     srcs: [
         "test/avb_ab_flow_unittest.cc",

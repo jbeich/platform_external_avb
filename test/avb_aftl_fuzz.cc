@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2017 The Android Open Source Project
+ * Copyright (C) 2020 The Android Open Source Project
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,38 +22,14 @@
  * SOFTWARE.
  */
 
-#if !defined(AVB_INSIDE_LIBAVB_H) && !defined(AVB_COMPILATION)
-#error "Never include this file directly, include libavb.h instead."
-#endif
+#include <stddef.h>
+#include <stdint.h>
 
-#ifndef AVB_VERSION_H_
-#define AVB_VERSION_H_
+#include "libavb_aftl/avb_aftl_types.h"
+#include "libavb_aftl/avb_aftl_util.h"
 
-#include "avb_sysdeps.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/* The version number of AVB - keep in sync with avbtool. */
-#define AVB_VERSION_MAJOR 1
-#define AVB_VERSION_MINOR 2
-#define AVB_VERSION_SUB 0
-
-/* Returns a NUL-terminated string for the libavb version in use.  The
- * returned string usually looks like "%d.%d.%d". Applications must
- * not make assumptions about the content of this string.
- *
- * Boot loaders should display this string in debug/diagnostics output
- * to aid with debugging.
- *
- * This is similar to the string put in the |release_string| string
- * field in the VBMeta struct by avbtool.
- */
-const char* avb_version_string(void);
-
-#ifdef __cplusplus
+extern "C" int LLVMFuzzerTestOneInput(const char* data, size_t size) {
+  AftlImage* image = parse_aftl_image((uint8_t*)data, size);
+  free_aftl_image(image);
+  return 0;
 }
-#endif
-
-#endif /* AVB_VERSION_H_ */
