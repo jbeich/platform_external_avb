@@ -209,6 +209,11 @@ design, this authority can be easily revoked by simply updating
 Storing signed verification data on other images - for example
 `boot.img` and `system.img` - is also done with `avbtool`.
 
+The minimum requirement for running `avbtool` is to either have
+Python 3.5 installed or build the avbtool with the embedded launcher
+using `m avbtool` and then run it out of the build artifact directory:
+`out/soong/host/linux-x86/bin/avbtool`
+
 In addition to `avbtool`, a library - `libavb` - is provided. This
 library performs all verification on the device side e.g. it starts by
 loading the `vbmeta` partition, checks the signature, and then goes on
@@ -372,7 +377,8 @@ The content for the vbmeta partition can be generated as follows:
     $ avbtool make_vbmeta_image                                                    \
         [--output OUTPUT]                                                          \
         [--algorithm ALGORITHM] [--key /path/to/key_used_for_signing_or_pub_key]   \
-        [--public_key_metadata /path/to/pkmd.bin] [--rollback_index NUMBER]        \
+        [--public_key_metadata /path/to/pkmd.bin]                                  \
+        [--rollback_index NUMBER] [--rollback_index_location NUMBER]               \
         [--include_descriptors_from_image /path/to/image.bin]                      \
         [--setup_rootfs_from_kernel /path/to/image.bin]                            \
         [--chain_partition part_name:rollback_index_location:/path/to/key1.bin]    \
@@ -388,7 +394,8 @@ added to an existing image as follows:
         --partition_name PARTNAME --partition_size SIZE                            \
         [--image IMAGE]                                                            \
         [--algorithm ALGORITHM] [--key /path/to/key_used_for_signing_or_pub_key]   \
-        [--public_key_metadata /path/to/pkmd.bin] [--rollback_index NUMBER]        \
+        [--public_key_metadata /path/to/pkmd.bin]                                  \
+        [--rollback_index NUMBER] [--rollback_index_location NUMBER]               \
         [--hash_algorithm HASH_ALG] [--salt HEX]                                   \
         [--include_descriptors_from_image /path/to/image.bin]                      \
         [--setup_rootfs_from_kernel /path/to/image.bin]                            \
@@ -409,7 +416,8 @@ hashtree is also appended to the image.
         --partition_name PARTNAME --partition_size SIZE                            \
         [--image IMAGE]                                                            \
         [--algorithm ALGORITHM] [--key /path/to/key_used_for_signing_or_pub_key]   \
-        [--public_key_metadata /path/to/pkmd.bin] [--rollback_index NUMBER]        \
+        [--public_key_metadata /path/to/pkmd.bin]                                  \
+        [--rollback_index NUMBER] [--rollback_index_location NUMBER]               \
         [--hash_algorithm HASH_ALG] [--salt HEX] [--block_size SIZE]               \
         [--include_descriptors_from_image /path/to/image.bin]                      \
         [--setup_rootfs_from_kernel /path/to/image.bin]                            \
@@ -1075,6 +1083,10 @@ When booting an image signed with a custom key, a yellow screen will be shown as
 part of the boot process to remind the user that the custom key is in use.
 
 # Version History
+
+### Version 1.2
+
+Version 1.2 adds support for the `rollback_index_location` field of the main vbmeta header.
 
 ### Version 1.1
 
