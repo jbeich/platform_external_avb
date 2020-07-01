@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "f467f3b7_c2ffc4e9",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4460,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-07-01T16:24:37Z",
+      "side": 1,
+      "message": "Would it make sense to just always print this information if it\u0027s available? IOW, not have an option at all. We don\u0027t provide any backward/forward compatibility guarantees for \u0027avbtool info_image\u0027 output so this should be fine...",
+      "range": {
+        "startLine": 4457,
+        "startChar": 0,
+        "endLine": 4460,
+        "endChar": 48
+      },
+      "revId": "01553a27989ebcb915bb80dedf9d49b06ed41867",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
