@@ -46,6 +46,30 @@
       "revId": "01553a27989ebcb915bb80dedf9d49b06ed41867",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "8e2df50e_a98eccc1",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4460,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2020-07-01T18:24:53Z",
+      "side": 1,
+      "message": "Ah, that\u0027s a good point for why we need the option. LGTM, thanks!",
+      "parentUuid": "79c59a2e_f6d5d75e",
+      "range": {
+        "startLine": 4457,
+        "startChar": 0,
+        "endLine": 4460,
+        "endChar": 48
+      },
+      "revId": "01553a27989ebcb915bb80dedf9d49b06ed41867",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
