@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "key": {
+        "uuid": "10ce2b4a_36f2b568",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1079733
+      },
+      "writtenOn": "2020-07-06T23:19:51Z",
+      "side": 1,
+      "message": "I think the issue is not integer overflow, because desc_end is also 32 bit pointer, so `nb_total + p \u003e desc_end` would\u0027ve caught that.\n\nThe issue that triggered asan is casting \u0026p (const uint8**, 32 bit pointer to a 32 bit pointer) to uint64_t* (32 bit pointer to a uint64_t), and then in avb_safe_add_to it will write 4 bytes past the end of p to 0.\n\nI think simply changing it to `p +\u003d nb_total` should be enough since we already checked overflow at line 105.",
+      "range": {
+        "startLine": 11,
+        "startChar": 33,
+        "endLine": 12,
+        "endChar": 59
+      },
+      "revId": "e2f7c3329f98806978ff69e281182e4f8b3b0166",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
+    }
+  ]
+}
