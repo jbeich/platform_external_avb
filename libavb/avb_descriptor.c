@@ -102,7 +102,18 @@ bool avb_descriptor_foreach(const uint8_t* image_data,
       goto out;
     }
 
-    if (nb_total + p < desc_start || nb_total + p > desc_end) {
+    uint64_t new_ptr_64;
+    if (!avb_safe_add(&new_ptr_64, (uint64_t)p, nb_total)) {
+      avb_error("Invalid descriptor length.\n");
+      goto out;
+    }
+    if (new_ptr_64 > UINTPTR_MAX) {
+      avb_error("Invalid descriptor length.\n");
+      goto out;
+    }
+    uint8_t* new_p = (uint8_t*)new_ptr_64;
+
+    if (new_p < desc_start || new_p > desc_end) {
       avb_error("Invalid data in descriptors array.\n");
       goto out;
     }
@@ -111,10 +122,7 @@ bool avb_descriptor_foreach(const uint8_t* image_data,
       goto out;
     }
 
-    if (!avb_safe_add_to((uint64_t*)(&p), nb_total)) {
-      avb_error("Invalid descriptor length.\n");
-      goto out;
-    }
+    p = new_p;
   }
 
   ret = true;
