@@ -102,7 +102,7 @@ bool avb_descriptor_foreach(const uint8_t* image_data,
       goto out;
     }
 
-    if (nb_total + p < desc_start || nb_total + p > desc_end) {
+    if (nb_total > static_cast<uint64_t>(desc_end - p)) {
       avb_error("Invalid data in descriptors array.\n");
       goto out;
     }
@@ -111,10 +111,7 @@ bool avb_descriptor_foreach(const uint8_t* image_data,
       goto out;
     }
 
-    if (!avb_safe_add_to((uint64_t*)(&p), nb_total)) {
-      avb_error("Invalid descriptor length.\n");
-      goto out;
-    }
+    p += nb_total;
   }
 
   ret = true;
