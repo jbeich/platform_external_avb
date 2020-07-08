@@ -16,6 +16,46 @@
       "revId": "769bcf167e6566e7e3b775ee0f71f168741997ae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "78eb66b5_7ddbebd4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2020-07-08T00:39:25Z",
+      "side": 1,
+      "message": "Will also need review from one of the AVB owners (Darren or otherwise, see \"Find Owners\")",
+      "revId": "769bcf167e6566e7e3b775ee0f71f168741997ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
+    },
+    {
+      "key": {
+        "uuid": "4c49a35d_01f5d855",
+        "filename": "libavb/avb_descriptor.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1178083
+      },
+      "writtenOn": "2020-07-08T00:39:25Z",
+      "side": 1,
+      "message": "I think we should just add new \"avb_safe_add(_to)_ptr\" helpers, something like:\n\nbool avb_safe_add_ptr(void* out_result,\n                      uintptr_t a,\n                      uintptr_t b) AVB_ATTR_WARN_UNUSED_RESULT;\nbool avb_safe_add_to_ptr(void* value,\n                         uintptr_t value_to_add) AVB_ATTR_WARN_UNUSED_RESULT\n\nIt\u0027s a bit bigger change, but it will help prevent these types of bugs in the future if there\u0027s a clear safe pointer math helper to use.\n\n(Also, technically char* would be a better type to use than void*, otherwise you\u0027re relying on compiler extensions that define sizeof(void) \u003d\u003d 1, but I would bet this isn\u0027t the only place that relies on that...)",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 114,
+        "endChar": 42
+      },
+      "revId": "769bcf167e6566e7e3b775ee0f71f168741997ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": true
     }
   ]
 }
