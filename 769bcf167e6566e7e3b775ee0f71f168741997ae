@@ -56,6 +56,30 @@
       "revId": "769bcf167e6566e7e3b775ee0f71f168741997ae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
       "unresolved": true
+    },
+    {
+      "key": {
+        "uuid": "cf74eb99_7745f18b",
+        "filename": "libavb/avb_descriptor.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 114,
+      "author": {
+        "id": 1219061
+      },
+      "writtenOn": "2020-07-08T21:57:28Z",
+      "side": 1,
+      "message": "I used the solution proposed my matthew, i think this is simpler.",
+      "parentUuid": "4c49a35d_01f5d855",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 114,
+        "endChar": 42
+      },
+      "revId": "769bcf167e6566e7e3b775ee0f71f168741997ae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889",
+      "unresolved": false
     }
   ]
 }
