@@ -154,7 +154,9 @@ python_test_host {
     data: [
         "test/data/**/*.*",
     ],
-    test_suites: ["general-tests"],
+    test_options: {
+        unit_test: true,
+    },
     version: {
         py2: {
             enabled: false,
@@ -336,7 +338,9 @@ cc_test_host {
         "test/data/*",
     ],
     test_config: "test/libavb_host_unittest.xml",
-    test_suites: ["general-tests"],
+    test_options: {
+        unit_test: true,
+    },
     static_libs: [
         "libavb",
         "libavb_ab_host",
