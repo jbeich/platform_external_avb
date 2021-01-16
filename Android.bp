@@ -91,6 +91,7 @@ python_binary_host {
             embedded_launcher: true,
         },
     },
+    compile_multilib: "both",
 }
 
 python_library_host {
