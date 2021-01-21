@@ -14,6 +14,10 @@
 // limitations under the License.
 //
 
+package {
+    default_applicable_licenses: ["external_avb_license"],
+}
+
 python_test_host {
     name: "at_auth_unlock_unittest",
     main: "at_auth_unlock_unittest.py",
