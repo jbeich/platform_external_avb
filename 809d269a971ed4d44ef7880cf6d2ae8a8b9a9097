@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68467338_40c37831",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 91,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-01-28T05:34:24Z",
+      "side": 1,
+      "message": "tab?\n\nLet me fix it here: https://android-review.googlesource.com/c/platform/external/avb/+/1561999",
+      "range": {
+        "startLine": 91,
+        "startChar": 0,
+        "endLine": 91,
+        "endChar": 5
+      },
+      "revId": "809d269a971ed4d44ef7880cf6d2ae8a8b9a9097",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
