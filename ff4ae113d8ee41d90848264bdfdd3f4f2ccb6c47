@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e5a4f4c_2807b2fd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1110792
+      },
+      "writtenOn": "2021-02-02T21:44:08Z",
+      "side": 1,
+      "message": "The Presubmit failures are valid failures. AvbSlotVerifyTest are failing due to this change. ",
+      "revId": "ff4ae113d8ee41d90848264bdfdd3f4f2ccb6c47",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
