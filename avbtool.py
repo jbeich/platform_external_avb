@@ -2805,7 +2805,7 @@ class Avb(object):
       when it is.
 
     """
-    c = 'dm="1 vroot none ro 1,'
+    c = 'dm-mod.create=\"vroot,,0,ro,'
     c += '0'                                                # start
     c += ' {}'.format((ht.image_size // 512))               # size (# sectors)
     c += ' verity {}'.format(ht.dm_verity_version)          # type and version
