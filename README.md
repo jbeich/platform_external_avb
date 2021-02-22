@@ -403,6 +403,7 @@ added to an existing image as follows:
         [--calc_max_image_size]                                                    \
         [--do_not_use_ab]                                                          \
         [--use_persistent_digest]
+Valid values for HASH_ALG above includes `sha1` and `sha256`.
 
 An integrity footer containing the root digest and salt for a hashtree
 for a partition can be added to an existing image as follows. The
@@ -428,6 +429,7 @@ hashtree is also appended to the image.
         [--do_not_use_ab]                                                          \
         [--no_hashtree]                                                            \
         [--use_persistent_digest]
+Valid values for HASH_ALG above includes `sha1`, `sha256`, and `blake2d-256`.
 
 The size of an image with integrity footers can be changed using the
 `resize_image` command:
