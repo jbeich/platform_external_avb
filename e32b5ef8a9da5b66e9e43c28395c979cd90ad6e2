@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55c7dbbe_6122e23a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 4
+      },
+      "lineNbr": 16,
+      "author": {
+        "id": 1088085
+      },
+      "writtenOn": "2021-02-23T20:34:27Z",
+      "side": 1,
+      "message": "output in https://paste.googleplex.com/4699461151358976",
+      "range": {
+        "startLine": 16,
+        "startChar": 21,
+        "endLine": 16,
+        "endChar": 32
+      },
+      "revId": "e32b5ef8a9da5b66e9e43c28395c979cd90ad6e2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
