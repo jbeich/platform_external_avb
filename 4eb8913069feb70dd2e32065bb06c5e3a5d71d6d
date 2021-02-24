@@ -140,6 +140,30 @@
       },
       "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3739c38e_a1bf586a",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-02-24T14:39:23Z",
+      "side": 1,
+      "message": "I concur, AVB images using blake2b-256 for the hashtree won\u0027t require a bootloader upgrade with a newer libavb.",
+      "parentUuid": "73c516b5_8922406b",
+      "range": {
+        "startLine": 648,
+        "startChar": 5,
+        "endLine": 648,
+        "endChar": 22
+      },
+      "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
