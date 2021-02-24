@@ -92,6 +92,30 @@
       },
       "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e8f495d0_6ef4b316",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1088085
+      },
+      "writtenOn": "2021-02-24T02:05:23Z",
+      "side": 1,
+      "message": "Yeah, hashlib.new() accepts upper case name, e.g. \u0027SHA1\u0027",
+      "parentUuid": "c9d0c40d_6c5ba767",
+      "range": {
+        "startLine": 648,
+        "startChar": 5,
+        "endLine": 648,
+        "endChar": 22
+      },
+      "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
