@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "241d3d6b_a1e75b43",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1088085
+      },
+      "writtenOn": "2021-02-24T02:00:32Z",
+      "side": 1,
+      "message": "Not really. This change doesn\u0027t impact libavb (who doesn\u0027t parse|use the hashtree) So we don\u0027t need a new version number in this case.",
+      "parentUuid": "087705ed_9a5006dd",
+      "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "260a87e0_9ca538fb",
@@ -31,6 +49,24 @@
       "writtenOn": "2021-02-24T01:56:12Z",
       "side": 1,
       "message": "It seems that there should be a blank line before this line.  Likewise below.  Also, I think HASH_ALG should be in backticks.",
+      "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32ae5c38_22dc7550",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1088085
+      },
+      "writtenOn": "2021-02-24T02:00:32Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "260a87e0_9ca538fb",
       "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
