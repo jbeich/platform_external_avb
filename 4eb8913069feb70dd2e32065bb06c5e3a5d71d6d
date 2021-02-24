@@ -16,6 +16,46 @@
       "message": "Did you take a look at the \"Adding New Features\" section of README.md, and does any of that apply here?",
       "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "260a87e0_9ca538fb",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1137063
+      },
+      "writtenOn": "2021-02-24T01:56:12Z",
+      "side": 1,
+      "message": "It seems that there should be a blank line before this line.  Likewise below.  Also, I think HASH_ALG should be in backticks.",
+      "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9d0c40d_6c5ba767",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 648,
+      "author": {
+        "id": 1137063
+      },
+      "writtenOn": "2021-02-24T01:56:12Z",
+      "side": 1,
+      "message": "Are the other algorithm names case-insensitive?  If not, then for consistency this should be case-sensitive.",
+      "range": {
+        "startLine": 648,
+        "startChar": 5,
+        "endLine": 648,
+        "endChar": 22
+      },
+      "revId": "4eb8913069feb70dd2e32065bb06c5e3a5d71d6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
