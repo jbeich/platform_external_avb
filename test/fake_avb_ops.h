@@ -32,6 +32,7 @@
 
 #include <libavb_ab/libavb_ab.h>
 #include <libavb_atx/libavb_atx.h>
+#include <libavb_open_dice/libavb_open_dice.h>
 
 namespace avb {
 
@@ -115,6 +116,10 @@ class FakeAvbOpsDelegate {
                                uint64_t key_version) = 0;
 
   virtual AvbIOResult get_random(size_t num_bytes, uint8_t* output) = 0;
+
+  virtual void clear_memory(AvbOpenDiceOps* ops,
+                            size_t size,
+                            void* address) = 0;
 };
 
 // Provides fake implementations of AVB ops. All instances of this class must be
@@ -141,6 +146,10 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   AvbAtxOps* avb_atx_ops() {
     return &avb_atx_ops_;
+  }
+
+  AvbOpenDiceOps* avb_open_dice_ops() {
+    return &avb_open_dice_ops_;
   }
 
   FakeAvbOpsDelegate* delegate() {
@@ -293,10 +302,13 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   AvbIOResult get_random(size_t num_bytes, uint8_t* output) override;
 
+  void clear_memory(AvbOpenDiceOps* ops, size_t size, void* address) override;
+
  private:
   AvbOps avb_ops_;
   AvbABOps avb_ab_ops_;
   AvbAtxOps avb_atx_ops_;
+  AvbOpenDiceOps avb_open_dice_ops_;
 
   FakeAvbOpsDelegate* delegate_;
 
@@ -450,6 +462,10 @@ class FakeAvbOpsDelegateWithDefaults : public FakeAvbOpsDelegate {
 
   AvbIOResult get_random(size_t num_bytes, uint8_t* output) override {
     return ops_.get_random(num_bytes, output);
+  }
+
+  void clear_memory(AvbOpenDiceOps* ops, size_t size, void* address) override {
+    ops_.clear_memory(ops, size, address);
   }
 
  protected:
