@@ -37,6 +37,7 @@
 #include <base/files/file_util.h>
 #include <base/strings/string_util.h>
 #include <base/strings/stringprintf.h>
+#include <openssl/mem.h>
 #include <openssl/rand.h>
 #include <openssl/sha.h>
 
@@ -429,6 +430,10 @@ AvbIOResult FakeAvbOps::get_random(size_t num_bytes, uint8_t* output) {
   return AVB_IO_RESULT_OK;
 }
 
+void FakeAvbOps::clear_memory(AvbOpenDiceOps* ops, size_t size, void* address) {
+  OPENSSL_cleanse(address, size);
+}
+
 static AvbIOResult my_ops_read_from_partition(AvbOps* ops,
                                               const char* partition,
                                               int64_t offset,
@@ -589,6 +594,13 @@ static AvbIOResult my_ops_get_random(AvbAtxOps* atx_ops,
       ->get_random(num_bytes, output);
 }
 
+static void my_ops_clear_memory(AvbOpenDiceOps* ops,
+                                size_t size,
+                                void* address) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops->ops)->delegate()->clear_memory(
+      ops, size, address);
+}
+
 FakeAvbOps::FakeAvbOps() {
   memset(&avb_ops_, 0, sizeof(avb_ops_));
   avb_ops_.ab_ops = &avb_ab_ops_;
@@ -618,6 +630,9 @@ FakeAvbOps::FakeAvbOps() {
       my_ops_read_permanent_attributes_hash;
   avb_atx_ops_.set_key_version = my_ops_set_key_version;
   avb_atx_ops_.get_random = my_ops_get_random;
+
+  avb_open_dice_ops_.ops = &avb_ops_;
+  avb_open_dice_ops_.clear_memory = my_ops_clear_memory;
 
   delegate_ = this;
 }
