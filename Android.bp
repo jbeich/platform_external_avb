@@ -209,6 +209,11 @@ cc_library_static {
     ],
     host_supported: true,
     recovery_available: true,
+    vendor_available: true,
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.virt",
+    ],
     header_libs: [
         "avb_headers",
     ],
@@ -444,6 +449,11 @@ cc_library_headers {
     name: "avb_headers",
     host_supported: true,
     recovery_available: true,
+    vendor_available: true,
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.virt",
+    ],
     export_include_dirs: ["."],
     target: {
         windows: {
