@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f3ec64e7_7efe31ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-03-12T14:42:26Z",
+      "side": 1,
+      "message": "So, essentially, this CL just makes libavb available to /vendor and certain APEXes?\n\nIf so, maybe update the commit message to say just that... I mean, if the reader wants to know more or why this was introduced they can also just look at the referenced bug.",
+      "revId": "16d1d21582e583ec5ce0bfda9cb5776e3075316b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
