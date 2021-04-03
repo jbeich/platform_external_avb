@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c99ef78b_7293c17e",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1088085
+      },
+      "writtenOn": "2021-04-03T06:04:53Z",
+      "side": 1,
+      "message": "note this is expected to be \u0027system\u0027\n\nhttps://source.corp.google.com/aosp-master/build/make/core/sysprop.mk;l\u003d57",
+      "range": {
+        "startLine": 288,
+        "startChar": 17,
+        "endLine": 288,
+        "endChar": 19
+      },
+      "revId": "e549c5ee4cdb358ed0f7e198ad0034b6adc0d4e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
