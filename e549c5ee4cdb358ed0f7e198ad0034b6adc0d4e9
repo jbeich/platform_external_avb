@@ -22,6 +22,30 @@
       },
       "revId": "e549c5ee4cdb358ed0f7e198ad0034b6adc0d4e9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5c037e9a_88294690",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 288,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-04-05T20:47:37Z",
+      "side": 1,
+      "message": "Yes, I understand that - I did not hardcode a \u0027system\u0027 so that this regex would still be backwards compatible with the older releases.",
+      "parentUuid": "c99ef78b_7293c17e",
+      "range": {
+        "startLine": 288,
+        "startChar": 17,
+        "endLine": 288,
+        "endChar": 19
+      },
+      "revId": "e549c5ee4cdb358ed0f7e198ad0034b6adc0d4e9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
