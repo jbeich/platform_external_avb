@@ -829,10 +829,10 @@ class ImageHandler(object):
         self._image.seek(data_sz, os.SEEK_CUR)
 
       elif chunk_type == ImageChunk.TYPE_FILL:
-        if data_sz != 4:
+        if data_sz != 8:
           raise ValueError('Fill chunk should have 4 bytes of fill, but this '
                            'has {}'.format(data_sz))
-        fill_data = self._image.read(4)
+        fill_data = self._image.read(8)
         self._chunks.append(ImageChunk(ImageChunk.TYPE_FILL,
                                        chunk_offset,
                                        output_offset,
@@ -980,8 +980,8 @@ class ImageHandler(object):
     Raises:
       OSError: If ImageHandler was initialized in read-only mode.
     """
-    assert len(fill_data) == 4
-    assert size % 4 == 0
+    assert len(fill_data) == 8
+    assert size % 8 == 0
     assert size % self.block_size == 0
 
     if self._read_only:
@@ -989,7 +989,7 @@ class ImageHandler(object):
 
     if not self.is_sparse:
       self._image.seek(0, os.SEEK_END)
-      self._image.write(fill_data * (size//4))
+      self._image.write(fill_data * (size//8))
       self._read_header()
       return
 
@@ -1002,7 +1002,7 @@ class ImageHandler(object):
                                   ImageChunk.TYPE_FILL,
                                   0,  # Reserved
                                   size // self.block_size,
-                                  4 + struct.calcsize(ImageChunk.FORMAT),
+                                  8 + struct.calcsize(ImageChunk.FORMAT),
                                   0))
     self._image.write(fill_data)
     self._read_header()
@@ -1120,8 +1120,8 @@ class ImageHandler(object):
           data_sz = num_to_keep
         elif chunk.chunk_type == ImageChunk.TYPE_FILL:
           truncate_at = (chunk.chunk_offset +
-                         struct.calcsize(ImageChunk.FORMAT) + 4)
-          data_sz = 4
+                         struct.calcsize(ImageChunk.FORMAT) + 8)
+          data_sz = 8
         else:
           assert chunk.chunk_type == ImageChunk.TYPE_DONT_CARE
           truncate_at = chunk.chunk_offset + struct.calcsize(ImageChunk.FORMAT)
@@ -2319,10 +2319,10 @@ class Avb(object):
     image.truncate(zero_ht_start_offset)
     data_zeroed_firstblock = b'ZeRoHaSH' + b'\0' * (image.block_size - 8)
     image.append_raw(data_zeroed_firstblock)
-    image.append_fill(b'\0\0\0\0', zero_ht_num_bytes - image.block_size)
+    image.append_fill(b'\0\0\0\0\0\0\0\0', zero_ht_num_bytes - image.block_size)
     if zero_fec_start_offset:
       image.append_raw(data_zeroed_firstblock)
-      image.append_fill(b'\0\0\0\0', zero_fec_num_bytes - image.block_size)
+      image.append_fill(b'\0\0\0\0\0\0\0\0', zero_fec_num_bytes - image.block_size)
     image.append_raw(data)
 
   def resize_image(self, image_filename, partition_size):
