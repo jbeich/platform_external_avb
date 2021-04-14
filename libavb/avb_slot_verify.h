@@ -84,6 +84,7 @@ typedef enum {
  * value used is "avb.managed_verity_mode" and 32 bytes of storage is needed.
  */
 typedef enum {
+  AVB_HASHTREE_ERROR_MODE_PANIC,
   AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
   AVB_HASHTREE_ERROR_MODE_RESTART,
   AVB_HASHTREE_ERROR_MODE_EIO,

@@ -322,6 +322,10 @@ AvbSlotVerifyResult avb_append_options(
     char* new_ret;
 
     switch (resolved_hashtree_error_mode) {
+      case AVB_HASHTREE_ERROR_MODE_PANIC:
+        verity_mode = "panicking";
+        dm_verity_mode = "panic_on_corruption";
+        break;
       case AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE:
         if (!cmdline_append_option(
                 slot_data, "androidboot.vbmeta.invalidate_on_error", "yes")) {

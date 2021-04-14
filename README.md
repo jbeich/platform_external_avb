@@ -982,6 +982,11 @@ not the bootloader. AVB provides a way to specify how the error should
 be handled through the `hashtree_error_mode` parameter in the
 `avb_slot_verify()` function. Possible values include
 
+* `AVB_HASHTREE_ERROR_MODE_PANIC` means that the OS will **panic** without
+  the current slot being invalidated. Be careful using this mode as it may
+  introduce boot panic if the same hashtree verification error is hit on
+  every boot. This mode is available since: 1.7.0 (kernel 5.9)
+
 * `AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE` means that the HLOS
   will invalidate the current slot and restart. On devices with A/B
   this would lead to attempting to boot the other slot (if it's marked
@@ -1021,6 +1026,7 @@ kernel command-line parameters in the following way:
 
 |      | `androidboot.veritymode` | `androidboot.veritymode.managed` | `androidboot.vbmeta.invalidate_on_error` |
 |------|:------------------------:|:--------------------------------:|:----------------------------------------:|
+| `AVB_HASHTREE_ERROR_MODE_PANIC` | **panicking** | (unset) | (unset) |
 | `AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE` | **enforcing** | (unset) | **yes** |
 | `AVB_HASHTREE_ERROR_MODE_RESTART` | **enforcing** | (unset) | (unset) |
 | `AVB_HASHTREE_ERROR_MODE_EIO` | **eio** | (unset) | (unset) |
