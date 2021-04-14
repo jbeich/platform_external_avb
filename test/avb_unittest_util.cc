@@ -36,6 +36,21 @@ std::string mem_to_hexstring(const uint8_t* data, size_t len) {
   return ret;
 }
 
+std::vector<uint8_t> hexstring_to_mem(const std::string& str) {
+  std::vector<uint8_t> data;
+
+  if (str.length() % 2 != 0) {
+    /* Hex-string has incomplete octet. */
+    std::abort();
+  }
+
+  for (size_t n = 0; n < str.length(); n += 2) {
+    data.push_back(std::stoul(str.substr(n, 2), NULL, 16));
+  }
+
+  return data;
+}
+
 std::string string_trim(const std::string& str) {
   size_t first = str.find_first_not_of(" \t\n");
   if (first == std::string::npos) {

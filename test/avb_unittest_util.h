@@ -35,6 +35,9 @@
 // Encodes |len| bytes of |data| as a lower-case hex-string.
 std::string mem_to_hexstring(const uint8_t* data, size_t len);
 
+// Decodes |str| from a hex-string into bytes.
+std::vector<uint8_t> hexstring_to_mem(const std::string& str);
+
 // Trims whitespace from start and end of |str|.
 std::string string_trim(const std::string& str);
 
