@@ -542,4 +542,10 @@ TEST_F(UtilTest, Basename) {
   EXPECT_EQ("/", std::string(avb_basename("/")));
 }
 
+TEST_F(UtilTest, MemHexstringConvertion) {
+  const std::string hexstring = "c0675d3c49add7d3a3286f98bf1e2346";
+  const auto mem = hexstring_to_mem(hexstring);
+  EXPECT_EQ(hexstring, mem_to_hexstring(mem.data(), mem.size()));
+}
+
 }  // namespace avb
