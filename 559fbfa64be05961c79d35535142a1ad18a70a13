@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3bc4bad4_9a281ce3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-04-16T08:17:53Z",
+      "side": 1,
+      "message": "Hello, Dear in charge of \"avb module\"\nCould you please review about this patch?\n\nThank you 😊",
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
