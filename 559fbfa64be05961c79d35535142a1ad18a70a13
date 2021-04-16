@@ -16,6 +16,29 @@
       "message": "Hello, Dear in charge of \"avb module\"\nCould you please review about this patch?\n\nThank you 😊",
       "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db732b3d_29ba93c0",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-04-16T10:37:09Z",
+      "side": 1,
+      "message": "Just curious, what will be an appropriate use case to use this mode?\n\nNote that to have better UX, we\u0027ve recently removed the RESTART_AND_INVALIDATE option from the common kernel.\n\nhttps://android-review.googlesource.com/q/I1d5acb96dda765a1e3ea0cf62a3bf4b2a78892ea \n\nAnd I\u0027m worried that the panic mode might do more harm than good in terms of UX.",
+      "range": {
+        "startLine": 987,
+        "startChar": 26,
+        "endLine": 988,
+        "endChar": 12
+      },
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
