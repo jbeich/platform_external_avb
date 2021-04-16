@@ -39,6 +39,30 @@
       },
       "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9984185b_8be93b5c",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-04-16T13:46:33Z",
+      "side": 1,
+      "message": "I don\u0027t understand what the point of this new option is. Why would one use it instead of AVB_HASHTREE_ERROR_MODE_RESTART?",
+      "parentUuid": "db732b3d_29ba93c0",
+      "range": {
+        "startLine": 987,
+        "startChar": 26,
+        "endLine": 988,
+        "endChar": 12
+      },
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
