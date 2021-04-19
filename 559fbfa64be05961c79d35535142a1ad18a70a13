@@ -63,6 +63,30 @@
       },
       "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b0e79e60_dc45bced",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-04-19T01:05:16Z",
+      "side": 1,
+      "message": "When use that option, it behaves like this.\n\nAs you know, Android device has debug level. \nWhen debug level set \u0027low\u0027, same as work AVB_HASHTREE_ERROR_MODE_RESTART mode. \nBut debug level set \u0027mid\u0027, device go to panic.\n\nOur policy is found device DM-Verity error, device will go panic. \nBecause This is to analyze the problem to easily in the development stage.(e.g. physical UFS crash, DRAM bit flip etc)\n\nThis question is same as dm-verity mainliner asked me. \nThis link will be help you.\n\nhttps://lkml.org/lkml/2020/6/18/68",
+      "parentUuid": "9984185b_8be93b5c",
+      "range": {
+        "startLine": 987,
+        "startChar": 26,
+        "endLine": 988,
+        "endChar": 12
+      },
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
