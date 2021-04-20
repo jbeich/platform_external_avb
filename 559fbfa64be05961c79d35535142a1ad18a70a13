@@ -35,6 +35,46 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d237936c_fe47367a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-04-20T12:52:43Z",
+      "side": 1,
+      "message": "TBH I still don\u0027t like it but since `panic_on_corruption` is now in upstream Linux let\u0027s just add support for it here as well. Simple nits to move the additions to the end of their respective lists / switch clauses, fix that and I\u0027ll LGTM this. Thanks!",
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b4122967_f250149a",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 985,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-04-20T12:52:43Z",
+      "side": 1,
+      "message": "Move to end of list.",
+      "range": {
+        "startLine": 985,
+        "startChar": 2,
+        "endLine": 985,
+        "endChar": 33
+      },
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "db732b3d_29ba93c0",
@@ -125,6 +165,52 @@
         "startChar": 26,
         "endLine": 988,
         "endChar": 12
+      },
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a43025dc_311d943c",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 328,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-04-20T12:52:43Z",
+      "side": 1,
+      "message": "Move to end.",
+      "range": {
+        "startLine": 325,
+        "startChar": 0,
+        "endLine": 328,
+        "endChar": 13
+      },
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61e2f0ba_57a9d265",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-04-20T12:52:43Z",
+      "side": 1,
+      "message": "While we don\u0027t promise API or ABI stability in libavb, but there\u0027s no reason to break it. So please move this new addition to the end.",
+      "range": {
+        "startLine": 87,
+        "startChar": 2,
+        "endLine": 87,
+        "endChar": 32
       },
       "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
