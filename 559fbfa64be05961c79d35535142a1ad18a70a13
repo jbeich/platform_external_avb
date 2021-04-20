@@ -87,6 +87,30 @@
       },
       "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "731cfe1c_834c1f54",
+        "filename": "README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 988,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-04-20T08:22:31Z",
+      "side": 1,
+      "message": "Dear. Bowgo Tsai\nCould you please explain more?\n\nI just think same as restart mode in shipping model. maybe I missed it.",
+      "parentUuid": "b0e79e60_dc45bced",
+      "range": {
+        "startLine": 987,
+        "startChar": 26,
+        "endLine": 988,
+        "endChar": 12
+      },
+      "revId": "559fbfa64be05961c79d35535142a1ad18a70a13",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
