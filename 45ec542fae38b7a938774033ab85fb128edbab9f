@@ -16,6 +16,23 @@
       "message": "Thank you for reviewing. I agree with your opinion. So i moved end of lists, switch and so on. could you one more see?\n",
       "revId": "45ec542fae38b7a938774033ab85fb128edbab9f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "149cab8d_6e279680",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-04-22T16:50:40Z",
+      "side": 1,
+      "message": "LGTM, thanks.",
+      "revId": "45ec542fae38b7a938774033ab85fb128edbab9f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
