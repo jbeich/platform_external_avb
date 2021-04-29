@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59b4f909_30fcd888",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-04-29T20:55:05Z",
+      "side": 1,
+      "message": "Is this a step too far?",
+      "range": {
+        "startLine": 11,
+        "startChar": 37,
+        "endLine": 12,
+        "endChar": 7
+      },
+      "revId": "7507ceca5c31051b9a20f47ebe1d7c96fa33376b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3a042203_ad87ad06",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-04-29T20:55:05Z",
+      "side": 1,
+      "message": "Had a go at exposing SHA crypto ops in a similar fashion to libeic. Does this seem like a good direction to take?",
+      "revId": "7507ceca5c31051b9a20f47ebe1d7c96fa33376b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
