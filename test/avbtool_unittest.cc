@@ -33,7 +33,9 @@
 #include <base/strings/string_util.h>
 #include <base/strings/stringprintf.h>
 
-#include <libavb/avb_sha.h>
+#include <openssl/is_boringssl.h>
+#include <openssl/sha.h>
+
 #include <libavb/libavb.h>
 
 #include "avb_unittest_util.h"
@@ -583,12 +585,13 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
   }
 
   // Manually calculate the hash to check that it agrees with avbtool.
-  AvbSHA256Ctx hasher_ctx;
   const uint8_t hasher_salt[4] = {0xd0, 0x0d, 0xf0, 0x0d};
-  avb_sha256_init(&hasher_ctx);
-  avb_sha256_update(&hasher_ctx, hasher_salt, 4);
-  avb_sha256_update(&hasher_ctx, rootfs.data(), rootfs_size);
-  uint8_t* hasher_digest = avb_sha256_final(&hasher_ctx);
+  uint8_t hasher_digest[SHA256_DIGEST_LENGTH];
+  SHA256_CTX hasher_ctx;
+  SHA256_Init(&hasher_ctx);
+  SHA256_Update(&hasher_ctx, hasher_salt, 4);
+  SHA256_Update(&hasher_ctx, rootfs.data(), rootfs_size);
+  SHA256_Final(hasher_digest, &hasher_ctx);
   EXPECT_EQ("9a58cc996d405e08a1e00f96dbfe9104fedf41cb83b1f5e4ed357fbcf58d88d9",
             mem_to_hexstring(hasher_digest, AVB_SHA256_DIGEST_SIZE));
 

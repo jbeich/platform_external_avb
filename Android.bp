@@ -99,12 +99,23 @@ cc_defaults {
         "libavb/avb_kernel_cmdline_descriptor.c",
         "libavb/avb_property_descriptor.c",
         "libavb/avb_rsa.c",
-        "libavb/avb_sha256.c",
-        "libavb/avb_sha512.c",
         "libavb/avb_slot_verify.c",
         "libavb/avb_util.c",
         "libavb/avb_vbmeta_image.c",
         "libavb/avb_version.c",
+    ],
+}
+
+cc_defaults {
+    name: "avb_crypto_ops_impl_sources",
+    srcs: [
+        "libavb/boringssl/avb_crypto_ops_impl.c",
+    ],
+    local_include_dirs: [
+        "libavb/boringssl",
+    ],
+    shared_libs: [
+        "libcrypto",
     ],
 }
 
@@ -206,6 +217,7 @@ cc_library_static {
     defaults: [
         "avb_defaults",
         "avb_sources",
+        "avb_crypto_ops_impl_sources",
     ],
     host_supported: true,
     recovery_available: true,
@@ -231,6 +243,7 @@ cc_library_static {
     defaults: [
         "avb_defaults",
         "avb_sources",
+        "avb_crypto_ops_impl_sources",
     ],
     recovery_available: true,
     header_libs: [
@@ -281,6 +294,7 @@ cc_library_static {
     defaults: [
         "avb_defaults",
         "avb_sources",
+        "avb_crypto_ops_impl_sources",
     ],
     host_supported: true,
     recovery_available: true,
@@ -324,7 +338,10 @@ cc_fuzz {
 
 cc_library_host_static {
     name: "libavb_atx_host",
-    defaults: ["avb_defaults"],
+    defaults: [
+        "avb_defaults",
+        "avb_crypto_ops_impl_sources",
+    ],
     header_libs: [
         "avb_headers",
     ],
@@ -347,7 +364,10 @@ cc_library_host_static {
 
 cc_library_host_static {
     name: "libavb_things_example",
-    defaults: ["avb_defaults"],
+    defaults: [
+        "avb_defaults",
+        "avb_crypto_ops_impl_sources",
+    ],
     header_libs: [
         "avb_headers",
     ],
@@ -357,7 +377,10 @@ cc_library_host_static {
 
 cc_test_host {
     name: "libavb_host_unittest",
-    defaults: ["avb_defaults"],
+    defaults: [
+        "avb_defaults",
+        "avb_crypto_ops_impl_sources",
+    ],
     required: [
         "simg2img",
         "img2simg",
@@ -403,6 +426,7 @@ cc_test_host {
         "test/avb_aftl_verify_unittest.cc",
         "test/avb_atx_validate_unittest.cc",
         "test/avb_atx_slot_verify_unittest.cc",
+        "test/avb_crypto_ops_unittest.cc",
         "test/avb_slot_verify_unittest.cc",
         "test/avb_unittest_util.cc",
         "test/avb_util_unittest.cc",
