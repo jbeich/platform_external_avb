@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "d54bebb7_16860e74",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-04-30T19:48:10Z",
+      "side": 1,
+      "message": "I think there are libavb users that don\u0027t have BoringSSL so this would be pretty annoying for them. So I would prefer to keep the existing implementation.\n\nIf it\u0027s not too difficult, I would also suggest we build two test libavb_host_unittest binaries, one with the existing implementation and one with BoringSSL.\n\nWe should then add both those binaries to a TEST_MAPPING file so both tests are run on presubmit (I thought we already had that actually).\n\nWhen getting around to adding curve 25519 support I think it would be fine to only add this to the BoringSSL-based implementation...",
+      "parentUuid": "59b4f909_30fcd888",
+      "range": {
+        "startLine": 11,
+        "startChar": 37,
+        "endLine": 12,
+        "endChar": 7
+      },
+      "revId": "7507ceca5c31051b9a20f47ebe1d7c96fa33376b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "3a042203_ad87ad06",
@@ -37,6 +61,23 @@
       "writtenOn": "2021-04-29T20:55:05Z",
       "side": 1,
       "message": "Had a go at exposing SHA crypto ops in a similar fashion to libeic. Does this seem like a good direction to take?",
+      "revId": "7507ceca5c31051b9a20f47ebe1d7c96fa33376b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b027338_7f3c767c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-04-30T19:48:10Z",
+      "side": 1,
+      "message": "Looks great, comments inline, sorry for being slow to respond!",
       "revId": "7507ceca5c31051b9a20f47ebe1d7c96fa33376b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
