@@ -50,6 +50,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "1c02b430_dd6b6420",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-05-04T12:53:31Z",
+      "side": 1,
+      "message": "Brought it back as an alternative implementation. I expect that one will use boringssl for things like ed25519 while the other will be pure boringssl.\n\nTEST_MAPPING has been added with the two variants of the unit test. I was struggling a little with soong so if you think there\u0027s a better way to do it I\u0027m up for learning new tricks!",
+      "parentUuid": "d54bebb7_16860e74",
+      "range": {
+        "startLine": 11,
+        "startChar": 37,
+        "endLine": 12,
+        "endChar": 7
+      },
+      "revId": "7507ceca5c31051b9a20f47ebe1d7c96fa33376b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "3a042203_ad87ad06",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
