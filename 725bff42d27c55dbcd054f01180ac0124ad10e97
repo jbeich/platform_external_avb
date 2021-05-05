@@ -16,6 +16,23 @@
       "message": "Thanks Andrew, I\u0027ll take a look soon! +Fernando, Bowgo for visibility.",
       "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f75806be_63d33522",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-05-05T20:44:54Z",
+      "side": 1,
+      "message": "LGTM, thanks Andrew! Fernando/Oleg: next time you pull a copy of libavb for integration into bootloader please make sure you configure it so it uses BoringSSL.",
+      "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
