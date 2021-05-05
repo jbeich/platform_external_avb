@@ -109,6 +109,8 @@ cc_defaults {
 cc_defaults {
     name: "avb_crypto_ops_impl_boringssl",
     srcs: [
+        "libavb/boringssl/ed25519.c",
+        "libavb/boringssl/hkdf.c",
         "libavb/boringssl/sha.c",
     ],
     local_include_dirs: [
@@ -122,11 +124,16 @@ cc_defaults {
 cc_defaults {
     name: "avb_crypto_ops_impl_sha",
     srcs: [
+        "libavb/boringssl/ed25519.c",
+        "libavb/boringssl/hkdf.c",
         "libavb/sha/sha256_impl.c",
         "libavb/sha/sha512_impl.c",
     ],
     local_include_dirs: [
         "libavb/sha",
+    ],
+    shared_libs: [
+        "libcrypto",
     ],
 }
 
