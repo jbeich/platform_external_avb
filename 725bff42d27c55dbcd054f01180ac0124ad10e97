@@ -33,6 +33,23 @@
       "message": "LGTM, thanks Andrew! Fernando/Oleg: next time you pull a copy of libavb for integration into bootloader please make sure you configure it so it uses BoringSSL.",
       "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "08c0cd9d_36991dfc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-05-06T10:14:03Z",
+      "side": 1,
+      "message": "Failed due to lack of capacity.. so let\u0027s use up more of it on a retry.",
+      "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
