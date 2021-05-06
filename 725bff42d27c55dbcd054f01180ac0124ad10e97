@@ -90,6 +90,30 @@
       },
       "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f255cf32_cd1756ad",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-05-06T14:20:29Z",
+      "side": 1,
+      "message": "I ran into soong issues when I did it that way with errors about these dependencies being missing for the empty target i.e. \"\". I didn\u0027t know such a target existed but it seemed that others had come across this with cc_defaults before but I didn\u0027t find how to make it work. If you know how to coax soong into accepting it I\u0027d be very happy to learn!",
+      "parentUuid": "e0be5d49_182ae087",
+      "range": {
+        "startLine": 456,
+        "startChar": 0,
+        "endLine": 458,
+        "endChar": 15
+      },
+      "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
