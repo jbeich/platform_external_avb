@@ -67,6 +67,29 @@
       "message": "Same capacity issue, haven\u0027t found any better advice so I\u0027ll treat these as flakes and try yet again.",
       "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e0be5d49_182ae087",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 458,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-05-06T14:12:14Z",
+      "side": 1,
+      "message": "Just curious, those lines are the same as L469-L471.\n\nWhy not just keep one copy in \"libavb_host_unittest_core\"?",
+      "range": {
+        "startLine": 456,
+        "startChar": 0,
+        "endLine": 458,
+        "endChar": 15
+      },
+      "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
