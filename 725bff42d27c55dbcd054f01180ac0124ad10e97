@@ -71,6 +71,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "90c5ceaa_a3c5d754",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1140895
+      },
+      "writtenOn": "2021-05-07T04:13:27Z",
+      "side": 1,
+      "message": "will do. we already use boringSSL via our own stubs.",
+      "parentUuid": "f75806be_63d33522",
+      "revId": "725bff42d27c55dbcd054f01180ac0124ad10e97",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "e0be5d49_182ae087",
         "filename": "Android.bp",
         "patchSetId": 3
