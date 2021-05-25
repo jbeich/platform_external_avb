@@ -1022,7 +1022,8 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                                  "      Salt:                  d00df00d\n"
                                  "      Root Digest:           "
                                  "%s\n"
-                                 "      Flags:                 0\n",
+                                 "      Flags:                 0\n"
+                                 "      Check At Most Once:    0\n",
                                  sparse_image ? " (Sparse)" : "",
                                  hash_algorithm.c_str(),
                                  root_digest.c_str()),
@@ -1055,7 +1056,8 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                                  "      Salt:                  d00df00d\n"
                                  "      Root Digest:           "
                                  "%s\n"
-                                 "      Flags:                 0\n",
+                                 "      Flags:                 0\n"
+                                 "      Check At Most Once:    0\n",
                                  hash_algorithm.c_str(),
                                  root_digest.c_str()),
               InfoImage(external_vbmeta_path));
@@ -1389,7 +1391,8 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                                  "      Salt:                  d00df00d\n"
                                  "      Root Digest:           "
                                  "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
-                                 "      Flags:                 0\n",
+                                 "      Flags:                 0\n"
+                                 "      Check At Most Once:    0\n",
                                  sparse_image ? " (Sparse)" : ""),
               InfoImage(rootfs_path));
   }
@@ -1717,7 +1720,8 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithNoHashtree) {
       "      Partition Name:        system\n"
       "      Salt:                  deadbeef\n"
       "      Root Digest:           4215bd42bcc99636f42956ce3d2c7884d6a8093b\n"
-      "      Flags:                 0\n",
+      "      Flags:                 0\n"
+      "      Check At Most Once:    0\n",
       InfoImage(system_path));
 }
 
@@ -1769,7 +1773,8 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigest) {
       "      Partition Name:        foobar\n"
       "      Salt:                  \n"
       "      Root Digest:           \n"
-      "      Flags:                 0\n",
+      "      Flags:                 0\n"
+      "      Check At Most Once:    0\n",
       InfoImage(path));
 }
 
@@ -1822,7 +1827,8 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithNoAB) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           "
       "d0e31526f5a3f8e3f59acf726bd31ae7861ee78f9baa9195356bf479c6f9119d\n"
-      "      Flags:                 1\n",
+      "      Flags:                 1\n"
+      "      Check At Most Once:    0\n",
       InfoImage(path));
 }
 
@@ -1875,7 +1881,8 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigestAndNoAB) {
       "      Partition Name:        foobar\n"
       "      Salt:                  \n"
       "      Root Digest:           \n"
-      "      Flags:                 1\n",
+      "      Flags:                 1\n"
+      "      Check At Most Once:    0\n",
       InfoImage(path));
 }
 
@@ -1925,7 +1932,8 @@ TEST_F(AvbToolTest, AddHashtreeFooterNoSizeOrName) {
       "      Partition Name:        \n"
       "      Salt:                  d00df00d\n"
       "      Root Digest:           2f73fb340e982794643e1121d82d5195677c2b31\n"
-      "      Flags:                 0\n",
+      "      Flags:                 0\n"
+      "      Check At Most Once:    0\n",
       InfoImage(path));
 
   // Check that at least avbtool can verify the image and hashtree.
@@ -2117,6 +2125,7 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
       "      Flags:                 0\n"
+      "      Check At Most Once:    0\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 1\n"
       "      Kernel Cmdline:        'dm=\"1 vroot none ro 1,0 2056 verity 1 "
@@ -2437,7 +2446,7 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
       "Rollback Index:           0\n"
       "Flags:                    0\n"
       "Rollback Index Location:  0\n"
-      "Release String:           'avbtool 1.2.0 '\n"
+      "Release String:           'avbtool 1.3.0 '\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
@@ -3121,6 +3130,8 @@ class AvbToolTest_PrintRequiredVersion : public AvbToolTest {
       extra_args = "--do_not_use_ab";
     } else if (target_required_minor_version == 2) {
       extra_args = "--rollback_index_location 2";
+    } else if (target_required_minor_version == 3) {
+      extra_args = "--check_at_most_once";
     }
     const size_t system_partition_size = 10 * 1024 * 1024;
     base::FilePath output_path = testdir_.Append(kOutputFile);
@@ -3202,6 +3213,10 @@ TEST_F(AvbToolTest_PrintRequiredVersion, HashtreeFooter_1_1) {
 
 TEST_F(AvbToolTest_PrintRequiredVersion, HashtreeFooter_1_2) {
   PrintWithAddHashtreeFooter(2);
+}
+
+TEST_F(AvbToolTest_PrintRequiredVersion, HashtreeFooter_1_3) {
+  PrintWithAddHashtreeFooter(3);
 }
 
 TEST_F(AvbToolTest_PrintRequiredVersion, Vbmeta_1_0) {

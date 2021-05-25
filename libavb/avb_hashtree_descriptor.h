@@ -62,6 +62,9 @@ typedef enum {
  * Changes in v1.1:
  *   - flags field is added which supports AVB_HASHTREE_DESCRIPTOR_FLAGS_USE_AB
  *   - digest_len may be zero, which indicates the use of a persistent digest
+ * Changes in v1.3:
+ *   - check_at_most_once field is added which supports to validate hashes
+ *     at most once in DM-Verity
  */
 typedef struct AvbHashtreeDescriptor {
   AvbDescriptor parent_descriptor;
@@ -79,7 +82,8 @@ typedef struct AvbHashtreeDescriptor {
   uint32_t salt_len;
   uint32_t root_digest_len;
   uint32_t flags;
-  uint8_t reserved[60];
+  uint32_t check_at_most_once;
+  uint8_t reserved[56];
 } AVB_ATTR_PACKED AvbHashtreeDescriptor;
 
 /* Copies |src| to |dest| and validates, byte-swapping fields in the

@@ -39,7 +39,7 @@ import time
 
 # Keep in sync with libavb/avb_version.h.
 AVB_VERSION_MAJOR = 1
-AVB_VERSION_MINOR = 2
+AVB_VERSION_MINOR = 3
 AVB_VERSION_SUB = 0
 
 # Keep in sync with libavb/avb_footer.h.
@@ -1355,11 +1355,12 @@ class AvbHashtreeDescriptor(AvbDescriptor):
     salt: Salt used as bytes.
     root_digest: Root digest as bytes.
     flags: Descriptor flags (see avb_hashtree_descriptor.h).
+    check_at_most_once: Verify data blocks only the first time (Optional param)
   """
 
   TAG = 1
-  RESERVED = 60
-  SIZE = 120 + RESERVED
+  RESERVED = 56
+  SIZE = 124 + RESERVED
   FORMAT_STRING = ('!QQ'  # tag, num_bytes_following (descriptor header)
                    'L'    # dm-verity version used
                    'Q'    # image size (bytes)
@@ -1374,7 +1375,8 @@ class AvbHashtreeDescriptor(AvbDescriptor):
                    'L'    # partition name (bytes)
                    'L'    # salt length (bytes)
                    'L'    # root digest length (bytes)
-                   'L' +  # flags
+                   'L'    # flags
+                   'L' +  # check at most once (bytes)
                    str(RESERVED) + 's')  # reserved
 
   def __init__(self, data=None):
@@ -1394,8 +1396,10 @@ class AvbHashtreeDescriptor(AvbDescriptor):
        self.tree_offset, self.tree_size, self.data_block_size,
        self.hash_block_size, self.fec_num_roots, self.fec_offset, self.fec_size,
        self.hash_algorithm, partition_name_len, salt_len,
-       root_digest_len, self.flags, _) = struct.unpack(self.FORMAT_STRING,
-                                                       data[0:self.SIZE])
+       root_digest_len, self.flags,
+       self.check_at_most_once, _) = struct.unpack(self.FORMAT_STRING,
+                                                   data[0:self.SIZE])
+
       expected_size = round_to_multiple(
           self.SIZE - 16 + partition_name_len + salt_len + root_digest_len, 8)
       if tag != self.TAG or num_bytes_following != expected_size:
@@ -1435,6 +1439,7 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       self.salt = b''
       self.root_digest = b''
       self.flags = 0
+      self.check_at_most_once = 0
 
   def _hashtree_digest_size(self):
     return len(create_avb_hashtree_hasher(self.hash_algorithm, b'').digest())
@@ -1462,6 +1467,7 @@ class AvbHashtreeDescriptor(AvbDescriptor):
     o.write('      Salt:                  {}\n'.format(self.salt.hex()))
     o.write('      Root Digest:           {}\n'.format(self.root_digest.hex()))
     o.write('      Flags:                 {}\n'.format(self.flags))
+    o.write('      Check At Most Once:    {}\n'.format(self.check_at_most_once))
 
   def encode(self):
     """Serializes the descriptor.
@@ -1481,7 +1487,8 @@ class AvbHashtreeDescriptor(AvbDescriptor):
                        self.hash_block_size, self.fec_num_roots,
                        self.fec_offset, self.fec_size, hash_algorithm_encoded,
                        len(partition_name_encoded), len(self.salt),
-                       len(self.root_digest), self.flags, self.RESERVED * b'\0')
+                       len(self.root_digest), self.flags,
+                       self.check_at_most_once, self.RESERVED * b'\0')
     ret = (desc + partition_name_encoded + self.salt + self.root_digest +
            padding_size * b'\0')
     return ret
@@ -2832,7 +2839,11 @@ class Avb(object):
     c += ' {}'.format(ht.root_digest.hex())                 # root_digest
     c += ' {}'.format(ht.salt.hex())                        # salt
     if ht.fec_num_roots > 0:
-      c += ' 10'  # number of optional args
+      if ht.check_at_most_once == 1:
+        c += ' 11'  # number of optional args
+        c += ' check_at_most_once'
+      else:
+        c += ' 10'  # number of optional args
       c += ' $(ANDROID_VERITY_MODE)'
       c += ' ignore_zero_blocks'
       c += ' use_fec_from_device PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'
@@ -2843,7 +2854,11 @@ class Avb(object):
       c += ' fec_blocks {}'.format(ht.fec_offset // ht.data_block_size)
       c += ' fec_start {}'.format(ht.fec_offset // ht.data_block_size)
     else:
-      c += ' 2'  # number of optional args
+      if ht.check_at_most_once == 1:
+        c += ' 3'  # number of optional args
+        c += ' check_at_most_once'
+      else:
+        c += ' 2'  # number of optional args
       c += ' $(ANDROID_VERITY_MODE)'
       c += ' ignore_zero_blocks'
     c += '" root=/dev/dm-0'
@@ -3532,7 +3547,7 @@ class Avb(object):
                           output_vbmeta_image, do_not_append_vbmeta_image,
                           print_required_libavb_version,
                           use_persistent_root_digest, do_not_use_ab,
-                          no_hashtree):
+                          no_hashtree, check_at_most_once):
     """Implements the 'add_hashtree_footer' command.
 
     See https://gitlab.com/cryptsetup/cryptsetup/wikis/DMVerity for
@@ -3576,6 +3591,8 @@ class Avb(object):
       use_persistent_root_digest: Use a persistent root digest on device.
       do_not_use_ab: The partition does not use A/B.
       no_hashtree: Do not append hashtree. Set size in descriptor as zero.
+      check_at_most_once: Set to verify data blocks only the first time they are read
+        from the data device.
 
     Raises:
       AvbError: If an argument is incorrect or adding the hashtree footer
@@ -3586,6 +3603,8 @@ class Avb(object):
       required_libavb_version_minor = 1
     if rollback_index_location > 0:
       required_libavb_version_minor = 2
+    if check_at_most_once:
+      required_libavb_version_minor = 3
 
     # If we're asked to calculate minimum required libavb version, we're done.
     if print_required_libavb_version:
@@ -3716,6 +3735,8 @@ class Avb(object):
         ht_desc.flags |= 1  # AVB_HASHTREE_DESCRIPTOR_FLAGS_DO_NOT_USE_AB
       if not use_persistent_root_digest:
         ht_desc.root_digest = root_digest
+      if check_at_most_once:
+        ht_desc.check_at_most_once = int(check_at_most_once)
 
       # Write the hash tree
       padding_needed = (round_to_multiple(len(hash_tree), image.block_size) -
@@ -4404,6 +4425,9 @@ class AvbTool(object):
     sub_parser.add_argument('--no_hashtree',
                             action='store_true',
                             help='Do not append hashtree')
+    sub_parser.add_argument('--check_at_most_once',
+                            action='store_true',
+                            help='Set to verify data block only once')
     self._add_common_args(sub_parser)
     self._add_common_footer_args(sub_parser)
     sub_parser.set_defaults(func=self.add_hashtree_footer)
@@ -4784,7 +4808,8 @@ class AvbTool(object):
         args.print_required_libavb_version,
         args.use_persistent_digest,
         args.do_not_use_ab,
-        args.no_hashtree)
+        args.no_hashtree,
+        args.check_at_most_once)
 
   def erase_footer(self, args):
     """Implements the 'erase_footer' sub-command."""
