@@ -429,7 +429,8 @@ hashtree is also appended to the image.
         [--calc_max_image_size]                                                    \
         [--do_not_use_ab]                                                          \
         [--no_hashtree]                                                            \
-        [--use_persistent_digest]
+        [--use_persistent_digest]                                                  \
+        [--check_at_most_once]
 
 Valid values for `HASH_ALG` above include `sha1`, `sha256`, and `blake2b-256`.
 
@@ -1109,6 +1110,11 @@ When booting an image signed with a custom key, a yellow screen will be shown as
 part of the boot process to remind the user that the custom key is in use.
 
 # Version History
+
+### Version 1.3
+
+Version 1.3 added new configuration to hashtree descriptors `flags` elemnet.
+* Support for `check_at_most_once` for DM-Verity.
 
 ### Version 1.2
 
