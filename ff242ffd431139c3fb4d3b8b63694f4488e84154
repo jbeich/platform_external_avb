@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ae5d105_3081ebd0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-05-26T00:58:05Z",
+      "side": 1,
+      "message": "Hello, Dear AVB library maintainers.\n\nCould you please review this patch?",
+      "revId": "ff242ffd431139c3fb4d3b8b63694f4488e84154",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
