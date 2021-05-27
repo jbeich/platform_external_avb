@@ -16,6 +16,23 @@
       "message": "Hi Jan, thanks for taking time on this. I randomly picked one from suggested owner list, so feel free to let me know if you\u0027d like suggest other to review this. Thank you.",
       "revId": "c0debbfd55f08a755b006550779c23e707d30b6d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "288c6c99_b5c72afc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-05-27T16:06:52Z",
+      "side": 1,
+      "message": "LGTM, thanks, looks like this is useful in bootloaders when debugging stuff. Cc Bowgo.",
+      "revId": "c0debbfd55f08a755b006550779c23e707d30b6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
