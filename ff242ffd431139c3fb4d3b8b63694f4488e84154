@@ -56,6 +56,30 @@
       },
       "revId": "ff242ffd431139c3fb4d3b8b63694f4488e84154",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1227b01_b1102c93",
+        "filename": "libavb/avb_hashtree_descriptor.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-05-27T12:15:28Z",
+      "side": 1,
+      "message": "Considering think about your review, i think your idea is  better. \nSo i will implement it again and update it.",
+      "parentUuid": "fe74999f_de7e80b8",
+      "range": {
+        "startLine": 85,
+        "startChar": 2,
+        "endLine": 85,
+        "endChar": 29
+      },
+      "revId": "ff242ffd431139c3fb4d3b8b63694f4488e84154",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
