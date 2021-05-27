@@ -33,6 +33,29 @@
       "message": "Hello, Dear avb library maintainers.\n\nCould you please review this patch?",
       "revId": "ff242ffd431139c3fb4d3b8b63694f4488e84154",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe74999f_de7e80b8",
+        "filename": "libavb/avb_hashtree_descriptor.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-05-27T10:40:08Z",
+      "side": 1,
+      "message": "looks like we just need one bit for this, maybe use one bit of the \u0027flags\u0027 above?",
+      "range": {
+        "startLine": 85,
+        "startChar": 2,
+        "endLine": 85,
+        "endChar": 29
+      },
+      "revId": "ff242ffd431139c3fb4d3b8b63694f4488e84154",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
