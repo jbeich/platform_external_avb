@@ -33,6 +33,23 @@
       "message": "LGTM, thanks, looks like this is useful in bootloaders when debugging stuff. Cc Bowgo.",
       "revId": "c0debbfd55f08a755b006550779c23e707d30b6d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "19b2e0cd_687b40c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1345812
+      },
+      "writtenOn": "2021-05-28T02:42:56Z",
+      "side": 1,
+      "message": "Thanks for the approval.",
+      "revId": "c0debbfd55f08a755b006550779c23e707d30b6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
