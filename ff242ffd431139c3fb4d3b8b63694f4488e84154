@@ -80,6 +80,30 @@
       },
       "revId": "ff242ffd431139c3fb4d3b8b63694f4488e84154",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a8c0ac3_f0e6e86d",
+        "filename": "libavb/avb_hashtree_descriptor.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-05-28T02:30:12Z",
+      "side": 1,
+      "message": "Updated the patch 😊",
+      "parentUuid": "b1227b01_b1102c93",
+      "range": {
+        "startLine": 85,
+        "startChar": 2,
+        "endLine": 85,
+        "endChar": 29
+      },
+      "revId": "ff242ffd431139c3fb4d3b8b63694f4488e84154",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
