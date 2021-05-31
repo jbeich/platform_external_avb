@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f7ea25a_93f463fb",
+        "filename": "README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 1117,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-05-31T10:26:05Z",
+      "side": 1,
+      "message": "How about:\n\nVersion 1.3 adds support for the `check_at_most_once` parameter of dm-verity in a hashtree descriptor.",
+      "range": {
+        "startLine": 1116,
+        "startChar": 0,
+        "endLine": 1117,
+        "endChar": 49
+      },
+      "revId": "19408fa4d07268dbf685a7b0d0b35b521200d95a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
