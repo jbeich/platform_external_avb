@@ -33,6 +33,24 @@
       "message": "Sounds good to me with adding --check_at_most_once... but we don\u0027t need to bump the version for this. I mean, images produced with \u0027avbtool --check_at_most_once\u0027 will run just fine on existing libavb versions.\n\nFWIW, we only bump the minor version if we _need_ a newer libavb version for the added feature to work, for example if we were to use ECDSA instead of RSA for signing the vbmeta data.\n\n",
       "revId": "9dc3175f98bff92a4f73055c361be50a66821305",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "531c8cd6_7bb5b97a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-06-01T23:55:46Z",
+      "side": 1,
+      "message": "Oh i got it. I just added new feature then bump the version. \nI will upload the patch again.",
+      "parentUuid": "cc69d9a7_355cc577",
+      "revId": "9dc3175f98bff92a4f73055c361be50a66821305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
