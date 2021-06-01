@@ -16,6 +16,23 @@
       "message": "Let\u0027s see if zeuthen@ has any comment.",
       "revId": "9dc3175f98bff92a4f73055c361be50a66821305",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc69d9a7_355cc577",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-06-01T15:03:37Z",
+      "side": 1,
+      "message": "Sounds good to me with adding --check_at_most_once... but we don\u0027t need to bump the version for this. I mean, images produced with \u0027avbtool --check_at_most_once\u0027 will run just fine on existing libavb versions.\n\nFWIW, we only bump the minor version if we _need_ a newer libavb version for the added feature to work, for example if we were to use ECDSA instead of RSA for signing the vbmeta data.\n\n",
+      "revId": "9dc3175f98bff92a4f73055c361be50a66821305",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
