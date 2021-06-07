@@ -56,6 +56,30 @@
       },
       "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "837ae10d_bee10d28",
+        "filename": "avbtool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 3600,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-06-07T23:24:13Z",
+      "side": 1,
+      "message": "nope, It was intended.\nSince it added with version 1.2, I thought it was necessary.\nSo I added it to the test case. \n\nDo you think it doesn\u0027t have to be because it\u0027s a function that can be supported regardless of the version?",
+      "parentUuid": "89b0478f_d381da72",
+      "range": {
+        "startLine": 3600,
+        "startChar": 34,
+        "endLine": 3600,
+        "endChar": 56
+      },
+      "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
