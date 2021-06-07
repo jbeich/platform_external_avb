@@ -16,6 +16,46 @@
       "message": "@David Zeuthen\nupdated patch. Could you please one more check? ",
       "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d5ff5a4f_bd850448",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-06-07T13:35:18Z",
+      "side": 1,
+      "message": "Sorry for being late, missed the upload.",
+      "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89b0478f_d381da72",
+        "filename": "avbtool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 3600,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-06-07T13:35:18Z",
+      "side": 1,
+      "message": "I don\u0027t think we need `required_libavb_version_minor` to be 2 if `check_at_most_once` is set. Maybe you left in this from the previous PS and just forgot to remove it?",
+      "range": {
+        "startLine": 3600,
+        "startChar": 34,
+        "endLine": 3600,
+        "endChar": 56
+      },
+      "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
