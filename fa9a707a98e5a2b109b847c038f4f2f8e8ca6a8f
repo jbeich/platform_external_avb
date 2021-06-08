@@ -152,6 +152,30 @@
       },
       "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "811f12c1_9b1aa250",
+        "filename": "avbtool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 3600,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2021-06-08T12:14:16Z",
+      "side": 1,
+      "message": "Requiring version 1.1 sounds good to me.",
+      "parentUuid": "8dd0a2ac_ca082320",
+      "range": {
+        "startLine": 3600,
+        "startChar": 34,
+        "endLine": 3600,
+        "endChar": 56
+      },
+      "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
