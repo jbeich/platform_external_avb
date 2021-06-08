@@ -80,6 +80,30 @@
       },
       "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65c9ca59_8266c074",
+        "filename": "avbtool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 3600,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-06-08T09:33:11Z",
+      "side": 1,
+      "message": "Should we at least require version 1.1, where \u0027flags\u0027 was added?\n\nOr we don\u0027t need to care about \u0027version_minor\u0027 because `check_at_most_once` in a hashtree descriptor is handled by the user land (init/fs_mgr) in another CL?\n\n   https://android-review.googlesource.com/c/platform/system/core/+/1717670",
+      "parentUuid": "837ae10d_bee10d28",
+      "range": {
+        "startLine": 3600,
+        "startChar": 34,
+        "endLine": 3600,
+        "endChar": 56
+      },
+      "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
