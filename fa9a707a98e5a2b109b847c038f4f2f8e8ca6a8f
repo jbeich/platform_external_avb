@@ -104,6 +104,30 @@
       },
       "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2bd0a228_44d3680f",
+        "filename": "avbtool.py",
+        "patchSetId": 5
+      },
+      "lineNbr": 3600,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-06-08T10:32:53Z",
+      "side": 1,
+      "message": "I think at least require version 1.1 is better.\nBecause \u0027flags\u0027 was added version 1.1.\nSo, If tell me your opinion, I will upload the patch again.\n\nThanks 😊",
+      "parentUuid": "65c9ca59_8266c074",
+      "range": {
+        "startLine": 3600,
+        "startChar": 34,
+        "endLine": 3600,
+        "endChar": 56
+      },
+      "revId": "fa9a707a98e5a2b109b847c038f4f2f8e8ca6a8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
