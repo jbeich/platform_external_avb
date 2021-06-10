@@ -39,6 +39,30 @@
       },
       "revId": "2998a353600061373bac0c8657078be4c5a4374d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33695f7a_40396e06",
+        "filename": "README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2021-06-10T04:45:30Z",
+      "side": 1,
+      "message": "Hum... That\u0027s so confused. \nLeast require version is 1.1 but added new feature version is 1.2.\n\nWhat would it be helpful to choose which version?",
+      "parentUuid": "02bbc07e_a1e7df5c",
+      "range": {
+        "startLine": 1118,
+        "startChar": 2,
+        "endLine": 1118,
+        "endChar": 71
+      },
+      "revId": "2998a353600061373bac0c8657078be4c5a4374d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
