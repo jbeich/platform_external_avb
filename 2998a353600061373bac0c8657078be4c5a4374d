@@ -63,6 +63,30 @@
       },
       "revId": "2998a353600061373bac0c8657078be4c5a4374d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b9a37c3_f62136d9",
+        "filename": "README.md",
+        "patchSetId": 7
+      },
+      "lineNbr": 1118,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-06-12T03:44:26Z",
+      "side": 1,
+      "message": "OK, nvm, please ignore my comments.",
+      "parentUuid": "33695f7a_40396e06",
+      "range": {
+        "startLine": 1118,
+        "startChar": 2,
+        "endLine": 1118,
+        "endChar": 71
+      },
+      "revId": "2998a353600061373bac0c8657078be4c5a4374d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
