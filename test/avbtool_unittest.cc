@@ -45,7 +45,7 @@ class AvbToolTest : public BaseAvbToolTest {
  public:
   AvbToolTest() {}
 
-  virtual void SetUp() override {
+  void SetUp() override {
     BaseAvbToolTest::SetUp();
     ops_.set_partition_dir(testdir_);
     ops_.set_stored_rollback_indexes({{0, 0}, {1, 0}, {2, 0}, {3, 0}});
@@ -472,9 +472,9 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
     if ((n >= 5 * 1000 && n < 105 * 1000) ||
         (n >= 205 * 1000 && n < 305 * 1000) ||
         (n >= 505 * 1000 && n < 605 * 1000)) {
-      rootfs[n] = uint8_t(n) & 0x03;
+      rootfs[n] = static_cast<uint8_t>(n) & 0x03;
     } else {
-      rootfs[n] = uint8_t(n);
+      rootfs[n] = static_cast<uint8_t>(n);
     }
   }
   base::FilePath external_vbmeta_path = testdir_.Append("external_vbmeta.bin");
@@ -950,7 +950,7 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
   std::vector<uint8_t> rootfs;
   rootfs.resize(rootfs_size);
   for (size_t n = 0; n < rootfs_size; n++)
-    rootfs[n] = uint8_t(n);
+    rootfs[n] = static_cast<uint8_t>(n);
   base::FilePath external_vbmeta_path = testdir_.Append("external_vbmeta.bin");
   base::FilePath extracted_vbmeta_path =
       testdir_.Append("extracted_vbmeta.bin");
@@ -1325,7 +1325,7 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
   std::vector<uint8_t> rootfs;
   rootfs.resize(rootfs_size);
   for (size_t n = 0; n < rootfs_size; n++)
-    rootfs[n] = uint8_t(n);
+    rootfs[n] = static_cast<uint8_t>(n);
   base::FilePath rootfs_path = testdir_.Append("rootfs.bin");
   EXPECT_EQ(rootfs_size,
             static_cast<const size_t>(
@@ -1963,7 +1963,8 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithCheckAtMostOnce) {
                  "--check_at_most_once",
                  path.value().c_str(),
                  (int)partition_size);
-  // There are two important bits here we're expecting with --check_at_most_once:
+  // There are two important bits here we're expecting with
+  // --check_at_most_once:
   //   Minimum libavb version = 1.1
   //   Hashtree descriptor -> Flags = 2
   ASSERT_EQ(
@@ -2114,7 +2115,7 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
   std::vector<uint8_t> rootfs;
   rootfs.resize(rootfs_size);
   for (size_t n = 0; n < rootfs_size; n++)
-    rootfs[n] = uint8_t(n);
+    rootfs[n] = static_cast<uint8_t>(n);
   base::FilePath rootfs_path = testdir_.Append("rootfs.bin");
   EXPECT_EQ(rootfs_size,
             static_cast<const size_t>(
@@ -2261,7 +2262,7 @@ TEST_F(AvbToolTest, AddHashFooterSmallImageWithExternalVbmeta) {
 
   std::vector<uint8_t> image(image_size, 0);
   for (size_t n = 0; n < image_size; n++) {
-    image[n] = uint8_t(n);
+    image[n] = static_cast<uint8_t>(n);
   }
 
   base::FilePath ext_vbmeta_path = testdir_.Append("ext_vbmeta.bin");
