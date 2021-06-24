@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,31 +22,29 @@
  * SOFTWARE.
  */
 
-#if !defined(AVB_INSIDE_LIBAVB_AFTL_H) && !defined(AVB_COMPILATION)
-#error "Never include this file directly, include libavb_aftl/libavb_aftl.h."
+#ifdef AVB_INSIDE_LIBAVB_H
+#error "You can't include avb_crypto_ops_impl.h in the public header libavb.h."
 #endif
 
-#ifndef AVB_AFTL_OPS_H_
-#define AVB_AFTL_OPS_H_
+#ifndef AVB_COMPILATION
+#error "Never include this file, it may only be used from internal avb code."
+#endif
 
-#include <libavb/libavb.h>
+#ifndef AVB_CRYPTO_OPS_IMPL_H_
+#define AVB_CRYPTO_OPS_IMPL_H_
+
+#include <openssl/is_boringssl.h>
+#include <openssl/sha.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct AvbAftlOps;
-typedef struct AvbAftlOps AvbAftlOps;
-
-/* An extension to AvbOps required by the new AFTL validation flow.
-   TODO(danielaustin): update the AFTL readme link once it is submitted.  */
-struct AvbAftlOps {
-  /* Operations from libavb. */
-  AvbOps* ops;
-};
+#define AVB_SHA256_CONTEXT_SIZE sizeof(SHA256_CTX)
+#define AVB_SHA512_CONTEXT_SIZE sizeof(SHA512_CTX)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* AVB_AFTL_OPS_H_ */
+#endif /* AVB_CRYPTO_OPS_IMPL_H_ */

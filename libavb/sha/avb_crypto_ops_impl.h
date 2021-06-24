@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,38 +22,50 @@
  * SOFTWARE.
  */
 
-#if !defined(AVB_INSIDE_LIBAVB_AFTL_H) && !defined(AVB_COMPILATION)
-#error "Never include this file directly, include libavb_aftl/libavb_aftl.h."
+#ifdef AVB_INSIDE_LIBAVB_H
+#error "You can't include avb_crypto_ops_impl.h in the public header libavb.h."
 #endif
 
-#ifndef AVB_AFTL_VALIDATE_H_
-#define AVB_AFTL_VALIDATE_H_
+#ifndef AVB_COMPILATION
+#error "Never include this file, it may only be used from internal avb code."
+#endif
 
-#include <libavb/libavb.h>
-#include "avb_aftl_types.h"
+#ifndef AVB_CRYPTO_OPS_IMPL_H_
+#define AVB_CRYPTO_OPS_IMPL_H_
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/* Verifies that the logged vbmeta hash matches the one on device. */
-bool avb_aftl_verify_vbmeta_hash(
-    uint8_t* vbmeta,          /* Buffer containing the vbmeta data. */
-    size_t vbmeta_size,       /* Size of the vbmeta buffer. */
-    AftlIcpEntry* icp_entry); /* Pointer to the AftlIcpEntry to verify. */
+#include <libavb/avb_sysdeps.h>
 
-/* Verifies the Merkle tree root hash. */
-bool avb_aftl_verify_icp_root_hash(
-    AftlIcpEntry* icp_entry); /* Pointer to the AftlIcpEntry to verify. */
+/* Block size in bytes of a SHA-256 digest. */
+#define AVB_SHA256_BLOCK_SIZE 64
 
-/* Verifies the log root signature for the transparency log submission. */
-bool avb_aftl_verify_entry_signature(
-    const uint8_t* key,       /* Transparency log public key data. */
-    size_t key_num_bytes,     /* Size of the key data. */
-    AftlIcpEntry* icp_entry); /* Pointer to the AftlIcpEntry to verify. */
+/* Block size in bytes of a SHA-512 digest. */
+#define AVB_SHA512_BLOCK_SIZE 128
+
+/* Data structure used for SHA-256. */
+typedef struct {
+  uint32_t h[8];
+  uint64_t tot_len;
+  size_t len;
+  uint8_t block[2 * AVB_SHA256_BLOCK_SIZE];
+} AvbSHA256ImplCtx;
+
+/* Data structure used for SHA-512. */
+typedef struct {
+  uint64_t h[8];
+  uint64_t tot_len;
+  size_t len;
+  uint8_t block[2 * AVB_SHA512_BLOCK_SIZE];
+} AvbSHA512ImplCtx;
+
+#define AVB_SHA256_CONTEXT_SIZE sizeof(AvbSHA256ImplCtx)
+#define AVB_SHA512_CONTEXT_SIZE sizeof(AvbSHA512ImplCtx)
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* AVB_AFTL_VALIDATE_H_ */
+#endif /* AVB_CRYPTO_OPS_IMPL_H_ */

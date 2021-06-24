@@ -429,7 +429,8 @@ hashtree is also appended to the image.
         [--calc_max_image_size]                                                    \
         [--do_not_use_ab]                                                          \
         [--no_hashtree]                                                            \
-        [--use_persistent_digest]
+        [--use_persistent_digest]                                                  \
+        [--check_at_most_once]
 
 Valid values for `HASH_ALG` above include `sha1`, `sha256`, and `blake2b-256`.
 
@@ -907,6 +908,13 @@ if (is_slot_is_marked_as_successful(slot->ab_suffix)) {
 }
 ```
 
+This logic should ideally be implemented outside of the HLOS. One
+possible implementation is to update rollback indices in the
+bootloader when booting into a successful slot. This means that
+when booting into a new OS not yet marked as successful, the
+rollback indices would not be updated. The first reboot after the
+slot succeeded would trigger an update of the rollback indices.
+
 For an HLOS where it's possible to roll back to a previous version,
 `stored_rollback_index[n]` should be set to the largest possible value
 allowing all bootable slots to boot. This approach is implemented in
@@ -1014,6 +1022,11 @@ be handled through the `hashtree_error_mode` parameter in the
    be used for **ONLY** diagnostics and debugging. It cannot be used
    unless verification errors are allowed.
 
+* `AVB_HASHTREE_ERROR_MODE_PANIC` means that the OS will **panic** without
+  the current slot being invalidated. Be careful using this mode as it may
+  introduce boot panic if the same hashtree verification error is hit on
+  every boot. This mode is available since: 1.7.0 (kernel 5.9)
+
 The value passed in `hashtree_error_mode` is essentially just passed on through
 to the HLOS through the the `androidboot.veritymode`,
 `androidboot.veritymode.managed`, and `androidboot.vbmeta.invalidate_on_error`
@@ -1026,12 +1039,33 @@ kernel command-line parameters in the following way:
 | `AVB_HASHTREE_ERROR_MODE_EIO` | **eio** | (unset) | (unset) |
 | `AVB_HASHTREE_ERROR_MODE_MANAGED_RESTART_AND_EIO` | **eio** or **enforcing** | **yes** | (unset) |
 | `AVB_HASHTREE_ERROR_MODE_LOGGING` | **ignore_corruption** | (unset) | (unset) |
+| `AVB_HASHTREE_ERROR_MODE_PANIC` | **panicking** | (unset) | (unset) |
 
 The only exception to this table is that if the
 `AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED` flag is set in the top-level vbmeta,
 then `androidboot.veritymode` is set to **disabled** and
 `androidboot.veritymode.managed` and `androidboot.vbmeta.invalidate_on_error`
 are unset.
+
+The different values of `hashtree_error_mode` parameter in the `avb_slot_verify()`
+function can be categorized into three groups:
+
+* `AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE`, which needs `CONFIG_DM_VERITY_AVB`
+  in the kernel config for the kernel to invalidate the current slot and
+  restart. This is kept here for legacy Android Things devices and is not
+  recommended for other device form factors.
+
+* The bootloader handles the switch between `AVB_HASHTREE_ERROR_MODE_RESTART`
+  and `AVB_HASHTREE_ERROR_MODE_EIO`. This would need a persistent storage on the
+  device to store the vbmeta digest, so the bootloader can detect if a device
+  ever gets an update or not. Once the new OS is installed and if the device is
+  in **EIO** mode, the bootloader should switch back to **RESTART** mode.
+
+* `AVB_HASHTREE_ERROR_MODE_MANAGED_RESTART_AND_EIO`: `libavb` helps the
+  bootloader manage **EIO**/**RESTART** state transition. The bootloader needs
+  to implement the callbacks of `AvbOps->read_persistent_value()` and
+  `AvbOps->write_persistent_value()` for `libavb` to store the vbmeta digest to
+  detect whether a new OS is installed.
 
 ### Which mode should I use for my device?
 
@@ -1086,7 +1120,9 @@ part of the boot process to remind the user that the custom key is in use.
 
 ### Version 1.2
 
-Version 1.2 adds support for the `rollback_index_location` field of the main vbmeta header.
+Version 1.2 adds support for the following:
+* `rollback_index_location` field of the main vbmeta header.
+* `check_at_most_once` parameter of dm-verity in a hashtree descriptor.
 
 ### Version 1.1
 
