@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2020 The Android Open Source Project
+ * Copyright (C) 2021 The Android Open Source Project
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -22,14 +22,40 @@
  * SOFTWARE.
  */
 
-#include <stddef.h>
-#include <stdint.h>
+#include <libavb/avb_sha.h>
 
-#include "libavb_aftl/avb_aftl_types.h"
-#include "libavb_aftl/avb_aftl_util.h"
+#include "avb_crypto_ops_impl.h"
 
-extern "C" int LLVMFuzzerTestOneInput(const char* data, size_t size) {
-  AftlImage* image = parse_aftl_image((uint8_t*)data, size);
-  free_aftl_image(image);
-  return 0;
+/* SHA-256 implementation */
+void avb_sha256_init(AvbSHA256Ctx* ctx) {
+  SHA256_CTX* realCtx = (SHA256_CTX*)ctx->reserved;
+  SHA256_Init(realCtx);
+}
+
+void avb_sha256_update(AvbSHA256Ctx* ctx, const uint8_t* data, size_t len) {
+  SHA256_CTX* realCtx = (SHA256_CTX*)ctx->reserved;
+  SHA256_Update(realCtx, data, len);
+}
+
+uint8_t* avb_sha256_final(AvbSHA256Ctx* ctx) {
+  SHA256_CTX* realCtx = (SHA256_CTX*)ctx->reserved;
+  SHA256_Final(ctx->buf, realCtx);
+  return ctx->buf;
+}
+
+/* SHA-512 implementation */
+void avb_sha512_init(AvbSHA512Ctx* ctx) {
+  SHA512_CTX* realCtx = (SHA512_CTX*)ctx->reserved;
+  SHA512_Init(realCtx);
+}
+
+void avb_sha512_update(AvbSHA512Ctx* ctx, const uint8_t* data, size_t len) {
+  SHA512_CTX* realCtx = (SHA512_CTX*)ctx->reserved;
+  SHA512_Update(realCtx, data, len);
+}
+
+uint8_t* avb_sha512_final(AvbSHA512Ctx* ctx) {
+  SHA512_CTX* realCtx = (SHA512_CTX*)ctx->reserved;
+  SHA512_Final(ctx->buf, realCtx);
+  return ctx->buf;
 }
