@@ -1,0 +1,78 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8c56ebbc_382b839d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-07-26T00:27:25Z",
+      "side": 1,
+      "message": "Still WIP but I\u0027m interested in thoughts about what an AVB DICE certificate should look like. I was thinking it could have a use informing KM about the AVB state, where today there are implementation defined mechanisms to hand over those details.",
+      "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06dcaa78_08767317",
+        "filename": "libavb_open_dice/avb_open_dice.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-07-26T00:27:25Z",
+      "side": 1,
+      "message": "Adding function in https://pigweed-review.googlesource.com/c/open-dice/+/54540",
+      "range": {
+        "startLine": 151,
+        "startChar": 11,
+        "endLine": 151,
+        "endChar": 24
+      },
+      "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e5de00ee_35ff254e",
+        "filename": "libavb_open_dice/avb_open_dice.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-07-26T00:27:25Z",
+      "side": 1,
+      "message": "Match this to the RootOfTrust and VerifiedBootState of the attestation fields of key attestation https://developer.android.com/training/articles/security-key-attestation#certificate_schema i.e. include all the information that ABL needs to share with KM.",
+      "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "320f8db9_492ca6b7",
+        "filename": "libavb_open_dice/avb_open_dice.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-07-26T00:27:25Z",
+      "side": 1,
+      "message": "It seems that 256-bit is the recommended size [1] for this hash but I don\u0027t know why or whether things will move towards 512 anyway.\n\n[1] -- https://developer.android.com/training/articles/security-key-attestation#certificate_schema_rootoftrust",
+      "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
