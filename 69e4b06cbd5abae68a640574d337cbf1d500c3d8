@@ -90,6 +90,24 @@
       "message": "It seems that 256-bit is the recommended size [1] for this hash but I don\u0027t know why or whether things will move towards 512 anyway.\n\n[1] -- https://developer.android.com/training/articles/security-key-attestation#certificate_schema_rootoftrust",
       "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b9d92c8_6b3dcaed",
+        "filename": "libavb_open_dice/avb_open_dice.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2021-07-27T19:17:03Z",
+      "side": 1,
+      "message": "I don\u0027t feel strongly, but keeping 256 here with zero padding seems fine.",
+      "parentUuid": "320f8db9_492ca6b7",
+      "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
