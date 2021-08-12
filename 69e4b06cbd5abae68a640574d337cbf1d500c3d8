@@ -58,6 +58,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6424a25_eeb41cdd",
+        "filename": "libavb_open_dice/avb_open_dice.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-08-12T17:42:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "06dcaa78_08767317",
+      "range": {
+        "startLine": 151,
+        "startChar": 11,
+        "endLine": 151,
+        "endChar": 24
+      },
+      "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e5de00ee_35ff254e",
@@ -71,6 +95,24 @@
       "writtenOn": "2021-07-26T00:27:25Z",
       "side": 1,
       "message": "Match this to the RootOfTrust and VerifiedBootState of the attestation fields of key attestation https://developer.android.com/training/articles/security-key-attestation#certificate_schema i.e. include all the information that ABL needs to share with KM.",
+      "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ba85ab1_0390a187",
+        "filename": "libavb_open_dice/avb_open_dice.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 161,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-08-12T17:42:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e5de00ee_35ff254e",
       "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -106,6 +148,24 @@
       "side": 1,
       "message": "I don\u0027t feel strongly, but keeping 256 here with zero padding seems fine.",
       "parentUuid": "320f8db9_492ca6b7",
+      "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87e19da8_b9328e96",
+        "filename": "libavb_open_dice/avb_open_dice.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 258,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-08-12T17:42:35Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "7b9d92c8_6b3dcaed",
       "revId": "69e4b06cbd5abae68a640574d337cbf1d500c3d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
