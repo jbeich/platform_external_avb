@@ -664,7 +664,7 @@ class ImageChunk(object):
     fill_data: Blob with data to fill if TYPE_FILL otherwise None.
   """
 
-  FORMAT = '<2H2I'
+  FORMAT = '<2H3I'
   TYPE_RAW = 0xcac1
   TYPE_FILL = 0xcac2
   TYPE_DONT_CARE = 0xcac3
@@ -735,7 +735,7 @@ class ImageHandler(object):
   """
   # See system/core/libsparse/sparse_format.h for details.
   MAGIC = 0xed26ff3a
-  HEADER_FORMAT = '<I4H4I'
+  HEADER_FORMAT = '<I4H5I'
 
   # These are formats and offset of just the |total_chunks| and
   # |total_blocks| fields.
@@ -781,7 +781,7 @@ class ImageHandler(object):
     self._image.seek(0, os.SEEK_SET)
     header_bin = self._image.read(struct.calcsize(self.HEADER_FORMAT))
     (magic, major_version, minor_version, file_hdr_sz, chunk_hdr_sz,
-     block_size, self._num_total_blocks, self._num_total_chunks,
+     block_size, self._num_total_blocks, self._num_total_chunks, __,
      _) = struct.unpack(self.HEADER_FORMAT, header_bin)
     if magic != self.MAGIC:
       # Not a sparse image, our job here is done.
@@ -811,7 +811,7 @@ class ImageHandler(object):
       chunk_offset = self._image.tell()
 
       header_bin = self._image.read(struct.calcsize(ImageChunk.FORMAT))
-      (chunk_type, _, chunk_sz, total_sz) = struct.unpack(ImageChunk.FORMAT,
+      (chunk_type, _, chunk_sz, total_sz, __) = struct.unpack(ImageChunk.FORMAT,
                                                           header_bin)
       data_sz = total_sz - struct.calcsize(ImageChunk.FORMAT)
 
@@ -927,7 +927,8 @@ class ImageHandler(object):
                                   ImageChunk.TYPE_DONT_CARE,
                                   0,  # Reserved
                                   num_bytes // self.block_size,
-                                  struct.calcsize(ImageChunk.FORMAT)))
+                                  struct.calcsize(ImageChunk.FORMAT),
+                                  0))
     self._read_header()
 
   def append_raw(self, data):
@@ -962,7 +963,8 @@ class ImageHandler(object):
                                   0,  # Reserved
                                   len(data) // self.block_size,
                                   len(data) +
-                                  struct.calcsize(ImageChunk.FORMAT)))
+                                  struct.calcsize(ImageChunk.FORMAT),
+                                  0))
     self._image.write(data)
     self._read_header()
 
@@ -1000,7 +1002,8 @@ class ImageHandler(object):
                                   ImageChunk.TYPE_FILL,
                                   0,  # Reserved
                                   size // self.block_size,
-                                  4 + struct.calcsize(ImageChunk.FORMAT)))
+                                  4 + struct.calcsize(ImageChunk.FORMAT),
+                                  0))
     self._image.write(fill_data)
     self._read_header()
 
