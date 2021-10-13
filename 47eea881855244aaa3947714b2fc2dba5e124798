@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e684b900_4accc146",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-10-13T15:44:28Z",
+      "side": 1,
+      "message": "Great, thanks for the quick fix and creation of the log_payload.\n\nI\u0027d have a preference of having the 2 changes in distinct PRs, if it\u0027s not too much work, please.",
+      "revId": "47eea881855244aaa3947714b2fc2dba5e124798",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1bc4ffc8_affb7cf4",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-10-13T15:44:28Z",
+      "side": 1,
+      "message": "nit: \"has been written\"?\n\nI don\u0027t feel too strongly about it, though.",
+      "range": {
+        "startLine": 118,
+        "startChar": 50,
+        "endLine": 118,
+        "endChar": 66
+      },
+      "revId": "47eea881855244aaa3947714b2fc2dba5e124798",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
