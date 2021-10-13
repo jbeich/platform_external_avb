@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "67b84a04_d33c7d0e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-10-13T16:17:13Z",
+      "side": 1,
+      "message": "So, you prefer having the creation of log_payload in a separate CL?\nNo problem with that. I\u0027ll focus this particular one on only fixing the bug, and surface a log_payload creation in a new/upcoming one then.",
+      "parentUuid": "e684b900_4accc146",
+      "revId": "47eea881855244aaa3947714b2fc2dba5e124798",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "1bc4ffc8_affb7cf4",
         "filename": "tools/transparency/pixel_factory_image_verify.py",
         "patchSetId": 1
