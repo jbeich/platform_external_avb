@@ -111,6 +111,12 @@ class PixelFactoryImageVerifier(object):
 
     print('The build fingerprint for factory image is: %s' % fingerprint)
     print('The VBMeta Digest for factory image is: %s' % vbmeta_digest)
+
+    with open('log_payload.txt', 'w') as f_out:
+      f_out.write(fingerprint.strip() + '\n')
+      f_out.write(vbmeta_digest.strip() + '\n\n')
+    print('A corresponding "log_payload.txt" file is now available.')
+
     sys.exit(0)
 
   def _download_factory_image(self, url):
@@ -325,7 +331,8 @@ class PixelFactoryImageVerifier(object):
   def _run_command(self, args, success_msg, fail_msg):
     """Runs command line tools."""
     p = subprocess.Popen(args, stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                         encoding='utf-8')
     pout, _ = p.communicate()
     if p.wait() == 0:
       print(success_msg)
