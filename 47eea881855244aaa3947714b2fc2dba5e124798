@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "380f33ac_615ecf15",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-10-13T17:37:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "67b84a04_d33c7d0e",
+      "revId": "47eea881855244aaa3947714b2fc2dba5e124798",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1bc4ffc8_affb7cf4",
@@ -49,6 +67,30 @@
       "writtenOn": "2021-10-13T15:44:28Z",
       "side": 1,
       "message": "nit: \"has been written\"?\n\nI don\u0027t feel too strongly about it, though.",
+      "range": {
+        "startLine": 118,
+        "startChar": 50,
+        "endLine": 118,
+        "endChar": 66
+      },
+      "revId": "47eea881855244aaa3947714b2fc2dba5e124798",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "02a55b9c_84d6c33e",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 118,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-10-13T17:37:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1bc4ffc8_affb7cf4",
       "range": {
         "startLine": 118,
         "startChar": 50,
