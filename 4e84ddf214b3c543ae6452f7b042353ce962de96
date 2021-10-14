@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ed842944_41b105ca",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-10-14T16:06:24Z",
+      "side": 1,
+      "message": "it was just incase there was a newline (the same goes to vbmeta digest).\nSince we are formatting specifically, I thought to be safe is to remove all possibility of whitespaces or newline, and then manually reconstruct \u0027\\n\u0027s.\n\nHope that makes sense.",
+      "parentUuid": "39129e2a_ff74d5f9",
+      "range": {
+        "startLine": 116,
+        "startChar": 30,
+        "endLine": 116,
+        "endChar": 37
+      },
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "74ac1daa_fa767bb9",
         "filename": "tools/transparency/pixel_factory_image_verify.py",
         "patchSetId": 1
@@ -54,6 +78,30 @@
       "writtenOn": "2021-10-14T15:50:51Z",
       "side": 1,
       "message": "not sure what\u0027s going on here? added or removed whitespace?",
+      "range": {
+        "startLine": 289,
+        "startChar": 7,
+        "endLine": 289,
+        "endChar": 8
+      },
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9824970e_d61cd6ef",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-10-14T16:06:24Z",
+      "side": 1,
+      "message": "Nothing was added/removed here. I think gerrit is pointing out that there\u0027s an unnecessary whitespace here (that wasn\u0027t fixed in this round).\n\nI can fix this too if you want (since I fixed the typo on \"fingerprint\" below).",
+      "parentUuid": "74ac1daa_fa767bb9",
       "range": {
         "startLine": 289,
         "startChar": 7,
