@@ -106,6 +106,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b1775dd_fa8a1c20",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-10-14T16:17:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66f4c915_89f975e5",
+      "range": {
+        "startLine": 116,
+        "startChar": 30,
+        "endLine": 116,
+        "endChar": 37
+      },
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "74ac1daa_fa767bb9",
@@ -167,6 +191,30 @@
       "side": 1,
       "message": "Yeah, if you don\u0027t mind. Will avoid the confusion for the next person who comes around. Thanks!",
       "parentUuid": "9824970e_d61cd6ef",
+      "range": {
+        "startLine": 289,
+        "startChar": 7,
+        "endLine": 289,
+        "endChar": 8
+      },
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73164bb6_ef3598c5",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-10-14T16:17:49Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5ba6a448_aa94fe47",
       "range": {
         "startLine": 289,
         "startChar": 7,
