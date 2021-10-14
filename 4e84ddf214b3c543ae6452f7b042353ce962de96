@@ -1,0 +1,67 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f84adad2_f54ab134",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-10-14T15:50:51Z",
+      "side": 1,
+      "message": "just a few minor formatting questions below, CL LGTM!",
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "39129e2a_ff74d5f9",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-10-14T15:50:51Z",
+      "side": 1,
+      "message": "just curious, there were whitespaces?",
+      "range": {
+        "startLine": 116,
+        "startChar": 30,
+        "endLine": 116,
+        "endChar": 37
+      },
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "74ac1daa_fa767bb9",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-10-14T15:50:51Z",
+      "side": 1,
+      "message": "not sure what\u0027s going on here? added or removed whitespace?",
+      "range": {
+        "startLine": 289,
+        "startChar": 7,
+        "endLine": 289,
+        "endChar": 8
+      },
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
