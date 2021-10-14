@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebf24383_fcb6f896",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-10-14T16:08:49Z",
+      "side": 1,
+      "message": "Thanks^2!",
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "39129e2a_ff74d5f9",
@@ -67,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "66f4c915_89f975e5",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 116,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-10-14T16:08:49Z",
+      "side": 1,
+      "message": "Great, makes sense, thanks!",
+      "parentUuid": "ed842944_41b105ca",
+      "range": {
+        "startLine": 116,
+        "startChar": 30,
+        "endLine": 116,
+        "endChar": 37
+      },
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "74ac1daa_fa767bb9",
         "filename": "tools/transparency/pixel_factory_image_verify.py",
         "patchSetId": 1
@@ -102,6 +143,30 @@
       "side": 1,
       "message": "Nothing was added/removed here. I think gerrit is pointing out that there\u0027s an unnecessary whitespace here (that wasn\u0027t fixed in this round).\n\nI can fix this too if you want (since I fixed the typo on \"fingerprint\" below).",
       "parentUuid": "74ac1daa_fa767bb9",
+      "range": {
+        "startLine": 289,
+        "startChar": 7,
+        "endLine": 289,
+        "endChar": 8
+      },
+      "revId": "4e84ddf214b3c543ae6452f7b042353ce962de96",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5ba6a448_aa94fe47",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-10-14T16:08:49Z",
+      "side": 1,
+      "message": "Yeah, if you don\u0027t mind. Will avoid the confusion for the next person who comes around. Thanks!",
+      "parentUuid": "9824970e_d61cd6ef",
       "range": {
         "startLine": 289,
         "startChar": 7,
