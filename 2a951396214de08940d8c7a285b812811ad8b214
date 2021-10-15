@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8577cc5e_66f083f8",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2021-10-15T22:34:57Z",
+      "side": 1,
+      "message": "nit: redundant",
+      "revId": "2a951396214de08940d8c7a285b812811ad8b214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a6fc32a_fe19f731",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2021-10-15T22:34:57Z",
+      "side": 1,
+      "message": "Please add a \"Test:\" clause describing how this was tested",
+      "revId": "2a951396214de08940d8c7a285b812811ad8b214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "218aad15_ab904f8b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2021-10-15T22:34:57Z",
+      "side": 1,
+      "message": "Please add tests: (1) works with new header format (would fail without this change), (2) works with old header format (still works after this change), and (3) fails with reasonable output for invalid header\n",
+      "revId": "2a951396214de08940d8c7a285b812811ad8b214",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
