@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b47dbaf4_48b92de9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-10-18T12:03:22Z",
+      "side": 1,
+      "message": "I\u0027m abandoning this CL as I chose for my code to live open-dice rather than libavb. Just tagging you in case you were interested in having ed25519 bindings and this might turn out to be useful to you.",
+      "revId": "3fbb70a0327c7f5159b0f7c8269823d1e90a6949",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
