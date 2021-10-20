@@ -111,6 +111,11 @@ class PixelFactoryImageVerifier(object):
 
     print('The build fingerprint for factory image is: %s' % fingerprint)
     print('The VBMeta Digest for factory image is: %s' % vbmeta_digest)
+
+    with open('payload.txt', 'w') as f_out:
+      f_out.write(fingerprint.strip() + '\n')
+      f_out.write(vbmeta_digest.strip() + '\n\n')
+    print('A corresponding "payload.txt" file has been created.')
     sys.exit(0)
 
   def _download_factory_image(self, url):
@@ -281,7 +286,7 @@ class PixelFactoryImageVerifier(object):
     Returns:
       The build fingerprint string, e.g.
       google/blueline/blueline:9/PQ2A.190305.002/5240760:user/release-keys
-    """ 
+    """
     os.chdir(image_dir)
     args = ['grep',
             '-a',
@@ -290,7 +295,7 @@ class PixelFactoryImageVerifier(object):
 
     result, output = self._run_command(
         args,
-        'Successfully extracted build fingerpint.',
+        'Successfully extracted build fingerprint.',
         'Build fingerprint extraction failed.')
     os.chdir(self.working_dir)
     if result:
@@ -325,7 +330,8 @@ class PixelFactoryImageVerifier(object):
   def _run_command(self, args, success_msg, fail_msg):
     """Runs command line tools."""
     p = subprocess.Popen(args, stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                         stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                         encoding='utf-8')
     pout, _ = p.communicate()
     if p.wait() == 0:
       print(success_msg)
