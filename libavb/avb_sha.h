@@ -40,13 +40,13 @@ extern "C" {
 #include "avb_crypto.h"
 #include "avb_sysdeps.h"
 
-/* The following defines must be set to something appropriate
+/* The following types must be set to something appropriate
  *
- *   AVB_SHA256_CONTEXT_SIZE - the size of AvbSHA256Ctx, excluding the buffer
- *   AVB_SHA512_CONTEXT_SIZE - the size of AvbSHA512Ctx, exclusing the buffer
+ *   AvbSHA256ImplCtx - SHA-256 context used by the implementation
+ *   AvbSHA512ImplCtx - SHA-512 context used by the implementation
  *
- * For example, if AvbSHA512Ctx is implemented using BoringSSL this would be
- * defined as sizeof(SHA256_CTX).
+ * For example, if AvbSHA512Ctx is implemented using BoringSSL this would
+ * typedef AvbSHA512ImplCtx to SHA512_CTX.
  *
  * We expect the implementation to provide a header file with the name
  * avb_crypto_ops_impl.h to do all this.
@@ -55,13 +55,13 @@ extern "C" {
 
 /* Data structure used for SHA-256. */
 typedef struct {
-  uint8_t reserved[AVB_SHA256_CONTEXT_SIZE];
+  AvbSHA256ImplCtx impl;
   uint8_t buf[AVB_SHA256_DIGEST_SIZE]; /* Used for storing the final digest. */
 } AvbSHA256Ctx;
 
 /* Data structure used for SHA-512. */
 typedef struct {
-  uint8_t reserved[AVB_SHA512_CONTEXT_SIZE];
+  AvbSHA512ImplCtx impl;
   uint8_t buf[AVB_SHA512_DIGEST_SIZE]; /* Used for storing the final digest. */
 } AvbSHA512Ctx;
 
