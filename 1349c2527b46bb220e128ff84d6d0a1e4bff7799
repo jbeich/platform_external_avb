@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e1e36e1e_1764e7f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-10-21T14:56:34Z",
+      "side": 1,
+      "message": "Having seen some integrations with the new SHA abstraction, there were a couple of things that felt awkward so I\u0027ve tried to do them better.",
+      "revId": "1349c2527b46bb220e128ff84d6d0a1e4bff7799",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
