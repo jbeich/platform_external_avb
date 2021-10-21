@@ -133,7 +133,7 @@ static const uint64_t sha512_k[80] = {
 /* SHA-512 implementation */
 
 void avb_sha512_init(AvbSHA512Ctx* avb_ctx) {
-  AvbSHA512ImplCtx* ctx = (AvbSHA512ImplCtx*)avb_ctx->reserved;
+  AvbSHA512ImplCtx* ctx = &avb_ctx->impl;
 #ifdef UNROLL_LOOPS_SHA512
   ctx->h[0] = sha512_h0[0];
   ctx->h[1] = sha512_h0[1];
@@ -321,7 +321,7 @@ static void SHA512_transform(AvbSHA512ImplCtx* ctx,
 }
 
 void avb_sha512_update(AvbSHA512Ctx* avb_ctx, const uint8_t* data, size_t len) {
-  AvbSHA512ImplCtx* ctx = (AvbSHA512ImplCtx*)avb_ctx->reserved;
+  AvbSHA512ImplCtx* ctx = &avb_ctx->impl;
   size_t block_nb;
   size_t new_len, rem_len, tmp_len;
   const uint8_t* shifted_data;
@@ -353,7 +353,7 @@ void avb_sha512_update(AvbSHA512Ctx* avb_ctx, const uint8_t* data, size_t len) {
 }
 
 uint8_t* avb_sha512_final(AvbSHA512Ctx* avb_ctx) {
-  AvbSHA512ImplCtx* ctx = (AvbSHA512ImplCtx*)avb_ctx->reserved;
+  AvbSHA512ImplCtx* ctx = &avb_ctx->impl;
   size_t block_nb;
   size_t pm_len;
   uint64_t len_b;
