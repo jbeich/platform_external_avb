@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b936dbce_7f830af2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2021-10-21T14:57:08Z",
+      "side": 1,
+      "message": "I\u0027m really not sure why I didn\u0027t keep it typed in the first place.",
+      "revId": "2801b929f1a7ffac5354e77c1187eb70ec6d2990",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
