@@ -40,8 +40,8 @@
 extern "C" {
 #endif
 
-#define AVB_SHA256_CONTEXT_SIZE sizeof(SHA256_CTX)
-#define AVB_SHA512_CONTEXT_SIZE sizeof(SHA512_CTX)
+typedef SHA256_CTX AvbSHA256ImplCtx;
+typedef SHA512_CTX AvbSHA512ImplCtx;
 
 #ifdef __cplusplus
 }
