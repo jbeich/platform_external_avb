@@ -61,9 +61,6 @@ typedef struct {
   uint8_t block[2 * AVB_SHA512_BLOCK_SIZE];
 } AvbSHA512ImplCtx;
 
-#define AVB_SHA256_CONTEXT_SIZE sizeof(AvbSHA256ImplCtx)
-#define AVB_SHA512_CONTEXT_SIZE sizeof(AvbSHA512ImplCtx)
-
 #ifdef __cplusplus
 }
 #endif
