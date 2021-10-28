@@ -1,5 +1,5 @@
 # Android Verified Boot 2.0
----
+----
 
 This repository contains tools and libraries for working with Android
 Verified Boot 2.0. Usually AVB is used to refer to this codebase.
