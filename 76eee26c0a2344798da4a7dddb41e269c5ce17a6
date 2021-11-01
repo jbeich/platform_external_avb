@@ -1,0 +1,130 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "32356856_bb78b857",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-01T18:06:31Z",
+      "side": 1,
+      "message": "LGTM with some minor suggestions.",
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1613f93_aed6a6e3",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-01T18:06:31Z",
+      "side": 1,
+      "message": "nit: \"Supported: all ...\"\n\n\"Supported are ...\" reads a bit weird.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 13
+      },
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "43e73451_fff00d3b",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-01T18:06:31Z",
+      "side": 1,
+      "message": "s/make/made?\n\nhow about \"downloaded and symlinked as `fbpacktool` in the same directory as `avbtool`\"?",
+      "range": {
+        "startLine": 43,
+        "startChar": 15,
+        "endLine": 43,
+        "endChar": 19
+      },
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8dddf60b_8aa93feb",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-01T18:06:31Z",
+      "side": 1,
+      "message": "downloaded from where?",
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "00fa4673_327e01dc",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-01T18:06:31Z",
+      "side": 1,
+      "message": "into what? you say individual images below for _unpack_bootloader. does this need more qualfiers, either here or below in _unpack_bootloader or is it obvious to people familiar with avb?",
+      "range": {
+        "startLine": 105,
+        "startChar": 44,
+        "endLine": 105,
+        "endChar": 45
+      },
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6afca1ee_f08d29bb",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-01T18:06:31Z",
+      "side": 1,
+      "message": "s/pout/_/?",
+      "range": {
+        "startLine": 219,
+        "startChar": 12,
+        "endLine": 219,
+        "endChar": 16
+      },
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
