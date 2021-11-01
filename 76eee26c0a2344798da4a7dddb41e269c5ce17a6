@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f6b505d_e8aae89f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-11-01T18:47:41Z",
+      "side": 1,
+      "message": "Fixing natalie\u0027s nits.",
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f1613f93_aed6a6e3",
@@ -31,6 +48,30 @@
       "writtenOn": "2021-11-01T18:06:31Z",
       "side": 1,
       "message": "nit: \"Supported: all ...\"\n\n\"Supported are ...\" reads a bit weird.",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 37,
+        "endChar": 13
+      },
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "827fa7b2_28ff79e6",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 37,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-11-01T18:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1613f93_aed6a6e3",
       "range": {
         "startLine": 37,
         "startChar": 0,
@@ -81,6 +122,48 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c275bd2_3b4b7196",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-11-01T18:47:41Z",
+      "side": 1,
+      "message": "can\u0027t add the detail here yet, until we\u0027ve fixed where we\u0027re serving it from - gonna leave this intentionally unspecified, until the tool is eventually published in AOSP.",
+      "parentUuid": "8dddf60b_8aa93feb",
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab9512bf_e2807080",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 43,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-11-01T18:47:41Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "43e73451_fff00d3b",
+      "range": {
+        "startLine": 43,
+        "startChar": 15,
+        "endLine": 43,
+        "endChar": 19
+      },
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "00fa4673_327e01dc",
@@ -104,6 +187,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "822eefb7_47101c6e",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-11-01T18:47:41Z",
+      "side": 1,
+      "message": "I rephrased this as \"Unpacks bootloader image into individual component images\"",
+      "parentUuid": "00fa4673_327e01dc",
+      "range": {
+        "startLine": 105,
+        "startChar": 44,
+        "endLine": 105,
+        "endChar": 45
+      },
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6afca1ee_f08d29bb",
@@ -117,6 +224,30 @@
       "writtenOn": "2021-11-01T18:06:31Z",
       "side": 1,
       "message": "s/pout/_/?",
+      "range": {
+        "startLine": 219,
+        "startChar": 12,
+        "endLine": 219,
+        "endChar": 16
+      },
+      "revId": "76eee26c0a2344798da4a7dddb41e269c5ce17a6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f84d8a60_4cc83e28",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 219,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-11-01T18:47:41Z",
+      "side": 1,
+      "message": "good catch!",
+      "parentUuid": "6afca1ee_f08d29bb",
       "range": {
         "startLine": 219,
         "startChar": 12,
