@@ -16,6 +16,29 @@
       "message": "New change to python script. PTAL.\n\nThanks!",
       "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2daf36fa_78c98357",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2021-11-03T23:21:05Z",
+      "side": 1,
+      "message": "nit: Could just check self.fw_unpacker_path?",
+      "range": {
+        "startLine": 87,
+        "startChar": 34,
+        "endLine": 87,
+        "endChar": 44
+      },
+      "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
