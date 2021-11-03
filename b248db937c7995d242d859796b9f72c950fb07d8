@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b605b469_36d8bf8d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-11-03T23:00:31Z",
+      "side": 1,
+      "message": "New change to python script. PTAL.\n\nThanks!",
+      "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
