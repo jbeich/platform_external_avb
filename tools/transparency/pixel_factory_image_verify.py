@@ -37,11 +37,11 @@ https://developers.google.com/android/images
 Supported: all factory images of Pixel 6 and later devices.
 
 In order for the tool to run correct the following utilities need to be
-pre-installed: wget, unzip.
+pre-installed: wget or curl, unzip.
 
 Additionally, make sure that the bootloader unpacker script is separately
-downloaded, made executable, and symlinked as 'fbpacktool' in the same directory
-as 'avbtool'.
+downloaded, made executable, and symlinked as 'fbpacktool', and made accessible
+via your shell $PATH.
 
 The tool also runs outside of the repository location as long as the working
 directory is writable.
@@ -67,8 +67,9 @@ class PixelFactoryImageVerifier(object):
     self.script_dir = os.path.split(self.script_path)[0]
     self.avbtool_path = os.path.abspath(os.path.join(self.script_path,
                                                      '../../../avbtool'))
-    self.fw_unpacker_path = os.path.abspath(os.path.join(self.script_path,
-                                                         '../../../fbpacktool'))
+    self.fw_unpacker_path = distutils.spawn.find_executable('fbpacktool')
+    self.wget_path = distutils.spawn.find_executable('wget')
+    self.curl_path = distutils.spawn.find_executable('curl')
 
   def run(self, argv):
     """Command line processor.
@@ -83,11 +84,16 @@ class PixelFactoryImageVerifier(object):
       sys.exit(1)
 
     # Checks if necessary commands are available.
-    for cmd in ['grep', 'unzip', 'wget']:
+    for cmd in ['grep', 'unzip', 'fbpacktool']:
       if not distutils.spawn.find_executable(cmd):
         print('Necessary command line tool needs to be installed first: %s'
               % cmd)
         sys.exit(1)
+
+    # Checks if either `wget` or `curl` is available.
+    if not self.wget_path and not self.curl_path:
+      print('Either wget or curl must be installed before proceeding.')
+      sys.exit(1)
 
     # Downloads factory image if URL is specified; otherwise treat it as file.
     if argv[1].lower().startswith('https://'):
@@ -184,7 +190,12 @@ class PixelFactoryImageVerifier(object):
     """
     print('Fetching file from: %s' % url)
     os.chdir(download_dir)
-    args = ['wget', url]
+    args = []
+    if self.wget_path:
+      args = [self.wget_path, url]
+    else:
+      args = [self.curl_path, '-O', url]
+
     result, _ = self._run_command(args,
                                   'Successfully downloaded file.',
                                   'File download failed.')
