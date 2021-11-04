@@ -122,6 +122,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "18de937c_c8daefdc",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2021-11-04T14:58:37Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "2daf36fa_78c98357",
+      "range": {
+        "startLine": 87,
+        "startChar": 34,
+        "endLine": 87,
+        "endChar": 44
+      },
+      "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a655cdf3_18115089",
