@@ -18,6 +18,46 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7a1b170e_0de0a441",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-04T12:58:21Z",
+      "side": 1,
+      "message": "LGTM - a couple of comments, but fine to address in a follow up CL.",
+      "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b96b5ec4_7c21def4",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-04T12:58:21Z",
+      "side": 1,
+      "message": "can you also update all the other docs that expected the tools to be co-located? thanks.",
+      "range": {
+        "startLine": 43,
+        "startChar": 59,
+        "endLine": 44,
+        "endChar": 21
+      },
+      "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2daf36fa_78c98357",
@@ -36,6 +76,46 @@
         "startChar": 34,
         "endLine": 87,
         "endChar": 44
+      },
+      "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a655cdf3_18115089",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-04T12:58:21Z",
+      "side": 1,
+      "message": "How about checking for all pre-requisites and informing the user of all the requirements, rather than them installing the first batch, re-running and finding out that they need more stuff?\n\nFine to do in a follow up CL - I think(?) neither wget nor curl is a likely small proportion of users. But know knows!",
+      "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "090b6590_96926631",
+        "filename": "tools/transparency/pixel_factory_image_verify.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1060150
+      },
+      "writtenOn": "2021-11-04T12:58:21Z",
+      "side": 1,
+      "message": "nit: maybe reuse the same wording as above?\n\n\"Necessary command line tool needs to be installed first: wget or curl\"",
+      "range": {
+        "startLine": 95,
+        "startChar": 13,
+        "endLine": 95,
+        "endChar": 68
       },
       "revId": "b248db937c7995d242d859796b9f72c950fb07d8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
