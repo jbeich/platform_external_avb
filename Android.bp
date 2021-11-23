@@ -301,6 +301,8 @@ cc_defaults {
         "libbase",
         "libchrome",
         "libcrypto",
+        "liblog",
+        "libevent",
     ],
     cflags: [
         "-Wno-missing-prototypes",
