@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec6ab226_cdbe683b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2021-12-21T18:33:39Z",
+      "side": 1,
+      "message": "This fixes the build issue, but if the device has verified boot enabled, did you confirm that dm-verity is also happy with a zero-sized hash tree?",
+      "revId": "331f2d6c8b9003f4a62f2f67cf620b62960a7607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
