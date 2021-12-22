@@ -16,6 +16,24 @@
       "message": "This fixes the build issue, but if the device has verified boot enabled, did you confirm that dm-verity is also happy with a zero-sized hash tree?",
       "revId": "331f2d6c8b9003f4a62f2f67cf620b62960a7607",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8675c5fb_5af21e44",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2021-12-22T08:11:53Z",
+      "side": 1,
+      "message": "Hi,\nThanks for raising the suggestion.\n\nYup, I\u0027ve verified this on a Pixel device (with kernel version 5.10.79-android13-0-00388-g36a154f81d7a-ab7957869). Let me updated this on the commit message as well.  Let me know if there is any concern.\n\nThanks!\n\nps: https://source.android.com/devices/architecture/kernel/gki-versioning#determine-release",
+      "parentUuid": "ec6ab226_cdbe683b",
+      "revId": "331f2d6c8b9003f4a62f2f67cf620b62960a7607",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
