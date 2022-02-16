@@ -3395,23 +3395,17 @@ class Avb(object):
     # this size + metadata (footer + vbmeta struct) fits in
     # |partition_size|.
     max_metadata_size = self.MAX_VBMETA_SIZE + self.MAX_FOOTER_SIZE
-    if partition_size < max_metadata_size:
+    if partition_size and partition_size < max_metadata_size:
       raise AvbError('Parition size of {} is too small. '
                      'Needs to be at least {}'.format(
                          partition_size, max_metadata_size))
-    max_image_size = partition_size - max_metadata_size
 
     # If we're asked to only calculate the maximum image size, we're done.
     if calc_max_image_size:
-      print('{}'.format(max_image_size))
+      print('{}'.format(partition_size - max_metadata_size))
       return
 
     image = ImageHandler(image_filename)
-
-    if partition_size % image.block_size != 0:
-      raise AvbError('Partition size of {} is not a multiple of the image '
-                     'block size {}.'.format(partition_size,
-                                             image.block_size))
 
     # If there's already a footer, truncate the image to its original
     # size. This way 'avbtool add_hash_footer' is idempotent (modulo
@@ -3428,6 +3422,18 @@ class Avb(object):
     else:
       # Image size is too small to possibly contain a footer.
       original_image_size = image.image_size
+
+    if not partition_size:
+      partition_size = original_image_size + max_metadata_size
+
+      # Round up to block size.
+      partition_size -= partition_size % -image.block_size
+
+    max_image_size = partition_size - max_metadata_size
+    if partition_size % image.block_size != 0:
+      raise AvbError('Partition size of {} is not a multiple of the image '
+                     'block size {}.'.format(partition_size,
+                                             image.block_size))
 
     # If anything goes wrong from here-on, restore the image back to
     # its original size.
