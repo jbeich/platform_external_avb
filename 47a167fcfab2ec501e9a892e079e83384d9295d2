@@ -33,6 +33,24 @@
       "message": "Hi,\n\nIn general LGTM, just one suggestion below.\n\nCan you add a new flag, e.g., --no_specific_partition_size (or other naming), to ensure the client really wants to skip specifying the partition size?\n\nThe --partition_size is quite important for static partitions (e.g., /boot, /vendor_boot) in physical devices. Because the device bootloader expects to read the AVB footer from the end of the partition, when a chain partition is used.\n\nhttps://android.googlesource.com/platform/external/avb/#the-vbmeta-struct\n\n\nI\u0027m worried that if someone *forget* to add --partition_size for a static partition (no error will occur after this CL), it might not be trivial to debug this issue.\n\n\nBtw, for dynamic partitions in Android, the caller of `avbtool` will try to calculate the min required partition size for a given image first. Then pass the value with --partition_size to avbtool. Just sharing the info, not sure if this helps in your case or not.\n\nhttps://cs.android.com/android/platform/superproject/+/master:build/make/tools/releasetools/verity_utils.py;l\u003d391;drc\u003d166d819fe47c903f731decd1c77b7f8111e7c6a8",
       "revId": "47a167fcfab2ec501e9a892e079e83384d9295d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c57f6b0c_8c19dd67",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1067098
+      },
+      "writtenOn": "2022-02-17T22:33:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecaf69cc_62421eed",
+      "revId": "47a167fcfab2ec501e9a892e079e83384d9295d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
