@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cf897d9e_6992824a",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 3440,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-02-21T06:40:48Z",
+      "side": 0,
+      "message": "I asked some colleagues and it turns out some of them didn\u0027t know this.\n\nps: https://torstencurdt.com/tech/posts/modulo-of-negative-numbers/\n\nSo let\u0027s use a more general method instead.",
+      "range": {
+        "startLine": 3440,
+        "startChar": 41,
+        "endLine": 3440,
+        "endChar": 42
+      },
+      "revId": "8b7b2bd994eebe4b3b132f10019829155eaa9878",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
