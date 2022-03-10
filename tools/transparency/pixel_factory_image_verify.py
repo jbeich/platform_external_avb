@@ -45,6 +45,8 @@ via your shell $PATH.
 
 The tool also runs outside of the repository location as long as the working
 directory is writable.
+
+test change
 """
 
 from __future__ import print_function
