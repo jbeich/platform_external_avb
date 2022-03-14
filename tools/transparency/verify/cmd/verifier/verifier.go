@@ -29,9 +29,9 @@ import (
 	"log"
 	"os"
 
-	"google3/third_party/golang/go_mod/sumdb/tlog/tlog"
-	"google3/wireless/android/security/transparency/verify/internal/checkpoint/checkpoint"
-	"google3/wireless/android/security/transparency/verify/internal/tiles/tiles"
+	"github.com/google/binary_transparency/verifier/internal/checkpoint"
+	"github.com/google/binary_transparency/verifier/internal/tiles"
+	"golang.org/x/mod/sumdb/tlog"
 
 	_ "embed"
 )

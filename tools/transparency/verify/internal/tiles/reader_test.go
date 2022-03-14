@@ -13,8 +13,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"google3/third_party/golang/cmp/cmp"
-	"google3/third_party/golang/go_mod/sumdb/tlog/tlog"
+	"github.com/google/go-cmp/cmp"
+	"golang.org/x/mod/sumdb/tlog"
 )
 
 const (

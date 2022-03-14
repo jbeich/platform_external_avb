@@ -10,7 +10,7 @@ import (
 	"path"
 	"testing"
 
-	"google3/third_party/golang/cmp/cmp"
+	"github.com/google/go-cmp/cmp"
 )
 
 // privateKeyForTest returns a ecdsa PrivateKey used in tests only.

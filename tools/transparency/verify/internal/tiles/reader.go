@@ -8,7 +8,7 @@ import (
 	"net/url"
 	"path"
 
-	"google3/third_party/golang/go_mod/sumdb/tlog/tlog"
+	"golang.org/x/mod/sumdb/tlog"
 )
 
 // HashReader implements tlog.HashReader, reading from tlog-based log located at

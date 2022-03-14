@@ -35,7 +35,7 @@ import (
 	"strconv"
 	"strings"
 
-	"google3/third_party/golang/go_mod/sumdb/note/note"
+	"golang.org/x/mod/sumdb/note"
 )
 
 const (
