@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2629cc38_6438f8dc",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2022-03-16T22:48:15Z",
+      "side": 1,
+      "message": "No, good point. I have had the same thought before. This is very doable and would provide a better user experience.\n\nHow about I file a bug for this improvement feature, and take care of it in a separate CL?",
+      "parentUuid": "2e16dbf2_9ce985ee",
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8bc5140f_e7dae1a7",
@@ -66,6 +84,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cd29440e_37223c4c",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2022-03-16T22:48:15Z",
+      "side": 1,
+      "message": "\u003e It\u0027s unclear if we\u0027ll be further publishing specific usage instructions there. \nThis statement surprises me - I thought that the website was going to be the central place for Binary Transparency information? In my mind, downloading/using this tool is a requirement just as avbtool or any of the others are (https://developers.google.com/android/binary_transparency/pixel#prerequisites-to-verifying).\n\nSo my mental model of the layout of information was that that page is the main thing users will read and follow, and that page links to these other tools they download. I believe currently we don\u0027t have extensive documentation in READMEs where some of the other code live - we just describe how to use it on the public website.\n\nBut I definitely see the value of your point:\n\u003e Even if we do, it is still best to have guides on how to accomplish the most basic tasks here in this README, so that users don\u0027t need to go back and forth between this README and the website.\nI\u0027m happy to make these changes, but first I\u0027m curious if you have any thoughts about my proposal?\n\n\u003e Also, the linked URL points to a page that is very large, and thus it is not ideal to just tell users to \"refer to this big page and comb for which part is relevant to what they are trying to do with this tool here\".\nAck. I guess I had a chicken and egg problem, because the new section is in CR (I have CCed you), unsubmitted. I plan to update this URL after that CL is submitted and populates on the public website.",
+      "parentUuid": "82c53cd9_829c069a",
+      "range": {
+        "startLine": 12,
+        "startChar": 119,
+        "endLine": 12,
+        "endChar": 224
+      },
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "8e4b27b2_daa0ea48",
         "filename": "tools/transparency/verify/README.md",
         "patchSetId": 3
@@ -100,6 +142,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b1edcc55_61a23c94",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2022-03-16T22:48:15Z",
+      "side": 1,
+      "message": "Good callout. I guess this depends on the content of the transparency log, so I will double check that it is all consistent (without the `\\n`) and then update the website payload specification accordingly.",
+      "parentUuid": "8e4b27b2_daa0ea48",
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ef8a4122_99b13179",
         "filename": "tools/transparency/verify/cmd/verifier/verifier.go",
         "patchSetId": 3
@@ -111,6 +171,30 @@
       "writtenOn": "2022-03-16T22:14:46Z",
       "side": 1,
       "message": "I think this should be `image_info_index` instead of `leaf_index`?",
+      "range": {
+        "startLine": 60,
+        "startChar": 30,
+        "endLine": 60,
+        "endChar": 40
+      },
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cc23201c_f8539f5f",
+        "filename": "tools/transparency/verify/cmd/verifier/verifier.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2022-03-16T22:48:15Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef8a4122_99b13179",
       "range": {
         "startLine": 60,
         "startChar": 30,
