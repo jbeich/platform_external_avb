@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "12d3bda8_9dedd73b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-16T16:17:35Z",
+      "side": 1,
+      "message": "The README.md file contains references to google3. Please resubmit.",
+      "revId": "fc6087727541d3fb59c22e014754c560e6b50f3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7757718f_b20d76f2",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 1
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-16T16:17:35Z",
+      "side": 1,
+      "message": "This paragraph is not relevant for this public facing version. Please remove.",
+      "range": {
+        "startLine": 9,
+        "startChar": 0,
+        "endLine": 12,
+        "endChar": 34
+      },
+      "revId": "fc6087727541d3fb59c22e014754c560e6b50f3d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
