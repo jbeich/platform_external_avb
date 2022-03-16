@@ -1,0 +1,124 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2e16dbf2_9ce985ee",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-16T22:14:46Z",
+      "side": 1,
+      "message": "I might have missed this - is there any logic in the code to do reverse lookup for index of a given payload?",
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8bc5140f_e7dae1a7",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-16T22:14:46Z",
+      "side": 1,
+      "message": "Please also add another section on how to invoke, explaining that an executable named `verifier` will be produced should there be no error, and an example of invocation and result of both a successful test \u0026 a failed verification look like.",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "82c53cd9_829c069a",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-16T22:14:46Z",
+      "side": 1,
+      "message": "It\u0027s unclear if we\u0027ll be further publishing specific usage instructions there. Even if we do, it is still best to have guides on how to accomplish the most basic tasks here in this README, so that users don\u0027t need to go back and forth between this README and the website.\n\nAlso, the linked URL points to a page that is very large, and thus it is not ideal to just tell users to \"refer to this big page and comb for which part is relevant to what they are trying to do with this tool here\".",
+      "range": {
+        "startLine": 12,
+        "startChar": 119,
+        "endLine": 12,
+        "endChar": 224
+      },
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8e4b27b2_daa0ea48",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-16T22:14:46Z",
+      "side": 1,
+      "message": "Another point:\n\nSo, I managed to build the `verifier` tool with the instruction given, and invoke it with the following command: `./verifier -image_info_index 0 -payload_path ./payload.txt`, and initially encountered `FAILURE: inclusion check error in tlog.CheckRecord: invalid transparency proof`, and it turned out that I included an additional `\\n` in the payload, as I manually constructed it following the format https://developers.google.com/android/binary_transparency/pixel#log-content. I suspect this might trip up some other users too.",
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a6d31936_a35dfda6",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-16T22:14:46Z",
+      "side": 1,
+      "message": "Additionally, could you also add some guide on how to \"create a payload file\" here. It\u0027s totally fine if we were to copy-paste a few commandlines here, and maintain a link to specific *section* within the website that we discussed this, which, I think is https://developers.google.com/android/binary_transparency/pixel#construct-the-payload-for-verification",
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef8a4122_99b13179",
+        "filename": "tools/transparency/verify/cmd/verifier/verifier.go",
+        "patchSetId": 3
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-16T22:14:46Z",
+      "side": 1,
+      "message": "I think this should be `image_info_index` instead of `leaf_index`?",
+      "range": {
+        "startLine": 60,
+        "startChar": 30,
+        "endLine": 60,
+        "endChar": 40
+      },
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
