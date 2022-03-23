@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dec72b03_9d543d5c",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-23T15:10:36Z",
+      "side": 1,
+      "message": "trailing whitespace",
+      "range": {
+        "startLine": 15,
+        "startChar": 0,
+        "endLine": 15,
+        "endChar": 1
+      },
+      "revId": "75c7b1398fb174a5b28472a9f83165ba78dfe4f3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
