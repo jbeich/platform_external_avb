@@ -77,6 +77,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "874b9764_0231cc4e",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2022-03-23T10:18:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8bc5140f_e7dae1a7",
+      "range": {
+        "startLine": 11,
+        "startChar": 0,
+        "endLine": 11,
+        "endChar": 9
+      },
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "82c53cd9_829c069a",
@@ -148,6 +172,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0367ca73_86a7c7bd",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 12,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2022-03-23T10:18:58Z",
+      "side": 1,
+      "message": "Great, SGTM.",
+      "parentUuid": "167be79e_3dd197b7",
+      "range": {
+        "startLine": 12,
+        "startChar": 119,
+        "endLine": 12,
+        "endChar": 224
+      },
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8e4b27b2_daa0ea48",
@@ -196,6 +244,42 @@
       "side": 1,
       "message": "Good callout. I guess this depends on the content of the transparency log, so I will double check that it is all consistent (without the `\\n`) and then update the website payload specification accordingly.",
       "parentUuid": "8e4b27b2_daa0ea48",
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "24311f41_336c5130",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2022-03-23T10:18:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a6d31936_a35dfda6",
+      "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9243202d_d81375ad",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2022-03-23T10:18:58Z",
+      "side": 1,
+      "message": "I have verified that the format on the website is correct. However, it is very likely for people to run into problems because certain text editors such as vim automatically add an extra newline at the end of a file. I have made a change for the verifier to try to fix whitespace issues in Google3, and I will upstream that change here in AOSP in the next CL.",
+      "parentUuid": "b1edcc55_61a23c94",
       "revId": "e392c7db3246cea0d24d183350b39724e48fddb5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
