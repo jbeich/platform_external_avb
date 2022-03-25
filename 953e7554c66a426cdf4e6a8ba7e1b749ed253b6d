@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ff15ebb_1ae9e8a8",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-25T15:15:11Z",
+      "side": 1,
+      "message": "This doesn\u0027t seem point to a specific section.",
+      "range": {
+        "startLine": 3,
+        "startChar": 224,
+        "endLine": 3,
+        "endChar": 287
+      },
+      "revId": "953e7554c66a426cdf4e6a8ba7e1b749ed253b6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "213f75c9_7341ce9c",
+        "filename": "tools/transparency/verify/README.md",
+        "patchSetId": 3
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-03-25T15:15:11Z",
+      "side": 1,
+      "message": "one input",
+      "range": {
+        "startLine": 25,
+        "startChar": 19,
+        "endLine": 25,
+        "endChar": 29
+      },
+      "revId": "953e7554c66a426cdf4e6a8ba7e1b749ed253b6d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
