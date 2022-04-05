@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2446cdfc_aa7ee8d0",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-04-05T14:47:27Z",
+      "side": 1,
+      "message": "Please remove references to google internals.",
+      "range": {
+        "startLine": 9,
+        "startChar": 17,
+        "endLine": 9,
+        "endChar": 102
+      },
+      "revId": "f224a320100e17a7d9fead47c395420cb8d33643",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
