@@ -2,11 +2,15 @@
 package tiles
 
 import (
+	"crypto/sha256"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 	"path"
+	"strconv"
+	"strings"
 
 	"golang.org/x/mod/sumdb/tlog"
 )
@@ -16,6 +20,13 @@ import (
 type HashReader struct {
 	URL string
 }
+
+
+// Domain separation prefix for Merkle tree hashing with second preimage
+// resistance similar to that used in RFC 6962.
+const (
+	leafHashPrefix = 0
+)
 
 // ReadHashes implements tlog.HashReader's ReadHashes.
 // See: https://pkg.go.dev/golang.org/x/mod/sumdb/tlog#HashReader.
@@ -47,6 +58,42 @@ func (h HashReader) ReadHashes(indices []int64) ([]tlog.Hash, error) {
 	return hashes, nil
 }
 
+// ImageInfosIndex returns a map from payload to its index in the
+// transparency log according to the image_info.txt.
+func ImageInfosIndex(logBaseURL string) (map[string]int64, error) {
+	b, err := readFromURL(logBaseURL, "image_info.txt")
+	if err != nil {
+		return nil, err
+	}
+
+	imageInfos := string(b)
+	return parseImageInfosIndex(imageInfos)
+}
+
+func parseImageInfosIndex(imageInfos string) (map[string]int64, error) {
+	m := make(map[string]int64)
+
+	infosStr := strings.Split(imageInfos, "\n\n")
+	for _, infoStr := range infosStr {
+		pieces := strings.SplitN(infoStr, "\n", 2)
+		if len(pieces) != 2 {
+			return nil, errors.New("missing newline, malformed image_info.txt")
+		}
+
+		idx, err := strconv.ParseInt(pieces[0], 10, 64)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert %q to int64", pieces[0])
+		}
+
+		// Ensure that each log entry does not have extraneous whitespace, but
+		// also terminates with a newline.
+		logEntry := strings.TrimSpace(pieces[1]) + "\n"
+		m[logEntry] = idx
+	}
+
+	return m, nil
+}
+
 func readFromURL(base, suffix string) ([]byte, error) {
 	u, err := url.Parse(base)
 	if err != nil {
@@ -64,4 +111,14 @@ func readFromURL(base, suffix string) ([]byte, error) {
 	}
 
 	return io.ReadAll(resp.Body)
+}
+
+// PayloadHash returns the hash of the payload.
+func PayloadHash(p []byte) (tlog.Hash, error) {
+	l := append([]byte{leafHashPrefix}, p...)
+	h := sha256.Sum256(l)
+
+	var hash tlog.Hash
+	copy(hash[:], h[:])
+	return hash, nil
 }
