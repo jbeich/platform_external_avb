@@ -33,6 +33,24 @@
       "message": "It seems that we don\u0027t use #include \"../\" under external/avb:\nhttps://cs.android.com/search?q\u003d%22include%20%5C%22..%22%20%20f:external%2Favb\n\nTo keep consistency, maybe we can still keep using \u003clibavb/*.h\u003e ?\n\nLet\u0027s see if David has any thoughts?",
       "revId": "1349c2527b46bb220e128ff84d6d0a1e4bff7799",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "15942f9b_c849018e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2022-05-26T10:16:17Z",
+      "side": 1,
+      "message": "I didn\u0027t see other cases that required directory traversal in the first place. The source files use \"\" so they get the header from the same repo as the source and, with this CL, I\u0027m applying that same lookup process to these files. So I\u0027m shooting for consistency in the include path priority.",
+      "parentUuid": "09b80f90_5ee18e80",
+      "revId": "1349c2527b46bb220e128ff84d6d0a1e4bff7799",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
