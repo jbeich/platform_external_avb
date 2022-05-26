@@ -16,6 +16,23 @@
       "message": "Having seen some integrations with the new SHA abstraction, there were a couple of things that felt awkward so I\u0027ve tried to do them better.",
       "revId": "1349c2527b46bb220e128ff84d6d0a1e4bff7799",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09b80f90_5ee18e80",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-05-26T09:24:02Z",
+      "side": 1,
+      "message": "It seems that we don\u0027t use #include \"../\" under external/avb:\nhttps://cs.android.com/search?q\u003d%22include%20%5C%22..%22%20%20f:external%2Favb\n\nTo keep consistency, maybe we can still keep using \u003clibavb/*.h\u003e ?\n\nLet\u0027s see if David has any thoughts?",
+      "revId": "1349c2527b46bb220e128ff84d6d0a1e4bff7799",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
