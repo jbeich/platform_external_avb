@@ -16,6 +16,23 @@
       "message": "LGTM, thanks!",
       "revId": "200ad321bee99f76ea94f63f83d3128a640298d2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9588534e_8fb7667b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-06-24T03:05:56Z",
+      "side": 1,
+      "message": "Oh, you\u0027ll need to modify test cases in \"test/avb_slot_verify_unittest.cc\", \"test/avbtool_unittest.cc\".\n\ne.g., \nhttps://android-review.googlesource.com/c/platform/external/avb/+/1262979",
+      "revId": "200ad321bee99f76ea94f63f83d3128a640298d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
