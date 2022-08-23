@@ -131,7 +131,7 @@ cc_defaults {
 }
 
 python_binary_host {
-    name: "avbtool",
+    name: "avbtool_lib",
     srcs: ["avbtool.py"],
     main: "avbtool.py",
     required: ["fec"],
@@ -262,7 +262,7 @@ cc_defaults {
     required: [
         "simg2img",
         "img2simg",
-        "avbtool",
+        "avbtool_lib",
     ],
     test_options: {
         unit_test: true,
