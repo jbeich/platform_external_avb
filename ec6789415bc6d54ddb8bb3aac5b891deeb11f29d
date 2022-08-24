@@ -46,6 +46,30 @@
       },
       "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "71a77a83_1c12b6f3",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1948227
+      },
+      "writtenOn": "2022-08-24T18:55:50Z",
+      "side": 1,
+      "message": "b/198619163\n\nIn short - having a module share the name of a source file is a problem going forward. I\u0027m open to suggestions.",
+      "parentUuid": "b00cca35_6c18c081",
+      "range": {
+        "startLine": 134,
+        "startChar": 11,
+        "endLine": 134,
+        "endChar": 22
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
