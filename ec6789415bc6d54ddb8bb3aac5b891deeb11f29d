@@ -22,6 +22,30 @@
       },
       "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a5e50838_216362af",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2022-08-24T17:47:55Z",
+      "side": 1,
+      "message": "Same, also curious what the point of this change is.",
+      "parentUuid": "b00cca35_6c18c081",
+      "range": {
+        "startLine": 134,
+        "startChar": 11,
+        "endLine": 134,
+        "endChar": 22
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
