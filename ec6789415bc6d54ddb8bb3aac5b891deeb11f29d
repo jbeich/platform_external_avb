@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b00cca35_6c18c081",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 134,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-08-24T09:37:58Z",
+      "side": 1,
+      "message": "Not sure why need to have the suffix of _lib, as it\u0027s actually not a library.\n\nAny more contexts? e.g., buganizer?\n\nps: avbtool already has many clients, this is likely to create some churns.",
+      "range": {
+        "startLine": 134,
+        "startChar": 11,
+        "endLine": 134,
+        "endChar": 22
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
