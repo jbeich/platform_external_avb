@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "993bdbda_7aee0e50",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-08-25T04:44:54Z",
+      "side": 1,
+      "message": "Let\u0027s add the bug# so others can get more info.\nAlso, usually we start by a one-liner title, followed by a blank line. Then more details.\n\nHow about:\n\nFirst batch of uploads for module-file collision remediation.\n\nHaving a module share the name of a source file is a problem\nin the build system going forward.\n\nBug: 198619163\nTest: m nothing\nChange-Id: I0e9f2f38979eeb169086cd2833cd7d12b76f12c4",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 52
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b00cca35_6c18c081",
         "filename": "Android.bp",
         "patchSetId": 1
@@ -67,6 +90,29 @@
         "startChar": 11,
         "endLine": 134,
         "endChar": 22
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e738a77_980955c7",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-08-25T04:44:54Z",
+      "side": 1,
+      "message": "If so, I\u0027d prefer we rename the source file, to limit the impact of multiple clients of \"avbtool\" executable.\n\ne.g., s/avbtool.py/avbtool_src.py",
+      "range": {
+        "startLine": 135,
+        "startChar": 12,
+        "endLine": 135,
+        "endChar": 19
       },
       "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
