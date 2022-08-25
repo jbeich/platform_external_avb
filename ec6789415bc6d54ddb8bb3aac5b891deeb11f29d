@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9c9c43e_06be29e6",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1948227
+      },
+      "writtenOn": "2022-08-25T14:47:39Z",
+      "side": 1,
+      "message": "thanks!",
+      "parentUuid": "993bdbda_7aee0e50",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 10,
+        "endChar": 52
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b00cca35_6c18c081",
@@ -108,6 +132,30 @@
       "writtenOn": "2022-08-25T04:44:54Z",
       "side": 1,
       "message": "If so, I\u0027d prefer we rename the source file, to limit the impact of multiple clients of \"avbtool\" executable.\n\ne.g., s/avbtool.py/avbtool_src.py",
+      "range": {
+        "startLine": 135,
+        "startChar": 12,
+        "endLine": 135,
+        "endChar": 19
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8a46bc2a_b4745a17",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1948227
+      },
+      "writtenOn": "2022-08-25T14:47:39Z",
+      "side": 1,
+      "message": "the file that poses a problem is the actual file `avbtool`, not the .py. I\u0027m okay proceeding with this approach, however. Is it possible to rename that?\n\nIn some other cases, \"filename_from_src: true\" made this work while changing the name of the module, if not.",
+      "parentUuid": "4e738a77_980955c7",
       "range": {
         "startLine": 135,
         "startChar": 12,
