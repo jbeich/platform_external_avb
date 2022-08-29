@@ -188,6 +188,30 @@
       },
       "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4b001dc8_7c293255",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1948227
+      },
+      "writtenOn": "2022-08-29T15:07:58Z",
+      "side": 1,
+      "message": "I think stem would work best",
+      "parentUuid": "eb116709_599a7acc",
+      "range": {
+        "startLine": 135,
+        "startChar": 12,
+        "endLine": 135,
+        "endChar": 19
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
