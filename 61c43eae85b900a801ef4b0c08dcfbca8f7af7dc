@@ -16,6 +16,23 @@
       "message": "Have you tested this change to check that the pixel_factory_image_verify.py still works?",
       "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "154393d2_afc92785",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-08-29T22:20:05Z",
+      "side": 1,
+      "message": "There are some other dependencies on the `avbtool` symlink that is in public documentations (e.g. https://developers.google.com/android/binary_transparency/pixel) that should be taken into account as well or at least coordinated for change too.",
+      "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
