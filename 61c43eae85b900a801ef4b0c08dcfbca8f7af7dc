@@ -33,6 +33,24 @@
       "message": "There are some other dependencies on the `avbtool` symlink that is in public documentations (e.g. https://developers.google.com/android/binary_transparency/pixel) that should be taken into account as well or at least coordinated for change too.",
       "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "220c5fff_e25ead1b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2022-08-29T22:24:15Z",
+      "side": 1,
+      "message": "Yes, I ran it with the command listed in the commit message and it passed. Running it is how I figured out all the python3 changes to make.",
+      "parentUuid": "3fe200f1_0f41c815",
+      "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
