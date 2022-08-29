@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fe200f1_0f41c815",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-08-29T22:17:59Z",
+      "side": 1,
+      "message": "Have you tested this change to check that the pixel_factory_image_verify.py still works?",
+      "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
