@@ -51,6 +51,24 @@
       "parentUuid": "3fe200f1_0f41c815",
       "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "813f5a11_f71a417e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2022-08-29T22:28:59Z",
+      "side": 1,
+      "message": "Oh sorry, you said pixel_factory_image_verify.py not image_handler_unittest.py. No, I didn\u0027t run that one, as it requires giving a pixel image as input which I didn\u0027t know how to make. Are there instructions for running that script?",
+      "parentUuid": "220c5fff_e25ead1b",
+      "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
