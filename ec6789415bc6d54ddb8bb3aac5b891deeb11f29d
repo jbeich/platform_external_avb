@@ -164,6 +164,30 @@
       },
       "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb116709_599a7acc",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 135,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-08-29T04:11:17Z",
+      "side": 1,
+      "message": "\u003e the file that poses a problem is the actual file  avbtool , not the .py.\n\nOh, I see.\n\nJust to ensure we\u0027re aligned, so the issue is that the \"name: avbtool\" below conflicts with this symlink: ./external/avb/\"avbtool\" -\u003e avbtool.py?\n\npython_binary_host {                                                                                                                              \n    name: \"avbtool\",   \u003c\u003d\u003d this name                                                                                                                           \n    srcs: [\"avbtool.py\"],                                                                                                                         \n    main: \"avbtool.py\",                                                                                                                           \n    ...\n}  \n\nSome solutions I can think of:\n 1. Is it possible to remove the symlink: external/avb/\"avbtool OR\n 2. change the \"name\" below and use \"stem\" to still output \u0027avbtool\u0027?\n \n python_binary_host {                                                                                                                              \n    name: \"avbtool_binary\",   \u003c\u003d\u003d rename it                                                                                                                          \n    srcs: [\"avbtool.py\"],                                                                                                                         \n    main: \"avbtool.py\",                                                                                                                           \n    ...\n    stem: \"avbtool\",   \u003c\u003d\u003d so we still builds `out/host/linux-x86/bin/avbtool`\n}  \n\nWDYT?",
+      "parentUuid": "8a46bc2a_b4745a17",
+      "range": {
+        "startLine": 135,
+        "startChar": 12,
+        "endLine": 135,
+        "endChar": 19
+      },
+      "revId": "ec6789415bc6d54ddb8bb3aac5b891deeb11f29d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
