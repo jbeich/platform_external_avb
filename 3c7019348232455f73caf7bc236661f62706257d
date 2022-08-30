@@ -16,6 +16,23 @@
       "message": "LGTM, but it\u0027s better to get David\u0027s green light, too!\n\n",
       "revId": "3c7019348232455f73caf7bc236661f62706257d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd9d7504_f12b389d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-08-30T19:08:29Z",
+      "side": 1,
+      "message": "LGTM overall - leaving this now to David Zeuthen to check if anything else that I forgot to point out.",
+      "revId": "3c7019348232455f73caf7bc236661f62706257d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
