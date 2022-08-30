@@ -123,6 +123,24 @@
       "parentUuid": "7b996700_4efe11a7",
       "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "493cdde8_e377d034",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2022-08-30T17:31:23Z",
+      "side": 1,
+      "message": "Done, it appears to work: https://paste.googleplex.com/5961616137912320\n\nI had to change imports like `from google3.third_party.devsite.androidsource.en.docs.core.bootloader.tools.pixel.fw_unpack import fbpack` to just `import fbpack` in the fbpack scripts though.",
+      "parentUuid": "0ba509c1_53fc4e51",
+      "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
