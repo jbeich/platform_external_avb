@@ -104,6 +104,24 @@
       "parentUuid": "6640e1df_c55dd816",
       "revId": "3c7019348232455f73caf7bc236661f62706257d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfb4b316_04bf5358",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2022-08-30T20:48:43Z",
+      "side": 1,
+      "message": "Yes, I\u0027m aware of those concerns and share the sentiment... my specific concern has to do with the fact that people are used to running `avbtool info_image --image ...` from the command-line and I\u0027d hate to break that muscle memory.\n\nAdding an alias to `envsetup.sh` seems like it would address my concerns, happy to +2 such a topic.",
+      "parentUuid": "6f648e39_1684982a",
+      "revId": "3c7019348232455f73caf7bc236661f62706257d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
