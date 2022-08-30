@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c527ab81_20d7cd5c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-08-30T06:50:17Z",
+      "side": 1,
+      "message": "LGTM, but it\u0027s better to get David\u0027s green light, too!\n\n",
+      "revId": "3c7019348232455f73caf7bc236661f62706257d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
