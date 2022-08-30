@@ -86,6 +86,24 @@
       "parentUuid": "cfb14e64_2af78a5e",
       "revId": "3c7019348232455f73caf7bc236661f62706257d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6f648e39_1684982a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1535516
+      },
+      "writtenOn": "2022-08-30T20:35:39Z",
+      "side": 1,
+      "message": "Also as a compromise, we could add a `avbtool` alias to `envsetup.sh`, so everyone who sources envsetup can continue to run `avbtool`. Would that be acceptable?",
+      "parentUuid": "6640e1df_c55dd816",
+      "revId": "3c7019348232455f73caf7bc236661f62706257d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
