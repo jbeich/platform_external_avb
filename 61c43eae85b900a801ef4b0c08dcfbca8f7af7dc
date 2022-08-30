@@ -87,6 +87,24 @@
       "parentUuid": "154393d2_afc92785",
       "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7b996700_4efe11a7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-08-30T14:19:19Z",
+      "side": 1,
+      "message": "For pixel_factory_image_verify.py, try instructions here: https://developers.google.com/android/binary_transparency/pixel#automatic-payload-construction, which should fetch the image automatically given a download link (which is also provided as an example in that link)",
+      "parentUuid": "813f5a11_f71a417e",
+      "revId": "61c43eae85b900a801ef4b0c08dcfbca8f7af7dc",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
