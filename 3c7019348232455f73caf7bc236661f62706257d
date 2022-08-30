@@ -33,6 +33,23 @@
       "message": "LGTM overall - leaving this now to David Zeuthen to check if anything else that I forgot to point out.",
       "revId": "3c7019348232455f73caf7bc236661f62706257d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfb14e64_2af78a5e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2022-08-30T20:07:36Z",
+      "side": 1,
+      "message": "Hmm, sorry to be difficult but can we rename the module instead of the tool? It\u0027s been `avbtool` for many years and making everybody type `avbtool.py` instead is going to be annoying.",
+      "revId": "3c7019348232455f73caf7bc236661f62706257d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
