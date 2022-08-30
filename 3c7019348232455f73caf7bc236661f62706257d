@@ -68,6 +68,24 @@
       "parentUuid": "cfb14e64_2af78a5e",
       "revId": "3c7019348232455f73caf7bc236661f62706257d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6640e1df_c55dd816",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1948227
+      },
+      "writtenOn": "2022-08-30T20:34:38Z",
+      "side": 1,
+      "message": "I\u0027m not the author, but I recently attempted to rename the module and found it quite difficult to chase down all references, many of which were in freeform cmd fields via \"$(location avbtool)\"",
+      "parentUuid": "cfb14e64_2af78a5e",
+      "revId": "3c7019348232455f73caf7bc236661f62706257d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
