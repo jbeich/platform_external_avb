@@ -175,6 +175,24 @@
       "parentUuid": "20eccaeb_1924636c",
       "revId": "3c7019348232455f73caf7bc236661f62706257d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "54f047df_e0ce7ed9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-08-31T06:32:05Z",
+      "side": 1,
+      "message": "\u003e my specific concern has to do with the fact that people are used to running  avbtool info_image --image ...  from the command-line and I\u0027d hate to break that muscle memory.\n\nThat\u0027s my concern, too. But I think this CL will not impact this, right?\nWe just removed the symlink of external/avb/avbtool -\u003e avbtool.py, and `avbtool` still available.\n\n`m avbtool`\n`whereis avbtool`\n \u003d\u003d\u003e ${ANDROID_BUILD_TOP}/out/host/linux-x86/bin/avbtool\n \nIIUC, the symlink file external/avb/avbtool is only affects local test cases using \"./avbtool\", and they\u0027re all changed to using \"./avbtool.py\" now.\n\nSo seems no need for the alias of `avbtool` in `envsetup.sh`?",
+      "parentUuid": "6a94b342_6a27d2b3",
+      "revId": "3c7019348232455f73caf7bc236661f62706257d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
