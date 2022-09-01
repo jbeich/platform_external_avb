@@ -269,7 +269,7 @@ cc_defaults {
     },
     compile_multilib: "first",
     data: [
-        "avbtool",
+        "avbtool.py",
         "test/avbtool_signing_helper_test.py",
         "test/avbtool_signing_helper_with_files_test.py",
         "test/data/*",
