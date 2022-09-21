@@ -136,7 +136,11 @@ python_binary_host {
     main: "avbtool.py",
     required: ["fec"],
     version: {
+        py2: {
+            enabled: false,
+        },
         py3: {
+            enabled: true,
             embedded_launcher: true,
         },
     },

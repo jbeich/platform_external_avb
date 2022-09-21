@@ -40,6 +40,14 @@ python_test_host {
         "data/atx_unlock_credential.bin",
         "data/testkey_atx_puk.pem",
     ],
+    version: {
+        py2: {
+            enabled: false,
+        },
+        py3: {
+            enabled: true,
+        },
+    },
     test_config: "at_auth_unlock_unittest.xml",
 }
 
