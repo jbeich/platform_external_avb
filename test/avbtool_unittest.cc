@@ -2006,6 +2006,47 @@ TEST_F(AvbToolTest, AddHashtreeFooterNoSizeWrongSize) {
                  path.value().c_str());
 }
 
+TEST_F(AvbToolTest, AddHashtreeFooterRoundImageSize) {
+  // Image size needs not to be a multiple of block size (4096 bytes) if
+  // --partition_size is specified. avbtool will round the image size being
+  // a multiple of block size, prior to add an AVB footer.
+  size_t image_size = 70 * 1024;
+  base::FilePath path = GenerateImage("data.bin", image_size);
+
+  size_t partition_size = 10 * 1024 * 1024;
+  // Note that there is --partition_size here.
+  EXPECT_COMMAND(0,
+                 "./avbtool.py add_hashtree_footer --salt d00df00d "
+                 "--image %s "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--partition_size %d --partition_name foobar "
+                 "--internal_release_string \"\" ",
+                 path.value().c_str(),
+                 (int)partition_size);
+}
+
+TEST_F(AvbToolTest, AddHashtreeFooterNoWrongPartitionSize) {
+  // Partition size must be a multiple of block size (4096 bytes) and this
+  // one isn't...
+  size_t partition_size = 10 * 1024 * 1024 + 1024;
+
+  // Image size doesn't matter in this case.
+  size_t image_size = 70 * 1024;
+  base::FilePath path = GenerateImage("data.bin", image_size);
+
+  // ... so we expect this command to fail.
+  EXPECT_COMMAND(1,
+                 "./avbtool.py add_hashtree_footer --salt d00df00d "
+                 "--image %s "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--partition_size %d --partition_name foobar "
+                 "--internal_release_string \"\" ",
+                 path.value().c_str(),
+                 (int)partition_size);
+}
+
 TEST_F(AvbToolTest, AddHashtreeFooterWithCheckAtMostOnce) {
   size_t partition_size = 10 * 1024 * 1024;
   base::FilePath path = GenerateImage("digest_location", partition_size / 2);
