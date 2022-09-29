@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fce78269_2fd13bac",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 3661,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-09-29T10:34:44Z",
+      "side": 1,
+      "message": "Added a new test case AddHashtreeFooterNoWrongPartitionSize() to test this condition.",
+      "range": {
+        "startLine": 3661,
+        "startChar": 24,
+        "endLine": 3661,
+        "endChar": 41
+      },
+      "revId": "1a4b925e5eb97800cd8a900a85cb2b9670f8261c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fd5bf2df_fc650dec",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 3665,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-09-29T10:34:44Z",
+      "side": 1,
+      "message": "This is tested by the existing AddHashtreeFooterNoSizeWrongSize().",
+      "range": {
+        "startLine": 3665,
+        "startChar": 22,
+        "endLine": 3665,
+        "endChar": 68
+      },
+      "revId": "1a4b925e5eb97800cd8a900a85cb2b9670f8261c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c269b71c_9c4d3642",
+        "filename": "test/avbtool_unittest.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 1995,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-09-29T10:34:44Z",
+      "side": 1,
+      "message": "The major diff between AddHashtreeFooterNoSizeWrongSize (here) and AddHashtreeFooterRoundImageSize (the following) is that there is no --partition_size here.",
+      "range": {
+        "startLine": 1995,
+        "startChar": 5,
+        "endLine": 1995,
+        "endChar": 74
+      },
+      "revId": "1a4b925e5eb97800cd8a900a85cb2b9670f8261c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
