@@ -3762,7 +3762,8 @@ class Avb(object):
       padding_needed = (round_to_multiple(len(hash_tree), image.block_size) -
                         len(hash_tree))
       hash_tree_with_padding = hash_tree + b'\0' * padding_needed
-      image.append_raw(hash_tree_with_padding)
+      if len(hash_tree_with_padding) > 0:
+        image.append_raw(hash_tree_with_padding)
       len_hashtree_and_fec = len(hash_tree_with_padding)
 
       # Generate FEC codes, if requested.
