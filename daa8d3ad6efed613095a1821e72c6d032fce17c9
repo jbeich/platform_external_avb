@@ -16,6 +16,24 @@
       "message": "IIUC, this merely adds it as another build target, and is *not* replacing it as a standalone binary, right?",
       "revId": "daa8d3ad6efed613095a1821e72c6d032fce17c9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5840e3c8_686683d1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1710792
+      },
+      "writtenOn": "2022-10-06T19:45:52Z",
+      "side": 1,
+      "message": "Correct, this CL does not remove the existing standalone binary.",
+      "parentUuid": "d991605c_a425d28f",
+      "revId": "daa8d3ad6efed613095a1821e72c6d032fce17c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
