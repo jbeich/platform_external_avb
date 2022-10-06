@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d991605c_a425d28f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2022-10-06T19:39:15Z",
+      "side": 1,
+      "message": "IIUC, this merely adds it as another build target, and is *not* replacing it as a standalone binary, right?",
+      "revId": "daa8d3ad6efed613095a1821e72c6d032fce17c9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
