@@ -130,6 +130,11 @@ cc_defaults {
     ],
 }
 
+python_library_host {
+    name: "libavbtool",
+    srcs: ["avbtool.py"],
+}
+
 python_binary_host {
     name: "avbtool",
     srcs: ["avbtool.py"],
