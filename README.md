@@ -623,11 +623,11 @@ debugging integrations with other tooling, you can configure the envirionment
 variable AVB_INVOCATION_LOGFILE with the name of the log file:
 
     $ export AVB_INVOCATION_LOGFILE='/tmp/avb_invocation.log'
-    $ ./avbtool version
-    $ ./avbtool version
+    $ ./avbtool.py version
+    $ ./avbtool.py version
     $ cat /tmp/avb_invocation.log
-    ./avbtool version
-    ./avbtool version
+    ./avbtool.py version
+    ./avbtool.py version
 
 
 ## Build System Integration
