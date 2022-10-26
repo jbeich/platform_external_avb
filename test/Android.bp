@@ -57,3 +57,24 @@ filegroup {
     name: "avb_testkey_rsa2048",
     srcs: ["data/testkey_rsa2048.pem"],
 }
+
+rust_library_rlib {
+    name: "libavb_test_data",
+    edition: "2021",
+    crate_name: "avb_test_data",
+    srcs: ["data/lib.rs"],
+    enabled: false,
+    host_supported: false,
+    no_stdlibs: true,
+    prefer_rlib: true,
+    stdlibs: [
+        "libcompiler_builtins.rust_sysroot",
+        "libcore.rust_sysroot",
+    ],
+    target: {
+        android_arm64: {
+            enabled: true,
+        },
+    },
+    apex_available: ["//apex_available:anyapex"],
+}
