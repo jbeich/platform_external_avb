@@ -22,6 +22,30 @@
       },
       "revId": "1773fc27a1bc1c20b727862b31084864e576d1ea",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83e94445_e6167f5a",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1139038
+      },
+      "writtenOn": "2022-10-27T13:04:20Z",
+      "side": 1,
+      "message": "Oh, because it\u0027s the test directory..",
+      "parentUuid": "0b164db4_ba65e92a",
+      "range": {
+        "startLine": 7,
+        "startChar": 0,
+        "endLine": 7,
+        "endChar": 6
+      },
+      "revId": "1773fc27a1bc1c20b727862b31084864e576d1ea",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
