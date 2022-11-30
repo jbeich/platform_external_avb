@@ -44,6 +44,11 @@ python_test_host {
 }
 
 filegroup {
+    name: "avb_testkey_rsa8192",
+    srcs: ["data/testkey_rsa8192.pem"],
+}
+
+filegroup {
     name: "avb_testkey_rsa4096",
     srcs: ["data/testkey_rsa4096.pem"],
 }
