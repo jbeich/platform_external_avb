@@ -373,3 +373,65 @@ cc_library_headers {
         },
     },
 }
+
+// A bare-metal version of libavb.
+cc_library_static {
+    name: "libavb_baremetal",
+    defaults: [
+        "avb_defaults",
+        "avb_sources",
+        "avb_crypto_ops_impl_boringssl_baremetal",
+    ],
+    host_supported: true,
+    header_libs: [
+        "avb_headers",
+    ],
+    export_header_lib_headers: ["avb_headers"],
+    srcs: [
+        "libavb/avb_sysdeps_posix.c",
+    ],
+    cflags: [
+        "-DAVB_SYSDEPS_BAREMETAL",
+    ],
+    static_libs: [
+        "libcrypto_baremetal",
+        "libavb_sysdeps_baremetal",
+    ],
+    target: {
+        glibc: {
+            enabled: false,
+        },
+    },
+}
+
+// The Rust implementation of functions in avb_sysdeps.h that require libc.
+rust_ffi_static {
+    name: "libavb_sysdeps_baremetal",
+    crate_name: "avb_sysdeps_baremetal",
+    srcs: ["libsysdeps_baremetal/avb_sysdeps.rs"],
+    visibility: [
+        "//external/avb:__subpackages__",
+        "//packages/modules/Virtualization:__subpackages__",
+    ],
+    include_dirs: [
+        "libsysdeps_baremetal/include",
+    ],
+    no_stdlibs: true,
+    prefer_rlib: true,
+    stdlibs: [
+        "libcore.rust_sysroot",
+    ],
+    rustlibs: [
+        "libbuddy_system_allocator",
+    ],
+}
+
+cc_defaults {
+    name: "avb_crypto_ops_impl_boringssl_baremetal",
+    srcs: [
+        "libavb/boringssl/sha.c",
+    ],
+    local_include_dirs: [
+        "libavb/boringssl",
+    ],
+}

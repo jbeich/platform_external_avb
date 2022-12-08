@@ -54,10 +54,6 @@ size_t avb_strlen(const char* str) {
   return strlen(str);
 }
 
-void avb_abort(void) {
-  abort();
-}
-
 void avb_print(const char* message) {
   fprintf(stderr, "%s", message);
 }
@@ -86,3 +82,9 @@ uint32_t avb_div_by_10(uint64_t* dividend) {
   *dividend /= 10;
   return rem;
 }
+
+#if !defined(AVB_SYSDEPS_BAREMETAL)
+void avb_abort(void) {
+  abort();
+}
+#endif

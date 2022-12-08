@@ -58,6 +58,10 @@ extern "C" {
 #define AVB_ALIGNMENT_SIZE 4
 #endif
 
+#if defined(AVB_SYSDEPS_BAREMETAL)
+#include "avb_sysdeps_baremetal.h"
+#endif
+
 /* Compare |n| bytes in |src1| and |src2|.
  *
  * Returns an integer less than, equal to, or greater than zero if the
@@ -99,9 +103,6 @@ void avb_print(const char* message);
  */
 void avb_printv(const char* message, ...) AVB_ATTR_SENTINEL;
 
-/* Aborts the program or reboots the device. */
-void avb_abort(void) AVB_ATTR_NO_RETURN;
-
 /* Allocates |size| bytes. Returns NULL if no memory is available,
  * otherwise a pointer to the allocated memory.
  *
@@ -122,6 +123,11 @@ size_t avb_strlen(const char* str) AVB_ATTR_WARN_UNUSED_RESULT;
 /* Divide the |dividend| by 10 and saves back to the pointer. Return the
  * remainder. */
 uint32_t avb_div_by_10(uint64_t* dividend);
+
+#if !defined(AVB_SYSDEPS_BAREMETAL)
+/* Aborts the program or reboots the device. */
+void avb_abort(void) AVB_ATTR_NO_RETURN;
+#endif
 
 #ifdef __cplusplus
 }
