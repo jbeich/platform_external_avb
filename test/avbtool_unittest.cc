@@ -1078,8 +1078,8 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
 void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   base::FilePath rootfs_path;
   CreateRootfsWithHashtreeFooter(sparse_image,
-                                 "sha1",
-                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67",
+                                 "sha256",
+                                 "b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a",
                                  &rootfs_path);
 
   /* Zero the hashtree on a copy of the image. */
@@ -1128,7 +1128,7 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
                  "--hash-offset=1052672 "
                  "verify "
                  "%s %s "
-                 "e811611467dcd6e8dc4324e45f706c2bdd51db67",
+                 "b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a",
                  rootfs_path.value().c_str(),
                  rootfs_path.value().c_str());
 
@@ -1185,7 +1185,7 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   EXPECT_EQ(4096UL, d.hash_block_size);
   EXPECT_EQ(6UL, d.partition_name_len);
   EXPECT_EQ(4UL, d.salt_len);
-  EXPECT_EQ(20UL, d.root_digest_len);
+  EXPECT_EQ(32UL, d.root_digest_len);
   const uint8_t* desc_end = reinterpret_cast<const uint8_t*>(descriptors[0]) +
                             sizeof(AvbHashtreeDescriptor);
   uint64_t o = 0;
@@ -1195,7 +1195,7 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   o += d.partition_name_len;
   EXPECT_EQ("d00df00d", mem_to_hexstring(desc_end + o, d.salt_len));
   o += d.salt_len;
-  EXPECT_EQ("e811611467dcd6e8dc4324e45f706c2bdd51db67",
+  EXPECT_EQ("b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a",
             mem_to_hexstring(desc_end + o, d.root_digest_len));
 
   // Check that the zeroed hashtree version differ only by the hashtree + fec
@@ -1254,7 +1254,7 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
       "      Flags:                 1\n"
       "      Kernel Cmdline:        'dm=\"1 vroot none ro 1,0 2056 verity 1 "
       "PARTUUID=$(ANDROID_SYSTEM_PARTUUID) PARTUUID=$(ANDROID_SYSTEM_PARTUUID) "
-      "4096 4096 257 257 sha1 e811611467dcd6e8dc4324e45f706c2bdd51db67 "
+      "4096 4096 257 257 sha256 b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a "
       "d00df00d 2 $(ANDROID_VERITY_MODE) ignore_zero_blocks\" root=/dev/dm-0'\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 2\n"
@@ -1384,11 +1384,11 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                                  "      FEC num roots:         2\n"
                                  "      FEC offset:            1069056\n"
                                  "      FEC size:              16384 bytes\n"
-                                 "      Hash Algorithm:        sha1\n"
+                                 "      Hash Algorithm:        sha256\n"
                                  "      Partition Name:        foobar\n"
                                  "      Salt:                  d00df00d\n"
                                  "      Root Digest:           "
-                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
+                                 "b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a\n"
                                  "      Flags:                 0\n",
                                  sparse_image ? " (Sparse)" : ""),
               InfoImage(rootfs_path));
@@ -1482,7 +1482,7 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
   EXPECT_EQ(16384UL, d.fec_size);
   EXPECT_EQ(6UL, d.partition_name_len);
   EXPECT_EQ(4UL, d.salt_len);
-  EXPECT_EQ(20UL, d.root_digest_len);
+  EXPECT_EQ(32UL, d.root_digest_len);
   const uint8_t* desc_end = reinterpret_cast<const uint8_t*>(descriptors[0]) +
                             sizeof(AvbHashtreeDescriptor);
   uint64_t o = 0;
@@ -1492,7 +1492,7 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
   o += d.partition_name_len;
   EXPECT_EQ("d00df00d", mem_to_hexstring(desc_end + o, d.salt_len));
   o += d.salt_len;
-  EXPECT_EQ("e811611467dcd6e8dc4324e45f706c2bdd51db67",
+  EXPECT_EQ("b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a",
             mem_to_hexstring(desc_end + o, d.root_digest_len));
 
   // Check that the zeroed hashtree version differ only by the hashtree + fec
@@ -1539,7 +1539,7 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
       "Minimum libavb version:   1.0\n"
       "Header Block:             256 bytes\n"
       "Authentication Block:     320 bytes\n"
-      "Auxiliary Block:          960 bytes\n"
+      "Auxiliary Block:          1024 bytes\n"
       "Public key (sha1):        cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
       "Algorithm:                SHA256_RSA2048\n"
       "Rollback Index:           0\n"
@@ -1551,7 +1551,7 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
       "      Flags:                 1\n"
       "      Kernel Cmdline:        'dm=\"1 vroot none ro 1,0 2056 verity 1 "
       "PARTUUID=$(ANDROID_SYSTEM_PARTUUID) PARTUUID=$(ANDROID_SYSTEM_PARTUUID) "
-      "4096 4096 257 257 sha1 e811611467dcd6e8dc4324e45f706c2bdd51db67 "
+      "4096 4096 257 257 sha256 b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a "
       "d00df00d 10 $(ANDROID_VERITY_MODE) ignore_zero_blocks "
       "use_fec_from_device "
       "PARTUUID=$(ANDROID_SYSTEM_PARTUUID) fec_roots 2 fec_blocks 261 "
@@ -1713,10 +1713,10 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithNoHashtree) {
       "      FEC num roots:         2\n"
       "      FEC offset:            10416128\n"
       "      FEC size:              0 bytes\n"
-      "      Hash Algorithm:        sha1\n"
+      "      Hash Algorithm:        sha256\n"
       "      Partition Name:        system\n"
       "      Salt:                  deadbeef\n"
-      "      Root Digest:           4215bd42bcc99636f42956ce3d2c7884d6a8093b\n"
+      "      Root Digest:           9302ba82e2cb9a93683a275c8a2ee7fdf7c205e77b4f2da780af3302f2de2fbd\n"
       "      Flags:                 0\n",
       InfoImage(system_path));
 }
@@ -1921,10 +1921,10 @@ TEST_F(AvbToolTest, AddHashtreeFooterNoSizeOrName) {
       "      FEC num roots:         2\n"
       "      FEC offset:            77824\n"
       "      FEC size:              8192 bytes\n"
-      "      Hash Algorithm:        sha1\n"
+      "      Hash Algorithm:        sha256\n"
       "      Partition Name:        \n"
       "      Salt:                  d00df00d\n"
-      "      Root Digest:           2f73fb340e982794643e1121d82d5195677c2b31\n"
+      "      Root Digest:           53da7e98ea282cfb7c1001c324127bd25289e4124284fd2852e78f29e48a23c0\n"
       "      Flags:                 0\n",
       InfoImage(path));
 
@@ -1977,10 +1977,10 @@ TEST_F(AvbToolTest, AddHashtreeFooterSingleBlock) {
       "      FEC num roots:         2\n"
       "      FEC offset:            4096\n"
       "      FEC size:              8192 bytes\n"
-      "      Hash Algorithm:        sha1\n"
+      "      Hash Algorithm:        sha256\n"
       "      Partition Name:        \n"
       "      Salt:                  d00df00d\n"
-      "      Root Digest:           4bd1e1f0aa1c2c793bb9f3e52de6ae7393889e61\n"
+      "      Root Digest:           596fc800e37fcf4af1be70306ef6a5b943d6bed8100246da7a7382fd417bad9d\n"
       "      Flags:                 0\n",
       InfoImage(path));
 
@@ -2262,16 +2262,16 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
       "      FEC num roots:         2\n"
       "      FEC offset:            1069056\n"
       "      FEC size:              16384 bytes\n"
-      "      Hash Algorithm:        sha1\n"
+      "      Hash Algorithm:        sha256\n"
       "      Partition Name:        rootfs\n"
       "      Salt:                  d00df00d\n"
-      "      Root Digest:           e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
+      "      Root Digest:           b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a\n"
       "      Flags:                 0\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 1\n"
       "      Kernel Cmdline:        'dm=\"1 vroot none ro 1,0 2056 verity 1 "
       "PARTUUID=$(ANDROID_SYSTEM_PARTUUID) PARTUUID=$(ANDROID_SYSTEM_PARTUUID) "
-      "4096 4096 257 257 sha1 e811611467dcd6e8dc4324e45f706c2bdd51db67 "
+      "4096 4096 257 257 sha256 b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a "
       "d00df00d 10 $(ANDROID_VERITY_MODE) ignore_zero_blocks "
       "use_fec_from_device PARTUUID=$(ANDROID_SYSTEM_PARTUUID) fec_roots 2 "
       "fec_blocks 261 fec_start 261\" root=/dev/dm-0'\n"
@@ -2332,7 +2332,7 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
   EXPECT_EQ(
       "dm=\"1 vroot none ro 1,0 2056 verity 1 "
       "PARTUUID=$(ANDROID_SYSTEM_PARTUUID) PARTUUID=$(ANDROID_SYSTEM_PARTUUID) "
-      "4096 4096 257 257 sha1 e811611467dcd6e8dc4324e45f706c2bdd51db67 "
+      "4096 4096 257 257 sha256 b10378ed2fbd732cccb9738a06786ece6c3262843f452c1f86ba4bd72ccd5e0a "
       "d00df00d 10 $(ANDROID_VERITY_MODE) ignore_zero_blocks "
       "use_fec_from_device PARTUUID=$(ANDROID_SYSTEM_PARTUUID) fec_roots 2 "
       "fec_blocks 261 fec_start 261\" root=/dev/dm-0 foo bar baz second "
@@ -3055,7 +3055,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionWithFollow) {
       "Verifying image system.img using embedded public key\n"
       "vbmeta: Successfully verified footer and SHA256_RSA4096 vbmeta struct "
       "in system.img\n"
-      "system: Successfully verified sha1 hashtree of system.img for image of "
+      "system: Successfully verified sha256 hashtree of system.img for image of "
       "8388608 bytes\n",
       out);
 
@@ -3079,7 +3079,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionWithFollow) {
       "Verifying image system.img using embedded public key\n"
       "vbmeta: Successfully verified footer and SHA256_RSA4096 vbmeta struct "
       "in system.img\n"
-      "system: Successfully verified sha1 hashtree of system.img for image of "
+      "system: Successfully verified sha256 hashtree of system.img for image of "
       "8388608 bytes\n",
       out);
 }
@@ -3203,7 +3203,7 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
                  out_path.value().c_str());
   ASSERT_TRUE(base::ReadFileToString(out_path, &out));
   EXPECT_EQ(
-      "system: d52d93c988d336a79abe1c05240ae9a79a9b7d61\n"
+      "system: a01e3b82c406296df71ead6a5d7e5ed0b9e284b629f0e99eb236afc3e5b38464\n"
       "boot: "
       "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d\n",
       out);
@@ -3222,7 +3222,7 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
       "  \"partitions\": [\n"
       "    {\n"
       "      \"name\": \"system\",\n"
-      "      \"digest\": \"d52d93c988d336a79abe1c05240ae9a79a9b7d61\"\n"
+      "      \"digest\": \"a01e3b82c406296df71ead6a5d7e5ed0b9e284b629f0e99eb236afc3e5b38464\"\n"
       "    },\n"
       "    {\n"
       "      \"name\": \"boot\",\n"

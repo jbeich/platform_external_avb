@@ -4411,8 +4411,8 @@ class AvbTool(object):
                             help='Partition name',
                             default='')
     sub_parser.add_argument('--hash_algorithm',
-                            help='Hash algorithm to use (default: sha1)',
-                            default='sha1')
+                            help='Hash algorithm to use (default: sha256)',
+                            default='sha256')
     sub_parser.add_argument('--salt',
                             help='Salt in hex (default: /dev/urandom)')
     sub_parser.add_argument('--block_size',
