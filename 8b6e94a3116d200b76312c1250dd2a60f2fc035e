@@ -16,6 +16,23 @@
       "message": "WIP: some more failing tests",
       "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3e40c2c_9ff90a5e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2022-12-20T19:29:47Z",
+      "side": 1,
+      "message": "I think this is coming from a good place (SHA256 is better than SHA1 etc.) but we can\u0027t really do this as per https://android.googlesource.com/platform/external/avb/+/master/README.md#Versioning-and-Compatibility as it\u0027s a specific goal that we want users to be able to upgrade to a more recent `avbtool` without any underlying changes.\n\nFor example this would break existing installations that don\u0027t specify `--hash_algorithm` as they\u0027d be getting SHA1 now and SHA256 after this change.",
+      "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
