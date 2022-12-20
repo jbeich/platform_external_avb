@@ -51,6 +51,24 @@
       "parentUuid": "e3e40c2c_9ff90a5e",
       "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "271957dd_a96302a5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2022-12-20T21:37:32Z",
+      "side": 1,
+      "message": "The reason `sha1` is used is purely historical.\n\nThere might be other tools/processes in the chain that might choke if the hashing algorithm is suddenly changed, including on the device itself (for example it\u0027s possible the bootloader didn\u0027t wire up sha256 support for libavb correctly). So I\u0027m afraid it\u0027s a no-no to do this, sorry.\n\nIs there any particular reason why you are interested in changing the default? If you want to use `sha256` somewhere just use the `--hash-algorithm` option...",
+      "parentUuid": "1a3365b6_ac8ad578",
+      "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
