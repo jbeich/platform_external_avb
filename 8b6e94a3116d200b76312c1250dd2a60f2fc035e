@@ -33,6 +33,24 @@
       "message": "I think this is coming from a good place (SHA256 is better than SHA1 etc.) but we can\u0027t really do this as per https://android.googlesource.com/platform/external/avb/+/master/README.md#Versioning-and-Compatibility as it\u0027s a specific goal that we want users to be able to upgrade to a more recent `avbtool` without any underlying changes.\n\nFor example this would break existing installations that don\u0027t specify `--hash_algorithm` as they\u0027d be getting SHA1 now and SHA256 after this change.",
       "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1a3365b6_ac8ad578",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1897307
+      },
+      "writtenOn": "2022-12-20T20:14:20Z",
+      "side": 1,
+      "message": "As I understand it, avbtool.py is a hostside tool.\n\nThis would definitely change the build artifacts which use default hash_algo because their vbmeta will have different hash (evident in the unit tests changes in this patch). But is changed artifacts considered an incompatible update? If it is just about verification, libavb already checks for hash_algorthm present in the descriptor before using the hash (for verification)- cs/android-internal/external/avb/libavb/avb_slot_verify.c?l\u003d399-415. Unless any old version of libavb didn\u0027t check it, this change should be compatible with verification.\n\nI was also wondering why only add_hashtree_footer uses the default sha1, others like `add_hash_footer` uses  sha256 as the default hash.",
+      "parentUuid": "e3e40c2c_9ff90a5e",
+      "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
