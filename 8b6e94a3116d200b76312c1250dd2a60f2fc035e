@@ -69,6 +69,24 @@
       "parentUuid": "1a3365b6_ac8ad578",
       "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd880a79_59986973",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1897307
+      },
+      "writtenOn": "2022-12-21T11:35:36Z",
+      "side": 1,
+      "message": "Gotcha. There is no particular necessity of changing the default. We figured some of the images in Microdroid do not explicitly set --hash-algorithm \u0026 rely on default \u0026 was surprised to see it being sha1 \u0026 thought of changing the default. But, since it is backward incompatible, I\u0027ll abandon this patch \u0026 fallback to adding this option in build system to add the flag.",
+      "parentUuid": "271957dd_a96302a5",
+      "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
