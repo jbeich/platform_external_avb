@@ -54,11 +54,30 @@ filegroup {
 }
 
 filegroup {
-    name: "avb_testkey_rsa4096_pub_bin",
-    srcs: ["data/testkey_rsa4096_pub.bin"],
-}
-
-filegroup {
     name: "avb_testkey_rsa2048",
     srcs: ["data/testkey_rsa2048.pem"],
+}
+
+genrule {
+    name: "avb_testkey_rsa2048_pub_bin",
+    tools: ["avbtool"],
+    srcs: [":avb_testkey_rsa2048"],
+    out: ["data/testkey_rsa2048_pub.bin"],
+    cmd: "$(location avbtool) extract_public_key --key $(in) --output $(out)",
+}
+
+genrule {
+    name: "avb_testkey_rsa4096_pub_bin",
+    tools: ["avbtool"],
+    srcs: [":avb_testkey_rsa4096"],
+    out: ["data/testkey_rsa4096_pub.bin"],
+    cmd: "$(location avbtool) extract_public_key --key $(in) --output $(out)",
+}
+
+genrule {
+    name: "avb_testkey_rsa8192_pub_bin",
+    tools: ["avbtool"],
+    srcs: [":avb_testkey_rsa8192"],
+    out: ["data/testkey_rsa8192_pub.bin"],
+    cmd: "$(location avbtool) extract_public_key --key $(in) --output $(out)",
 }
