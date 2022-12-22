@@ -87,6 +87,24 @@
       "parentUuid": "271957dd_a96302a5",
       "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "530d5dd6_0967701a",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2022-12-22T14:40:30Z",
+      "side": 1,
+      "message": "\u003e Microdroid do not explicitly set --hash-algorithm \u0026 rely on default \u0026 was surprised to see it being sha1 \n\nMaybe we can consider adding a test to check sha1 is not used in Microdroid?\n\ne.g., in Android, the check is done via:\nhttps://cs.android.com/android/platform/superproject/+/master:cts/tests/tests/security/native/verified_boot/VerifiedBootTest.cpp;l\u003d99?q\u003davbHashtreeNotUsingSha1",
+      "parentUuid": "cd880a79_59986973",
+      "revId": "8b6e94a3116d200b76312c1250dd2a60f2fc035e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
