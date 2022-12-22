@@ -16,6 +16,24 @@
       "message": "FWIW, I\u0027d be in favor of breaking clients if it means no sha1, especially unintentional sha1. I wouldn\u0027t want to change it out from under them though. Possibly the best [breaking] change would be to remove support for a default and make all callers choose explicitly. We can add a friendly message to guide users how to do this. Alternatively, we can require a \"sha1-exception\" arg before we proceed with using sha1.\n\nIf we *really* don\u0027t want even this, can we add a bold warning message so at least there\u0027s more chance someone will notice?",
       "revId": "bb583467c6252035f421484e62a3ae9f4b6a7d3e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68539cf0_ece2f5f2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2022-12-22T19:16:36Z",
+      "side": 1,
+      "message": "I agree, this seems like a good enough reason to bump the major version of avbtool. David, what do you think?",
+      "parentUuid": "0b7a4a08_03435a57",
+      "revId": "bb583467c6252035f421484e62a3ae9f4b6a7d3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
