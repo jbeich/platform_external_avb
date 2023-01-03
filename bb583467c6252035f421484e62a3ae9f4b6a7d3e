@@ -34,6 +34,24 @@
       "parentUuid": "0b7a4a08_03435a57",
       "revId": "bb583467c6252035f421484e62a3ae9f4b6a7d3e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10126e70_aa3090bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2023-01-03T16:55:52Z",
+      "side": 1,
+      "message": "Bumping the major version would mean a flag day for all users, meaning all the devices in the field would need a libavb update for their bootloader...\n\nI think a less drastic thing would just to have `avbtool` error out if SHA-1 is used unless for example the option `--i-know-sha1-is-unsafe` is passed. That way we won\u0027t need to bump the version and bootloaders won\u0027t need to be updated. I think this is sorta-kinda what Darren originally suggested? I\u0027d be OK with something like this!",
+      "parentUuid": "68539cf0_ece2f5f2",
+      "revId": "bb583467c6252035f421484e62a3ae9f4b6a7d3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
