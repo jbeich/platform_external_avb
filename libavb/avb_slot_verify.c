@@ -43,6 +43,9 @@
 /* Maximum size of a vbmeta image - 64 KiB. */
 #define VBMETA_MAX_SIZE (64 * 1024)
 
+/* Test buffer used to check the existence of a partition. */
+#define TEST_BUFFER_SIZE 1
+
 static AvbSlotVerifyResult initialize_persistent_digest(
     AvbOps* ops,
     const char* part_name,
@@ -672,6 +675,42 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
         vbmeta_size = footer.vbmeta_size;
       }
     }
+  } else if (is_main_vbmeta) {
+    /* If we are looking for 'vbmeta' and we're the main vbmeta struct,
+     * we can use a one-byte buffer to check the existence of the current
+     * partition.
+     */
+    uint8_t test_buf[TEST_BUFFER_SIZE];
+    size_t test_num_read;
+    io_ret = ops->read_from_partition(ops,
+                                      full_partition_name,
+                                      0 /* offset */,
+                                      TEST_BUFFER_SIZE,
+                                      test_buf,
+                                      &test_num_read);
+    /* If there is no such partition, go try to get it from the boot partition
+     * instead.
+     */
+    if (io_ret == AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION) {
+      avb_debugv(full_partition_name,
+                 ": No such partition. Trying 'boot' instead.\n",
+                 NULL);
+      ret = load_and_verify_vbmeta(ops,
+                                   requested_partitions,
+                                   ab_suffix,
+                                   flags,
+                                   allow_verification_error,
+                                   0 /* toplevel_vbmeta_flags */,
+                                   0 /* rollback_index_location */,
+                                   "boot",
+                                   avb_strlen("boot"),
+                                   NULL /* expected_public_key */,
+                                   0 /* expected_public_key_length */,
+                                   slot_data,
+                                   out_algorithm_type,
+                                   out_additional_cmdline_subst);
+      goto out;
+    }
   }
 
   vbmeta_buf = avb_malloc(vbmeta_size);
@@ -702,34 +741,9 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
     goto out;
   } else if (io_ret != AVB_IO_RESULT_OK) {
-    /* If we're looking for 'vbmeta' but there is no such partition,
-     * go try to get it from the boot partition instead.
-     */
-    if (is_main_vbmeta && io_ret == AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION &&
-        !look_for_vbmeta_footer) {
-      avb_debugv(full_partition_name,
-                 ": No such partition. Trying 'boot' instead.\n",
-                 NULL);
-      ret = load_and_verify_vbmeta(ops,
-                                   requested_partitions,
-                                   ab_suffix,
-                                   flags,
-                                   allow_verification_error,
-                                   0 /* toplevel_vbmeta_flags */,
-                                   0 /* rollback_index_location */,
-                                   "boot",
-                                   avb_strlen("boot"),
-                                   NULL /* expected_public_key */,
-                                   0 /* expected_public_key_length */,
-                                   slot_data,
-                                   out_algorithm_type,
-                                   out_additional_cmdline_subst);
-      goto out;
-    } else {
-      avb_errorv(full_partition_name, ": Error loading vbmeta data.\n", NULL);
-      ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
-      goto out;
-    }
+    avb_errorv(full_partition_name, ": Error loading vbmeta data.\n", NULL);
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+    goto out;
   }
   avb_assert(vbmeta_num_read <= vbmeta_size);
 
