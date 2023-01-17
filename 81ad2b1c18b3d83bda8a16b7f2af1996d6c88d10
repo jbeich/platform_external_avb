@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1d19c5a6_9bc203a7",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2023-01-17T23:52:40Z",
+      "side": 1,
+      "message": "The `} else {` looks wrong. Why only test whether the partition exist on a branch?",
+      "revId": "81ad2b1c18b3d83bda8a16b7f2af1996d6c88d10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f77e1b94_d080edb0",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2023-01-17T23:52:40Z",
+      "side": 1,
+      "message": "It\u0027s a little weird/confusing to pass `-TEST_BUFFER_SIZE` here which is to be interpreted as reading from the last byte of the partition. At least it made me pause. Why not just pass zero if all you need is to test for the existence of a partition?",
+      "range": {
+        "startLine": 687,
+        "startChar": 38,
+        "endLine": 687,
+        "endChar": 55
+      },
+      "revId": "81ad2b1c18b3d83bda8a16b7f2af1996d6c88d10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
