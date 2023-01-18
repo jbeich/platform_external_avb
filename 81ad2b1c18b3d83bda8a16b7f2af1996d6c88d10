@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0b14122_576c77ef",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-01-18T09:00:47Z",
+      "side": 1,
+      "message": "Actually that\u0027s because in the corresponding `if`, we already tried to read the footer, so we don\u0027t need to test again whether the partition exists for that branch.\n\nOtherwise we can move the branch for the `\u0027boot\u0027` fallback here, so that we don\u0027t add any new conditional in this cl. wdyt?\n\n`if (is_main_vbmeta \u0026\u0026 io_ret \u003d\u003d AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION \u0026\u0026\n        !look_for_vbmeta_footer)`",
+      "parentUuid": "1d19c5a6_9bc203a7",
+      "revId": "81ad2b1c18b3d83bda8a16b7f2af1996d6c88d10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f77e1b94_d080edb0",
@@ -31,6 +49,30 @@
       "writtenOn": "2023-01-17T23:52:40Z",
       "side": 1,
       "message": "It\u0027s a little weird/confusing to pass `-TEST_BUFFER_SIZE` here which is to be interpreted as reading from the last byte of the partition. At least it made me pause. Why not just pass zero if all you need is to test for the existence of a partition?",
+      "range": {
+        "startLine": 687,
+        "startChar": 38,
+        "endLine": 687,
+        "endChar": 55
+      },
+      "revId": "81ad2b1c18b3d83bda8a16b7f2af1996d6c88d10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99f014b1_c9fec408",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 687,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-01-18T09:00:47Z",
+      "side": 1,
+      "message": "I changed it to zero here.",
+      "parentUuid": "f77e1b94_d080edb0",
       "range": {
         "startLine": 687,
         "startChar": 38,
