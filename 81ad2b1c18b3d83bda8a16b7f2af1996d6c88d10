@@ -54,6 +54,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e1bc749_b4a9d860",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 678,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-01-19T15:49:24Z",
+      "side": 1,
+      "message": "Sure. I totally understand. I also want to make the impact of this change as small as possible. So in the latest patch, I we only fallback on `boot` partition when the three conditions are satisfied, it\u0027s the same as before.\n\n`(is_main_vbmeta \u0026\u0026 io_ret \u003d\u003d AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION \u0026\u0026\n        !look_for_vbmeta_footer)`\n        \nFor all the other cases we just continue the previous flow.",
+      "parentUuid": "d908718b_c68af25a",
+      "revId": "81ad2b1c18b3d83bda8a16b7f2af1996d6c88d10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f77e1b94_d080edb0",
