@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ccf614e4_42ab30d4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-01-19T17:01:47Z",
+      "side": 1,
+      "message": "Hi David,\n\nI updated the code according to our discussion. I collected the `AvbIOResult` return instead of the boolean because the result will be needed later to decide if we want to fallback on the `boot` partition.\n\nCould you please take a look?",
+      "revId": "cb00b07ed876873aab6a2678d524b31cd0745517",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
