@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f03291bc_7d733c22",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-01-19T08:15:56Z",
+      "side": 1,
+      "message": "Hi Darren,\n\nCould you please help review this cl? David is OOO this week.",
+      "revId": "cad6301aa8d297a93d7ff9a000c38329baf63d10",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
