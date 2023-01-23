@@ -16,6 +16,23 @@
       "message": "Hi David,\n\nI updated the code according to our discussion. I collected the `AvbIOResult` return instead of the boolean because the result will be needed later to decide if we want to fallback on the `boot` partition.\n\nCould you please take a look?",
       "revId": "cb00b07ed876873aab6a2678d524b31cd0745517",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1ce622e2_7f8e80aa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2023-01-23T09:21:55Z",
+      "side": 1,
+      "message": "LGTM, approved, thanks for all the work on this!",
+      "revId": "cb00b07ed876873aab6a2678d524b31cd0745517",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
