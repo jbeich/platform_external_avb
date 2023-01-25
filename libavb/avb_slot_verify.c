@@ -691,6 +691,20 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
         vbmeta_size = footer.vbmeta_size;
       }
     }
+  } else {
+    uint64_t partition_size = 0;
+    io_ret =
+        ops->get_size_of_partition(ops, full_partition_name, &partition_size);
+    if (io_ret != AVB_IO_RESULT_OK) {
+      avb_errorv(full_partition_name, ": Failed to get partition size\n", NULL);
+    } else if (partition_size < vbmeta_size) {
+      avb_errorv(full_partition_name,
+                 ": Using partition size ",
+                 partition_size,
+                 " as vbmeta size\n",
+                 NULL);
+      vbmeta_size = partition_size;
+    }
   }
 
   /* Read one byte from the partition to check the existence of the
