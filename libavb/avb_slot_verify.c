@@ -558,22 +558,6 @@ out:
   return ret;
 }
 
-static AvbIOResult read_one_byte_from_partition(AvbOps* ops,
-                                                const char* partition_name) {
-  /* test_buf is a one-byte buffer used to check the existence of the
-   * current partition before allocating the big chunk of memory on heap
-   * for vbmeta later.
-   */
-  uint8_t test_buf[TEST_BUFFER_SIZE];
-  size_t test_num_read;
-  return ops->read_from_partition(ops,
-                                  partition_name,
-                                  0 /* offset */,
-                                  TEST_BUFFER_SIZE,
-                                  test_buf,
-                                  &test_num_read);
-}
-
 static AvbSlotVerifyResult load_and_verify_vbmeta(
     AvbOps* ops,
     const char* const* requested_partitions,
@@ -691,14 +675,24 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
         vbmeta_size = footer.vbmeta_size;
       }
     }
+  } else {
+    uint64_t partition_size = 0;
+    io_ret =
+        ops->get_size_of_partition(ops, full_partition_name, &partition_size);
+    if (io_ret != AVB_IO_RESULT_OK) {
+      avb_debugv(full_partition_name, ": Failed to get partition size\n", NULL);
+    } else if (partition_size < vbmeta_size && partition_size > 0) {
+      avb_debugv(
+          full_partition_name, ": Using partition size as vbmeta size\n", NULL);
+      vbmeta_size = partition_size;
+    }
   }
 
-  /* Read one byte from the partition to check the existence of the
+  /* Use result from get_size_of_partition to check the existence of the
    * partition before allocating the big chunk of memory on heap
    * for vbmeta later. `io_ret` will be used later to decide whether
    * to fallback on the `boot` partition.
    */
-  io_ret = read_one_byte_from_partition(ops, full_partition_name);
   if (io_ret != AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION) {
     vbmeta_buf = avb_malloc(vbmeta_size);
     if (vbmeta_buf == NULL) {
