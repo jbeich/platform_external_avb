@@ -691,6 +691,20 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
         vbmeta_size = footer.vbmeta_size;
       }
     }
+  } else {
+    uint64_t partition_size = 0;
+    io_ret =
+        ops->get_size_of_partition(ops, full_partition_name, &partition_size);
+    if (io_ret != AVB_IO_RESULT_OK) {
+      avb_debugv(full_partition_name, ": Failed to get partition size\n", NULL);
+    } else if (partition_size < vbmeta_size) {
+      avb_debugv(full_partition_name,
+                 ": Using partition size ",
+                 partition_size,
+                 " as vbmeta size\n",
+                 NULL);
+      vbmeta_size = partition_size;
+    }
   }
 
   /* Read one byte from the partition to check the existence of the
@@ -699,32 +713,35 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
    * to fallback on the `boot` partition.
    */
   io_ret = read_one_byte_from_partition(ops, full_partition_name);
-  if (io_ret != AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION) {
-    vbmeta_buf = avb_malloc(vbmeta_size);
-    if (vbmeta_buf == NULL) {
-      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
-      goto out;
-    }
-
-    if (vbmeta_offset != 0) {
-      avb_debugv("Loading vbmeta struct in footer from partition '",
-                 full_partition_name,
-                 "'.\n",
-                 NULL);
-    } else {
-      avb_debugv("Loading vbmeta struct from partition '",
-                 full_partition_name,
-                 "'.\n",
-                 NULL);
-    }
-
-    io_ret = ops->read_from_partition(ops,
-                                      full_partition_name,
-                                      vbmeta_offset,
-                                      vbmeta_size,
-                                      vbmeta_buf,
-                                      &vbmeta_num_read);
+  if (io_ret == AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION) {
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_IO;
+    goto out;
   }
+  vbmeta_buf = avb_malloc(vbmeta_size);
+  if (vbmeta_buf == NULL) {
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    avb_debugv("Partition does not exist '", full_partition_name, "'.\n", NULL);
+    goto out;
+  }
+
+  if (vbmeta_offset != 0) {
+    avb_debugv("Loading vbmeta struct in footer from partition '",
+               full_partition_name,
+               "'.\n",
+               NULL);
+  } else {
+    avb_debugv("Loading vbmeta struct from partition '",
+               full_partition_name,
+               "'.\n",
+               NULL);
+  }
+
+  io_ret = ops->read_from_partition(ops,
+                                    full_partition_name,
+                                    vbmeta_offset,
+                                    vbmeta_size,
+                                    vbmeta_buf,
+                                    &vbmeta_num_read);
   if (io_ret == AVB_IO_RESULT_ERROR_OOM) {
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
     goto out;
