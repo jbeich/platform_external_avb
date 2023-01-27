@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "32260b31_3776f4da",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 691,
+      "author": {
+        "id": 1710792
+      },
+      "writtenOn": "2023-01-27T18:29:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "35844e48_00885052",
+      "range": {
+        "startLine": 691,
+        "startChar": 21,
+        "endLine": 691,
+        "endChar": 42
+      },
+      "revId": "8e3084f64cd73a7cfa69b783c3c1714b63125562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "314b5041_9837be3a",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-01-27T08:58:14Z",
       "side": 1,
       "message": "Can we skip the memory allocation below for other errors?\n\nFor example, if we wanted to read `vbmeta` and we didn\u0027t land in L687 above with some error other than `NO_SUCH_PARTITION`, we can still arrive here with `vbmeta_size\u003dMAX`, do we need to continue in this case?",
+      "range": {
+        "startLine": 696,
+        "startChar": 6,
+        "endLine": 696,
+        "endChar": 53
+      },
+      "revId": "8e3084f64cd73a7cfa69b783c3c1714b63125562",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "75832a94_299d4a7d",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 7
+      },
+      "lineNbr": 696,
+      "author": {
+        "id": 1710792
+      },
+      "writtenOn": "2023-01-27T18:29:52Z",
+      "side": 1,
+      "message": "Done, added an exit path on L694 for other error codes",
+      "parentUuid": "314b5041_9837be3a",
       "range": {
         "startLine": 696,
         "startChar": 6,
