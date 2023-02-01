@@ -148,10 +148,8 @@ python_binary_host {
     compile_multilib: "first",
 }
 
-// Build libavb - this is a static library that depends
-// on only libc and libcrypto, but no other dependencies.
-cc_library_static {
-    name: "libavb",
+cc_defaults {
+    name: "libavb_defaults",
     defaults: [
         "avb_defaults",
         "avb_sources",
@@ -173,6 +171,23 @@ cc_library_static {
             cflags: ["-fno-stack-protector"],
         },
     },
+}
+
+// Build libavb - this is a static library that depends
+// on only libc and libcrypto, but no other dependencies.
+cc_library_static {
+    name: "libavb",
+    defaults: ["libavb_defaults"],
+}
+
+// Build libavb_non_debug - this is a static library that depends
+// on only libc and libcrypto, but no other dependencies.
+// The non debug version of the library doesn't print any debug
+// message.
+cc_library_static {
+    name: "libavb_non_debug",
+    defaults: ["libavb_defaults"],
+    cflags: ["-UAVB_ENABLE_DEBUG"],
 }
 
 // Build libavb_user for the target - in addition to libavb, it
