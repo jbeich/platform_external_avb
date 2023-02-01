@@ -130,17 +130,18 @@ cc_defaults {
     ],
 }
 
+python_library_host {
+    name: "libavbtool",
+    srcs: ["avbtool.py"],
+}
+
 python_binary_host {
     name: "avbtool",
     srcs: ["avbtool.py"],
     main: "avbtool.py",
     required: ["fec"],
     version: {
-        py2: {
-            enabled: false,
-        },
         py3: {
-            enabled: true,
             embedded_launcher: true,
         },
     },
@@ -269,7 +270,7 @@ cc_defaults {
     },
     compile_multilib: "first",
     data: [
-        "avbtool",
+        "avbtool.py",
         "test/avbtool_signing_helper_test.py",
         "test/avbtool_signing_helper_with_files_test.py",
         "test/data/*",
