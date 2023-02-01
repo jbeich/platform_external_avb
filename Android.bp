@@ -114,9 +114,6 @@ cc_defaults {
     local_include_dirs: [
         "libavb/boringssl",
     ],
-    shared_libs: [
-        "libcrypto",
-    ],
 }
 
 cc_defaults {
@@ -155,14 +152,24 @@ cc_defaults {
         "avb_sources",
         "avb_crypto_ops_impl_boringssl",
     ],
-    host_supported: true,
-    ramdisk_available: true,
-    vendor_ramdisk_available: true,
-    recovery_available: true,
     header_libs: [
         "avb_headers",
     ],
     export_header_lib_headers: ["avb_headers"],
+}
+
+// Build libavb - this is a static library that depends
+// on only libc and libcrypto, but no other dependencies.
+cc_library_static {
+    name: "libavb",
+    defaults: ["libavb_defaults"],
+    host_supported: true,
+    ramdisk_available: true,
+    vendor_ramdisk_available: true,
+    recovery_available: true,
+    shared_libs: [
+        "libcrypto",
+    ],
     target: {
         linux: {
             srcs: ["libavb/avb_sysdeps_posix.c"],
@@ -173,21 +180,15 @@ cc_defaults {
     },
 }
 
-// Build libavb - this is a static library that depends
-// on only libc and libcrypto, but no other dependencies.
+// A variant of the library that can run in baremetal environments.
 cc_library_static {
-    name: "libavb",
-    defaults: ["libavb_defaults"],
-}
-
-// Build libavb_non_debug - this is a static library that depends
-// on only libc and libcrypto, but no other dependencies.
-// The non debug version of the library doesn't print any debug
-// message.
-cc_library_static {
-    name: "libavb_non_debug",
+    name: "libavb_baremetal",
     defaults: ["libavb_defaults"],
     cflags: ["-UAVB_ENABLE_DEBUG"],
+    static_libs: [
+        "libcrypto_baremetal",
+    ],
+    srcs: ["libavb/avb_sysdeps_posix.c"],
 }
 
 // Build libavb_user for the target - in addition to libavb, it
@@ -205,7 +206,10 @@ cc_library_static {
         "avb_headers",
     ],
     export_header_lib_headers: ["avb_headers"],
-    shared_libs: ["libbase"],
+    shared_libs: [
+        "libbase",
+        "libcrypto",
+    ],
     static_libs: ["libfs_mgr"],
     cflags: [
         "-DAVB_AB_I_UNDERSTAND_LIBAVB_AB_IS_DEPRECATED",
