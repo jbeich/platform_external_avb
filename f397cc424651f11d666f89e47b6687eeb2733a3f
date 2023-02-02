@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb7a663b_c719f694",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2023-02-02T14:57:52Z",
+      "side": 1,
+      "message": "OK. My only concern is that you might miss essential information but that\u0027s not really your fault since the entire codebase is currently using `avb_debug()` for everything. If this turns out to be a problem we can add something like `avb_info()` or `avb_warning()` which always emits messages regardless of whether `AVB_ENABLE_DEBUG` is set or not.",
+      "revId": "f397cc424651f11d666f89e47b6687eeb2733a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
