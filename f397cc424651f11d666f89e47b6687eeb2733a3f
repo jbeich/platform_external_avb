@@ -16,6 +16,24 @@
       "message": "OK. My only concern is that you might miss essential information but that\u0027s not really your fault since the entire codebase is currently using `avb_debug()` for everything. If this turns out to be a problem we can add something like `avb_info()` or `avb_warning()` which always emits messages regardless of whether `AVB_ENABLE_DEBUG` is set or not.",
       "revId": "f397cc424651f11d666f89e47b6687eeb2733a3f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cf92261_765783be",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-02-02T15:53:00Z",
+      "side": 1,
+      "message": "Yeah, that sounds good to me. Thanks for the suggestion. Let\u0027s see if we need to refine the the logging level here or not.",
+      "parentUuid": "eb7a663b_c719f694",
+      "revId": "f397cc424651f11d666f89e47b6687eeb2733a3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
