@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "d4c8a8cd_2185aa0f",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-02-13T22:07:51Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7617669a_dcaabb6b",
+      "range": {
+        "startLine": 187,
+        "startChar": 15,
+        "endLine": 187,
+        "endChar": 32
+      },
+      "revId": "7e04cf37f70d34f4b140e041fae92e06eb20970e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4f8d57ab_ef22d1ec",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-02-13T12:27:03Z",
       "side": 1,
       "message": "What\u0027s this?",
+      "range": {
+        "startLine": 191,
+        "startChar": 12,
+        "endLine": 191,
+        "endChar": 38
+      },
+      "revId": "7e04cf37f70d34f4b140e041fae92e06eb20970e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29206a0a_22da4908",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 191,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-02-13T22:07:51Z",
+      "side": 1,
+      "message": "libavb uses internally an abstraction API to support different platforms (see cs/android/external/avb/libavb/avb_util.h) and this is the POSIX backend.",
+      "parentUuid": "4f8d57ab_ef22d1ec",
       "range": {
         "startLine": 191,
         "startChar": 12,
