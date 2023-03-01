@@ -62,10 +62,20 @@ static int open_partition(const char* name, int flags) {
   path = avb_strdupv("/dev/block/by-name/", name, NULL);
   if (path != NULL) {
     fd = open(path, flags);
-    avb_free(path);
     if (fd != -1) {
       return fd;
+    } else {
+      auto path_len = avb_strlen(path);
+      if (avb_memcmp(path + path_len - 2, "_a", 2) == 0 ||
+        avb_memcmp(path + path_len - 2, "_b", 2) == 0) {
+        path[path_len - 2] = '\0';
+        fd = open(path, flags);
+        if (fd != -1) {
+          return fd;
+        }
+      }
     }
+    avb_free(path);
   }
 
   /* OK, so /dev/block/by-name/<partition_name> didn't work... so we're
