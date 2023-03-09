@@ -16,6 +16,23 @@
       "message": "Hi,\n\nHaving some AVB partitions has A/B but others don\u0027t seems a weird configuration to me.\n\nReplied a comment at b/270899577#comment11 for further discussion.",
       "revId": "1f035933f7be05314a7ff3c3e6f3bc9bed0cc164",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b81f1b3_727a2fe0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-03-09T12:16:27Z",
+      "side": 1,
+      "message": "David, you mentioned about adding the DO_NOT_USE_AB for chain partitions when reviewing the following CL (but no good use-case at that time).\n\nhttps://android-review.git.corp.google.com/c/platform/external/avb/+/611010\n\nShould it be re-considered now? (context: b/270899577#comment13)",
+      "revId": "1f035933f7be05314a7ff3c3e6f3bc9bed0cc164",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
