@@ -51,6 +51,7 @@ extern "C" {
 #define AVB_ATTR_PRINTF(x, y) __attribute__((format(printf, x, y)))
 #define AVB_ATTR_NO_RETURN __attribute__((noreturn))
 #define AVB_ATTR_SENTINEL __attribute__((__sentinel__))
+#define AVB_ATTR_FORMAT_PRINTF __attribute__((format(printf, 1, 2)))
 
 /* Size in bytes used for alignment. */
 #ifdef __LP64__
@@ -95,10 +96,16 @@ void* avb_memset(void* dest, const int c, size_t n);
  */
 void avb_print(const char* message);
 
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+/* Prints out a vector of strings.
+ * @param fmt: A printf-style format string that specifies the format of the message.
+ * @param ...: Optional arguments that are passed to the format string.
+=======
 /* Prints out a vector of strings. Each argument must point to a
  * NUL-terminated UTF-8 string and NULL must be the last argument.
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
  */
-void avb_printv(const char* message, ...) AVB_ATTR_SENTINEL;
+void avb_printv(const char* fmt, ...) AVB_ATTR_FORMAT_PRINTF;
 
 /* Prints out a formatted string.
  *

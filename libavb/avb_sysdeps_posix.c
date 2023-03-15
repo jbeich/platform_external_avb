@@ -69,14 +69,11 @@ void avb_print(const char* message) {
   fprintf(stderr, "%s", message);
 }
 
-void avb_printv(const char* message, ...) {
+void avb_printv(const char* fmt, ...) {
   va_list ap;
-  const char* m;
 
-  va_start(ap, message);
-  for (m = message; m != NULL; m = va_arg(ap, const char*)) {
-    fprintf(stderr, "%s", m);
-  }
+  va_start(ap, fmt);
+  vfprintf(stderr, fmt, ap);
   va_end(ap);
 }
 

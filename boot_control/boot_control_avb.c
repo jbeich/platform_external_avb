@@ -58,7 +58,11 @@ static unsigned int module_getCurrentSlot(boot_control_module_t* module) {
   } else if (strcmp(propbuf, "_b") == 0) {
     return 1;
   } else {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+    avb_errorv("Unexpected slot suffix '%s'.\n", propbuf);
+=======
     avb_error("Unexpected slot suffix '", propbuf, "'.\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
     return 0;
   }
   return 0;

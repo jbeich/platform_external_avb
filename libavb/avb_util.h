@@ -115,21 +115,81 @@ extern "C" {
 #define avb_assert_aligned(addr) \
   avb_assert((((uintptr_t)addr) & (AVB_ALIGNMENT_SIZE - 1)) == 0)
 
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+#ifdef AVB_ENABLE_DEBUG
+/* Print functions, used for diagnostics.
+ *
+ * These have no effect unless AVB_ENABLE_DEBUG is defined.
+ */
+#define avb_debug(fmt)                  \
+  do {                                  \
+    avb_printv("%s:%s: DEBUG: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__));\
+  } while (0)
+#define avb_debugv(fmt, ...)            \
+  do {                                  \
+    avb_printv("%s:%s: DEBUG: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__), \
+               ##__VA_ARGS__);          \
+  } while (0)
+#else
+#define avb_debug(fmt)
+#define avb_debugv(fmt, ...)
+#endif
+
+=======
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
 /* Prints out a message. This is typically used if a runtime-error
  * occurs.
  */
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+#define avb_error(fmt)                  \
+  do {                                  \
+    avb_printv("%s:%s: ERROR: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__));\
+  } while (0)
+#define avb_errorv(fmt, ...)            \
+  do {                                  \
+    avb_printv("%s:%s: ERROR: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__), \
+               ##__VA_ARGS__);          \
+=======
 #define avb_error(message, ...)               \
   do {                                        \
     AVB_LOG("ERROR", message, ##__VA_ARGS__); \
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
   } while (0)
 
 /* Prints out a message and calls avb_abort().
  */
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+#define avb_fatal(fmt)                  \
+  do {                                  \
+    avb_printv("%s:%s: FATAL: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__));\
+    avb_abort();                        \
+=======
 #define avb_fatal(message, ...)               \
   do {                                        \
     AVB_LOG("FATAL", message, ##__VA_ARGS__); \
     avb_abort();                              \
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
   } while (0)
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+#define avb_fatalv(fmt, ...)            \
+  do {                                  \
+    avb_printv("%s:%s: FATAL: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__), \
+               ##__VA_ARGS__);          \
+    avb_abort();                        \
+  } while (0)
+=======
 
 #ifndef AVB_USE_PRINTF_LOGS
 /* Deprecated legacy logging functions -- kept for client compatibility.
@@ -138,6 +198,7 @@ extern "C" {
 #define avb_errorv(message, ...) avb_error(message, ##__VA_ARGS__)
 #define avb_fatalv(message, ...) avb_fatal(message, ##__VA_ARGS__)
 #endif
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
 
 /* Converts a 16-bit unsigned integer from big-endian to host byte order. */
 uint16_t avb_be16toh(uint16_t in) AVB_ATTR_WARN_UNUSED_RESULT;

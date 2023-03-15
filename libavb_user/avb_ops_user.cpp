@@ -138,7 +138,11 @@ static AvbIOResult read_from_partition(AvbOps* ops,
   if (offset < 0) {
     uint64_t partition_size;
     if (ioctl(fd, BLKGETSIZE64, &partition_size) != 0) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+      avb_errorv("Error getting size of \"%s\" partition.\n", partition);
+=======
       avb_error("Error getting size of \"", partition, "\" partition.\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
       ret = AVB_IO_RESULT_ERROR_IO;
       goto out;
     }
@@ -193,7 +197,11 @@ static AvbIOResult write_to_partition(AvbOps* ops,
 
   fd = open_partition(partition, O_WRONLY);
   if (fd == -1) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+    avb_errorv("Error opening \"%s\" partition.\n", partition);
+=======
     avb_error("Error opening \"", partition, "\" partition.\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
     ret = AVB_IO_RESULT_ERROR_IO;
     goto out;
   }
@@ -272,14 +280,22 @@ static AvbIOResult get_size_of_partition(AvbOps* ops,
 
   fd = open_partition(partition, O_WRONLY);
   if (fd == -1) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+    avb_errorv("Error opening \"%s\" partition.\n", partition);
+=======
     avb_error("Error opening \"", partition, "\" partition.\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
     ret = AVB_IO_RESULT_ERROR_IO;
     goto out;
   }
 
   if (out_size_in_bytes != NULL) {
     if (ioctl(fd, BLKGETSIZE64, out_size_in_bytes) != 0) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+      avb_errorv("Error getting size of \"%s\" partition.\n", partition);
+=======
       avb_error("Error getting size of \"", partition, "\" partition.\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
       ret = AVB_IO_RESULT_ERROR_IO;
       goto out;
     }

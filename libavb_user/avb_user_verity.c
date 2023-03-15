@@ -86,15 +86,25 @@ static bool load_top_level_vbmeta_header(
                                       &footer,
                                       &num_read);
     if (io_res != AVB_IO_RESULT_OK) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+      avb_errorv("Error loading footer from partition '%s'\n",
+                 out_partition_name);
+=======
       avb_error(
           "Error loading footer from partition '", out_partition_name, "'\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
       goto out;
     }
 
     if (avb_memcmp(footer.magic, AVB_FOOTER_MAGIC, AVB_FOOTER_MAGIC_LEN) != 0) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+      avb_errorv("Data from '%s' does not look like a vbmeta footer.\n",
+                 out_partition_name);
+=======
       avb_error("Data from '",
                 out_partition_name,
                 "' does not look like a vbmeta footer.\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
       goto out;
     }
 
@@ -108,7 +118,11 @@ static bool load_top_level_vbmeta_header(
   }
 
   if (io_res != AVB_IO_RESULT_OK) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+    avb_errorv("Error loading from partition '%s'\n", out_partition_name);
+=======
     avb_error("Error loading from partition '", out_partition_name, "'\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
     goto out;
   }
 
@@ -137,9 +151,14 @@ bool avb_user_verity_get(AvbOps* ops,
   }
 
   if (avb_memcmp(vbmeta_image, AVB_MAGIC, AVB_MAGIC_LEN) != 0) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+    avb_errorv("Data from '%s' does not look like a vbmeta header.\n",
+               partition_name);
+=======
     avb_error("Data from '",
               partition_name,
               "' does not look like a vbmeta header.\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
     goto out;
   }
 
@@ -174,9 +193,14 @@ bool avb_user_verity_set(AvbOps* ops,
   }
 
   if (avb_memcmp(vbmeta_image, AVB_MAGIC, AVB_MAGIC_LEN) != 0) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+    avb_errorv("Data from '%s' does not look like a vbmeta header.\n",
+               partition_name);
+=======
     avb_error("Data from '",
               partition_name,
               "' does not look like a vbmeta header.\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
     goto out;
   }
 
@@ -196,7 +220,11 @@ bool avb_user_verity_set(AvbOps* ops,
                                    AVB_VBMETA_IMAGE_HEADER_SIZE,
                                    vbmeta_image);
   if (io_res != AVB_IO_RESULT_OK) {
+<<<<<<< PATCH SET (186763 libavb: print log to kmsg for debugging)
+    avb_errorv("Error writing to partition '%s'\n", partition_name);
+=======
     avb_error("Error writing to partition '", partition_name, "'\n");
+>>>>>>> BASE      (597efc sysdeps: Add support for vfprintf() logging)
     goto out;
   }
 
