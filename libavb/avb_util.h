@@ -78,70 +78,55 @@ extern "C" {
  *
  * These have no effect unless AVB_ENABLE_DEBUG is defined.
  */
-#define avb_debug(message)              \
+#define avb_debug(fmt)                  \
   do {                                  \
-    avb_printv(avb_basename(__FILE__),  \
-               ":",                     \
-               AVB_TO_STRING(__LINE__), \
-               ": DEBUG: ",             \
-               message,                 \
-               NULL);                   \
+    avb_printv("%s:%s: DEBUG: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__));\
   } while (0)
-#define avb_debugv(message, ...)        \
+#define avb_debugv(fmt, ...)            \
   do {                                  \
-    avb_printv(avb_basename(__FILE__),  \
-               ":",                     \
+    avb_printv("%s:%s: DEBUG: " fmt,    \
+               avb_basename(__FILE__),  \
                AVB_TO_STRING(__LINE__), \
-               ": DEBUG: ",             \
-               message,                 \
                ##__VA_ARGS__);          \
   } while (0)
 #else
-#define avb_debug(message)
-#define avb_debugv(message, ...)
+#define avb_debug(fmt)
+#define avb_debugv(fmt, ...)
 #endif
 
 /* Prints out a message. This is typically used if a runtime-error
  * occurs.
  */
-#define avb_error(message)              \
+#define avb_error(fmt)                  \
   do {                                  \
-    avb_printv(avb_basename(__FILE__),  \
-               ":",                     \
-               AVB_TO_STRING(__LINE__), \
-               ": ERROR: ",             \
-               message,                 \
-               NULL);                   \
+    avb_printv("%s:%s: ERROR: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__));\
   } while (0)
-#define avb_errorv(message, ...)        \
+#define avb_errorv(fmt, ...)            \
   do {                                  \
-    avb_printv(avb_basename(__FILE__),  \
-               ":",                     \
+    avb_printv("%s:%s: ERROR: " fmt,    \
+               avb_basename(__FILE__),  \
                AVB_TO_STRING(__LINE__), \
-               ": ERROR: ",             \
-               message,                 \
                ##__VA_ARGS__);          \
   } while (0)
 
 /* Prints out a message and calls avb_abort().
  */
-#define avb_fatal(message)              \
+#define avb_fatal(fmt)                  \
   do {                                  \
-    avb_printv(avb_basename(__FILE__),  \
-               ":",                     \
-               AVB_TO_STRING(__LINE__), \
-               ": FATAL: ",             \
-               message,                 \
-               NULL);                   \
+    avb_printv("%s:%s: FATAL: " fmt,    \
+               avb_basename(__FILE__),  \
+               AVB_TO_STRING(__LINE__));\
     avb_abort();                        \
   } while (0)
-#define avb_fatalv(message, ...)        \
+#define avb_fatalv(fmt, ...)            \
   do {                                  \
-    avb_printv(avb_basename(__FILE__),  \
-               ":",                     \
+    avb_printv("%s:%s: FATAL: " fmt,    \
+               avb_basename(__FILE__),  \
                AVB_TO_STRING(__LINE__), \
-               ": FATAL: ",             \
-               message,                 \
                ##__VA_ARGS__);          \
     avb_abort();                        \
   } while (0)

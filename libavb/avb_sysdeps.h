@@ -50,6 +50,7 @@ extern "C" {
 #define AVB_ATTR_PACKED __attribute__((packed))
 #define AVB_ATTR_NO_RETURN __attribute__((noreturn))
 #define AVB_ATTR_SENTINEL __attribute__((__sentinel__))
+#define AVB_ATTR_FORMAT_PRINTF __attribute__((format(printf, 1, 2)))
 
 /* Size in bytes used for alignment. */
 #ifdef __LP64__
@@ -94,10 +95,11 @@ void* avb_memset(void* dest, const int c, size_t n);
  */
 void avb_print(const char* message);
 
-/* Prints out a vector of strings. Each argument must point to a
- * NUL-terminated UTF-8 string and NULL should be the last argument.
+/* Prints out a vector of strings.
+ * @param fmt: A printf-style format string that specifies the format of the message.
+ * @param ...: Optional arguments that are passed to the format string.
  */
-void avb_printv(const char* message, ...) AVB_ATTR_SENTINEL;
+void avb_printv(const char* fmt, ...) AVB_ATTR_FORMAT_PRINTF;
 
 /* Aborts the program or reboots the device. */
 void avb_abort(void) AVB_ATTR_NO_RETURN;

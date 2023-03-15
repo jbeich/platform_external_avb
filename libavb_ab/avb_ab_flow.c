@@ -263,15 +263,11 @@ AvbABFlowResult avb_ab_flow(AvbABOps* ab_ops,
         case AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED:
           if (flags & AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR) {
             /* Do nothing since we allow this. */
-            avb_debugv("Allowing slot ",
-                       slot_suffixes[n],
-                       " which verified "
-                       "with result ",
-                       avb_slot_verify_result_to_string(verify_result),
-                       " because "
-                       "AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR "
+            avb_debugv("Allowing slot %s which verified with result %s"
+                       " because AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR "
                        "is set.\n",
-                       NULL);
+                       slot_suffixes[n],
+                       avb_slot_verify_result_to_string(verify_result));
             saw_and_allowed_verification_error = true;
           } else {
             set_slot_unbootable = true;
@@ -285,12 +281,9 @@ AvbABFlowResult avb_ab_flow(AvbABOps* ab_ops,
       }
 
       if (set_slot_unbootable) {
-        avb_errorv("Error verifying slot ",
+        avb_errorv("Error verifying slot %s with result %s - setting unbootable.\n",
                    slot_suffixes[n],
-                   " with result ",
-                   avb_slot_verify_result_to_string(verify_result),
-                   " - setting unbootable.\n",
-                   NULL);
+                   avb_slot_verify_result_to_string(verify_result));
         slot_set_unbootable(&ab_data.slots[n]);
       }
     }
