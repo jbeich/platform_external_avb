@@ -65,12 +65,19 @@ void avb_print(const char* message) {
 void avb_printv(const char* message, ...) {
   va_list ap;
   const char* m;
+  FILE *fp = fopen("/dev/kmsg", "a");
 
   va_start(ap, message);
   for (m = message; m != NULL; m = va_arg(ap, const char*)) {
     fprintf(stderr, "%s", m);
+    if (fp != NULL) {
+      fprintf(fp, "%s", m);
+    }
   }
   va_end(ap);
+  if (fp != NULL) {
+    fclose(fp);
+  }
 }
 
 void* avb_malloc_(size_t size) {
