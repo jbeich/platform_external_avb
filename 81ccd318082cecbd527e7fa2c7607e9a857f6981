@@ -33,6 +33,24 @@
       "message": "Only nit here is that opening and closing `/dev/kmsg` could be wasteful but I also don\u0027t think we have a lot of logging in general so it\u0027s likely not a problem in practice.",
       "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "923cb4e3_53c829c8",
+        "filename": "libavb/avb_sysdeps_posix.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2023-03-20T00:00:20Z",
+      "side": 1,
+      "message": "Yes, you are right. \nI tried to find another way if I had printed a lot of logs.\n\nIf there is a lot of logs in the future, I will find another way and suggest it.\nThank you 👍",
+      "parentUuid": "e1dd8152_5933ac65",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
