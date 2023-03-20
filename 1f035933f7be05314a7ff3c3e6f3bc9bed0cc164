@@ -33,6 +33,23 @@
       "message": "David, you mentioned about adding the DO_NOT_USE_AB for chain partitions when reviewing the following CL (but no good use-case at that time).\n\nhttps://android-review.git.corp.google.com/c/platform/external/avb/+/611010\n\nShould it be re-considered now? (context: b/270899577#comment13)",
       "revId": "1f035933f7be05314a7ff3c3e6f3bc9bed0cc164",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96b014ce_b05d1bb1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2023-03-20T22:07:02Z",
+      "side": 1,
+      "message": "Thanks Bowgo for digging out CL:611010 ... definitely if we wanted to support this behavior, `AVB_CHAIN_PARTITION_DESCRIPTOR_FLAGS_DO_NOT_USE_AB` would be the way to go.",
+      "revId": "1f035933f7be05314a7ff3c3e6f3bc9bed0cc164",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
