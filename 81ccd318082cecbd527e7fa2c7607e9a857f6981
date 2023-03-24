@@ -37,6 +37,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "65a75baf_c8a078e9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-03-24T09:01:02Z",
+      "side": 1,
+      "message": "Hi,\nLooks like this change will cause some build errors in our internal branch.\n\n+ptosi@ to take a look.\n\nld.lld: error: undefined symbol: fopen\n\u003e\u003e\u003e referenced by avb_sysdeps_posix.c:68 (external/avb/libavb/avb_sysdeps_posix.c:68)\n\u003e\u003e\u003e               avb_sysdeps_posix.o:(avb_printv) in archive out/soong/.intermediates/packages/modules/Virtualization/pvmfw/libpvmfw/android_arm64_armv8-2a_cortex-a55_static/libpvmfw.a\n\nld.lld: error: undefined symbol: fclose\n\u003e\u003e\u003e referenced by avb_sysdeps_posix.c:79 (external/avb/libavb/avb_sysdeps_posix.c:79)\n\u003e\u003e\u003e               avb_sysdeps_posix.o:(avb_printv) in archive out/soong/.intermediates/packages/modules/Virtualization/pvmfw/libpvmfw/android_arm64_armv8-2a_cortex-a55_static/libpvmfw.a\nclang-16: error: linker command failed with exit code 1 (use -v to see invocation)",
+      "parentUuid": "752e518c_ba366780",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1dd8152_5933ac65",
         "filename": "libavb/avb_sysdeps_posix.c",
         "patchSetId": 2
