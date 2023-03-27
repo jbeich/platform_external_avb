@@ -91,6 +91,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fe2a9018_6f5b2742",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-03-27T05:38:02Z",
+      "side": 1,
+      "message": "Yeah, looking at the code, we would ideally want `avb_printv` to result in a single `write(/dev/kmsg)` call. WDYT of looking into using the CPP to produce a single `printf(stderr` by concatenating pre-compilation the literal C strings and some `\"%s\"`?",
+      "parentUuid": "fda8b56e_641c41e7",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1dd8152_5933ac65",
         "filename": "libavb/avb_sysdeps_posix.c",
         "patchSetId": 2
