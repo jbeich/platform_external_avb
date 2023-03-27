@@ -144,6 +144,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c512a711_e91d730d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-03-27T09:23:37Z",
+      "side": 1,
+      "message": "By \"CPP\", I meant [C Preprocessor](https://en.wikipedia.org/wiki/C_preprocessor), not C++ :) More specifically, using macros to produce successive literal strings that the preprocessor concatenates before they reach the compiler.",
+      "parentUuid": "e4b0a47f_3e820ff5",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1dd8152_5933ac65",
         "filename": "libavb/avb_sysdeps_posix.c",
         "patchSetId": 2
