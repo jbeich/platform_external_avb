@@ -73,6 +73,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fda8b56e_641c41e7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2023-03-27T02:25:38Z",
+      "side": 1,
+      "message": "Yes, you\u0027r right.\nRather than fixing the library, I tried to redirect it from the init.\n\nSome devices come out normally, while others come out as below.\nSo i made a this patch. I\u0027ll check if there\u0027s another good way\n\n[    1.045961] [5:           init:    1] avb_slot_verify.c\n[    1.045966] [5:           init:    1] :\n[    1.045968] [5:           init:    1] 692\n[    1.045970] [5:           init:    1] : DEBUG:\n[    1.045972] [5:           init:    1] Loading vbmeta struct from partition \u0027\n[    1.045974] [5:           init:    1] vbmeta\n[    1.045976] [5:           init:    1] \u0027.",
+      "parentUuid": "66ad212e_b2ee0f9f",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1dd8152_5933ac65",
         "filename": "libavb/avb_sysdeps_posix.c",
         "patchSetId": 2
