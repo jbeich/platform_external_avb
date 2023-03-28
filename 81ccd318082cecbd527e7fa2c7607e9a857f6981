@@ -162,6 +162,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eef5a24b_c0f60d10",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2023-03-28T01:32:15Z",
+      "side": 1,
+      "message": "I understood it 😊 Thank you for more explain.\nI will make a new patch. I will be take a time due to build and test.",
+      "parentUuid": "c512a711_e91d730d",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1dd8152_5933ac65",
         "filename": "libavb/avb_sysdeps_posix.c",
         "patchSetId": 2
