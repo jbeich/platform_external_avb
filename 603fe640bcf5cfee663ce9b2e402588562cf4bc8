@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5621d5f9_0366b2de",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-03T16:55:46Z",
+      "side": 1,
+      "message": "Is there a way to:\n- build the `vfprintf` format string at compile time\n- make `avb_{debug,error,fatal}` work with both `avb_printv` and `vfprintf`\n- let the client decide at build time which logging API they use\n\nwithout introducing a new macro?\n\nAlso, if this macro is kept, recommendations for its name are more than welcome!",
+      "range": {
+        "startLine": 103,
+        "startChar": 7,
+        "endLine": 103,
+        "endChar": 22
+      },
+      "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
