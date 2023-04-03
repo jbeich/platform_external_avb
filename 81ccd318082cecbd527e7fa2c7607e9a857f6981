@@ -198,6 +198,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ad8e73bd_464a6c12",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-03T16:45:09Z",
+      "side": 1,
+      "message": "Yeah, I\u0027ve had a go at it in aosp/2520439; please LMK if this addresses your issue (code review welcome!).",
+      "parentUuid": "ae7f038c_a3702dab",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1dd8152_5933ac65",
         "filename": "libavb/avb_sysdeps_posix.c",
         "patchSetId": 2
