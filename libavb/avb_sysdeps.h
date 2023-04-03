@@ -48,6 +48,7 @@ extern "C" {
  */
 #define AVB_ATTR_WARN_UNUSED_RESULT __attribute__((warn_unused_result))
 #define AVB_ATTR_PACKED __attribute__((packed))
+#define AVB_ATTR_PRINTF(x, y) __attribute__((format(printf, x, y)))
 #define AVB_ATTR_NO_RETURN __attribute__((noreturn))
 #define AVB_ATTR_SENTINEL __attribute__((__sentinel__))
 
@@ -98,6 +99,12 @@ void avb_print(const char* message);
  * NUL-terminated UTF-8 string and NULL should be the last argument.
  */
 void avb_printv(const char* message, ...) AVB_ATTR_SENTINEL;
+
+#ifdef AVB_PRINTF_LOGS
+/* Prints a formatted string.
+ */
+int avb_printf(const char* fmt, ...) AVB_ATTR_PRINTF(1, 2);
+#endif
 
 /* Aborts the program or reboots the device. */
 void avb_abort(void) AVB_ATTR_NO_RETURN;
