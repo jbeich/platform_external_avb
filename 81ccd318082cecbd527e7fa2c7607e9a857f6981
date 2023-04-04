@@ -234,6 +234,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3efa2e3d_52334c77",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-04T08:23:37Z",
+      "side": 1,
+      "message": "Thanks, waiting for your review!\n\nNote that modifying the `avb_printv` signature as you did here is not acceptable as it will break client code given that they will now receive a call that doesn\u0027t match their implementation of `sysdeps`.",
+      "parentUuid": "fa010df4_c6790fe1",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1dd8152_5933ac65",
         "filename": "libavb/avb_sysdeps_posix.c",
         "patchSetId": 2
