@@ -270,6 +270,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "44bef628_36f4ea4c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-04T12:22:04Z",
+      "side": 1,
+      "message": "The library internally relies on a set of functions (defined in [`avb_sysdeps.h`](https://cs.android.com/android/platform/superproject/+/master:external/avb/libavb/avb_sysdeps.h)) to abstract services provided by the underlying \"system\" and it is the responsibility of the client code to implement those functions on their platform. In the particular case of POSIX systems, the library provides a standard implementation ([`avb_sysdeps_posix.c`](https://cs.android.com/android/platform/superproject/+/master:external/avb/libavb/avb_sysdeps_posix.c)) for convenience, as the underlying interface is standard.\n\nThis means that function signatures in `sysdeps` must be stable, as client backends are written against them, and any modification would break clients of the library. In your patch, you modify not only the `avb_printv` implementation but also its interface (instead of taking a variable number of strings, it would now expose a `printf`-like API), which would clash with client code that still (rightfully) implements the old one.\n\nThis is why aosp/2520439 introduces a new `sysdeps` function (`avb_printf`) instead.",
+      "parentUuid": "ce168501_489e147a",
+      "revId": "81ccd318082cecbd527e7fa2c7607e9a857f6981",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e1dd8152_5933ac65",
         "filename": "libavb/avb_sysdeps_posix.c",
         "patchSetId": 2
