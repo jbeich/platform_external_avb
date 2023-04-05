@@ -22,6 +22,64 @@
       },
       "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4d3f9164_8a8608f8",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2023-04-05T05:52:18Z",
+      "side": 1,
+      "message": "I looks good to me this function always be built in.\nThan How about a branch in libavb/avb_util.h according to the compile option? \nIt\u0027s just for suggest, Never mind :) \n\nHum... It\u0027s difficult to decision macro name.\nHow about `AVB_USE_PRINTF_LOGS`?",
+      "parentUuid": "5621d5f9_0366b2de",
+      "range": {
+        "startLine": 103,
+        "startChar": 7,
+        "endLine": 103,
+        "endChar": 22
+      },
+      "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f6b69f8_13c0bdef",
+        "filename": "libavb/avb_sysdeps_posix.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2023-04-05T05:52:18Z",
+      "side": 1,
+      "message": "Is it necessary return type?",
+      "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e4f888b_e515b0d0",
+        "filename": "test/avb_sysdeps_posix_testing.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2023-04-05T05:52:18Z",
+      "side": 1,
+      "message": "Is it necessary return type?",
+      "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
