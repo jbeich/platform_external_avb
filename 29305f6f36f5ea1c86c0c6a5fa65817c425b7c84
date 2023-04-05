@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4eea24e0_1e48b392",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-05T08:34:52Z",
+      "side": 1,
+      "message": "@jhs2.lee@samsung.com, could you please confirm that this patch addresses the issue you describe in [our discussion](https://android-review.git.corp.google.com/c/platform/external/avb/+/2493379/comments/752e518c_ba366780) on aosp/2493379? Thanks!",
+      "revId": "29305f6f36f5ea1c86c0c6a5fa65817c425b7c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

@@ -89,6 +89,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "397c2438_029b9452",
+        "filename": "libavb/avb_sysdeps_posix.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-05T08:34:52Z",
+      "side": 1,
+      "message": "I agree with your point that it\u0027s not used by the library so I\u0027ve removed the return value, even if that means not follow the `printf(3)` signature (which might be cleaner?).",
+      "parentUuid": "8f6b69f8_13c0bdef",
+      "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9e4f888b_e515b0d0",
@@ -102,6 +120,24 @@
       "writtenOn": "2023-04-05T05:52:18Z",
       "side": 1,
       "message": "Is it necessary return type?",
+      "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99f9afa9_9c160e62",
+        "filename": "test/avb_sysdeps_posix_testing.cc",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-05T08:34:52Z",
+      "side": 1,
+      "message": "(see other comment)",
+      "parentUuid": "9e4f888b_e515b0d0",
       "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
