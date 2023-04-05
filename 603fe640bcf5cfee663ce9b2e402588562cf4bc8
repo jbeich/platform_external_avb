@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c202c241_747bd53a",
+        "filename": "libavb/avb_sysdeps.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-05T08:28:00Z",
+      "side": 1,
+      "message": "\u003e I looks good to me this function always be built in.\n\nYes, good point!\n\n\u003e How about `AVB_USE_PRINTF_LOGS`?\n\nDone",
+      "parentUuid": "4d3f9164_8a8608f8",
+      "range": {
+        "startLine": 103,
+        "startChar": 7,
+        "endLine": 103,
+        "endChar": 22
+      },
+      "revId": "603fe640bcf5cfee663ce9b2e402588562cf4bc8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8f6b69f8_13c0bdef",
