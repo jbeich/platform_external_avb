@@ -51,6 +51,24 @@
       "message": "I find type in comment like below. Maybe you wanna write `Note that` 😊\n\n```\nNotei that client code \npassing the now deprecated NULL sentinel to the logging macros\navb_{debug,error,fatal}() must NOT enable this feature.\n```\n\nIf you don\u0027t mind, could you write the link to the page we discussed or my name(something like that reported-by, cc) in commit message?",
       "revId": "29305f6f36f5ea1c86c0c6a5fa65817c425b7c84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "94a7ae4f_8b4b4912",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-06T13:16:42Z",
+      "side": 1,
+      "message": "Removed the [`i`](https://vimhelp.org/insert.txt.html#i) and mentioned you in the commit message; thanks.",
+      "parentUuid": "019660f0_c8ae0993",
+      "revId": "29305f6f36f5ea1c86c0c6a5fa65817c425b7c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
