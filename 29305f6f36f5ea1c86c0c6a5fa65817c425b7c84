@@ -16,6 +16,41 @@
       "message": "@jhs2.lee@samsung.com, could you please confirm that this patch addresses the issue you describe in [our discussion](https://android-review.git.corp.google.com/c/platform/external/avb/+/2493379/comments/752e518c_ba366780) on aosp/2493379? Thanks!",
       "revId": "29305f6f36f5ea1c86c0c6a5fa65817c425b7c84",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "feba553c_4689a08d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2023-04-06T03:00:27Z",
+      "side": 1,
+      "message": "Yes, this patch resolve my issue [aosp/2493379](https://android-review.googlesource.com/c/platform/external/avb/+/2493379).\n\nI did a build and kmsg check test.\nIt\u0027s work well.\n\nIf you submit it, i will try to redirect stderr to `/dev/kmsg` using `dup2`.",
+      "parentUuid": "4eea24e0_1e48b392",
+      "revId": "29305f6f36f5ea1c86c0c6a5fa65817c425b7c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "019660f0_c8ae0993",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1863406
+      },
+      "writtenOn": "2023-04-06T03:00:27Z",
+      "side": 1,
+      "message": "I find type in comment like below. Maybe you wanna write `Note that` 😊\n\n```\nNotei that client code \npassing the now deprecated NULL sentinel to the logging macros\navb_{debug,error,fatal}() must NOT enable this feature.\n```\n\nIf you don\u0027t mind, could you write the link to the page we discussed or my name(something like that reported-by, cc) in commit message?",
+      "revId": "29305f6f36f5ea1c86c0c6a5fa65817c425b7c84",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
