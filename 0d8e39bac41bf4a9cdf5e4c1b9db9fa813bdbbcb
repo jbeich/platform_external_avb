@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "44c1fde5_35a8bf7e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-13T08:27:10Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "c35e339c_a2bf6c06",
+      "revId": "0d8e39bac41bf4a9cdf5e4c1b9db9fa813bdbbcb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f2986d99_6920692b",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-04-13T05:03:36Z",
       "side": 1,
       "message": "Could we gate the definition of these with #ifndef AVB_USE_PRINTF_LOGS to avoid the case described in the commit message?",
+      "revId": "0d8e39bac41bf4a9cdf5e4c1b9db9fa813bdbbcb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a0a32e58_9c8fea41",
+        "filename": "libavb/avb_util.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2023-04-13T08:27:10Z",
+      "side": 1,
+      "message": "Nice; done!",
+      "parentUuid": "f2986d99_6920692b",
       "revId": "0d8e39bac41bf4a9cdf5e4c1b9db9fa813bdbbcb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
