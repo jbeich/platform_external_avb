@@ -95,7 +95,7 @@ void* avb_memset(void* dest, const int c, size_t n);
 void avb_print(const char* message);
 
 /* Prints out a vector of strings. Each argument must point to a
- * NUL-terminated UTF-8 string and NULL should be the last argument.
+ * NUL-terminated UTF-8 string and NULL must be the last argument.
  */
 void avb_printv(const char* message, ...) AVB_ATTR_SENTINEL;
 
