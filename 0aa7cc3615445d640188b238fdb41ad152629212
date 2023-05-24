@@ -33,6 +33,23 @@
       "message": "Add reviewers",
       "revId": "0aa7cc3615445d640188b238fdb41ad152629212",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4ae96e9_c1e4e62d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-05-24T08:43:42Z",
+      "side": 1,
+      "message": "LGTM, let\u0027s see if other reviewers have any thoughts.",
+      "revId": "0aa7cc3615445d640188b238fdb41ad152629212",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
