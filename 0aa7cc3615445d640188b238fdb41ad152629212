@@ -86,6 +86,29 @@
       "parentUuid": "d9f1b679_559bfbc4",
       "revId": "0aa7cc3615445d640188b238fdb41ad152629212",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c983b220_91beeb89",
+        "filename": "libavb/avb_sysdeps_posix.c",
+        "patchSetId": 3
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1058768
+      },
+      "writtenOn": "2023-05-31T16:07:29Z",
+      "side": 1,
+      "message": "`e` is a GNU extension, so not technically speaking POSIX. Not sure if that matters.",
+      "range": {
+        "startLine": 66,
+        "startChar": 30,
+        "endLine": 66,
+        "endChar": 31
+      },
+      "revId": "0aa7cc3615445d640188b238fdb41ad152629212",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
