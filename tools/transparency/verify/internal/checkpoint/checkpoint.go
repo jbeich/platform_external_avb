@@ -6,10 +6,9 @@
 //
 // When a commitment needs to be sent to other processes (such as a witness or
 // other log clients), it is put in the form of a checkpoint, which also
-// includes an "ecosystem identifier". The "ecosystem identifier" defines how
-// to parse the checkpoint data. This package deals only with the DEFAULT
-// ecosystem, which has only the information from Root and no additional data.
-// Support for other ecosystems will be added as needed.
+// includes an "origin" string. The origin should is a unique identifier for
+// the log identity which issues the checkpoint. This package deals only with
+// the origin for the Pixel Binary Transparency Log.
 //
 // This checkpoint is signed in a note format (golang.org/x/mod/sumdb/note)
 // before sending out. An unsigned checkpoint is not a valid commitment and
@@ -39,8 +38,8 @@ import (
 )
 
 const (
-	// defaultEcosystemID identifies a checkpoint in the DEFAULT ecosystem.
-	defaultEcosystemID = "DEFAULT\n"
+	// originID identifies a checkpoint for the Pixel Binary Transparency Log.
+	originID = "developers.google.com/android/binary_transparency/0\n"
 )
 
 type verifier interface {
@@ -99,7 +98,7 @@ func NewVerifier(pemKey []byte, name string) (EcdsaVerifier, error) {
 	}, nil
 }
 
-// Root contains the checkpoint data for a DEFAULT ecosystem checkpoint.
+// Root contains the checkpoint data.
 type Root struct {
 	// Size is the number of entries in the log at this point.
 	Size uint64
@@ -108,15 +107,15 @@ type Root struct {
 }
 
 func parseCheckpoint(ckpt string) (Root, error) {
-	if !strings.HasPrefix(ckpt, defaultEcosystemID) {
-		return Root{}, errors.New("invalid checkpoint - unknown ecosystem, must be DEFAULT")
+	if !strings.HasPrefix(ckpt, originID) {
+		return Root{}, errors.New(fmt.Sprintf("invalid checkpoint - unknown origin, must be %s", originID))
 	}
-	// Strip the ecosystem ID and parse the rest of the checkpoint.
-	body := ckpt[len(defaultEcosystemID):]
+	// Strip the origin ID and parse the rest of the checkpoint.
+	body := ckpt[len(originID):]
 	// body must contain exactly 2 lines, size and the root hash.
 	l := strings.SplitN(body, "\n", 3)
 	if len(l) != 3 || len(l[2]) != 0 {
-		return Root{}, errors.New("invalid checkpoint - bad format: must have ecosystem id, size and root hash each followed by newline")
+		return Root{}, errors.New("invalid checkpoint - bad format: must have origin id, size and root hash each followed by newline")
 	}
 	size, err := strconv.ParseUint(l[0], 10, 64)
 	if err != nil {
@@ -156,11 +155,12 @@ func getSignedCheckpoint(logURL string) ([]byte, error) {
 // Data at `logURL` is the checkpoint and must be in the note format
 // (golang.org/x/mod/sumdb/note).
 //
-// The checkpoint must be in the DEFAULT ecosystem.
+// The checkpoint must be for the Pixel Binary Transparency Log origin.
 //
 // Returns error if the signature fails to verify or if the checkpoint
 // does not conform to the following format:
-// 	[]byte("[ecosystem]\n[size]\n[hash]").
+//
+//	[]byte("[origin]\n[size]\n[hash]").
 func FromURL(logURL string, v verifier) (Root, error) {
 	b, err := getSignedCheckpoint(logURL)
 	if err != nil {
