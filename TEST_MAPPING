@@ -1,6 +1,9 @@
 {
   "presubmit": [
     {
+      "name": "libavb_bindgen_test"
+    },
+    {
       "name": "libavb_host_unittest"
     },
     {
