@@ -8,6 +8,9 @@
     },
     {
       "name": "libavb_host_unittest_sha"
+    },
+    {
+      "name": "libavb_rs_test"
     }
   ]
 }
