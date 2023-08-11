@@ -9,5 +9,11 @@
     {
       "name": "libavb_host_unittest_sha"
     }
+  ],
+  "postsubmit": [
+    {
+      // Move to presubmit once we have the necessary SLO data.
+      "name": "libavb_rs_test"
+    }
   ]
 }

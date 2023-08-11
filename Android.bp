@@ -460,3 +460,34 @@ rust_test {
     clippy_lints: "none",
     lints: "none",
 }
+
+// Rust library wrapping libavb C implementation.
+rust_defaults {
+    name: "libavb_rs.defaults",
+    srcs: ["src/lib.rs"],
+    prefer_rlib: true,
+    // Require unsafe blocks for inside unsafe functions.
+    flags: ["-Dunsafe_op_in_unsafe_fn"],
+    rustlibs: [
+        "libavb_bindgen_nostd",
+        "libtinyvec_nostd",
+    ],
+    whole_static_libs: [
+        "libavb_baremetal",
+    ],
+    no_stdlibs: true,
+    stdlibs: [
+        "libcore.rust_sysroot",
+    ],
+}
+
+rust_library_rlib {
+    name: "libavb_rs",
+    crate_name: "avb",
+    defaults: ["libavb_rs.defaults"],
+}
+
+rust_test {
+    name: "libavb_rs_test",
+    defaults: ["libavb_rs.defaults"],
+}
