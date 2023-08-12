@@ -270,7 +270,7 @@ static AvbIOResult get_size_of_partition(AvbOps* ops,
   int fd;
   AvbIOResult ret;
 
-  fd = open_partition(partition, O_WRONLY);
+  fd = open_partition(partition, O_RDONLY);
   if (fd == -1) {
     avb_error("Error opening \"", partition, "\" partition.\n");
     ret = AVB_IO_RESULT_ERROR_IO;
