@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "081d9f67_62b38292",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1973455
+      },
+      "writtenOn": "2023-08-14T06:56:48Z",
+      "side": 1,
+      "message": "Please CP this CL into `stage-aosp-udc-ts-dev`",
+      "revId": "44b7409468568836097c8544ab024b25074ff21d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
