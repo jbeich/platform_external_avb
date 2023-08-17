@@ -24,6 +24,8 @@
 #![cfg_attr(not(test), no_std)]
 
 mod error;
+mod util;
+mod verify;
 
 pub use error::{IoError, SlotVerifyError};
 
