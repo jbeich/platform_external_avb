@@ -32,7 +32,7 @@
 
 use avb_bindgen::{AvbIOResult, AvbSlotVerifyResult};
 
-use core::fmt;
+use core::{fmt, str::Utf8Error};
 
 /// `AvbSlotVerifyResult` error wrapper.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -136,6 +136,12 @@ impl fmt::Display for IoError {
             Self::InvalidValueSize => write!(f, "Invalid named persistent value size"),
             Self::InsufficientSpace => write!(f, "Buffer is too small"),
         }
+    }
+}
+
+impl From<Utf8Error> for IoError {
+    fn from(_: Utf8Error) -> Self {
+        Self::Io
     }
 }
 
