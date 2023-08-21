@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "db0ecf69_3f78d0bd",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-21T08:18:25Z",
+      "side": 1,
+      "message": "It looks like we can also stop exposing `libcrypto_baremetal` to `avf` with this cl, wdyt?",
+      "range": {
+        "startLine": 449,
+        "startChar": 9,
+        "endLine": 449,
+        "endChar": 28
+      },
+      "revId": "5d8171ef959d90f5d8a6fa29415fd070b32895d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
