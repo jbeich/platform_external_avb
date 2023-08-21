@@ -22,6 +22,30 @@
       },
       "revId": "5d8171ef959d90f5d8a6fa29415fd070b32895d5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7ef4e68a_7ce0fd15",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 449,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-21T16:42:58Z",
+      "side": 1,
+      "message": "Yep looks like that works, thanks! I\u0027ll upload a separate CL to go in after these just to limit cross-CL dependence a bit.",
+      "parentUuid": "db0ecf69_3f78d0bd",
+      "range": {
+        "startLine": 449,
+        "startChar": 9,
+        "endLine": 449,
+        "endChar": 28
+      },
+      "revId": "5d8171ef959d90f5d8a6fa29415fd070b32895d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
