@@ -25,6 +25,9 @@ use core::{
     ptr, slice,
 };
 
+/// Common `Result` type for `IoError` errors.
+pub type Result<T> = core::result::Result<T, IoError>;
+
 /// Base implementation-provided callbacks for verification.
 ///
 /// See libavb `AvbOps` for more complete documentation.
@@ -46,7 +49,7 @@ pub trait Ops {
         partition: &CStr,
         offset: i64,
         buffer: &mut [u8],
-    ) -> Result<usize, IoError>;
+    ) -> Result<usize>;
 
     /// Returns a reference to preloaded partition contents.
     ///
@@ -63,9 +66,24 @@ pub trait Ops {
     /// * `Err<IoError::NotImplemented>` if the requested partition has not been preloaded;
     ///   verification will next attempt to load the partition via `read_from_partition()`.
     /// * Any other `Err<IoError>` if an error occurred; verification will exit immediately.
-    fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8], IoError> {
+    fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8]> {
         Err(IoError::NotImplemented)
     }
+
+    /// Checks if the given public key is valid for vbmeta image signing.
+    ///
+    /// # Arguments
+    /// * `public_key`: the public key.
+    /// * `public_key_metadata`: public key metadata set by the `--public_key_metadata` arg in
+    ///                          `avbtool`, or None if no metadata was provided.
+    ///
+    /// # Returns
+    /// True if the given key is valid, false if it is not, `IoError` on error.
+    fn validate_vbmeta_public_key(
+        &mut self,
+        public_key: &[u8],
+        public_key_metadata: Option<&[u8]>,
+    ) -> Result<bool>;
 }
 
 /// Helper to pass user-provided `Ops` through libavb via the `user_data` pointer.
@@ -106,9 +124,9 @@ impl<'a> UserData<'a> {
             atx_ops: ptr::null_mut(), // TODO: support optional ATX.
             read_from_partition: Some(read_from_partition),
             get_preloaded_partition: Some(get_preloaded_partition),
+            write_to_partition: None, // Not needed, only used for deprecated A/B.
+            validate_vbmeta_public_key: Some(validate_vbmeta_public_key),
             // TODO: add callback wrappers for the remaining API.
-            write_to_partition: None,
-            validate_vbmeta_public_key: None,
             read_rollback_index: None,
             write_rollback_index: None,
             read_is_device_unlocked: None,
@@ -119,29 +137,35 @@ impl<'a> UserData<'a> {
             validate_public_key_for_partition: None,
         }
     }
+}
 
-    /// Extracts the user-provided Ops from a raw *AvbOps.
-    ///
-    /// # Safety
-    /// Only call this function on an `AvbOps` object whose userdata was initialized to a valid
-    /// UserData object via `create_avb_ops()`.
-    ///
-    /// The returned ref is only valid in the current libavb callback scope. Do not return back to
-    /// libavb while still holding it.
-    unsafe fn from_libavb(avb_ops: &'a *mut AvbOps) -> Result<&'a mut dyn Ops, IoError> {
-        // SAFETY: we created this AvbOps object and passed it to libavb so we know it meets all
-        // the criteria for `as_mut()`.
-        let avb_ops = unsafe { avb_ops.as_mut() }.ok_or(IoError::Io)?;
-        // Cast the void* `user_data` back to a UserData*.
-        let user_data = avb_ops.user_data as *mut Self;
-        // SAFETY: we created this UserData object and passed it to libavb so we know it meets all
-        // the criteria for `as_mut()`.
-        Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.0)
-    }
+/// Extracts the user-provided `Ops` from a raw `AvbOps`.
+///
+/// # Arguments
+/// * `avb_ops`: The raw `AvbOps` pointer used by libavb.
+///
+/// # Returns
+/// The Rust `Ops` extracted from `avb_ops.user_data`.
+///
+/// # Safety
+/// Only call this function on an `AvbOps` object whose `user_data` was initialized to a valid
+/// `UserData` object via `create_avb_ops()`.
+///
+/// The returned ref is only valid in the current libavb callback scope. Do not return back to
+/// libavb while still holding it.
+unsafe fn extract_ops(avb_ops: &*mut AvbOps) -> Result<&mut dyn Ops> {
+    // SAFETY: we created this AvbOps object and passed it to libavb so we know it meets all
+    // the criteria for `as_mut()`.
+    let avb_ops = unsafe { avb_ops.as_mut() }.ok_or(IoError::Io)?;
+    // Cast the void* `user_data` back to a UserData*.
+    let user_data = avb_ops.user_data as *mut UserData;
+    // SAFETY: we created this UserData object and passed it to libavb so we know it meets all
+    // the criteria for `as_mut()`.
+    Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.0)
 }
 
 /// Converts a non-NULL `ptr` to `()`, NULL to `Err(IoError::Io)`.
-fn check_nonnull<T>(ptr: *const T) -> Result<(), IoError> {
+fn check_nonnull<T>(ptr: *const T) -> Result<()> {
     match ptr.is_null() {
         true => Err(IoError::Io),
         false => Ok(()),
@@ -183,7 +207,7 @@ unsafe fn try_read_from_partition(
     num_bytes: usize,
     buffer: *mut c_void,
     out_num_read: *mut usize,
-) -> Result<(), IoError> {
+) -> Result<()> {
     check_nonnull(partition)?;
     check_nonnull(buffer)?;
     check_nonnull(out_num_read)?;
@@ -197,7 +221,7 @@ unsafe fn try_read_from_partition(
     // SAFETY:
     // * we only use `ops` objects created via `create_avb_ops()` as required.
     // * `ops` is not held past the scope of this callback.
-    let ops = unsafe { UserData::from_libavb(&ops) }?;
+    let ops = unsafe { extract_ops(&ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `partition`.
@@ -252,7 +276,7 @@ unsafe fn try_get_preloaded_partition(
     num_bytes: usize,
     out_pointer: *mut *mut u8,
     out_num_bytes_preloaded: *mut usize,
-) -> Result<(), IoError> {
+) -> Result<()> {
     check_nonnull(partition)?;
     check_nonnull(out_pointer)?;
     check_nonnull(out_num_bytes_preloaded)?;
@@ -269,7 +293,7 @@ unsafe fn try_get_preloaded_partition(
     // SAFETY:
     // * we only use `ops` objects created via `create_avb_ops()` as required.
     // * `ops` is not held past the scope of this callback.
-    let ops = unsafe { UserData::from_libavb(&ops) }?;
+    let ops = unsafe { extract_ops(&ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `partition`.
@@ -303,6 +327,79 @@ unsafe fn try_get_preloaded_partition(
     Ok(())
 }
 
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn validate_vbmeta_public_key(
+    ops: *mut AvbOps,
+    public_key_data: *const u8,
+    public_key_length: usize,
+    public_key_metadata: *const u8,
+    public_key_metadata_length: usize,
+    out_is_trusted: *mut bool,
+) -> AvbIOResult {
+    result_to_io_enum(try_validate_vbmeta_public_key(
+        ops,
+        public_key_data,
+        public_key_length,
+        public_key_metadata,
+        public_key_metadata_length,
+        out_is_trusted,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `create_avb_ops()`.
+/// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
+/// * `out_is_trusted` must adhere to the requirements of `ptr::write()`.
+unsafe fn try_validate_vbmeta_public_key(
+    ops: *mut AvbOps,
+    public_key_data: *const u8,
+    public_key_length: usize,
+    public_key_metadata: *const u8,
+    public_key_metadata_length: usize,
+    out_is_trusted: *mut bool,
+) -> Result<()> {
+    check_nonnull(public_key_data)?;
+    check_nonnull(out_is_trusted)?;
+
+    // Initialize the output variables first in case something fails.
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_is_trusted`.
+    unsafe { ptr::write(out_is_trusted, false) };
+
+    // SAFETY:
+    // * we only use `ops` objects created via `create_avb_ops()` as required.
+    // * `ops` is not held past the scope of this callback.
+    let ops = unsafe { extract_ops(&ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `public_key_data` with size `public_key_length`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let public_key = unsafe { slice::from_raw_parts(public_key_data, public_key_length) };
+    let metadata = check_nonnull(public_key_metadata).ok().map(
+        // SAFETY:
+        // * we've checked that the pointer is non-NULL.
+        // * libavb gives us a properly-allocated `public_key_metadata` with size
+        //   `public_key_metadata_length`.
+        // * we only access the contents via the returned slice.
+        // * the returned slice is not held past the scope of this callback.
+        |_| unsafe { slice::from_raw_parts(public_key_metadata, public_key_metadata_length) },
+    );
+
+    let trusted = ops.validate_vbmeta_public_key(public_key, metadata)?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_is_trusted`.
+    unsafe { ptr::write(out_is_trusted, trusted) };
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -314,12 +411,16 @@ mod tests {
     ///
     /// In addition to being used to exercise individual callback wrappers, this will be used for
     /// full verification tests so behavior needs to be correct.
+    #[derive(Default)]
     struct TestOps {
         /// Partitions to "read" on request.
         pub partitions: HashMap<&'static str, Vec<u8>>,
         /// Preloaded partitions. Same functionality as `partitions`, just separated to be able
         /// to test reading and preloading callbacks independently.
         pub preloaded: HashMap<&'static str, Vec<u8>>,
+        /// Vbmeta public keys as a map of {(key, metadata): trusted}. Querying unknown keys will
+        /// return `IoError::Io`.
+        pub vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), bool>,
     }
 
     impl Ops for TestOps {
@@ -328,7 +429,7 @@ mod tests {
             partition: &CStr,
             offset: i64,
             buffer: &mut [u8],
-        ) -> Result<usize, IoError> {
+        ) -> Result<usize> {
             let contents = self
                 .partitions
                 .get(partition.to_str()?)
@@ -361,11 +462,22 @@ mod tests {
             Ok(bytes_read)
         }
 
-        fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8], IoError> {
+        fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8]> {
             self.preloaded
                 .get(partition.to_str()?)
                 .ok_or(IoError::NotImplemented)
                 .map(|vec| &vec[..])
+        }
+
+        fn validate_vbmeta_public_key(
+            &mut self,
+            public_key: &[u8],
+            public_key_metadata: Option<&[u8]>,
+        ) -> Result<bool> {
+            self.vbmeta_keys
+                .get(&(public_key, public_key_metadata))
+                .ok_or(IoError::Io)
+                .copied()
         }
     }
 
@@ -444,12 +556,36 @@ mod tests {
         result
     }
 
+    /// Calls the `validate_vbmeta_public_key()` C callback the same way libavb would.
+    fn call_validate_vbmeta_public_key(
+        ops: &mut TestOps,
+        public_key: &[u8],
+        public_key_metadata: Option<&[u8]>,
+        out_is_trusted: &mut bool,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        // SAFETY: `user_data` remains in place and unmodified while `avb_ops` exists.
+        let mut avb_ops = unsafe { user_data.create_avb_ops() };
+        let (metadata_ptr, metadata_size) =
+            public_key_metadata.map_or((ptr::null(), 0), |m| (m.as_ptr(), m.len()));
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.validate_vbmeta_public_key.unwrap()(
+                &mut avb_ops as *mut AvbOps,
+                public_key.as_ptr(),
+                public_key.len(),
+                metadata_ptr,
+                metadata_size,
+                out_is_trusted,
+            )
+        }
+    }
+
     #[test]
     fn test_read_from_partition() {
-        let mut ops = TestOps {
-            partitions: HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]),
-            preloaded: HashMap::default(),
-        };
+        let mut ops = TestOps::default();
+        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -462,10 +598,8 @@ mod tests {
 
     #[test]
     fn test_read_from_partition_with_offset() {
-        let mut ops = TestOps {
-            partitions: HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]),
-            preloaded: HashMap::default(),
-        };
+        let mut ops = TestOps::default();
+        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -478,10 +612,8 @@ mod tests {
 
     #[test]
     fn test_read_from_partition_negative_offset() {
-        let mut ops = TestOps {
-            partitions: HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]),
-            preloaded: HashMap::default(),
-        };
+        let mut ops = TestOps::default();
+        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -494,10 +626,8 @@ mod tests {
 
     #[test]
     fn test_read_from_partition_truncate() {
-        let mut ops = TestOps {
-            partitions: HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]),
-            preloaded: HashMap::default(),
-        };
+        let mut ops = TestOps::default();
+        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -510,10 +640,8 @@ mod tests {
 
     #[test]
     fn test_read_from_partition_unknown() {
-        let mut ops = TestOps {
-            partitions: HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]),
-            preloaded: HashMap::default(),
-        };
+        let mut ops = TestOps::default();
+        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 10;
@@ -526,10 +654,8 @@ mod tests {
 
     #[test]
     fn test_get_preloaded_partition() {
-        let mut ops = TestOps {
-            partitions: HashMap::default(),
-            preloaded: HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]),
-        };
+        let mut ops = TestOps::default();
+        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 0;
@@ -545,10 +671,8 @@ mod tests {
 
     #[test]
     fn test_get_preloaded_partition_truncate() {
-        let mut ops = TestOps {
-            partitions: HashMap::default(),
-            preloaded: HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]),
-        };
+        let mut ops = TestOps::default();
+        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 0;
@@ -564,10 +688,8 @@ mod tests {
 
     #[test]
     fn test_get_preloaded_partition_unknown() {
-        let mut ops = TestOps {
-            partitions: HashMap::default(),
-            preloaded: HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]),
-        };
+        let mut ops = TestOps::default();
+        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 10;
@@ -578,5 +700,58 @@ mod tests {
         assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION);
         assert_eq!(size, 0);
         assert_eq!(contents, []);
+    }
+
+    #[test]
+    fn test_validate_vbmeta_public_key() {
+        let mut ops = TestOps::default();
+        ops.vbmeta_keys = HashMap::from([((b"testkey".as_ref(), None), true)]);
+
+        let mut is_trusted = false;
+        let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(is_trusted);
+    }
+
+    #[test]
+    fn test_validate_vbmeta_public_key_with_metadata() {
+        let mut ops = TestOps::default();
+        ops.vbmeta_keys =
+            HashMap::from([((b"testkey".as_ref(), Some(b"testmeta".as_ref())), true)]);
+
+        let mut is_trusted = false;
+        let result = call_validate_vbmeta_public_key(
+            &mut ops,
+            b"testkey",
+            Some(b"testmeta"),
+            &mut is_trusted,
+        );
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(is_trusted);
+    }
+
+    #[test]
+    fn test_validate_vbmeta_public_key_rejected() {
+        let mut ops = TestOps::default();
+        ops.vbmeta_keys = HashMap::from([((b"testkey".as_ref(), None), false)]);
+
+        let mut is_trusted = true;
+        let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(!is_trusted);
+    }
+
+    #[test]
+    fn test_validate_vbmeta_public_key_error() {
+        let mut ops = TestOps::default();
+
+        let mut is_trusted = true;
+        let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_IO);
+        assert!(!is_trusted);
     }
 }
