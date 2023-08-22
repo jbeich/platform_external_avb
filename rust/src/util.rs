@@ -82,7 +82,45 @@ pub(crate) unsafe fn cstr_to_str<'a, L>(
     c_str.to_str().map_err(|_| IoError::Io)
 }
 
+/// Converts a C buffer (pointer + size) to a Rust byte slice.
+///
+/// Immutable version of `buffer_to_slice_mut()`.
+///
+/// # Args
+/// * `ptr`: pointer to the buffer data.
+/// * `size`: buffer size in bytes.
+/// * `lifetime_`: lifetime to assign the returned slice.
+///
+/// # Returns
+/// A byte slice wrapping the given buffer, or `IoError` if `ptr` was `NULL`.
+///
+/// # Safety
+/// `ptr` must either be `NULL` or:
+/// * point to a valid single allocation of at least `size` bytes
+/// * the buffer contents must not be modified while the returned slice exists
+///
+/// These conditions must hold for at least the given `lifetime_`.
+///
+/// All pointers provided by libavb meet this criteria.
+pub fn buffer_to_slice<'a, L>(
+    ptr: *const u8,
+    size: usize,
+    lifetime_: &'a L,
+) -> Result<&'a [u8], IoError> {
+    if ptr.is_null() {
+        return Err(IoError::Io);
+    }
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL
+    // * the caller is required to meet the function safety conditions
+    let ret = unsafe { slice::from_raw_parts(ptr, size) };
+    Ok(ret)
+}
+
 /// Converts a C buffer (pointer + size) to a mutable Rust byte slice.
+///
+/// Mutable version of `buffer_to_slice()`.
 ///
 /// # Args
 /// * `ptr`: pointer to the buffer data.
@@ -176,6 +214,37 @@ mod tests {
             assert_eq!(
                 unsafe { cstr_to_str(source.as_ptr(), &lifetime) },
                 Ok("abc123")
+            );
+        }
+    }
+
+    #[test]
+    fn test_buffer_to_slice() {
+        let source = [0u8, 1u8, 2u8, 3u8];
+        assert_eq!(
+            unsafe { buffer_to_slice(source.as_ptr(), source.len(), &source) },
+            Ok([0u8, 1u8, 2u8, 3u8].as_ref())
+        );
+    }
+
+    #[test]
+    fn test_buffer_to_slice_null() {
+        let null = ptr::null::<u8>();
+        assert_eq!(
+            unsafe { buffer_to_slice(null, 10, &null) },
+            Err(IoError::Io)
+        );
+    }
+
+    #[test]
+    fn test_buffer_to_slice_lifetime() {
+        let source = [0u8, 1u8, 2u8, 3u8];
+        {
+            // A lifetime we know to be shorter than the source is OK.
+            let lifetime = ();
+            assert_eq!(
+                unsafe { buffer_to_slice(source.as_ptr(), source.len(), &lifetime) },
+                Ok([0u8, 1u8, 2u8, 3u8].as_ref())
             );
         }
     }
