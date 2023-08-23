@@ -1,0 +1,142 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f82d6cc5_c5977f35",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-23T08:06:49Z",
+      "side": 1,
+      "message": "It looks like this default is only for nostd, can we rename it to `libavb_rs_nostd.defaults`, or move the nostd part L471-481 to the library so that an std lib can reuse this default later?",
+      "range": {
+        "startLine": 466,
+        "startChar": 11,
+        "endLine": 466,
+        "endChar": 29
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "73b8a3be_0711949d",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-23T08:06:49Z",
+      "side": 1,
+      "message": "Can we rename it to `libavb_rs_nostd` to mark that this is a nostd library?",
+      "range": {
+        "startLine": 485,
+        "startChar": 11,
+        "endLine": 485,
+        "endChar": 20
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8738abf7_b6764f3a",
+        "filename": "src/error.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-23T08:06:49Z",
+      "side": 1,
+      "message": "Is this still needed as this enum is part of a public API?",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 23
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b9e9435_35fa4a7b",
+        "filename": "src/error.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-23T08:06:49Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 23
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "784342d1_09f1ddce",
+        "filename": "src/lib.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-23T08:06:49Z",
+      "side": 1,
+      "message": "Is this really needed? pvmfw/avb requires alloc just for the capability definition in the AvbProperty, that is quite AVF specific. I don\u0027t think we want to port that to libavb. What about just introducing `alloc` when it\u0027s eventually needed?",
+      "range": {
+        "startLine": 22,
+        "startChar": 46,
+        "endLine": 23,
+        "endChar": 32
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26d34e03_e2afab61",
+        "filename": "src/lib.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-23T08:06:49Z",
+      "side": 1,
+      "message": "Think this can be removed for now.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 19
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
