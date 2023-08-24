@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9b634f1c_dfbe76c3",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 466,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-24T22:39:46Z",
+      "side": 1,
+      "message": "Good idea thanks, I\u0027ll rename to `nostd` for now and we can split out a std version later if needed.",
+      "parentUuid": "f82d6cc5_c5977f35",
+      "range": {
+        "startLine": 466,
+        "startChar": 11,
+        "endLine": 466,
+        "endChar": 29
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "73b8a3be_0711949d",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-08-23T08:06:49Z",
       "side": 1,
       "message": "Can we rename it to `libavb_rs_nostd` to mark that this is a nostd library?",
+      "range": {
+        "startLine": 485,
+        "startChar": 11,
+        "endLine": 485,
+        "endChar": 20
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ed551ae_c22a9343",
+        "filename": "Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 485,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-24T22:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "73b8a3be_0711949d",
       "range": {
         "startLine": 485,
         "startChar": 11,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c0916043_4dcea19d",
+        "filename": "src/error.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-24T22:39:46Z",
+      "side": 1,
+      "message": "Ah good point probably not, removed.",
+      "parentUuid": "8738abf7_b6764f3a",
+      "range": {
+        "startLine": 113,
+        "startChar": 0,
+        "endLine": 113,
+        "endChar": 23
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7b9e9435_35fa4a7b",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-08-23T08:06:49Z",
       "side": 1,
       "message": "ditto",
+      "range": {
+        "startLine": 126,
+        "startChar": 0,
+        "endLine": 126,
+        "endChar": 23
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "98fb91c0_3e0c74a9",
+        "filename": "src/error.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 126,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-24T22:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7b9e9435_35fa4a7b",
       "range": {
         "startLine": 126,
         "startChar": 0,
@@ -116,6 +212,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b20ebb0c_bf0ed870",
+        "filename": "src/lib.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 23,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-24T22:39:46Z",
+      "side": 1,
+      "message": "Ack I think you\u0027re right it\u0027s not necessary yet, my thought was that libavb does require some [sysdeps hooks for allocation](https://cs.android.com/android/platform/superproject/main/+/main:external/avb/libavb/avb_sysdeps.h;l\u003d121) and the right thing to do here is to have the library user provide an allocator using the standard Rust mechanisms which we plumb into the libavb sysdeps internally to this library.\n\nRight now it looks like the `libavb_baremetal` target automatically brings in `avb_sysdeps_posix` to provide allocation instead, which seems OK as long as the environment provides posix-compatible `malloc()` etc., but not all bootloaders do.\n\nOr, equally possible, I could be completely misunderstanding what\u0027s happening here 😊 In any case I think you\u0027re right that I shouldn\u0027t put anything about allocation here until I actually have a plan to use it.",
+      "parentUuid": "784342d1_09f1ddce",
+      "range": {
+        "startLine": 22,
+        "startChar": 46,
+        "endLine": 23,
+        "endChar": 32
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "26d34e03_e2afab61",
@@ -129,6 +249,30 @@
       "writtenOn": "2023-08-23T08:06:49Z",
       "side": 1,
       "message": "Think this can be removed for now.",
+      "range": {
+        "startLine": 27,
+        "startChar": 0,
+        "endLine": 27,
+        "endChar": 19
+      },
+      "revId": "fe33c2be24503a2d298aef3bb909615ad697ba63",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "51fcb98e_a5a9783b",
+        "filename": "src/lib.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 27,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-24T22:39:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26d34e03_e2afab61",
       "range": {
         "startLine": 27,
         "startChar": 0,
