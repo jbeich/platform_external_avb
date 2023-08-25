@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "bb9addc7_1d9979d0",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-25T20:17:00Z",
+      "side": 1,
+      "message": "Makes sense, done. Do you think we should create a separate `Android.bp` and `TEST_MAPPING` in the subdir as well, or just continue to use the top-level dir for those files?",
+      "parentUuid": "76a8dd4f_608365b4",
+      "range": {
+        "startLine": 467,
+        "startChar": 12,
+        "endLine": 467,
+        "endChar": 16
+      },
+      "revId": "bee8e64d423b193ae7c07f82f8c3e3f43463c796",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "df0ab42f_150bf1ab",
         "filename": "src/lib.rs",
         "patchSetId": 3
@@ -37,6 +61,30 @@
       "writtenOn": "2023-08-25T08:02:05Z",
       "side": 1,
       "message": "nit: Actually the tests are compiled without `no_std` but the target definition in `Android.bp` still imposes nostd. To resolve this incoherence we can just change this line to `![no_std]`.",
+      "range": {
+        "startLine": 24,
+        "startChar": 12,
+        "endLine": 24,
+        "endChar": 21
+      },
+      "revId": "bee8e64d423b193ae7c07f82f8c3e3f43463c796",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3897aa55_b8a94175",
+        "filename": "src/lib.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-25T20:17:00Z",
+      "side": 1,
+      "message": "Sorry not 100% following, I would like to use `std` in tests to be able to do things like allocation, `format!()`, etc for simplicity. Are you saying that the tests should also be fully `no_std` and I should avoid those things?\n\nFor now I changed it to `![no_std]` here and then in tests just explicitly drag std back in:\n\n```\nextern crate std;\nuse std::*;\n```\n\nbut let me know if that wasn\u0027t what you were intending.",
+      "parentUuid": "df0ab42f_150bf1ab",
       "range": {
         "startLine": 24,
         "startChar": 12,
