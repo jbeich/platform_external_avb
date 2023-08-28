@@ -141,6 +141,30 @@
       },
       "revId": "bee8e64d423b193ae7c07f82f8c3e3f43463c796",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "98f5cc26_de37d586",
+        "filename": "src/lib.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-28T09:35:24Z",
+      "side": 1,
+      "message": "Actually I meant that the test is compiled with nostd environment according to the definition in `Android.bp`, but `#![cfg_attr(not(test), no_std)]` allows to use std in tests. It\u0027s not so coherent, so either we can change the test target definition to std or tests to nostd.\n```\nrust_test {\n    name: \"libavb_rs_nostd_test\",\n    defaults: [\"libavb_rs_nostd.defaults\"], // \u003d\u003e\n    // no_stdlibs: true,\n    // stdlibs: [\n    //    \"libcore.rust_sysroot\",\n    //],\n    test_suites: [\"general-tests\"],\n}\n```\n\nOtherwise, I agree it\u0027s handy to have `std` in tests.",
+      "parentUuid": "92622a2c_94bbec6c",
+      "range": {
+        "startLine": 24,
+        "startChar": 12,
+        "endLine": 24,
+        "endChar": 21
+      },
+      "revId": "bee8e64d423b193ae7c07f82f8c3e3f43463c796",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
