@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "264b604c_275b6d5d",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-28T21:31:45Z",
+      "side": 1,
+      "message": "I don\u0027t have a strong preference, but it seems like it might help discoverability to keep the `TEST_MAPPING` file and corresponding `Android.bp` test rules in the same directory. And it turns out that `libcrypto_baremetal` is currently only visible to `//external/avb/`, not subdirectories.\n\nSo it would be slightly easier to just keep the rules here, but if you (or any other reviewer) feels that they should go in the `rust/` subdir then it\u0027s also easy enough to modify `libcrypto_baremetal` visibility.",
+      "parentUuid": "80e20c57_1a697f8b",
+      "range": {
+        "startLine": 467,
+        "startChar": 12,
+        "endLine": 467,
+        "endChar": 16
+      },
+      "revId": "bee8e64d423b193ae7c07f82f8c3e3f43463c796",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "df0ab42f_150bf1ab",
         "filename": "src/lib.rs",
         "patchSetId": 3
@@ -157,6 +181,30 @@
       "side": 1,
       "message": "Actually I meant that the test is compiled with nostd environment according to the definition in `Android.bp`, but `#![cfg_attr(not(test), no_std)]` allows to use std in tests. It\u0027s not so coherent, so either we can change the test target definition to std or tests to nostd.\n```\nrust_test {\n    name: \"libavb_rs_nostd_test\",\n    defaults: [\"libavb_rs_nostd.defaults\"], // \u003d\u003e\n    // no_stdlibs: true,\n    // stdlibs: [\n    //    \"libcore.rust_sysroot\",\n    //],\n    test_suites: [\"general-tests\"],\n}\n```\n\nOtherwise, I agree it\u0027s handy to have `std` in tests.",
       "parentUuid": "92622a2c_94bbec6c",
+      "range": {
+        "startLine": 24,
+        "startChar": 12,
+        "endLine": 24,
+        "endChar": 21
+      },
+      "revId": "bee8e64d423b193ae7c07f82f8c3e3f43463c796",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6ba6707e_bb68d225",
+        "filename": "src/lib.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-28T21:31:45Z",
+      "side": 1,
+      "message": "Ah I see thanks for the clarification, I went with changing the test to use `std`.",
+      "parentUuid": "98f5cc26_de37d586",
       "range": {
         "startLine": 24,
         "startChar": 12,
