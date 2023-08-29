@@ -25,6 +25,12 @@ use core::{
     marker::PhantomData,
     ptr, slice,
 };
+#[cfg(feature = "uuid")]
+use uuid::Uuid;
+
+/// Length of a UUID C-string representation including hyphens and a null-terminator.
+#[cfg(feature = "uuid")]
+const UUID_CSTRING_LENGTH: usize = uuid::fmt::Hyphenated::LENGTH + 1;
 
 /// Common `Result` type for `IoError` errors.
 type Result<T> = core::result::Result<T, IoError>;
@@ -116,6 +122,21 @@ pub trait Ops {
     /// # Returns
     /// True if the device is unlocked, false if locked, `IoError` on error.
     fn read_is_device_unlocked(&mut self) -> Result<bool>;
+
+    /// Returns the GUID of the requested partition.
+    ///
+    /// This is only necessary if the kernel commandline requires GUID substitution, and is omitted
+    /// from the library by default to avoid unnecessary dependencies. To implement:
+    /// 1. Enable the `uuid` feature during compilation
+    /// 2. Provide the [`uuid` crate](https://docs.rs/uuid/latest/uuid/) dependency
+    ///
+    /// # Arguments
+    /// * `partition`: partition name.
+    ///
+    /// # Returns
+    /// The partition GUID or `IoError` on error.
+    #[cfg(feature = "uuid")]
+    fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> Result<Uuid>;
 }
 
 /// Helper to pass user-provided `Ops` through libavb via the `user_data` pointer.
@@ -189,8 +210,8 @@ impl<'a> ScopedAvbOps<'a> {
                 read_rollback_index: Some(read_rollback_index),
                 write_rollback_index: Some(write_rollback_index),
                 read_is_device_unlocked: Some(read_is_device_unlocked),
+                get_unique_guid_for_partition: Some(get_unique_guid_for_partition),
                 // TODO: add callback wrappers for the remaining API.
-                get_unique_guid_for_partition: None,
                 get_size_of_partition: None,
                 read_persistent_value: None,
                 write_persistent_value: None,
@@ -587,23 +608,105 @@ unsafe fn try_read_is_device_unlocked(ops: *mut AvbOps, out_is_unlocked: *mut bo
     Ok(())
 }
 
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+#[cfg(feature = "uuid")]
+unsafe extern "C" fn get_unique_guid_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    guid_buf: *mut c_char,
+    guid_buf_size: usize,
+) -> AvbIOResult {
+    result_to_io_enum(try_get_unique_guid_for_partition(
+        ops,
+        partition,
+        guid_buf,
+        guid_buf_size,
+    ))
+}
+
+/// When compiled without the `uuid` feature this callback is not used, just return error.
+#[cfg(not(feature = "uuid"))]
+unsafe extern "C" fn get_unique_guid_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    guid_buf: *mut c_char,
+    guid_buf_size: usize,
+) -> AvbIOResult {
+    AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `guid_buf` must adhere to the requirements of `slice::from_raw_parts_mut()`.
+#[cfg(feature = "uuid")]
+unsafe fn try_get_unique_guid_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    guid_buf: *mut c_char,
+    guid_buf_size: usize,
+) -> Result<()> {
+    check_nonnull(partition)?;
+    check_nonnull(guid_buf)?;
+
+    if guid_buf_size < UUID_CSTRING_LENGTH {
+        // This would indicate some internal error - the uuid library needs more
+        // space to print the UUID string than libavb provided.
+        return Err(IoError::Oom);
+    }
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `partition`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let partition = unsafe { CStr::from_ptr(partition) };
+    let guid = ops.get_unique_guid_for_partition(partition)?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `guid_buf` with size `guid_buf_size`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let buffer = unsafe { slice::from_raw_parts_mut(guid_buf as *mut u8, guid_buf_size) };
+    let len = guid.as_hyphenated().encode_lower(buffer).len();
+    buffer[len] = b'\0';
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     use std::collections::HashMap;
     use std::ffi::CString;
+    #[cfg(feature = "uuid")]
+    use uuid::uuid;
+
+    /// Represents a single fake partition.
+    #[derive(Default)]
+    struct FakePartition {
+        contents: Vec<u8>, // Partition contents
+        preloaded: bool,   // Whether it should report as preloaded or not
+        #[cfg(feature = "uuid")]
+        uuid: Uuid, // Partition UUID
+    }
 
     /// Ops implementation for testing.
     ///
     /// In addition to being used to exercise individual callback wrappers, this will be used for
     /// full verification tests so behavior needs to be correct.
     struct TestOps {
-        /// Partitions to "read" on request.
-        partitions: HashMap<&'static str, Vec<u8>>,
-        /// Preloaded partitions. Same functionality as `partitions`, just separated to be able
-        /// to test reading and preloading callbacks independently.
-        preloaded: HashMap<&'static str, Vec<u8>>,
+        /// Partitions to provide to libavb callbacks.
+        partitions: HashMap<&'static str, FakePartition>,
         /// Vbmeta public keys as a map of {(key, metadata): trusted}. Querying unknown keys will
         /// return `IoError::Io`.
         vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), bool>,
@@ -613,11 +716,36 @@ mod tests {
         unlock_state: Result<bool>,
     }
 
+    impl TestOps {
+        /// Adds a partition with the given contents.
+        ///
+        /// Reduces boilerplate a bit by taking in a raw array and returning a &mut so tests can
+        /// do something like this:
+        ///
+        /// ```
+        /// test_ops.add_partition("foo", [1, 2, 3, 4]);
+        /// test_ops.add_partition("bar", [0, 0]).preloaded = true;
+        /// ```
+        fn add_partition<const N: usize>(
+            &mut self,
+            name: &'static str,
+            contents: [u8; N],
+        ) -> &mut FakePartition {
+            self.partitions.insert(
+                name,
+                FakePartition {
+                    contents: contents.into(),
+                    ..Default::default()
+                },
+            );
+            self.partitions.get_mut(name).unwrap()
+        }
+    }
+
     impl Default for TestOps {
         fn default() -> Self {
             Self {
                 partitions: HashMap::new(),
-                preloaded: HashMap::new(),
                 vbmeta_keys: HashMap::new(),
                 rollbacks: HashMap::new(),
                 unlock_state: Err(IoError::Io),
@@ -632,10 +760,16 @@ mod tests {
             offset: i64,
             buffer: &mut [u8],
         ) -> Result<usize> {
-            let contents = self
+            let partition = self
                 .partitions
                 .get(partition.to_str()?)
                 .ok_or(IoError::NoSuchPartition)?;
+
+            // We should never be trying to read a preloaded partition from disk since we already
+            // have it available in memory.
+            assert!(!partition.preloaded);
+
+            let contents = &partition.contents;
 
             // Negative offset means count backwards from the end.
             let offset = {
@@ -665,10 +799,14 @@ mod tests {
         }
 
         fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8]> {
-            self.preloaded
-                .get(partition.to_str()?)
-                .ok_or(IoError::NotImplemented)
-                .map(|vec| &vec[..])
+            match self.partitions.get(partition.to_str()?) {
+                Some(FakePartition {
+                    contents,
+                    preloaded: true,
+                    ..
+                }) => Ok(&contents[..]),
+                _ => Err(IoError::NotImplemented),
+            }
         }
 
         fn validate_vbmeta_public_key(
@@ -693,6 +831,14 @@ mod tests {
 
         fn read_is_device_unlocked(&mut self) -> Result<bool> {
             self.unlock_state.clone()
+        }
+
+        #[cfg(feature = "uuid")]
+        fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> Result<Uuid> {
+            self.partitions
+                .get(partition.to_str()?)
+                .map(|p| p.uuid)
+                .ok_or(IoError::NoSuchPartition)
         }
     }
 
@@ -835,10 +981,32 @@ mod tests {
         unsafe { avb_ops.read_is_device_unlocked.unwrap()(avb_ops, out_is_unlocked) }
     }
 
+    /// Calls the `get_unique_guid_for_partition()` C callback the same way libavb would.
+    fn call_get_unique_guid_for_partition(
+        ops: &mut impl Ops,
+        partition: &str,
+        out_guid_str: &mut [u8],
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let part_name = CString::new(partition).unwrap();
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.get_unique_guid_for_partition.unwrap()(
+                avb_ops,
+                part_name.as_ptr(),
+                out_guid_str.as_mut_ptr() as *mut _,
+                out_guid_str.len(),
+            )
+        }
+    }
+
     #[test]
     fn test_read_from_partition() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -852,7 +1020,7 @@ mod tests {
     #[test]
     fn test_read_from_partition_with_offset() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -866,7 +1034,7 @@ mod tests {
     #[test]
     fn test_read_from_partition_negative_offset() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -880,7 +1048,7 @@ mod tests {
     #[test]
     fn test_read_from_partition_truncate() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -894,7 +1062,7 @@ mod tests {
     #[test]
     fn test_read_from_partition_unknown() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 10;
@@ -908,7 +1076,7 @@ mod tests {
     #[test]
     fn test_get_preloaded_partition() {
         let mut ops = TestOps::default();
-        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo_preload", [1, 2, 3, 4]).preloaded = true;
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 0;
@@ -925,7 +1093,7 @@ mod tests {
     #[test]
     fn test_get_preloaded_partition_truncate() {
         let mut ops = TestOps::default();
-        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo_preload", [1, 2, 3, 4]).preloaded = true;
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 0;
@@ -942,7 +1110,7 @@ mod tests {
     #[test]
     fn test_get_preloaded_partition_unknown() {
         let mut ops = TestOps::default();
-        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo_preload", [1, 2, 3, 4]).preloaded = true;
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 10;
@@ -1082,5 +1250,62 @@ mod tests {
             AvbIOResult::AVB_IO_RESULT_ERROR_IO
         );
         assert_eq!(unlocked, false);
+    }
+
+    #[cfg(feature = "uuid")]
+    #[test]
+    fn test_get_unique_guid_for_partition() {
+        let mut ops = TestOps::default();
+        ops.add_partition("foo", []).uuid = uuid!("01234567-89ab-cdef-0123-456789abcdef");
+
+        let mut uuid_str = [b'?'; UUID_CSTRING_LENGTH];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_OK
+        );
+        assert_eq!(
+            String::from_utf8(uuid_str.into()).unwrap(),
+            "01234567-89ab-cdef-0123-456789abcdef\0"
+        )
+    }
+
+    #[cfg(feature = "uuid")]
+    #[test]
+    fn test_get_unique_guid_for_partition_unknown() {
+        let mut ops = TestOps::default();
+
+        let mut uuid_str = [b'?'; UUID_CSTRING_LENGTH];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
+        );
+    }
+
+    #[cfg(feature = "uuid")]
+    #[test]
+    fn test_get_unique_guid_for_partition_undersize_buffer() {
+        let mut ops = TestOps::default();
+        ops.add_partition("foo", []).uuid = uuid!("01234567-89ab-cdef-0123-456789abcdef");
+
+        let mut uuid_str = [b'?'; UUID_CSTRING_LENGTH - 1];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_ERROR_OOM
+        );
+    }
+
+    #[cfg(not(feature = "uuid"))]
+    #[test]
+    fn test_get_unique_guid_for_partition_not_implemented() {
+        let mut ops = TestOps::default();
+        ops.add_partition("foo", []);
+
+        // Without the `uuid` feature enabled, get_unique_guid_for_partition() should
+        // unconditionally fail without trying to call any Ops functions.
+        let mut uuid_str = [b'?'; 0];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
+        );
     }
 }
