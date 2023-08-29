@@ -96,6 +96,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a7630698_d7e4f3aa",
+        "filename": "Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-29T07:42:10Z",
+      "side": 1,
+      "message": "That\u0027s also fine. Otherwise, one advantage of having `Android.bp` in `rust/` is that we can limit the access to bindgen only to the rust libraries.",
+      "parentUuid": "264b604c_275b6d5d",
+      "range": {
+        "startLine": 467,
+        "startChar": 12,
+        "endLine": 467,
+        "endChar": 16
+      },
+      "revId": "bee8e64d423b193ae7c07f82f8c3e3f43463c796",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "df0ab42f_150bf1ab",
