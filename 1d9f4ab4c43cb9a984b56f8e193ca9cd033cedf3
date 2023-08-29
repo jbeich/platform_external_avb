@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2bb5b45_f0896662",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2023-08-29T18:27:25Z",
+      "side": 1,
+      "message": "I\u0027m not a Rust expert but this LGTM, thanks!",
+      "revId": "1d9f4ab4c43cb9a984b56f8e193ca9cd033cedf3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
