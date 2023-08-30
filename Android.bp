@@ -406,7 +406,7 @@ cc_library_headers {
 // a safe higher-level Rust API.
 rust_defaults {
     name: "libavb_bindgen.defaults",
-    wrapper_src: "bindgen/avb.h",
+    wrapper_src: "rust/bindgen/avb.h",
     crate_name: "avb_bindgen",
     edition: "2021",
     visibility: [
@@ -459,4 +459,36 @@ rust_test {
     auto_gen_config: true,
     clippy_lints: "none",
     lints: "none",
+}
+
+// Rust library wrapping libavb C implementation.
+rust_defaults {
+    name: "libavb_rs.defaults",
+    srcs: ["rust/src/lib.rs"],
+    // Require unsafe blocks for inside unsafe functions.
+    flags: ["-Dunsafe_op_in_unsafe_fn"],
+    rustlibs: [
+        "libavb_bindgen_nostd",
+        "libtinyvec_nostd",
+    ],
+    whole_static_libs: [
+        "libavb_baremetal",
+    ],
+}
+
+rust_library_rlib {
+    name: "libavb_rs_nostd",
+    crate_name: "avb",
+    prefer_rlib: true,
+    defaults: ["libavb_rs.defaults"],
+    no_stdlibs: true,
+    stdlibs: [
+        "libcore.rust_sysroot",
+    ],
+}
+
+rust_test {
+    name: "libavb_rs_test",
+    defaults: ["libavb_rs.defaults"],
+    test_suites: ["general-tests"],
 }
