@@ -71,6 +71,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eb6a28b8_43eb82ab",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Done thanks.\n\nOne quick question re: mutable aliases, I\u0027m not sure if we can properly ensure this from C code, e.g. if libavb calls us doing something like this:\n\n```\nvoid do_callback(const char* ptr, ...) {\n  // bounces into Rust and this `cstr_to_str()` function\n}\n\nchar* buffer[32] \u003d \"foo\";  // mutable\ndo_callback(buffer, ...);  // passes immutable ptr while mutable alias exists\n```\n\nWould it be more appropriate to say something like \"memory must not be modified\", which is something we can be more certain of knowing that libavb is single-threaded? Or does this safety block really just apply to Rust so it just means we cannot have any mutable aliases in our Rust code?",
+      "parentUuid": "14450ef6_c028e44c",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5cfb0139_a2ee29b5",
         "filename": "rust/src/util.rs",
         "patchSetId": 1
@@ -82,6 +100,24 @@
       "writtenOn": "2023-08-31T13:48:56Z",
       "side": 1,
       "message": "This function should be unsafe, as it depends on the caller satisfying its safety requirements.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4c751354_12435b40",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Ah cool, I thought `unsafe` was supposed to be used as little as possible to make the compiler happy, but that makes sense that it should instead just bubble up any time the caller needs to be aware of safety requirements.",
+      "parentUuid": "5cfb0139_a2ee29b5",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -99,6 +135,24 @@
       "writtenOn": "2023-08-31T13:48:56Z",
       "side": 1,
       "message": "Again, this function should be marked as unsafe, and you should document the rest of the safety requirements (namely that the pointer must either be null or to a valid allocation of at least `size` bytes, aligned appropriately for `T`, with no mutable aliases).",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e27e1a99_c38f5839",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Done.\n\nRe: properly-aligned, I really only want to implement this for `void` or `u8` pointers which have no alignment requirements (I think). Is there a good way in Rust to do generic bounds based on specific conditions like that e.g. `T: void | u8` or `T: align_of\u003cT\u003e() \u003d\u003d 1` or something like that? I couldn\u0027t find anything myself when searching around.",
+      "parentUuid": "a0c2287c_108aeda8",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -197,6 +251,77 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e77be2de_4ce8fa44",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Yeah I wasn\u0027t sure what the standard practice was here, I don\u0027t expect to ever expose this module as public API, so if it\u0027s OK to just leave this as `pub` it seems a bit simpler.",
+      "parentUuid": "a24a104b_a8d908ca",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 4
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0400f0c_03f0c05a",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "\u003e About the naming, I feel it\u0027s more clear to call it write instead of introducing\na new name.\n\nAck makes sense, I thought it might be useful to differentiate since this does check for NULL whereas `write` doesn\u0027t. WDYT about `write_checked` or something like that?\n\n\u003e Please also document the rest of the safety requirements for ptr.\n\nDone",
+      "parentUuid": "3b2637c0_f9bec596",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 18
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d5f657a_c413e891",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Now that these are `unsafe`, do I need to document `SAFETY` comments here as well or is it ok to omit those for unit tests?",
+      "range": {
+        "startLine": 128,
+        "startChar": 19,
+        "endLine": 128,
+        "endChar": 30
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0547362f_efb779ac",
@@ -210,6 +335,24 @@
       "writtenOn": "2023-08-31T13:48:56Z",
       "side": 1,
       "message": "Who is responsible for guaranteeing this? If it\u0027s the trait implementor, then this should be an unsafe trait.\n\nOr better, return an owned buffer and free it when the verification data is dropped.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ada33327_df0c078f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Yeah this one is a bit weird, usage is generally that the implementer has already loaded a kernel image into memory and they want to verify it, but they\u0027ll still need it afterwards in order to actually boot the kernel so we can\u0027t drop it.\n\nI\u0027ll mark unsafe thanks.",
+      "parentUuid": "0547362f_efb779ac",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -231,6 +374,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "035224e7_fba9dbdb",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Done thanks, I wasn\u0027t sure if this was typically done for non-public API.",
+      "parentUuid": "09a362ff_411ef53b",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68c9841e_8d569af4",
@@ -248,6 +409,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b65b5b23_df82ec17",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68c9841e_8d569af4",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "8592b5c9_c54d6aa8",
@@ -261,6 +440,24 @@
       "writtenOn": "2023-08-31T13:48:56Z",
       "side": 1,
       "message": "This function should be unsafe.\n\nOr alternatively, have the `AvbOps` take ownership of `self`, I guess by boxing it.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "627e9679_b9f5755c",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Done thanks, yeah I am probably over-complicating this but ideally this library would be no-alloc so I wanted to avoid boxing. Will go with `unsafe` for now.",
+      "parentUuid": "8592b5c9_c54d6aa8",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -288,6 +485,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ebb3ae5e_d1d722f3",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Oops thanks leftover old naming, fixed.",
+      "parentUuid": "a1d3f535_050734da",
+      "range": {
+        "startLine": 133,
+        "startChar": 28,
+        "endLine": 133,
+        "endChar": 39
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ab5530f_a80b3a3a",
@@ -301,6 +522,24 @@
       "writtenOn": "2023-08-31T13:48:56Z",
       "side": 1,
       "message": "This method has safety requirements so it should be marked unsafe.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0a2a9b69_e7433b9f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6ab5530f_a80b3a3a",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -322,6 +561,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ff474a6_5d000ea5",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Done, these wrappers are only ever called from C so IIUC the `unsafe` marker is something of a no-op but it makes sense to document it.",
+      "parentUuid": "3ad2cf75_58ad4b25",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ec98369_0d6452cd",
@@ -335,6 +592,24 @@
       "writtenOn": "2023-08-31T13:48:56Z",
       "side": 1,
       "message": "unsafe",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dd2c1128_36ac2c3e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:49:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2ec98369_0d6452cd",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
