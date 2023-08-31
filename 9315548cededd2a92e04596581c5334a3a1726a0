@@ -579,6 +579,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a4aaa3f_144e8461",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-08-31T18:58:32Z",
+      "side": 1,
+      "message": "(Edit: I suppose that\u0027s not true re: no-op since we call these functions from our unit tests as well)",
+      "parentUuid": "4ff474a6_5d000ea5",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2ec98369_0d6452cd",
