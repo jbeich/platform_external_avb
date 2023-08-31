@@ -35,6 +35,74 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "20b0e532_02f4e801",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "Thanks for the extensive comments! There are some safety issues to resolve.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "14450ef6_c028e44c",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "`ptr` also needs to be either null or valid, point to a NUL-terminated string within its allocation, and have no mutable aliases.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cfb0139_a2ee29b5",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "This function should be unsafe, as it depends on the caller satisfying its safety requirements.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0c2287c_108aeda8",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "Again, this function should be marked as unsafe, and you should document the rest of the safety requirements (namely that the pointer must either be null or to a valid allocation of at least `size` bytes, aligned appropriately for `T`, with no mutable aliases).",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ef3d6609_c3e89984",
@@ -77,6 +145,196 @@
         "endLine": 105,
         "endChar": 4
       },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3b2637c0_f9bec596",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "Please also document the rest of the safety requirements for `ptr`.",
+      "parentUuid": "ef3d6609_c3e89984",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 18
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a24a104b_a8d908ca",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "The module is not public, so these functions aren\u0027t exposed.",
+      "parentUuid": "b24cca68_5ccb1478",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 4
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0547362f_efb779ac",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "Who is responsible for guaranteeing this? If it\u0027s the trait implementor, then this should be an unsafe trait.\n\nOr better, return an owned buffer and free it when the verification data is dropped.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "09a362ff_411ef53b",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "Should this be a Rustdoc comment?",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68c9841e_8d569af4",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 97,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "Add an extra slash to each line to make this a Rustdoc comment.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8592b5c9_c54d6aa8",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "This function should be unsafe.\n\nOr alternatively, have the `AvbOps` take ownership of `self`, I guess by boxing it.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a1d3f535_050734da",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 133,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "Where is this function?",
+      "range": {
+        "startLine": 133,
+        "startChar": 28,
+        "endLine": 133,
+        "endChar": 39
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ab5530f_a80b3a3a",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "This method has safety requirements so it should be marked unsafe.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3ad2cf75_58ad4b25",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "This should also be marked unsafe, it has a bunch of safety requirements on the pointers passed to it.",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2ec98369_0d6452cd",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-08-31T13:48:56Z",
+      "side": 1,
+      "message": "unsafe",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
