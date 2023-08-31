@@ -16,6 +16,69 @@
       "message": "I\u0027m not 100% confident in this approach, it\u0027s going to be difficult to test until I port all the callbacks and can do a full end-to-end verification, but I *think* this trait-based approach for callbacks should be compatible with pvmwf\u0027s usage and flexible enough for general use.\n\nI\u0027m working on adding the remaining callbacks piece by piece and hopefully should have a working proof of concept in a week or so.",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "750a780c_4be5dcad",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-31T07:52:58Z",
+      "side": 1,
+      "message": "Hi Andrew, could you review this cl?",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef3d6609_c3e89984",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-31T07:52:58Z",
+      "side": 1,
+      "message": "This still should be unsafe since nothing in the impl guarantees that T points to an aligned instance of T.\n\nAbout the naming, I feel it\u0027s more clear to call it `write` instead of introducing \na new name.",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 18
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b24cca68_5ccb1478",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-08-31T07:52:58Z",
+      "side": 1,
+      "message": "Should this be `pub(crate)` since this API is unrelated to `avb`?",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 4
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
