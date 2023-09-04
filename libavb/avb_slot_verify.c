@@ -565,7 +565,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     size_t expected_public_key_length,
     AvbSlotVerifyData* slot_data,
     AvbAlgorithmType* out_algorithm_type,
-    AvbCmdlineSubstList* out_additional_cmdline_subst) {
+    AvbCmdlineSubstList* out_additional_cmdline_subst,
+    bool allow_noab_suffix) {
   char full_partition_name[AVB_PART_NAME_MAX_SIZE];
   AvbSlotVerifyResult ret;
   AvbIOResult io_ret;
@@ -613,17 +614,26 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
     goto out;
   }
-
-  /* Construct full partition name e.g. system_a. */
-  if (!avb_str_concat(full_partition_name,
+  if (allow_noab_suffix) {
+    if (partition_name_len >= AVB_PART_NAME_MAX_SIZE) {
+      avb_error("Partition name and suffix does not fit.\n");
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+      goto out;
+    }
+    avb_memcpy(full_partition_name, partition_name, partition_name_len);
+    full_partition_name[partition_name_len] = '\0';
+  }else{
+    /* Construct full partition name e.g. system_a. */
+    if (!avb_str_concat(full_partition_name,
                       sizeof full_partition_name,
                       partition_name,
                       partition_name_len,
                       ab_suffix,
                       avb_strlen(ab_suffix))) {
-    avb_error("Partition name and suffix does not fit.\n");
-    ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
-    goto out;
+      avb_error("Partition name and suffix does not fit.\n");
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
+      goto out;
+    }
   }
 
   /* If we're loading from the main vbmeta partition, the vbmeta struct is in
@@ -742,7 +752,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
                                    0 /* expected_public_key_length */,
                                    slot_data,
                                    out_algorithm_type,
-                                   out_additional_cmdline_subst);
+                                   out_additional_cmdline_subst,
+				   allow_noab_suffix);
       goto out;
     } else {
       avb_error(full_partition_name, ": Error loading vbmeta data.\n");
@@ -1017,7 +1028,11 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
           ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
           goto out;
         }
-
+        if ((chain_desc.flags & AVB_HASH_DESCRIPTOR_FLAGS_DO_NOT_USE_AB) != 0){
+          allow_noab_suffix = true;
+        }else{
+          allow_noab_suffix = false;
+        }
         chain_partition_name = ((const uint8_t*)descriptors[n]) +
                                sizeof(AvbChainPartitionDescriptor);
         chain_public_key = chain_partition_name + chain_desc.partition_name_len;
@@ -1036,7 +1051,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
                                    chain_desc.public_key_len,
                                    slot_data,
                                    NULL, /* out_algorithm_type */
-                                   NULL /* out_additional_cmdline_subst */);
+                                   NULL /* out_additional_cmdline_subst */,
+				   allow_noab_suffix);
         if (sub_ret != AVB_SLOT_VERIFY_RESULT_OK) {
           ret = sub_ret;
           if (!result_should_continue(ret)) {
@@ -1479,7 +1495,8 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                    0 /* expected_public_key_length */,
                                    slot_data,
                                    &algorithm_type,
-                                   additional_cmdline_subst);
+                                   additional_cmdline_subst,
+				   false);
       if (!allow_verification_error && ret != AVB_SLOT_VERIFY_RESULT_OK) {
         goto fail;
       }
@@ -1500,7 +1517,8 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                  0 /* expected_public_key_length */,
                                  slot_data,
                                  &algorithm_type,
-                                 additional_cmdline_subst);
+                                 additional_cmdline_subst,
+				 false);
     if (!allow_verification_error && ret != AVB_SLOT_VERIFY_RESULT_OK) {
       goto fail;
     }
