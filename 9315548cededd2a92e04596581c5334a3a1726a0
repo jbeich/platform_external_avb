@@ -89,6 +89,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "388ac542_7c5d7d19",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-04T14:58:20Z",
+      "side": 1,
+      "message": "Saying \"must not be modified\" seems reasonable. Really the requirement is that the caller must obey Rust\u0027s aliasing rules, but that\u0027s a reasonable approximation.",
+      "parentUuid": "eb6a28b8_43eb82ab",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5cfb0139_a2ee29b5",
         "filename": "rust/src/util.rs",
         "patchSetId": 1
@@ -153,6 +171,24 @@
       "side": 1,
       "message": "Done.\n\nRe: properly-aligned, I really only want to implement this for `void` or `u8` pointers which have no alignment requirements (I think). Is there a good way in Rust to do generic bounds based on specific conditions like that e.g. `T: void | u8` or `T: align_of\u003cT\u003e() \u003d\u003d 1` or something like that? I couldn\u0027t find anything myself when searching around.",
       "parentUuid": "a0c2287c_108aeda8",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23eaa0ad_a478a9fa",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-04T14:58:20Z",
+      "side": 1,
+      "message": "Can you just take a `*mut u8` then rather than a `*mut T`?\n\nIf you really want to accept arbitrary types with no alignment requirements, then check out [`zerocopy::Unaligned`](https://docs.rs/zerocopy/latest/zerocopy/trait.Unaligned.html), but that seems unnecessarily complicated.\n\nAs for aliasing, as this function allows mutation of the data behind `ptr` the requirement is that nobody else accesses it at all within the lifetime `\u0027a`.",
+      "parentUuid": "e27e1a99_c38f5839",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -322,6 +358,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "913712c0_d568c030",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-04T14:58:20Z",
+      "side": 1,
+      "message": "I think the lint will require that you write something, but it\u0027s fine if it\u0027s fairly short. See what happens when you run the tests.",
+      "parentUuid": "0d5f657a_c413e891",
+      "range": {
+        "startLine": 128,
+        "startChar": 19,
+        "endLine": 128,
+        "endChar": 30
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0547362f_efb779ac",
@@ -359,6 +419,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e51163ef_f54c9dbb",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-04T14:58:20Z",
+      "side": 1,
+      "message": "I\u0027m not quite following sorry. Is the requirement on the implementer or the caller? If it\u0027s on the implementer, then the trait should be unsafe rather than the function.",
+      "parentUuid": "ada33327_df0c078f",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "09a362ff_411ef53b",
         "filename": "rust/src/verify.rs",
         "patchSetId": 1
@@ -388,6 +466,24 @@
       "side": 1,
       "message": "Done thanks, I wasn\u0027t sure if this was typically done for non-public API.",
       "parentUuid": "09a362ff_411ef53b",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4d287be_3d392cc7",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 77,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-04T14:58:20Z",
+      "side": 1,
+      "message": "It\u0027s not required, but if you\u0027ve written a comment anyway it might as well be Rustdoc. IDEs typically show them which can be helpful sometimes.",
+      "parentUuid": "035224e7_fba9dbdb",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -593,6 +689,24 @@
       "side": 1,
       "message": "(Edit: I suppose that\u0027s not true re: no-op since we call these functions from our unit tests as well)",
       "parentUuid": "4ff474a6_5d000ea5",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1f8f4867_599254a0",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 153,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-04T14:58:20Z",
+      "side": 1,
+      "message": "Yeah, even if it\u0027s only called from C it\u0027s still useful documentation.",
+      "parentUuid": "2a4aaa3f_144e8461",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
