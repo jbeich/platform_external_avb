@@ -105,6 +105,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "19908056_cef4b172",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 57,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-05T23:47:58Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "388ac542_7c5d7d19",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5cfb0139_a2ee29b5",
@@ -189,6 +207,24 @@
       "side": 1,
       "message": "Can you just take a `*mut u8` then rather than a `*mut T`?\n\nIf you really want to accept arbitrary types with no alignment requirements, then check out [`zerocopy::Unaligned`](https://docs.rs/zerocopy/latest/zerocopy/trait.Unaligned.html), but that seems unnecessarily complicated.\n\nAs for aliasing, as this function allows mutation of the data behind `ptr` the requirement is that nobody else accesses it at all within the lifetime `\u0027a`.",
       "parentUuid": "e27e1a99_c38f5839",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a724e77a_f6a39361",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-05T23:47:58Z",
+      "side": 1,
+      "message": "Makes sense, thanks, taking `u8` and requiring callers to cast if necessary sounds like the right approach.",
+      "parentUuid": "23eaa0ad_a478a9fa",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -382,6 +418,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c6c2052_5eeaa704",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-05T23:47:58Z",
+      "side": 1,
+      "message": "Presubmit seems OK without it as does local `atest`, leaving as-is for the time being.",
+      "parentUuid": "913712c0_d568c030",
+      "range": {
+        "startLine": 128,
+        "startChar": 19,
+        "endLine": 128,
+        "endChar": 30
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0547362f_efb779ac",
@@ -431,6 +491,24 @@
       "side": 1,
       "message": "I\u0027m not quite following sorry. Is the requirement on the implementer or the caller? If it\u0027s on the implementer, then the trait should be unsafe rather than the function.",
       "parentUuid": "ada33327_df0c078f",
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "805a988c_1cadeb9f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-05T23:47:58Z",
+      "side": 1,
+      "message": "Gotcha, makes sense. Thinking about this more, I think I was confusing the functionality itself with how we\u0027re going to be using it.\n\nThere\u0027s nothing inherently unsafe about implementing or calling this function; internally to this library we\u0027re doing some unsafe stuff with the result by sending it into C functions, but that\u0027s external to the implementation or calling of the method and should be documented at the unsafe locations.",
+      "parentUuid": "e51163ef_f54c9dbb",
       "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
