@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "27024852_4ae4af00",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 95,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-06T10:33:39Z",
+      "side": 1,
+      "message": "This should be a bit stronger: it should only be accessed via the returned slice. I.e. it shouldn\u0027t be read via other pointers either.",
+      "revId": "a88b1b13f8703e1a9b8391ec702520df407bdcb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0e0b7b1_ca80acc9",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-06T10:33:39Z",
+      "side": 1,
+      "message": "accessed (either read or modified)",
+      "range": {
+        "startLine": 129,
+        "startChar": 31,
+        "endLine": 129,
+        "endChar": 39
+      },
+      "revId": "a88b1b13f8703e1a9b8391ec702520df407bdcb1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
