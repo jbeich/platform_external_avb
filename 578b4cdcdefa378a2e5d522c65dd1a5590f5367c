@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8426cb67_65b78282",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-07T17:19:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aca971c4_42894c59",
+      "range": {
+        "startLine": 35,
+        "startChar": 10,
+        "endLine": 35,
+        "endChar": 13
+      },
+      "revId": "578b4cdcdefa378a2e5d522c65dd1a5590f5367c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0289e669_d49daa51",
@@ -77,6 +101,30 @@
       "writtenOn": "2023-09-07T08:45:27Z",
       "side": 1,
       "message": "Since the callback is so long, can we just create a normal function `try_...() -\u003e Result\u003c..\u003e` instead of nesting it here?\n\nSame for the function below.",
+      "range": {
+        "startLine": 165,
+        "startChar": 23,
+        "endLine": 165,
+        "endChar": 27
+      },
+      "revId": "578b4cdcdefa378a2e5d522c65dd1a5590f5367c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3da83e2e_d3f616d5",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-07T17:19:21Z",
+      "side": 1,
+      "message": "Sure thing, I had thought that repeating the argument list was enough boilerplate that it wasn\u0027t worth it but I don\u0027t have a strong preference, happy to switch over.\n\nFor my own understanding, is this just for readability, or does a long closure introduce some space or time overhead vs a predefined function?",
+      "parentUuid": "c7126127_8b04f05c",
       "range": {
         "startLine": 165,
         "startChar": 23,
