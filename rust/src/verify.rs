@@ -144,6 +144,61 @@ pub trait Ops {
     /// # Returns
     /// The partition size in bytes or `IoError` on error.
     fn get_size_of_partition(&mut self, partition: &CStr) -> Result<u64>;
+
+    /// Reads the requested persistent value.
+    ///
+    /// This is only necessary if using persistent digests or the "managed restart and EIO"
+    /// hashtree verification mode; if verification is not using these features, this function will
+    /// never be called.
+    ///
+    /// # Arguments
+    /// * `name`: persistent value name.
+    /// * `value`: buffer to read persistent value into; if too small to hold the persistent value,
+    ///            `IoError::InsufficientSpace` should be returned and this function will be called
+    ///            again with an appropriately-sized buffer. This may be an empty slice if the
+    ///            caller only wants to query the persistent value size.
+    ///
+    /// # Returns
+    /// * The number of bytes written into `value` on success.
+    /// * `IoError::NoSuchValue` if `name` is not a known persistent value.
+    /// * `IoError::InsufficientSpace` with the required size if the `value` buffer is too small.
+    /// * Any other `IoError` on failure.
+    fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> Result<usize>;
+
+    /// Writes the requested persistent value.
+    ///
+    /// This is only necessary if using persistent digests or the "managed restart and EIO"
+    /// hashtree verification mode; if verification is not using these features, this function will
+    /// never be called.
+    ///
+    /// # Arguments
+    /// * `name`: persistent value name.
+    /// * `value`: bytes to write as the new value.
+    ///
+    /// # Returns
+    /// * Unit on success.
+    /// * `IoError::NoSuchValue` if `name` is not a supported persistent value.
+    /// * `IoError::InvalidValueSize` if `value` is too large to save as a persistent value.
+    /// * Any other `IoError` on failure.
+    fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> Result<()>;
+
+    /// Erases the requested persistent value.
+    ///
+    /// This is only necessary if using persistent digests or the "managed restart and EIO"
+    /// hashtree verification mode; if verification is not using these features, this function will
+    /// never be called.
+    ///
+    /// If the requested persistent value is already erased, this function is a no-op and should
+    /// return `Ok(())`.
+    ///
+    /// # Arguments
+    /// * `name`: persistent value name.
+    ///
+    /// # Returns
+    /// * Unit on success.
+    /// * `IoError::NoSuchValue` if `name` is not a supported persistent value.
+    /// * Any other `IoError` on failure.
+    fn erase_persistent_value(&mut self, name: &CStr) -> Result<()>;
 }
 
 /// Helper to pass user-provided `Ops` through libavb via the `user_data` pointer.
@@ -219,9 +274,9 @@ impl<'a> ScopedAvbOps<'a> {
                 read_is_device_unlocked: Some(read_is_device_unlocked),
                 get_unique_guid_for_partition: Some(get_unique_guid_for_partition),
                 get_size_of_partition: Some(get_size_of_partition),
+                read_persistent_value: Some(read_persistent_value),
+                write_persistent_value: Some(write_persistent_value),
                 // TODO: add callback wrappers for the remaining API.
-                read_persistent_value: None,
-                write_persistent_value: None,
                 validate_public_key_for_partition: None,
             },
             _user_data: PhantomData,
@@ -751,6 +806,135 @@ unsafe fn try_get_size_of_partition(
     Ok(())
 }
 
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_persistent_value(
+    ops: *mut AvbOps,
+    name: *const c_char,
+    buffer_size: usize,
+    out_buffer: *mut u8,
+    out_num_bytes_read: *mut usize,
+) -> AvbIOResult {
+    result_to_io_enum(try_read_persistent_value(
+        ops,
+        name,
+        buffer_size,
+        out_buffer,
+        out_num_bytes_read,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `name` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
+/// * `out_num_bytes_read` must adhere to the requirements of `ptr::write()`.
+unsafe fn try_read_persistent_value(
+    ops: *mut AvbOps,
+    name: *const c_char,
+    buffer_size: usize,
+    out_buffer: *mut u8,
+    out_num_bytes_read: *mut usize,
+) -> Result<()> {
+    check_nonnull(name)?;
+    check_nonnull(out_num_bytes_read)?;
+
+    // Initialize the output variables first in case something fails.
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_num_bytes_read`.
+    unsafe { ptr::write(out_num_bytes_read, 0) };
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `name`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let name = unsafe { CStr::from_ptr(name) };
+    let mut empty: [u8; 0] = [];
+    let value = match out_buffer.is_null() {
+        // NULL buffer => empty slice, used to just query the value size.
+        true => &mut empty,
+        false => {
+            // SAFETY:
+            // * we've checked that the pointer is non-NULL.
+            // * libavb gives us a properly-allocated `out_buffer` with size `buffer_size`.
+            // * we only access the contents via the returned slice.
+            // * the returned slice is not held past the scope of this callback.
+            unsafe { slice::from_raw_parts_mut(out_buffer as *mut u8, buffer_size) }
+        }
+    };
+
+    let result = ops.read_persistent_value(name, value);
+    // On success or insufficient space we need to write the property size back.
+    if let Ok(size) | Err(IoError::InsufficientSpace(size)) = result {
+        // SAFETY:
+        // * we've checked that the pointer is non-NULL.
+        // * libavb gives us a properly-allocated `out_num_bytes_read`.
+        unsafe { ptr::write(out_num_bytes_read, size) };
+    };
+    // We've written the size back and can drop it now.
+    result.map(|_| ())
+}
+
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn write_persistent_value(
+    ops: *mut AvbOps,
+    name: *const c_char,
+    value_size: usize,
+    value: *const u8,
+) -> AvbIOResult {
+    result_to_io_enum(try_write_persistent_value(ops, name, value_size, value))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `name` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts()`.
+unsafe fn try_write_persistent_value(
+    ops: *mut AvbOps,
+    name: *const c_char,
+    value_size: usize,
+    value: *const u8,
+) -> Result<()> {
+    check_nonnull(name)?;
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `name`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let name = unsafe { CStr::from_ptr(name) };
+
+    if value_size == 0 {
+        ops.erase_persistent_value(name)
+    } else {
+        check_nonnull(value)?;
+        // SAFETY:
+        // * we've checked that the pointer is non-NULL.
+        // * libavb gives us a properly-allocated `value` with size `value_size`.
+        // * we only access the contents via the returned slice.
+        // * the returned slice is not held past the scope of this callback.
+        let value = unsafe { slice::from_raw_parts(value, value_size) };
+        ops.write_persistent_value(name, value)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -787,6 +971,10 @@ mod tests {
         rollbacks: HashMap<usize, u64>,
         /// Unlock state. Set an error to simulate IoError during access.
         unlock_state: Result<bool>,
+        /// Persistent named values. Set an error to simulate `IoError` during access. Writing
+        /// a non-existent persistent value will create it; to simulate `NoSuchValue` instead,
+        /// create an entry with `Err(IoError::NoSuchValue)` as the value.
+        persistent_values: HashMap<String, Result<Vec<u8>>>,
     }
 
     impl TestOps {
@@ -813,6 +1001,19 @@ mod tests {
             );
             self.partitions.get_mut(name).unwrap()
         }
+
+        /// Adds a persistent value with the given state.
+        ///
+        /// Reduces boilerplate by allowing array input:
+        ///
+        /// ```
+        /// test_ops.add_persistent_value("foo", Ok(b"contents"));
+        /// test_ops.add_persistent_value("bar", Err(IoError::NoSuchValue));
+        /// ```
+        fn add_persistent_value(&mut self, name: &str, contents: Result<&[u8]>) {
+            self.persistent_values
+                .insert(name.into(), contents.map(|b| b.into()));
+        }
     }
 
     impl Default for TestOps {
@@ -822,6 +1023,7 @@ mod tests {
                 vbmeta_keys: HashMap::new(),
                 rollbacks: HashMap::new(),
                 unlock_state: Err(IoError::Io),
+                persistent_values: HashMap::new(),
             }
         }
     }
@@ -919,6 +1121,49 @@ mod tests {
                 .get(partition.to_str()?)
                 .map(|p| u64::try_from(p.contents.len()).unwrap())
                 .ok_or(IoError::NoSuchPartition)
+        }
+
+        fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> Result<usize> {
+            match self
+                .persistent_values
+                .get(name.to_str()?)
+                .ok_or(IoError::NoSuchValue)?
+            {
+                // If we were given enough space, write the value contents.
+                Ok(contents) if contents.len() <= value.len() => {
+                    value[..contents.len()].clone_from_slice(contents);
+                    Ok(contents.len())
+                }
+                // Not enough space, tell the caller how much we need.
+                Ok(contents) => Err(IoError::InsufficientSpace(contents.len())),
+                // Simulated error, return it.
+                Err(e) => Err(e.clone()),
+            }
+        }
+
+        fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> Result<()> {
+            let name = name.to_str()?;
+
+            // If the test requested a simulated error on this value, return it.
+            if let Some(Err(e)) = self.persistent_values.get(name) {
+                return Err(e.clone());
+            }
+
+            self.persistent_values
+                .insert(name.to_string(), Ok(value.to_vec()));
+            Ok(())
+        }
+
+        fn erase_persistent_value(&mut self, name: &CStr) -> Result<()> {
+            let name = name.to_str()?;
+
+            // If the test requested a simulated error on this value, return it.
+            if let Some(Err(e)) = self.persistent_values.get(name) {
+                return Err(e.clone());
+            }
+
+            self.persistent_values.remove(name);
+            Ok(())
         }
     }
 
@@ -1096,6 +1341,50 @@ mod tests {
 
         // SAFETY: we've properly created and initialized all the raw pointers being passed in.
         unsafe { avb_ops.get_size_of_partition.unwrap()(avb_ops, part_name.as_ptr(), out_size) }
+    }
+
+    /// Calls the `read_persistent_value()` C callback the same way libavb would.
+    fn call_read_persistent_value(
+        ops: &mut impl Ops,
+        name: &str,
+        out_buffer: Option<&mut [u8]>,
+        out_num_bytes_read: &mut usize,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let name = CString::new(name).unwrap();
+        let (buffer_ptr, buffer_size) =
+            out_buffer.map_or((ptr::null_mut(), 0), |b| (b.as_mut_ptr(), b.len()));
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.read_persistent_value.unwrap()(
+                avb_ops,
+                name.as_ptr(),
+                buffer_size,
+                buffer_ptr,
+                out_num_bytes_read,
+            )
+        }
+    }
+
+    /// Calls the `write_persistent_value()` C callback the same way libavb would.
+    fn call_write_persistent_value(
+        ops: &mut impl Ops,
+        name: &str,
+        value: Option<&[u8]>,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let name = CString::new(name).unwrap();
+        let (value_ptr, value_size) = value.map_or((ptr::null(), 0), |v| (v.as_ptr(), v.len()));
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.write_persistent_value.unwrap()(avb_ops, name.as_ptr(), value_size, value_ptr)
+        }
     }
 
     #[test]
@@ -1425,5 +1714,120 @@ mod tests {
 
         assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION);
         assert_eq!(size, 0);
+    }
+
+    #[test]
+    fn test_read_persistent_value() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let mut size = 0;
+        let mut buffer = [b'.'; 8];
+        let result = call_read_persistent_value(&mut ops, "foo", Some(&mut buffer), &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert_eq!(size, 4);
+        assert_eq!(&buffer[..], b"1234....");
+    }
+
+    #[test]
+    fn test_read_persistent_value_buffer_too_small() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let mut size = 0;
+        let mut buffer = [b'.'; 2];
+        let result = call_read_persistent_value(&mut ops, "foo", Some(&mut buffer), &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE);
+        assert_eq!(size, 4);
+        assert_eq!(&buffer[..], b"..");
+    }
+
+    #[test]
+    fn test_read_persistent_value_buffer_null() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let mut size = 0;
+        let result = call_read_persistent_value(&mut ops, "foo", None, &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE);
+        assert_eq!(size, 4);
+    }
+
+    #[test]
+    fn test_read_persistent_value_error() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Err(IoError::Io));
+
+        let mut size = 10;
+        let mut buffer = [b'.'; 8];
+        let result = call_read_persistent_value(&mut ops, "foo", Some(&mut buffer), &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_IO);
+        assert_eq!(size, 0);
+        assert_eq!(&buffer[..], b"........");
+    }
+
+    #[test]
+    fn test_read_persistent_value_unknown() {
+        let mut ops = TestOps::default();
+
+        let mut size = 10;
+        let mut buffer = [b'.'; 8];
+        let result = call_read_persistent_value(&mut ops, "foo", Some(&mut buffer), &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE);
+        assert_eq!(size, 0);
+        assert_eq!(&buffer[..], b"........");
+    }
+
+    #[test]
+    fn test_write_persistent_value() {
+        let mut ops = TestOps::default();
+
+        let result = call_write_persistent_value(&mut ops, "foo", Some(b"1234"));
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert_eq!(
+            ops.persistent_values.get("foo").unwrap().as_ref().unwrap(),
+            b"1234"
+        );
+    }
+
+    #[test]
+    fn test_write_persistent_value_overwrite_existing() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let result = call_write_persistent_value(&mut ops, "foo", Some(b"5678"));
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert_eq!(
+            ops.persistent_values.get("foo").unwrap().as_ref().unwrap(),
+            b"5678"
+        );
+    }
+
+    #[test]
+    fn test_write_persistent_value_erase_existing() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let result = call_write_persistent_value(&mut ops, "foo", None);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(ops.persistent_values.is_empty());
+    }
+
+    #[test]
+    fn test_write_persistent_value_error() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Err(IoError::NoSuchValue));
+
+        let result = call_write_persistent_value(&mut ops, "foo", Some(b"1234"));
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE);
     }
 }
