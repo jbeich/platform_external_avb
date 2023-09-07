@@ -371,6 +371,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "516243fb_5b55817f",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-07T08:45:27Z",
+      "side": 1,
+      "message": "Sure that works!",
+      "parentUuid": "e0400f0c_03f0c05a",
+      "range": {
+        "startLine": 105,
+        "startChar": 4,
+        "endLine": 105,
+        "endChar": 18
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4319cd10_fb45d1aa",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-07T08:45:27Z",
+      "side": 1,
+      "message": "\u003e The module is not public, so these functions aren\u0027t exposed.\n\nThe other module `verify` is also not public, but the `pub` trait there is intended to be public. Frankly, it\u0027s easier to define the correct scope from the beginning rather than leaving future readers to guess the intended visibility of the functions.",
+      "parentUuid": "e77be2de_4ce8fa44",
+      "range": {
+        "startLine": 105,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 4
+      },
+      "revId": "9315548cededd2a92e04596581c5334a3a1726a0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d5f657a_c413e891",
