@@ -133,6 +133,30 @@
       },
       "revId": "578b4cdcdefa378a2e5d522c65dd1a5590f5367c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aa00d3c1_24aab0c6",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 165,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-08T12:22:01Z",
+      "side": 1,
+      "message": "It\u0027s just for readability. I feel long nested functions are not so easy to read in any language.",
+      "parentUuid": "3da83e2e_d3f616d5",
+      "range": {
+        "startLine": 165,
+        "startChar": 23,
+        "endLine": 165,
+        "endChar": 27
+      },
+      "revId": "578b4cdcdefa378a2e5d522c65dd1a5590f5367c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
