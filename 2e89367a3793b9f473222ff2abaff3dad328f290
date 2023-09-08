@@ -1,0 +1,159 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6633aae2_2fd2dfa7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-08T19:04:58Z",
+      "side": 1,
+      "message": "Hi David,\n\nThanks for the work and sorry again for the late review..",
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e13ba280_98ebc0c7",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-08T19:04:58Z",
+      "side": 1,
+      "message": "It\u0027s more clear to make all the functions in this API return `Result\u003cT, IoError\u003e`. It\u0027s more coherent and easier for users to implement. `Option` doesn\u0027t support `?`.",
+      "range": {
+        "startLine": 68,
+        "startChar": 62,
+        "endLine": 68,
+        "endChar": 75
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36afef65_fb034893",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-08T19:04:58Z",
+      "side": 1,
+      "message": "This function has very similar functionality as `read_from_partition`, just but it operates on preloaded data and circumvents the need for new memory allocation. Why it has completely different signature compared the other one here?\n\nTBH, I believe it would be advantageous to maintain a consistent set of APIs with the C code. Since the Rust library primarily serves as a wrapper, having the same function and parameters names would be more intuitive and straightforward.",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 30
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5df72a4e_8808008f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-08T19:04:58Z",
+      "side": 1,
+      "message": "This looks a bit awkward. Can we just make this consistent with the C API, to pass `\u0026mut out_num_read` as param and return `Result\u003c(), IoError\u003e`?\n\nThen here we can just call `ops.read_from_partition([Rust type params])` directly.",
+      "range": {
+        "startLine": 200,
+        "startChar": 8,
+        "endLine": 200,
+        "endChar": 47
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2605b8cd_b4f4dc4d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 245,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-08T19:04:58Z",
+      "side": 1,
+      "message": "As discussed offline, I don\u0027t think we really need the lifetime parameter and the helper functions here, since if we call the original Rust function, anyway the returned reference is only valid for the lifetime of the function.",
+      "range": {
+        "startLine": 245,
+        "startChar": 5,
+        "endLine": 245,
+        "endChar": 21
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da979385_9361d959",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-08T19:04:58Z",
+      "side": 1,
+      "message": "It\u0027s convenient to pass `\u0026CStr` around as well in ffi code. We don\u0027t need to make everything from ptr to \u0026CStr then to `\u0026str`.",
+      "range": {
+        "startLine": 253,
+        "startChar": 37,
+        "endLine": 253,
+        "endChar": 40
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bdcbb3e6_ea718536",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 269,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-08T19:04:58Z",
+      "side": 1,
+      "message": "I\u0027m a bit confused as to why this function returns \u0026[u8] as output, while the other read_partition function writes the output \u0026[u8] in a parameter. Moreover, both of them differ from the C API.\n\nIMO, it would be more advantageous to adhere to the C API for the operations defined here.\n\nhttps://cs.android.com/android/platform/superproject/main/+/main:external/avb/libavb/avb_ops.h?ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain\u0026q\u003df:external%20f:avb%20f:ops.h",
+      "range": {
+        "startLine": 269,
+        "startChar": 8,
+        "endLine": 269,
+        "endChar": 41
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
