@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "69aa1622_3c5ed7bb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "Thanks for the explanation. I did expect a thinner wrapper mostly that allows libavb to be called in Rust in a relatively safer way in comparison with calling the binding directly :) \n\nAs said in the other thread, maybe we can document the target API in a doc first, because based on the current cl I still don\u0027t see how the main entry point `verify_avb_slot` is going to interact with the trait defined here. Just to make sure that everyone is on the same page about the direction. wdyt?",
+      "parentUuid": "d6230f27_8ecfd3b7",
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e13ba280_98ebc0c7",
         "filename": "rust/src/verify.rs",
         "patchSetId": 5
@@ -132,6 +150,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "286857da_5bce5296",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "I see, thanks for the explanation. Another thing is that not all the functions are supposed to be implemented by users. How are you going to allow users not to implement certain functions in the trait?\n\nMaybe it\u0027s easier to summarise how the target rust API and entry point function will look like in a doc, so that everyone knows what all these incremental cls lead to?",
+      "parentUuid": "8d398220_c0627923",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 30
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5df72a4e_8808008f",
         "filename": "rust/src/verify.rs",
         "patchSetId": 5
@@ -167,6 +209,30 @@
       "side": 1,
       "message": "IMO hiding awkwardness inside the library is better than requiring the user to deal with it.\n\nOut-params are too easy to forget to set in all code paths and aren\u0027t always clear on expectations e.g. what if the function fails early, do we still need to set the output param? http://go/totw/176 is written for C++ so not all the reasoning applies, but I think the overall idea of \"prefer return values over output params when possible\" still holds in Rust.\n\nThis code itself is a good example - do we actually need to write 0 to `out_num_read` on failure? Or could we just `return Err()` directly here:\n\n```\nmatch ops.read_from_partition(...) {\n  Ok(bytes_read) \u003d\u003e {\n    unsafe { write_checked(...) }\n    Ok(())\n  }\n  Err(e) \u003d\u003e Err(e)\n}\n```\n\nIn this particular case I\u0027m reasonably certain libavb will do the right thing if I just return an error and it won\u0027t try to use `out_num_read`, but the function documentation doesn\u0027t say either way, so as a library user if I want to be as safe as possible I should cover this condition and write to the output params even on failure.",
       "parentUuid": "5df72a4e_8808008f",
+      "range": {
+        "startLine": 200,
+        "startChar": 8,
+        "endLine": 200,
+        "endChar": 47
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "62724642_5749cf24",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "It\u0027s okay to write 0. It\u0027s just the style of converting result to tuple and then returning the result, that I feel a bit atypical. What about writing a default and then forwarding the error as you said?\n```\n// SAFETY: `out_num_read` is non-null and properly allocated by libavb.\nunsafe { ptr::write(out_num_read, 0); }\nlet bytes_read \u003d ops.read_from_partition(partition, offset, buffer)?;\n// SAFETY: `out_num_read` is non-null and properly allocated by libavb.\nunsafe { ptr::write(out_num_read, bytes_read); }\nOk(())\n```\n\nWe can do the same for the other function.",
+      "parentUuid": "e86601d4_8c04c74b",
       "range": {
         "startLine": 200,
         "startChar": 8,
@@ -261,6 +327,30 @@
       "side": 1,
       "message": "Since this is passed into the user-implemented ops, providing it to them as a standard Rust `\u0026str` avoids requiring them to interface with FFI types.\n\nIn the pvmfw code for example, passing this around as a `CStr` eventually requires specifying the expected partition names as [raw bytestrings with explicit manual nul-termination](https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/Virtualization/pvmfw/avb/src/partition.rs;l\u003d32) rather than a more natural string type. It\u0027s not a huge deal, but maybe a slight inconvenience/awkwardness for the user that could be avoided.",
       "parentUuid": "da979385_9361d959",
+      "range": {
+        "startLine": 253,
+        "startChar": 37,
+        "endLine": 253,
+        "endChar": 40
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1154a2d_cba6e378",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "When working with \u0026str, two conversions are required: from a pointer to \u0026CStr, and from \u0026CStr to \u0026str. This can lead to confusion regarding lifetimes. Without the lifetime parameter in the helper function, the lifetime of the returned \u0026str would be tied to the \u0026CStr living with the scope of the helper function from the first look.\n\nIf you really want the API to take \u0026str, would it be easier to make the 2-step conversion directly in the callers instead of having a helper function?",
+      "parentUuid": "8494961b_a32ffc06",
       "range": {
         "startLine": 253,
         "startChar": 37,

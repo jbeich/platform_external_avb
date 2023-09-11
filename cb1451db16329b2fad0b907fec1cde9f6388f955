@@ -1,0 +1,211 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2948fb83_b57e8e04",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "Can you add \"... for internal usages only.\" to this?",
+      "range": {
+        "startLine": 15,
+        "startChar": 19,
+        "endLine": 15,
+        "endChar": 24
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea75f760_7c6386c7",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "It\u0027s better to take a `*const T` here, since a check function is not supposed to modify the pointer. The caller can cast `*mut T` to `*const T` with as easily.",
+      "range": {
+        "startLine": 29,
+        "startChar": 41,
+        "endLine": 29,
+        "endChar": 44
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e9add108_1771a905",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "As this is simply a check function, what about just to return ()?",
+      "range": {
+        "startLine": 29,
+        "startChar": 58,
+        "endLine": 29,
+        "endChar": 64
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "063eacdf_da9beba0",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "It\u0027s possible to define `impl  From\u003cUtf8Error\u003e for IoError` in `error.rs` so that we can use `?` directly here.\n\nIt\u0027s convenient especially if we inline this function.",
+      "range": {
+        "startLine": 55,
+        "startChar": 19,
+        "endLine": 55,
+        "endChar": 43
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b763dcf6_1fe0639e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "Should this be an error?",
+      "range": {
+        "startLine": 67,
+        "startChar": 10,
+        "endLine": 67,
+        "endChar": 66
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af110c8c_641d06bf",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "Can we throw an error instead of panicking? users usually don\u0027t expect the lib to panic. Same for the unwrap below.",
+      "range": {
+        "startLine": 140,
+        "startChar": 29,
+        "endLine": 140,
+        "endChar": 38
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6314bead_bc5f62f9",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "We also need to check that `ops` is not null, maybe in `from_libavb`.",
+      "range": {
+        "startLine": 189,
+        "startChar": 46,
+        "endLine": 189,
+        "endChar": 49
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "305093c7_50981a17",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "It\u0027s possible to make partition \u0026CStr type and replace this with `partition.to_str()?` once you implement the `From\u003cUtf8Error\u003e`. That way we don\u0027t need the helper function or lifetime parameter and the code is more concise.",
+      "range": {
+        "startLine": 201,
+        "startChar": 61,
+        "endLine": 201,
+        "endChar": 70
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99d79d40_918822dc",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-11T09:28:35Z",
+      "side": 1,
+      "message": "Why isn\u0027t it an error if users request to read a partition but found nothing?",
+      "range": {
+        "startLine": 264,
+        "startChar": 8,
+        "endLine": 265,
+        "endChar": 32
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
