@@ -144,6 +144,54 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "eef9a059_aa3634c2",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-12T13:43:33Z",
+      "side": 1,
+      "message": "Just out of curiosity, I checked the first 5 pages of most rust `check_*` functions [1]. I could\u0027t find any example that returns back the object it checks. Otherwise, I think a check function should just take a `*const` since it\u0027s not supposed to change anything.\n\n[1] https://cs.android.com/search?q\u003dl:rs%20%5C%20check_\u0026ss\u003dandroid%2Fplatform%2Fsuperproject%2Fmain\u0026start\u003d1",
+      "parentUuid": "0f946be1_452688a4",
+      "range": {
+        "startLine": 29,
+        "startChar": 58,
+        "endLine": 29,
+        "endChar": 64
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "96f699fe_497e028b",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-12T13:43:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "f91014a0_de0c551e",
+      "range": {
+        "startLine": 29,
+        "startChar": 41,
+        "endLine": 29,
+        "endChar": 44
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "063eacdf_da9beba0",
         "filename": "rust/src/util.rs",
         "patchSetId": 7
@@ -320,6 +368,30 @@
       "side": 1,
       "message": "The [`as_mut()`](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) pointer-to-ref conversion function checks for NULL internally.",
       "parentUuid": "6314bead_bc5f62f9",
+      "range": {
+        "startLine": 189,
+        "startChar": 46,
+        "endLine": 189,
+        "endChar": 49
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5e65bde4_c3695077",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-12T13:43:33Z",
+      "side": 1,
+      "message": "Ack",
+      "parentUuid": "df5d5ccb_118059e1",
       "range": {
         "startLine": 189,
         "startChar": 46,

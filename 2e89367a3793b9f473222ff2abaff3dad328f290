@@ -216,6 +216,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "65a9535a_7450ad90",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-12T13:43:33Z",
+      "side": 1,
+      "message": "\u003e The optional callbacks will have a default implementation defined in the trait (as how get_preloaded_partition() has a default implementation that returns None)\n\nSo we return `Result\u003cOption\u003c\u0026[u8]\u003e\u003e` instead of `Result\u003c\u0026[u8]\u003e` only to detect whether users have implemented the function? Mm, tbh I feel `Result\u003cOption\u003e\u003e` a bit heavy and not so straight-forward. \n\nWhat about still returning `Result\u003c\u0026[u8]\u003e` and just raise an `IoError::FunctionUnimplemented` error as default implementation? We just can forward this error with `?` in `try_**` and in `result_to_io_enum()` we can convert this to the `*_OK` enum.",
+      "parentUuid": "d51d379c_5cb55896",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 30
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5df72a4e_8808008f",
         "filename": "rust/src/verify.rs",
         "patchSetId": 5

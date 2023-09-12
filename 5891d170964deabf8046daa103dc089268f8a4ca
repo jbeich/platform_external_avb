@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "619f8799_b3852e64",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-12T13:43:33Z",
+      "side": 1,
+      "message": "why not `.as_mut_ptr()` so we don\u0027t need `as`?",
+      "range": {
+        "startLine": 289,
+        "startChar": 16,
+        "endLine": 289,
+        "endChar": 44
+      },
+      "revId": "5891d170964deabf8046daa103dc089268f8a4ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
