@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ef1d742f_40a5266a",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 15,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "2948fb83_b57e8e04",
+      "range": {
+        "startLine": 15,
+        "startChar": 19,
+        "endLine": 15,
+        "endChar": 24
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ea75f760_7c6386c7",
@@ -70,6 +94,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f91014a0_de0c551e",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "This is required to support the inline capabilities above, since if we only had the const version we couldn\u0027t return a `*mut` back to the caller. If we decide to return `()` instead I will remove this variant.",
+      "parentUuid": "ea75f760_7c6386c7",
+      "range": {
+        "startLine": 29,
+        "startChar": 41,
+        "endLine": 29,
+        "endChar": 44
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f946be1_452688a4",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "I wanted to be able to call this inline, so that e.g. instead of always requiring this:\n\n```\ncheck_nonnull(p)?;\ndo_thing_with_ptr(p);\n```\n\nwe can optionally chain the calls:\n\n```\ndo_thing_with_ptr(check_nonnull(p)?);\n```\n\nI think it can help readability, but am not super opinionated either way, if you prefer the separate calls I can change to `()`.\n\n(Also moved these APIs into `verify.rs` for now since they are the only two left and didn\u0027t seem worth a separate file for the time being)",
+      "parentUuid": "e9add108_1771a905",
+      "range": {
+        "startLine": 29,
+        "startChar": 58,
+        "endLine": 29,
+        "endChar": 64
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "063eacdf_da9beba0",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-09-11T09:28:35Z",
       "side": 1,
       "message": "It\u0027s possible to define `impl  From\u003cUtf8Error\u003e for IoError` in `error.rs` so that we can use `?` directly here.\n\nIt\u0027s convenient especially if we inline this function.",
+      "range": {
+        "startLine": 55,
+        "startChar": 19,
+        "endLine": 55,
+        "endChar": 43
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f8ca96c3_c10637b5",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 55,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "063eacdf_da9beba0",
       "range": {
         "startLine": 55,
         "startChar": 19,
@@ -116,6 +212,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "98548ff1_10ea927e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 67,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "No, there are 3 possible outcomes here:\n\n1. Partition is preloaded -\u003e give the pointer to libavb, it will use this data\n2. Partition is not preloaded -\u003e return NULL to libavb, it will try to read data from disk instead\n3. Error -\u003e libavb will exit immediately without continuing verification\n\nSo we need None to be able to differentiate between #2 and #3",
+      "parentUuid": "b763dcf6_1fe0639e",
+      "range": {
+        "startLine": 67,
+        "startChar": 10,
+        "endLine": 67,
+        "endChar": 66
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "af110c8c_641d06bf",
@@ -129,6 +249,30 @@
       "writtenOn": "2023-09-11T09:28:35Z",
       "side": 1,
       "message": "Can we throw an error instead of panicking? users usually don\u0027t expect the lib to panic. Same for the unwrap below.",
+      "range": {
+        "startLine": 140,
+        "startChar": 29,
+        "endLine": 140,
+        "endChar": 38
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "41dfc694_2db79498",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 140,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "Ack, since we create the `AvbOps` object ourselves it should always be valid, but it seems reasonable to handle it properly in case there\u0027s a bug that allows this to happen.",
+      "parentUuid": "af110c8c_641d06bf",
       "range": {
         "startLine": 140,
         "startChar": 29,
@@ -162,6 +306,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "df5d5ccb_118059e1",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 189,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "The [`as_mut()`](https://doc.rust-lang.org/std/primitive.pointer.html#method.as_mut) pointer-to-ref conversion function checks for NULL internally.",
+      "parentUuid": "6314bead_bc5f62f9",
+      "range": {
+        "startLine": 189,
+        "startChar": 46,
+        "endLine": 189,
+        "endChar": 49
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "305093c7_50981a17",
@@ -185,6 +353,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a043033f_8d47b584",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 201,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "Oh yeah that makes sense, thanks. Done.",
+      "parentUuid": "305093c7_50981a17",
+      "range": {
+        "startLine": 201,
+        "startChar": 61,
+        "endLine": 201,
+        "endChar": 70
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "99d79d40_918822dc",
@@ -198,6 +390,30 @@
       "writtenOn": "2023-09-11T09:28:35Z",
       "side": 1,
       "message": "Why isn\u0027t it an error if users request to read a partition but found nothing?",
+      "range": {
+        "startLine": 264,
+        "startChar": 8,
+        "endLine": 265,
+        "endChar": 32
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b02c7f6d_211ed4e7",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 265,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "Somewhat addressed in the comment on line 76 above, but for more context this is a user-provided callback called by libavb, not a user-facing API (e.g. the user is providing the partition, not requesting it). It\u0027s totally valid for the user to say that the partition has not been preloaded, libavb will just continue to ask for the data to then be loaded from disk.",
+      "parentUuid": "99d79d40_918822dc",
       "range": {
         "startLine": 264,
         "startChar": 8,

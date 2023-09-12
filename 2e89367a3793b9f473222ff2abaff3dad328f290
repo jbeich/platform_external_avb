@@ -56,6 +56,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "70b1d8aa_7b783484",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "Sounds good, I uploaded the other changes for the time being, and I will start writing up an API doc and try to have it ready in the next day or two.",
+      "parentUuid": "69aa1622_3c5ed7bb",
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e13ba280_98ebc0c7",
         "filename": "rust/src/verify.rs",
         "patchSetId": 5
@@ -174,6 +192,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d51d379c_5cb55896",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "\u003e How are you going to allow users not to implement certain functions in the trait?\n\nThe optional callbacks will have a default implementation defined in the trait (as how `get_preloaded_partition()` has a default implementation that returns `None`)\n\n\u003e Maybe it\u0027s easier to summarise how the target rust API and entry point function will look like in a doc, so that everyone knows what all these incremental cls lead to?\n\nAck will do.",
+      "parentUuid": "286857da_5bce5296",
+      "range": {
+        "startLine": 68,
+        "startChar": 7,
+        "endLine": 68,
+        "endChar": 30
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5df72a4e_8808008f",
         "filename": "rust/src/verify.rs",
         "patchSetId": 5
@@ -233,6 +275,30 @@
       "side": 1,
       "message": "It\u0027s okay to write 0. It\u0027s just the style of converting result to tuple and then returning the result, that I feel a bit atypical. What about writing a default and then forwarding the error as you said?\n```\n// SAFETY: `out_num_read` is non-null and properly allocated by libavb.\nunsafe { ptr::write(out_num_read, 0); }\nlet bytes_read \u003d ops.read_from_partition(partition, offset, buffer)?;\n// SAFETY: `out_num_read` is non-null and properly allocated by libavb.\nunsafe { ptr::write(out_num_read, bytes_read); }\nOk(())\n```\n\nWe can do the same for the other function.",
       "parentUuid": "e86601d4_8c04c74b",
+      "range": {
+        "startLine": 200,
+        "startChar": 8,
+        "endLine": 200,
+        "endChar": 47
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e5e1bda_1ea427cc",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 200,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "Gotcha, I was mostly trying to avoid multiple unsafe blocks since that seemed to be the most awkward part, but if the tuple assignment is unusual I\u0027ll switch over to this approach.",
+      "parentUuid": "62724642_5749cf24",
       "range": {
         "startLine": 200,
         "startChar": 8,
@@ -351,6 +417,30 @@
       "side": 1,
       "message": "When working with \u0026str, two conversions are required: from a pointer to \u0026CStr, and from \u0026CStr to \u0026str. This can lead to confusion regarding lifetimes. Without the lifetime parameter in the helper function, the lifetime of the returned \u0026str would be tied to the \u0026CStr living with the scope of the helper function from the first look.\n\nIf you really want the API to take \u0026str, would it be easier to make the 2-step conversion directly in the callers instead of having a helper function?",
       "parentUuid": "8494961b_a32ffc06",
+      "range": {
+        "startLine": 253,
+        "startChar": 37,
+        "endLine": 253,
+        "endChar": 40
+      },
+      "revId": "2e89367a3793b9f473222ff2abaff3dad328f290",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6c74b2a1_80e0a10e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-12T00:43:00Z",
+      "side": 1,
+      "message": "Ack that makes sense thanks for explaining, used the suggested approach to store the `\u0026CStr` locally then convert to `\u0026str` when passing to the caller.",
+      "parentUuid": "b1154a2d_cba6e378",
       "range": {
         "startLine": 253,
         "startChar": 37,
