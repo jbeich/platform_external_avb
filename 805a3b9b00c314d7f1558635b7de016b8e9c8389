@@ -1,0 +1,153 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5dcc0591_c91d78ed",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T11:39:55Z",
+      "side": 1,
+      "message": "Please also run unit test via:\n\nTest: libavb_host_unittest\n\nThe detailed command is:\n\n 1. m libavb_host_unittest\n 2. out/host/linux-x86/nativetest64/libavb_host_unittest/libavb_host_unittest\n \n \nYou\u0027ll probably need to modify avbtool_unittest.cc to make the unit test pass with your change.\n\nReference: https://android-review.git.corp.google.com/c/platform/external/avb/+/611010/7/test/avbtool_unittest.cc",
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "60d117b2_aa213b38",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 6
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T11:39:55Z",
+      "side": 1,
+      "message": "Hi,\nPlease merge this chagne with https://r.android.com/2737496, resulting in one change.\n\nIt seems no need to have two CLs linked with the same topic.",
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cbbacbbc_5a301d2c",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T11:39:55Z",
+      "side": 1,
+      "message": "supports",
+      "range": {
+        "startLine": 147,
+        "startChar": 24,
+        "endLine": 147,
+        "endChar": 31
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b714e68e_0b0a6551",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 2934,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T11:39:55Z",
+      "side": 1,
+      "message": "... chain which does not ...",
+      "range": {
+        "startLine": 2934,
+        "startChar": 60,
+        "endLine": 2934,
+        "endChar": 65
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eeaa54db_f89fad09",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 3000,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T11:39:55Z",
+      "side": 1,
+      "message": "How about make it clear, by renaming them as:\n  \n   chain_partitions_use_ab, chain_partitions_do_not_use_ab",
+      "range": {
+        "startLine": 3000,
+        "startChar": 28,
+        "endLine": 3000,
+        "endChar": 77
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f4e28bbf_836fac9f",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 3356,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T11:39:55Z",
+      "side": 1,
+      "message": "Same as above.",
+      "range": {
+        "startLine": 3355,
+        "startChar": 44,
+        "endLine": 3356,
+        "endChar": 53
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5e876184_581db1b0",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 3574,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T11:39:55Z",
+      "side": 1,
+      "message": "How about make it clear: chain_partitions_use_ab\n\n   same for the following",
+      "range": {
+        "startLine": 3574,
+        "startChar": 44,
+        "endLine": 3574,
+        "endChar": 60
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
