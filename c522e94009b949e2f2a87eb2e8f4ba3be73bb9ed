@@ -1,0 +1,176 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b6426ed3_b36d752b",
+        "filename": "libavb/avb_chain_partition_descriptor.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:19:14Z",
+      "side": 1,
+      "message": "chain",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 17
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7e2304a1_87d2e3e3",
+        "filename": "libavb/avb_chain_partition_descriptor.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:19:14Z",
+      "side": 1,
+      "message": "Can we add the version info in the comment as well:\n\n  Changes in v1.3: ....\n  \nSimilar to:\n  \nhttps://android-review.git.corp.google.com/c/platform/external/avb/+/611010/7/libavb/avb_hash_descriptor.h#60",
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8714dc35_49a5bd46",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:19:14Z",
+      "side": 1,
+      "message": "Allow means it may be no_ab or ab suffix?\n\nLet\u0027s be clear, how about using `bool append_ab_suffix`?",
+      "range": {
+        "startLine": 569,
+        "startChar": 9,
+        "endLine": 569,
+        "endChar": 26
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68945c4f_b2eb8b83",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:19:14Z",
+      "side": 1,
+      "message": "Let\u0027s add a comment.\n\n/* No ab_suffix, just copy the partition name as is. */",
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a82c3a3c_3e60d6bf",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:19:14Z",
+      "side": 1,
+      "message": "No suffix in this case, so:\n  \n     Partition name does not fit.",
+      "range": {
+        "startLine": 619,
+        "startChar": 17,
+        "endLine": 619,
+        "endChar": 56
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c06f26f_33fcdb13",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1032,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:19:14Z",
+      "side": 1,
+      "message": "append_ab_suffix \u003d false;",
+      "range": {
+        "startLine": 1032,
+        "startChar": 10,
+        "endLine": 1032,
+        "endChar": 35
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4afdf4f2_0de125e9",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1499,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:19:14Z",
+      "side": 1,
+      "message": "Let\u0027s add a comment to describe the argument name, so the reader can easily know the meaning of \u0027false\u0027 here.\n\ne.g., \n\n  true /* append_ab_suffix */",
+      "range": {
+        "startLine": 1499,
+        "startChar": 35,
+        "endLine": 1499,
+        "endChar": 40
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f3baf7b2_b6faa5ce",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1521,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:19:14Z",
+      "side": 1,
+      "message": "same here.",
+      "range": {
+        "startLine": 1521,
+        "startChar": 33,
+        "endLine": 1521,
+        "endChar": 38
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
