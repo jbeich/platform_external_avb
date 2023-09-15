@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dad8a72b_4434cee5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-15T16:22:13Z",
+      "side": 1,
+      "message": "Hi,\n\nLet\u0027s discuss/change the code in the \u0027main\u0027 branch first, then get it merged there.\n\nAfter the CL is merged into \u0027main\u0027, you can start to cherry-pick it to the android13-* branch here.",
+      "revId": "34e82888c64156701a1176094e72a803bebf366a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
