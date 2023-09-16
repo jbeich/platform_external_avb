@@ -66,6 +66,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cd9469af_e0e0f16d",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-16T02:10:42Z",
+      "side": 1,
+      "message": "On a second thought, how about using `bool use_ab_suffix`? \n\n(i.e., please ignore my proposal of `append_ab_suffix`).",
+      "parentUuid": "8714dc35_49a5bd46",
+      "range": {
+        "startLine": 569,
+        "startChar": 9,
+        "endLine": 569,
+        "endChar": 26
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "68945c4f_b2eb8b83",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 5
