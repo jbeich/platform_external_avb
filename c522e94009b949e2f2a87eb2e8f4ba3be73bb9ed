@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "16ba1246_d486c519",
+        "filename": "libavb/avb_chain_partition_descriptor.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-16T09:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b6426ed3_b36d752b",
+      "range": {
+        "startLine": 38,
+        "startChar": 13,
+        "endLine": 38,
+        "endChar": 17
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7e2304a1_87d2e3e3",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-09-15T16:19:14Z",
       "side": 1,
       "message": "Can we add the version info in the comment as well:\n\n  Changes in v1.3: ....\n  \nSimilar to:\n  \nhttps://android-review.git.corp.google.com/c/platform/external/avb/+/611010/7/libavb/avb_hash_descriptor.h#60",
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "557bc5e2_520368f9",
+        "filename": "libavb/avb_chain_partition_descriptor.h",
+        "patchSetId": 5
+      },
+      "lineNbr": 60,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-16T09:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7e2304a1_87d2e3e3",
       "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -88,6 +130,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8111093_2d2c25a5",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-16T09:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cd9469af_e0e0f16d",
+      "range": {
+        "startLine": 569,
+        "startChar": 9,
+        "endLine": 569,
+        "endChar": 26
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "68945c4f_b2eb8b83",
@@ -105,6 +171,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0c1770bf_6843c4ba",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-16T09:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "68945c4f_b2eb8b83",
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a82c3a3c_3e60d6bf",
@@ -118,6 +202,30 @@
       "writtenOn": "2023-09-15T16:19:14Z",
       "side": 1,
       "message": "No suffix in this case, so:\n  \n     Partition name does not fit.",
+      "range": {
+        "startLine": 619,
+        "startChar": 17,
+        "endLine": 619,
+        "endChar": 56
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "198153ac_8d4c2495",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 619,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-16T09:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "a82c3a3c_3e60d6bf",
       "range": {
         "startLine": 619,
         "startChar": 17,
@@ -151,6 +259,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c5461e44_9be90913",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1032,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-16T09:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4c06f26f_33fcdb13",
+      "range": {
+        "startLine": 1032,
+        "startChar": 10,
+        "endLine": 1032,
+        "endChar": 35
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4afdf4f2_0de125e9",
@@ -174,6 +306,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f6595df_85cafb7a",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1499,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-16T09:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4afdf4f2_0de125e9",
+      "range": {
+        "startLine": 1499,
+        "startChar": 35,
+        "endLine": 1499,
+        "endChar": 40
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f3baf7b2_b6faa5ce",
@@ -187,6 +343,30 @@
       "writtenOn": "2023-09-15T16:19:14Z",
       "side": 1,
       "message": "same here.",
+      "range": {
+        "startLine": 1521,
+        "startChar": 33,
+        "endLine": 1521,
+        "endChar": 38
+      },
+      "revId": "c522e94009b949e2f2a87eb2e8f4ba3be73bb9ed",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "39b38c6e_77640e2f",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 1521,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-16T09:21:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f3baf7b2_b6faa5ce",
       "range": {
         "startLine": 1521,
         "startChar": 33,
