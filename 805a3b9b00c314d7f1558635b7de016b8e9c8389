@@ -20,6 +20,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5a67f533_94a8acc9",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1993695
+      },
+      "writtenOn": "2023-09-20T14:13:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5dcc0591_c91d78ed",
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "60d117b2_aa213b38",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 6
@@ -58,6 +76,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa2a487b_777ac813",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1993695
+      },
+      "writtenOn": "2023-09-20T14:13:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "cbbacbbc_5a301d2c",
+      "range": {
+        "startLine": 147,
+        "startChar": 24,
+        "endLine": 147,
+        "endChar": 31
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b714e68e_0b0a6551",
@@ -71,6 +113,30 @@
       "writtenOn": "2023-09-15T11:39:55Z",
       "side": 1,
       "message": "... chain which does not ...",
+      "range": {
+        "startLine": 2934,
+        "startChar": 60,
+        "endLine": 2934,
+        "endChar": 65
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee2ce410_a9a7c958",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 2934,
+      "author": {
+        "id": 1993695
+      },
+      "writtenOn": "2023-09-20T14:13:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b714e68e_0b0a6551",
       "range": {
         "startLine": 2934,
         "startChar": 60,
@@ -104,6 +170,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "17769ff8_db4baf36",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 3000,
+      "author": {
+        "id": 1993695
+      },
+      "writtenOn": "2023-09-20T14:13:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eeaa54db_f89fad09",
+      "range": {
+        "startLine": 3000,
+        "startChar": 28,
+        "endLine": 3000,
+        "endChar": 77
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f4e28bbf_836fac9f",
@@ -127,6 +217,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "756882ed_60690a1c",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 3356,
+      "author": {
+        "id": 1993695
+      },
+      "writtenOn": "2023-09-20T14:13:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f4e28bbf_836fac9f",
+      "range": {
+        "startLine": 3355,
+        "startChar": 44,
+        "endLine": 3356,
+        "endChar": 53
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5e876184_581db1b0",
@@ -140,6 +254,30 @@
       "writtenOn": "2023-09-15T11:39:55Z",
       "side": 1,
       "message": "How about make it clear: chain_partitions_use_ab\n\n   same for the following",
+      "range": {
+        "startLine": 3574,
+        "startChar": 44,
+        "endLine": 3574,
+        "endChar": 60
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aaeb51ec_af4f8d6e",
+        "filename": "avbtool.py",
+        "patchSetId": 6
+      },
+      "lineNbr": 3574,
+      "author": {
+        "id": 1993695
+      },
+      "writtenOn": "2023-09-20T14:13:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5e876184_581db1b0",
       "range": {
         "startLine": 3574,
         "startChar": 44,
