@@ -3239,17 +3239,31 @@ class Avb(object):
 
     return header_data_blob + bytes(auth_data_blob) + bytes(aux_data_blob)
 
-  def extract_public_key(self, key_path, output):
+  def extract_public_key(self, key_path, image_path, output):
     """Implements the 'extract_public_key' command.
 
     Arguments:
       key_path: The path to a RSA private key file.
+      image_path: The path to an image to get public key from.
       output: The file to write to.
 
     Raises:
       AvbError: If the public key could not be extracted.
     """
-    output.write(RSAPublicKey(key_path).encode())
+    if key_path:
+      output.write(RSAPublicKey(key_path).encode())
+    elif image_path:
+      image = ImageHandler(image_path, read_only=True)
+      (_, header, _, _) = self._parse_image(image)
+
+      vbmeta_blob = self._load_vbmeta_blob(image)
+      key_offset = (header.SIZE +
+                    header.authentication_data_block_size +
+                    header.public_key_offset)
+      key_blob = vbmeta_blob[key_offset:key_offset + header.public_key_size]
+      output.write(key_blob)
+    else:
+      raise AvbError('no input given (private key or image)')
 
   def append_vbmeta_image(self, image_filename, vbmeta_image_filename,
                           partition_size):
@@ -4323,9 +4337,11 @@ class AvbTool(object):
 
     sub_parser = subparsers.add_parser('extract_public_key',
                                        help='Extract public key.')
-    sub_parser.add_argument('--key',
-                            help='Path to RSA private key file',
-                            required=True)
+    sub_parser_group = sub_parser.add_mutually_exclusive_group(required=True)
+    sub_parser_group.add_argument('--key',
+                                  help='Path to RSA private key file')
+    sub_parser_group.add_argument('--image',
+                                  help='Image to extract public key from')
     sub_parser.add_argument('--output',
                             help='Output file name',
                             type=argparse.FileType('wb'),
@@ -4757,7 +4773,7 @@ class AvbTool(object):
 
   def extract_public_key(self, args):
     """Implements the 'extract_public_key' sub-command."""
-    self.avb.extract_public_key(args.key, args.output)
+    self.avb.extract_public_key(args.key, args.image, args.output)
 
   def make_vbmeta_image(self, args):
     """Implements the 'make_vbmeta_image' sub-command."""
