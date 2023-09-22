@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "13d7dd39_267df06f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 9
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-22T23:18:26Z",
+      "side": 1,
+      "message": "PS9: as discussed in the doc, we use now `CStr` in the public API in order to avoid memory allocation later on.",
+      "range": {
+        "startLine": 46,
+        "startChar": 20,
+        "endLine": 46,
+        "endChar": 24
+      },
+      "revId": "5b34a07e72daec4df89721472de04b7590b81794",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

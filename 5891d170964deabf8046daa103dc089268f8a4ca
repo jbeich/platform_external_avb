@@ -22,6 +22,30 @@
       },
       "revId": "5891d170964deabf8046daa103dc089268f8a4ca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4a2a3c98_71832e5c",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 289,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-22T23:18:26Z",
+      "side": 1,
+      "message": "`contents` is an immutable `\u0026[u8]` at this point so the compiler won\u0027t let us call `as_mut_ptr()`.\n\nWe could require the user to provide preloaded data as `mut \u0026[u8]` instead, but libavb will never actually write to it in the preloaded case (it just uses a mutable pointer because it dual-purposes mutable and immutable data behind the same pointer for different use cases). So it seemed more useful to expose it to the user as an immutable slice since the data will never actually be modified.",
+      "parentUuid": "619f8799_b3852e64",
+      "range": {
+        "startLine": 289,
+        "startChar": 16,
+        "endLine": 289,
+        "endChar": 44
+      },
+      "revId": "5891d170964deabf8046daa103dc089268f8a4ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

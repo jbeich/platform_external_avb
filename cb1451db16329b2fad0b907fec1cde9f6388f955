@@ -190,6 +190,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f1389d80_86ef8157",
+        "filename": "rust/src/util.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-22T23:18:26Z",
+      "side": 1,
+      "message": "Yeah perhaps my naming is confusing here, I suppose what I\u0027m really intending is something more along the lines of an `_or()`-style function where you return the thing if it\u0027s valid or something else if not.\n\nI\u0027ll remove it for now though and if it seems useful later we can add it back in as something like `nonnull_or_err()`.",
+      "parentUuid": "eef9a059_aa3634c2",
+      "range": {
+        "startLine": 29,
+        "startChar": 58,
+        "endLine": 29,
+        "endChar": 64
+      },
+      "revId": "cb1451db16329b2fad0b907fec1cde9f6388f955",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "063eacdf_da9beba0",
