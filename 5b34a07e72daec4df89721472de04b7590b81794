@@ -3,6 +3,23 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "c7af3c89_a0c82d57",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 9
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-26T16:16:45Z",
+      "side": 1,
+      "message": "Ok @zeuthen@google.com I think this is finally ready for OWNER review! Sorry for the long back and forth about Rust stuff, now that we have a design doc I *think* the following CLs should be more straightforward :)",
+      "revId": "5b34a07e72daec4df89721472de04b7590b81794",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "13d7dd39_267df06f",
         "filename": "rust/src/verify.rs",
         "patchSetId": 9
@@ -37,6 +54,30 @@
       "writtenOn": "2023-09-26T11:51:06Z",
       "side": 1,
       "message": "I think it\u0027s simpler if we just raise this error here and convert this error to `Ok(())` in `result_to_io_enum`. So here we just do:\n```\nlet content \u003d ops.get_preloaded_partition(partition)?;\n...\nOk(())\n```\nThis makes the code more compact and we don\u0027t need to repeat this match to three items in multiple places.",
+      "range": {
+        "startLine": 300,
+        "startChar": 8,
+        "endLine": 300,
+        "endChar": 36
+      },
+      "revId": "5b34a07e72daec4df89721472de04b7590b81794",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f60b6ef_67b2bf89",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 9
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-26T16:16:45Z",
+      "side": 1,
+      "message": "`NotImplemented` is usually going to be a fatal error that does need to be reported back to libavb, it\u0027s just in the case of optional APIs like this one that `NotImplemented` should be translated to `Ok(())`.\n\nSince this is the less-common case, it seems better to have to manually translate `NotImplemented` -\u003e `Ok(())` in these instances, and let the default behavior of `result_to_io_enum()` turn it into an error to handle the common case (e.g. line 214 above).",
+      "parentUuid": "e054d30d_37ab67cd",
       "range": {
         "startLine": 300,
         "startChar": 8,
