@@ -102,6 +102,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f8939bcd_f150ad5c",
+        "filename": "README.md",
+        "patchSetId": 6
+      },
+      "lineNbr": 1158,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-09-27T09:32:54Z",
+      "side": 1,
+      "message": "Sorry, just catch this:\n\n   a chain descriptor.",
+      "range": {
+        "startLine": 1158,
+        "startChar": 39,
+        "endLine": 1158,
+        "endChar": 56
+      },
+      "revId": "805a3b9b00c314d7f1558635b7de016b8e9c8389",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "b714e68e_0b0a6551",
         "filename": "avbtool.py",
         "patchSetId": 6
