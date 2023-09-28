@@ -85,6 +85,60 @@
       "message": "`mkbootimg_test`:\n\n\nThere were 3 failures:\n  Traceback (most recent call last):\n  File \"tests/mkbootimg_test.py\", line 169, in test_legacy_boot_image_v4_signature_with_avbtool_path\n  File \"tests/mkbootimg_test.py\", line 161, in _test_legacy_boot_image_v4_signature\nAssertionError: \"Mini[367 chars]ol 1.3.0\u0027\\nDescriptors:\\n    Hash descriptor:\\[326 chars]e\u0027\\n\" !\u003d \"Mini[367 chars]ol 1.2.0\u0027\\nDescriptors:\\n    Hash descriptor:\\[326 chars]e\u0027\\n\"\n  Minimum libavb version:   1.0\n  Header Block:             256 bytes\n  Authentication Block:     320 bytes\n  Auxiliary Block:          832 bytes\n  Public key (sha1):        cdbb77177f731920bbe0a0f94f84d9038ae0617d\n  Algorithm:                SHA256_RSA2048\n  Rollback Index:           0\n  Flags:                    0\n  Rollback Index Location:  0\n- Release String:           \u0027avbtool 1.3.0\u0027\n?                                      ^\n+ Release String:           \u0027avbtool 1.2.0\u0027\n?                                      ^\n  Descriptors:\n      Hash descriptor:\n        Image Size:            12288 bytes\n        Hash Algorithm:        sha256\n        Partition Name:        boot\n        Salt:                  d00df00d\n        Digest:                cf3755630856f23ab70e501900050feef30b633b3e82a9085a578617e344f9c7\n        Flags:                 0\n      Prop: foo -\u003e \u0027bar\u0027\n      Prop: gki -\u003e \u0027nice\u0027\n\n\n  Traceback (most recent call last):\n  File \"tests/mkbootimg_test.py\", line 169, in test_legacy_boot_image_v4_signature_with_avbtool_path\n  File \"tests/mkbootimg_test.py\", line 161, in _test_legacy_boot_image_v4_signature\nAssertionError: \"Mini[367 chars]ol 1.3.0\u0027\\nDescriptors:\\n    Hash descriptor:\\[326 chars]e\u0027\\n\" !\u003d \"Mini[367 chars]ol 1.2.0\u0027\\nDescriptors:\\n    Hash descriptor:\\[326 chars]e\u0027\\n\"\n  Minimum libavb version:   1.0\n  Header Block:             256 bytes\n  Authentication Block:     320 bytes\n  Auxiliary Block:          832 bytes\n  Public key (sha1):        cdbb77177f731920bbe0a0f94f84d9038ae0617d\n  Algorithm:                SHA256_RSA2048\n  Rollback Index:           0\n  Flags:                    0\n  Rollback Index Location:  0\n- Release String:           \u0027avbtool 1.3.0\u0027\n?                                      ^\n+ Release String:           \u0027avbtool 1.2.0\u0027\n?                                      ^\n  Descriptors:\n      Hash descriptor:\n        Image Size:            12288 bytes\n        Hash Algorithm:        sha256\n        Partition Name:        boot\n        Salt:                  d00df00d\n        Digest:                cf3755630856f23ab70e501900050feef30b633b3e82a9085a578617e344f9c7\n        Flags:                 0\n      Prop: foo -\u003e \u0027bar\u0027\n      Prop: gki -\u003e \u0027nice\u0027\n\n\n  Traceback (most recent call last):\n  File \"tests/mkbootimg_test.py\", line 169, in test_legacy_boot_image_v4_signature_with_avbtool_path\n  File \"tests/mkbootimg_test.py\", line 161, in _test_legacy_boot_image_v4_signature\nAssertionError: \"Mini[367 chars]ol 1.3.0\u0027\\nDescriptors:\\n    Hash descriptor:\\[326 chars]e\u0027\\n\" !\u003d \"Mini[367 chars]ol 1.2.0\u0027\\nDescriptors:\\n    Hash descriptor:\\[326 chars]e\u0027\\n\"\n  Minimum libavb version:   1.0\n  Header Block:             256 bytes\n  Authentication Block:     320 bytes\n  Auxiliary Block:          832 bytes\n  Public key (sha1):        cdbb77177f731920bbe0a0f94f84d9038ae0617d\n  Algorithm:                SHA256_RSA2048\n  Rollback Index:           0\n  Flags:                    0\n  Rollback Index Location:  0\n- Release String:           \u0027avbtool 1.3.0\u0027\n?                                      ^\n+ Release String:           \u0027avbtool 1.2.0\u0027\n?                                      ^\n  Descriptors:\n      Hash descriptor:\n        Image Size:            12288 bytes\n        Hash Algorithm:        sha256\n        Partition Name:        boot\n        Salt:                  d00df00d\n        Digest:                cf3755630856f23ab70e501900050feef30b633b3e82a9085a578617e344f9c7\n        Flags:                 0\n      Prop: foo -\u003e \u0027bar\u0027\n      Prop: gki -\u003e \u0027nice\u0027",
       "revId": "a1fe228b86543a21739c51352f5ce72f134fccfa",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ca1da9f0_2513ddde",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-28T11:09:48Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "ac382489_6ab1796b",
+      "revId": "a1fe228b86543a21739c51352f5ce72f134fccfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f21da078_0732e375",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-28T11:09:48Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "faee706f_8d18c295",
+      "revId": "a1fe228b86543a21739c51352f5ce72f134fccfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1186865a_8ee34cf3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2002655
+      },
+      "writtenOn": "2023-09-28T11:09:48Z",
+      "side": 1,
+      "message": "done",
+      "parentUuid": "8878e395_a65b5a8c",
+      "revId": "a1fe228b86543a21739c51352f5ce72f134fccfa",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
