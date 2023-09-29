@@ -45,6 +45,52 @@
       },
       "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ec06595_2116f677",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-29T07:50:47Z",
+      "side": 1,
+      "message": "Maybe call it `as_ops` since the return value is a reference?",
+      "range": {
+        "startLine": 156,
+        "startChar": 10,
+        "endLine": 156,
+        "endChar": 21
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "47942dda_4df64766",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-29T07:50:47Z",
+      "side": 1,
+      "message": "Can this work without `0`?\n```suggestion\n    unsafe { user_data.as_mut() }.ok_or(IoError::Io)\n```",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 164,
+        "endChar": 59
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
