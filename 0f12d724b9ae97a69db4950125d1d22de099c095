@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e9720a94_e01f577d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-29T19:22:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "94ff38fe_df778ffb",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 4
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "de0f21ad_53a529e5",
@@ -37,6 +61,24 @@
       "writtenOn": "2023-09-29T10:30:53Z",
       "side": 1,
       "message": "Even if you follow these rules, it looks to me like the combination of this and `create_avb_ops` lets you duplicate a mutable reference. Something like:\n\n```rust\nlet ops \u003d \u0026mut my_ops;\nlet avb_ops \u003d UserData::new(ops).create_avb_ops();\nlet ops2 \u003d UserData::extract_ops(avb_ops).unwrap();\n/// Now both ops and ops2 are live mutable references to my_ops.\n```\n\nYou probably can\u0027t avoid that due to the lifetime erasure of `AvbOps`, but it would be good to mention it in the safety comments. Maybe something in the safety comment for `create_avb_ops` saying that the `Ops` contained in the `UserData` must not be used as long as the `AvbOps` is alive.",
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1953adf5_9b77cb29",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-29T19:22:12Z",
+      "side": 1,
+      "message": "Good point thanks, updated several safety docs and tried to clarify the workflow a bit but LMK if I made it more confusing.",
+      "parentUuid": "de0f21ad_53a529e5",
       "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -111,6 +153,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b57974a6_0991ff65",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-29T19:22:12Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4ec06595_2116f677",
+      "range": {
+        "startLine": 156,
+        "startChar": 10,
+        "endLine": 156,
+        "endChar": 21
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "496214c6_54a168de",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-29T19:22:12Z",
+      "side": 1,
+      "message": "Ack makes sense, I was trying to provide a little bit of compile-time enforcement against accidentally hanging onto the returned reference too long by tying it to the lifetime of the raw pointer, but I agree it is a bit awkward and weird.\n\nI\u0027ll switch to explicit lifetime invention, the safety docs should explain the proper usage and this will save some repeated boilerplate at the call sites vs taking a reference.",
+      "parentUuid": "225a2e34_cb4b1fc9",
+      "range": {
+        "startLine": 156,
+        "startChar": 31,
+        "endLine": 156,
+        "endChar": 36
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "47942dda_4df64766",
@@ -124,6 +214,30 @@
       "writtenOn": "2023-09-29T07:50:47Z",
       "side": 1,
       "message": "Can this work without `0`?\n```suggestion\n    unsafe { user_data.as_mut() }.ok_or(IoError::Io)\n```",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 164,
+        "endChar": 59
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc55de2d_9f4afd10",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-09-29T19:22:12Z",
+      "side": 1,
+      "message": "I couldn\u0027t find a way to make this work unfortunately. The `.0` is needed to extract the `Ops` from the `UserData` wrapper, and when I tried to `map()` it instead of unwrapping then re-wrapping I got some mutable borrow compiler error, I think because `map` then tries to take ownership of the `\u0026mut`?\n\n```\n    unsafe { user_data.as_mut() }\n        .ok_or(IoError::Io)\n        .map(|u| u.0)\n```\n\n```\nerror[E0507]: cannot move out of `u` which is behind a mutable reference\n   --\u003e external/avb/rust/src/verify.rs:204:18\n    |\n204 |         .map(|u| u.0)\n    |                  ^^^ move occurs because `u.0` has type `\u0026mut dyn verify::\nOps`, which does not implement the `Copy` trait\n\n```",
+      "parentUuid": "47942dda_4df64766",
       "range": {
         "startLine": 164,
         "startChar": 4,
