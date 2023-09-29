@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94ff38fe_df778ffb",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 29,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-29T07:16:39Z",
+      "side": 1,
+      "message": "It looks like this doesn\u0027t need to be public for now.",
+      "range": {
+        "startLine": 29,
+        "startChar": 0,
+        "endLine": 29,
+        "endChar": 4
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0574c639_65d5d47d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-29T07:16:39Z",
+      "side": 1,
+      "message": "The practice of passing a reference to a pointer and eliding the lifetime of the returned Ops reference to match the pointer reference feels unconventional. This structure is not commonly seen in Android [1].\n\nWhat about passing `\u0026mut AvbOps` as a parameter and have the returned `\u0026mut dyn Ops` share the same lifetime as `\u0026mut AvbOps` ? It feels more intuitive this way.\n\n[1] https://cs.android.com/search?q\u003d%22%26*mut%20%22%20-f:prebuilt",
+      "range": {
+        "startLine": 156,
+        "startChar": 31,
+        "endLine": 156,
+        "endChar": 36
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

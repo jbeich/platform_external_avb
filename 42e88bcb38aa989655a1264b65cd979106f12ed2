@@ -204,6 +204,30 @@
       },
       "revId": "42e88bcb38aa989655a1264b65cd979106f12ed2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "601251ac_4c65986b",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-09-29T07:16:39Z",
+      "side": 1,
+      "message": "That looks fine.",
+      "parentUuid": "82bee835_21d38c7b",
+      "range": {
+        "startLine": 563,
+        "startChar": 44,
+        "endLine": 566,
+        "endChar": 10
+      },
+      "revId": "42e88bcb38aa989655a1264b65cd979106f12ed2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
