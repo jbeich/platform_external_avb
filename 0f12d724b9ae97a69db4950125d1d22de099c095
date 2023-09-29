@@ -26,6 +26,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "de0f21ad_53a529e5",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 155,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-29T10:30:53Z",
+      "side": 1,
+      "message": "Even if you follow these rules, it looks to me like the combination of this and `create_avb_ops` lets you duplicate a mutable reference. Something like:\n\n```rust\nlet ops \u003d \u0026mut my_ops;\nlet avb_ops \u003d UserData::new(ops).create_avb_ops();\nlet ops2 \u003d UserData::extract_ops(avb_ops).unwrap();\n/// Now both ops and ops2 are live mutable references to my_ops.\n```\n\nYou probably can\u0027t avoid that due to the lifetime erasure of `AvbOps`, but it would be good to mention it in the safety comments. Maybe something in the safety comment for `create_avb_ops` saying that the `Ops` contained in the `UserData` must not be used as long as the `AvbOps` is alive.",
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "0574c639_65d5d47d",
         "filename": "rust/src/verify.rs",
         "patchSetId": 4
@@ -65,6 +82,30 @@
         "startChar": 10,
         "endLine": 156,
         "endChar": 21
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "225a2e34_cb4b1fc9",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 156,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-09-29T10:30:53Z",
+      "side": 1,
+      "message": "Agreed, this is weird and I don\u0027t see what it gains you. Either take a reference (as Alice suggests) and make the caller take care of lifetimes when they convert the pointer to a reference, or just take a pointer and make the invention of an arbitrary lifetime explicit.",
+      "parentUuid": "0574c639_65d5d47d",
+      "range": {
+        "startLine": 156,
+        "startChar": 31,
+        "endLine": 156,
+        "endChar": 36
       },
       "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
