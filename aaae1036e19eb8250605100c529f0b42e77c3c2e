@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5aba88b8_c1bb5154",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 3252,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2023-10-02T06:46:47Z",
+      "side": 1,
+      "message": "nit: should we raise AvbError() if both key_path and image_path are provided?",
+      "revId": "aaae1036e19eb8250605100c529f0b42e77c3c2e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
