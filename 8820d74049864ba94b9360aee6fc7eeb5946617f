@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "95360f7f_693a42ee",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-02T23:26:12Z",
+      "side": 1,
+      "message": "Oh neat, I\u0027ll definitely play around with this thanks",
+      "parentUuid": "1aa1947c_400c1fa3",
+      "range": {
+        "startLine": 151,
+        "startChar": 14,
+        "endLine": 151,
+        "endChar": 28
+      },
+      "revId": "8820d74049864ba94b9360aee6fc7eeb5946617f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd4a89a5_f9a52b60",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-10-02T14:42:16Z",
       "side": 1,
       "message": "Can we remove this?",
+      "range": {
+        "startLine": 613,
+        "startChar": 28,
+        "endLine": 613,
+        "endChar": 43
+      },
+      "revId": "8820d74049864ba94b9360aee6fc7eeb5946617f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c8aa33a9_ea6719ce",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-02T23:26:12Z",
+      "side": 1,
+      "message": "Ah yep looks like this is unnecessary, thanks",
+      "parentUuid": "dd4a89a5_f9a52b60",
       "range": {
         "startLine": 613,
         "startChar": 28,
