@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1aa1947c_400c1fa3",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 151,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-02T14:42:16Z",
+      "side": 1,
+      "message": "Can be addressed in another cl: Instead of making this function unsafe, an alternative approach could involve encapsulating the raw `AvbOps` with a phantom data of `UserData`, similar to the `DiceInputValues` [1]. By doing so, we delegate the responsibility of lifetime checking to Rust itself, rather than relying on the caller of this function.\n\n[1] https://cs.android.com/android/platform/superproject/main/+/main:system/security/diced/open_dice/src/dice.rs;l\u003d180;drc\u003d7f30e5415896226e1aa9d4903593dc7fc868c2e7",
+      "range": {
+        "startLine": 151,
+        "startChar": 14,
+        "endLine": 151,
+        "endChar": 28
+      },
+      "revId": "8820d74049864ba94b9360aee6fc7eeb5946617f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd4a89a5_f9a52b60",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 613,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-02T14:42:16Z",
+      "side": 1,
+      "message": "Can we remove this?",
+      "range": {
+        "startLine": 613,
+        "startChar": 28,
+        "endLine": 613,
+        "endChar": 43
+      },
+      "revId": "8820d74049864ba94b9360aee6fc7eeb5946617f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

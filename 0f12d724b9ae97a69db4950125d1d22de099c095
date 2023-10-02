@@ -246,6 +246,30 @@
       },
       "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b878a07_d8d50bed",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-02T14:42:16Z",
+      "side": 1,
+      "message": "Oh I see. Let\u0027s leave it like this then.",
+      "parentUuid": "fc55de2d_9f4afd10",
+      "range": {
+        "startLine": 164,
+        "startChar": 4,
+        "endLine": 164,
+        "endChar": 59
+      },
+      "revId": "0f12d724b9ae97a69db4950125d1d22de099c095",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
