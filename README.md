@@ -144,6 +144,11 @@ possible to work with a partition that does not use A/B and should
 never have the prefix. This corresponds to the
 `AVB_HASH[TREE]_DESCRIPTOR_FLAGS_DO_NOT_USE_AB` flags.
 
+In version 1.3, avbtool supports `chain_partition_do_not_use_ab` for
+`make_vbmeta_image` operations. This makes it possible to work with
+a chain partition that does not use A/B and should not have the suffix.
+This corresponds to the `AVB_CHAIN_PARTITION_DESCRIPTOR_FLAGS_DO_NOT_USE_AB` flag.
+
 ## The VBMeta Digest
 
 The VBMeta digest is a digest over all VBMeta structs including the root struct
@@ -370,17 +375,18 @@ there is obviously no need to bump it again.
 
 The content for the vbmeta partition can be generated as follows:
 
-    $ avbtool make_vbmeta_image                                                    \
-        [--output OUTPUT]                                                          \
-        [--algorithm ALGORITHM] [--key /path/to/key_used_for_signing_or_pub_key]   \
-        [--public_key_metadata /path/to/pkmd.bin]                                  \
-        [--rollback_index NUMBER] [--rollback_index_location NUMBER]               \
-        [--include_descriptors_from_image /path/to/image.bin]                      \
-        [--setup_rootfs_from_kernel /path/to/image.bin]                            \
-        [--chain_partition part_name:rollback_index_location:/path/to/key1.bin]    \
-        [--signing_helper /path/to/external/signer]                                \
-        [--signing_helper_with_files /path/to/external/signer_with_files]          \
-        [--print_required_libavb_version]                                          \
+    $ avbtool make_vbmeta_image                                                                  \
+        [--output OUTPUT]                                                                        \
+        [--algorithm ALGORITHM] [--key /path/to/key_used_for_signing_or_pub_key]                 \
+        [--public_key_metadata /path/to/pkmd.bin]                                                \
+        [--rollback_index NUMBER] [--rollback_index_location NUMBER]                             \
+        [--include_descriptors_from_image /path/to/image.bin]                                    \
+        [--setup_rootfs_from_kernel /path/to/image.bin]                                          \
+        [--chain_partition part_name:rollback_index_location:/path/to/key1.bin]                  \
+        [--chain_partition_do_not_use_ab part_name:rollback_index_location:/path/to/key.bin]     \
+        [--signing_helper /path/to/external/signer]                                              \
+        [--signing_helper_with_files /path/to/external/signer_with_files]                        \
+        [--print_required_libavb_version]                                                        \
         [--append_to_release_string STR]
 
 An integrity footer containing the hash for an entire partition can be
@@ -1146,6 +1152,11 @@ When booting an image signed with a custom key, a yellow screen will be shown as
 part of the boot process to remind the user that the custom key is in use.
 
 # Version History
+
+### Version 1.3
+Version 1.3 adds support for the following:
+* A 32-bit `flags` element is added to a chain descriptor.
+* Support for chain partitions which don't use [A/B](#a_b-support).
 
 ### Version 1.2
 
