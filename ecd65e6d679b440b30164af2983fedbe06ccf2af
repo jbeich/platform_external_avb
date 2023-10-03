@@ -16,6 +16,24 @@
       "message": "Hey Alice, zeuthen@ has said that he\u0027s fine with us having a separate OWNERS file in the Rust sub-dir so we can iterate faster - would you be OK with this?\n\nIf so, do you have others who should be added here? I\u0027m not dying to be an OWNER myself so if your team wants to take the entire list here I\u0027m totally fine with that, but I\u0027m also happy to stay on the list if it\u0027s easier that way.",
       "revId": "ecd65e6d679b440b30164af2983fedbe06ccf2af",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25f91381_21bae83c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-03T08:24:28Z",
+      "side": 1,
+      "message": "I think we can start with us and will see if to add other people later. Thanks for sorting this out!",
+      "parentUuid": "d091343d_72de2e3f",
+      "revId": "ecd65e6d679b440b30164af2983fedbe06ccf2af",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
