@@ -39,7 +39,7 @@ import time
 
 # Keep in sync with libavb/avb_version.h.
 AVB_VERSION_MAJOR = 1
-AVB_VERSION_MINOR = 2
+AVB_VERSION_MINOR = 3
 AVB_VERSION_SUB = 0
 
 # Keep in sync with libavb/avb_footer.h.
@@ -1805,15 +1805,17 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
     rollback_index_location: The rollback index location to use.
     partition_name: Partition name as string.
     public_key: The public key as bytes.
+    flags: Descriptor flags (see avb_chain_partition_descriptor.h).
   """
 
   TAG = 4
-  RESERVED = 64
-  SIZE = 28 + RESERVED
+  RESERVED = 60
+  SIZE = 32 + RESERVED
   FORMAT_STRING = ('!QQ'  # tag, num_bytes_following (descriptor header)
                    'L'    # rollback_index_location
                    'L'    # partition_name_size (bytes)
                    'L' +  # public_key_size (bytes)
+                   'L' +  # flags
                    str(RESERVED) + 's')  # reserved
 
   def __init__(self, data=None):
@@ -1831,7 +1833,8 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
     if data:
       (tag, num_bytes_following, self.rollback_index_location,
        partition_name_len,
-       public_key_len, _) = struct.unpack(self.FORMAT_STRING, data[0:self.SIZE])
+       public_key_len, self.flags, _) = struct.unpack(self.FORMAT_STRING,
+                                                      data[0:self.SIZE])
       expected_size = round_to_multiple(
           self.SIZE - 16 + partition_name_len + public_key_len, 8)
       if tag != self.TAG or num_bytes_following != expected_size:
@@ -1852,6 +1855,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
       self.rollback_index_location = 0
       self.partition_name = ''
       self.public_key = b''
+      self.flags = 0
 
   def print_desc(self, o):
     """Print the descriptor.
@@ -1866,6 +1870,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
     # Just show the SHA1 of the key, for size reasons.
     pubkey_digest = hashlib.sha1(self.public_key).hexdigest()
     o.write('      Public key (sha1):       {}\n'.format(pubkey_digest))
+    o.write('      Flags:                   {}\n'.format(self.flags))
 
   def encode(self):
     """Serializes the descriptor.
@@ -1881,7 +1886,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
     desc = struct.pack(self.FORMAT_STRING, self.TAG, nbf_with_padding,
                        self.rollback_index_location,
                        len(partition_name_encoded), len(self.public_key),
-                       self.RESERVED * b'\0')
+                       self.flags, self.RESERVED * b'\0')
     ret = desc + partition_name_encoded + self.public_key + padding_size * b'\0'
     return ret
 
@@ -2908,7 +2913,8 @@ class Avb(object):
 
     return self._get_cmdline_descriptors_for_hashtree_descriptor(ht)
 
-  def make_vbmeta_image(self, output, chain_partitions, algorithm_name,
+  def make_vbmeta_image(self, output, chain_partitions_use_ab,
+                        chain_partitions_do_not_use_ab, algorithm_name,
                         key_path, public_key_metadata_path, rollback_index,
                         flags, rollback_index_location,
                         props, props_from_file, kernel_cmdlines,
@@ -2924,7 +2930,8 @@ class Avb(object):
 
     Arguments:
       output: File to write the image to.
-      chain_partitions: List of partitions to chain or None.
+      chain_partitions_use_ab: List of partitions to chain or None.
+      chain_partitions_do_not_use_ab: List of partitions to chain which does not use A/B or None.
       algorithm_name: Name of algorithm to use.
       key_path: Path to key to use or None.
       public_key_metadata_path: Path to public key metadata or None.
@@ -2950,6 +2957,8 @@ class Avb(object):
     tmp_header = AvbVBMetaHeader()
     if rollback_index_location > 0:
       tmp_header.bump_required_libavb_version_minor(2)
+    if chain_partitions_do_not_use_ab:
+      tmp_header.bump_required_libavb_version_minor(3)
     if include_descriptors_from_image:
       # Use the bump logic in AvbVBMetaHeader to calculate the max required
       # version of all included descriptors.
@@ -2970,8 +2979,8 @@ class Avb(object):
     ht_desc_to_setup = None
     vbmeta_blob = self._generate_vbmeta_blob(
         algorithm_name, key_path, public_key_metadata_path, descriptors,
-        chain_partitions, rollback_index, flags, rollback_index_location,
-        props, props_from_file,
+        chain_partitions_use_ab, chain_partitions_do_not_use_ab,
+        rollback_index, flags, rollback_index_location, props, props_from_file,
         kernel_cmdlines, setup_rootfs_from_kernel, ht_desc_to_setup,
         include_descriptors_from_image, signing_helper,
         signing_helper_with_files, release_string,
@@ -2988,7 +2997,7 @@ class Avb(object):
 
   def _generate_vbmeta_blob(self, algorithm_name, key_path,
                             public_key_metadata_path, descriptors,
-                            chain_partitions,
+                            chain_partitions_use_ab, chain_partitions_do_not_use_ab,
                             rollback_index, flags, rollback_index_location,
                             props, props_from_file,
                             kernel_cmdlines,
@@ -3013,7 +3022,8 @@ class Avb(object):
       key_path: The path to the .pem file used to sign the blob.
       public_key_metadata_path: Path to public key metadata or None.
       descriptors: A list of descriptors to insert or None.
-      chain_partitions: List of partitions to chain or None.
+      chain_partitions_use_ab: List of partitions to chain with A/B or None.
+      chain_partitions_do_not_use_ab: List of partitions to chain without A/B or None
       rollback_index: The rollback index to use.
       flags: Flags to use in the image.
       rollback_index_location: Location of the main vbmeta rollback index.
@@ -3053,9 +3063,15 @@ class Avb(object):
     h.bump_required_libavb_version_minor(required_libavb_version_minor)
 
     # Insert chained partition descriptors, if any
-    if chain_partitions:
+    all_chain_partitions = []
+    if chain_partitions_use_ab:
+      all_chain_partitions.extend(chain_partitions_use_ab)
+    if chain_partitions_do_not_use_ab:
+      all_chain_partitions.extend(chain_partitions_do_not_use_ab)
+
+    if len(all_chain_partitions) > 0:
       used_locations = {rollback_index_location: True}
-      for cp in chain_partitions:
+      for cp in all_chain_partitions:
         cp_tokens = cp.split(':')
         if len(cp_tokens) != 3:
           raise AvbError('Malformed chained partition "{}".'.format(cp))
@@ -3075,6 +3091,8 @@ class Avb(object):
           raise AvbError('Rollback index location must be 1 or larger.')
         with open(file_path, 'rb') as f:
           desc.public_key = f.read()
+        if chain_partitions_do_not_use_ab and (cp in chain_partitions_do_not_use_ab):
+          desc.flags |= 1
         descriptors.append(desc)
 
     # Descriptors.
@@ -3335,8 +3353,9 @@ class Avb(object):
 
   def add_hash_footer(self, image_filename, partition_size,
                       dynamic_partition_size, partition_name,
-                      hash_algorithm, salt, chain_partitions, algorithm_name,
-                      key_path,
+                      hash_algorithm, salt, chain_partitions_use_ab,
+                      chain_partitions_do_not_use_ab,
+                      algorithm_name, key_path,
                       public_key_metadata_path, rollback_index, flags,
                       rollback_index_location, props,
                       props_from_file, kernel_cmdlines,
@@ -3356,7 +3375,8 @@ class Avb(object):
       partition_name: Name of partition (without A/B suffix).
       hash_algorithm: Hash algorithm to use.
       salt: Salt to use as a hexadecimal string or None to use /dev/urandom.
-      chain_partitions: List of partitions to chain.
+      chain_partitions_use_ab: List of partitions to chain with A/B or None.
+      chain_partitions_do_not_use_ab: List of partitions to chain without A/B or None.
       algorithm_name: Name of algorithm to use.
       key_path: Path to key to use or None.
       public_key_metadata_path: Path to public key metadata or None.
@@ -3399,6 +3419,8 @@ class Avb(object):
       required_libavb_version_minor = 1
     if rollback_index_location > 0:
       required_libavb_version_minor = 2
+    if chain_partitions_do_not_use_ab:
+      required_libavb_version_minor = 3
 
     # If we're asked to calculate minimum required libavb version, we're done.
     if print_required_libavb_version:
@@ -3493,8 +3515,8 @@ class Avb(object):
       ht_desc_to_setup = None
       vbmeta_blob = self._generate_vbmeta_blob(
           algorithm_name, key_path, public_key_metadata_path, [h_desc],
-          chain_partitions, rollback_index, flags, rollback_index_location,
-          props, props_from_file,
+          chain_partitions_use_ab, chain_partitions_do_not_use_ab, rollback_index,
+          flags, rollback_index_location, props, props_from_file,
           kernel_cmdlines, setup_rootfs_from_kernel, ht_desc_to_setup,
           include_descriptors_from_image, signing_helper,
           signing_helper_with_files, release_string,
@@ -3550,8 +3572,9 @@ class Avb(object):
 
   def add_hashtree_footer(self, image_filename, partition_size, partition_name,
                           generate_fec, fec_num_roots, hash_algorithm,
-                          block_size, salt, chain_partitions, algorithm_name,
-                          key_path,
+                          block_size, salt, chain_partitions_use_ab,
+                          chain_partitions_do_not_use_ab,
+                          algorithm_name, key_path,
                           public_key_metadata_path, rollback_index, flags,
                           rollback_index_location,
                           props, props_from_file, kernel_cmdlines,
@@ -3579,7 +3602,8 @@ class Avb(object):
       hash_algorithm: Hash algorithm to use.
       block_size: Block size to use.
       salt: Salt to use as a hexadecimal string or None to use /dev/urandom.
-      chain_partitions: List of partitions to chain.
+      chain_partitions_use_ab: List of partitions to chain.
+      chain_partitions_do_not_use_ab: List of partitions to chain without A/B or None.
       algorithm_name: Name of algorithm to use.
       key_path: Path to key to use or None.
       public_key_metadata_path: Path to public key metadata or None.
@@ -3620,6 +3644,8 @@ class Avb(object):
       required_libavb_version_minor = 1
     if rollback_index_location > 0:
       required_libavb_version_minor = 2
+    if chain_partitions_do_not_use_ab:
+      required_libavb_version_minor = 3
 
     # If we're asked to calculate minimum required libavb version, we're done.
     if print_required_libavb_version:
@@ -3791,7 +3817,8 @@ class Avb(object):
       vbmeta_offset = tree_offset + len_hashtree_and_fec
       vbmeta_blob = self._generate_vbmeta_blob(
           algorithm_name, key_path, public_key_metadata_path, [ht_desc],
-          chain_partitions, rollback_index, flags, rollback_index_location,
+          chain_partitions_use_ab, chain_partitions_do_not_use_ab,
+          rollback_index, flags, rollback_index_location,
           props, props_from_file,
           kernel_cmdlines, setup_rootfs_from_kernel, ht_desc_to_setup,
           include_descriptors_from_image, signing_helper,
@@ -4250,6 +4277,11 @@ class AvbTool(object):
                             help='Allow signed integrity-data for partition',
                             metavar='PART_NAME:ROLLBACK_SLOT:KEY_PATH',
                             action='append')
+    sub_parser.add_argument('--chain_partition_do_not_use_ab',
+                            help='Allow signed integrity-data for partition does not use A/B',
+                            metavar='PART_NAME:ROLLBACK_SLOT:KEY_PATH',
+                            action='append',
+                            required=False)
     sub_parser.add_argument('--flags',
                             help='VBMeta flags',
                             type=parse_number,
@@ -4763,6 +4795,7 @@ class AvbTool(object):
     """Implements the 'make_vbmeta_image' sub-command."""
     args = self._fixup_common_args(args)
     self.avb.make_vbmeta_image(args.output, args.chain_partition,
+                               args.chain_partition_do_not_use_ab,
                                args.algorithm, args.key,
                                args.public_key_metadata, args.rollback_index,
                                args.flags, args.rollback_index_location,
@@ -4788,8 +4821,9 @@ class AvbTool(object):
     self.avb.add_hash_footer(args.image.name if args.image else None,
                              args.partition_size, args.dynamic_partition_size,
                              args.partition_name, args.hash_algorithm,
-                             args.salt, args.chain_partition, args.algorithm,
-                             args.key,
+                             args.salt, args.chain_partition,
+                             args.chain_partition_do_not_use_ab,
+                             args.algorithm, args.key,
                              args.public_key_metadata, args.rollback_index,
                              args.flags, args.rollback_index_location,
                              args.prop, args.prop_from_file,
@@ -4822,7 +4856,9 @@ class AvbTool(object):
         args.partition_name,
         not args.do_not_generate_fec, args.fec_num_roots,
         args.hash_algorithm, args.block_size,
-        args.salt, args.chain_partition, args.algorithm,
+        args.salt, args.chain_partition,
+        args.chain_partition_do_not_use_ab,
+        args.algorithm,
         args.key, args.public_key_metadata,
         args.rollback_index, args.flags,
         args.rollback_index_location, args.prop,
