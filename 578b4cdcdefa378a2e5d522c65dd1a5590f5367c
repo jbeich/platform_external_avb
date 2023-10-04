@@ -88,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "da7deaba_fcd00f1c",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-04T00:07:08Z",
+      "side": 1,
+      "message": "My understanding is that it\u0027s OK to ignore data between the content and the footer, since it\u0027s likely just partition buffer space in case the image grows in future versions.\n\nResolving to allow CL submission but if I misunderstood or there\u0027s still some uncertainty here we can file a bug and/or follow up later.",
+      "parentUuid": "0289e669_d49daa51",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 14
+      },
+      "revId": "578b4cdcdefa378a2e5d522c65dd1a5590f5367c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7126127_8b04f05c",
