@@ -32,7 +32,7 @@
 
 use avb_bindgen::{AvbIOResult, AvbSlotVerifyResult};
 
-use core::fmt;
+use core::{fmt, str::Utf8Error};
 
 /// `AvbSlotVerifyResult` error wrapper.
 #[derive(Clone, Debug, PartialEq, Eq)]
@@ -123,6 +123,9 @@ pub enum IoError {
     InvalidValueSize,
     /// `AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE`
     InsufficientSpace,
+    /// Custom error code to indicate that an optional callback method has not been implemented.
+    /// If this is returned from a required callback method, it will bubble up as an `Io` error.
+    NotImplemented,
 }
 
 impl fmt::Display for IoError {
@@ -135,7 +138,14 @@ impl fmt::Display for IoError {
             Self::NoSuchValue => write!(f, "No such named persistent value"),
             Self::InvalidValueSize => write!(f, "Invalid named persistent value size"),
             Self::InsufficientSpace => write!(f, "Buffer is too small"),
+            Self::NotImplemented => write!(f, "Function not implemented"),
         }
+    }
+}
+
+impl From<Utf8Error> for IoError {
+    fn from(_: Utf8Error) -> Self {
+        Self::Io
     }
 }
 
@@ -178,6 +188,9 @@ impl From<IoError> for AvbIOResult {
             IoError::NoSuchValue => AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE,
             IoError::InvalidValueSize => AvbIOResult::AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE,
             IoError::InsufficientSpace => AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE,
+            // `NotImplemented` is internal to this library and doesn't have a libavb equivalent,
+            // convert it to the default I/O error.
+            IoError::NotImplemented => AvbIOResult::AVB_IO_RESULT_ERROR_IO,
         }
     }
 }
