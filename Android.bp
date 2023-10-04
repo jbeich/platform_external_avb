@@ -398,3 +398,97 @@ cc_library_headers {
         },
     },
 }
+
+// Rust bindgen wrappers to allow calling into libavb from Rust.
+//
+// The auto-generated wrappers are Rust unsafe and somewhat difficult to work
+// with so are not exposed outside of this directory; instead we will provide
+// a safe higher-level Rust API.
+rust_defaults {
+    name: "libavb_bindgen.defaults",
+    wrapper_src: "rust/bindgen/avb.h",
+    crate_name: "avb_bindgen",
+    edition: "2021",
+    visibility: [
+        ":__subpackages__",
+        // TODO(b/290110273): add the Rust public API layer here and adjust
+        // Virtualization packages to depend on it instead of the raw bindgen.
+        "//packages/modules/Virtualization:__subpackages__",
+    ],
+    source_stem: "bindings",
+    bindgen_flags: [
+        "--constified-enum-module AvbDescriptorTag",
+        "--default-enum-style rust",
+        "--allowlist-type=AvbDescriptorTag",
+        "--allowlist-function=.*",
+        "--allowlist-var=AVB.*",
+        "--use-core",
+        "--raw-line=#![no_std]",
+        "--ctypes-prefix=core::ffi",
+    ],
+    cflags: ["-DBORINGSSL_NO_CXX"],
+}
+
+rust_bindgen {
+    name: "libavb_bindgen",
+    defaults: ["libavb_bindgen.defaults"],
+    host_supported: true,
+    static_libs: [
+        "libavb",
+    ],
+    shared_libs: [
+        "libcrypto",
+    ],
+}
+
+rust_bindgen {
+    name: "libavb_bindgen_nostd",
+    defaults: ["libavb_bindgen.defaults"],
+    static_libs: [
+        "libavb_baremetal",
+        "libcrypto_baremetal",
+    ],
+}
+
+rust_test {
+    name: "libavb_bindgen_test",
+    srcs: [":libavb_bindgen"],
+    crate_name: "avb_bindgen_test",
+    edition: "2021",
+    test_suites: ["general-tests"],
+    auto_gen_config: true,
+    clippy_lints: "none",
+    lints: "none",
+}
+
+// Rust library wrapping libavb C implementation.
+rust_defaults {
+    name: "libavb_rs.defaults",
+    srcs: ["rust/src/lib.rs"],
+    // Require unsafe blocks for inside unsafe functions.
+    flags: ["-Dunsafe_op_in_unsafe_fn"],
+    rustlibs: [
+        "libavb_bindgen_nostd",
+        "libtinyvec_nostd",
+    ],
+    whole_static_libs: [
+        "libavb_baremetal",
+    ],
+}
+
+rust_library_rlib {
+    name: "libavb_rs_nostd",
+    crate_name: "avb",
+    prefer_rlib: true,
+    defaults: ["libavb_rs.defaults"],
+    no_stdlibs: true,
+    stdlibs: [
+        "libcore.rust_sysroot",
+    ],
+}
+
+rust_test {
+    name: "libavb_rs_test",
+    defaults: ["libavb_rs.defaults"],
+    test_suites: ["general-tests"],
+}
