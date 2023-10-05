@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c9e82c82_9ae49699",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-05T23:03:30Z",
+      "side": 1,
+      "message": "I looked at `PhantomData` as you suggested in https://android-review.git.corp.google.com/c/platform/external/avb/+/2745947/comment/1aa1947c_400c1fa3/, but after playing around I realized I could achieve the same goal without an additional wrapper struct by accessing `AvbOps` itself as a `\u0026mut` and tying it to the parent structure that way.\n\nBut LMK if this isn\u0027t what you were envisioning and I can adjust further.",
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
