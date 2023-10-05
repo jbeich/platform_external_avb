@@ -111,7 +111,7 @@ pub trait Ops {
 ///                                  `Ops` (Rust/fat) ->
 ///                                  `UserData` (Rust/thin)
 ///
-///                                  `create_avb_ops()` makes
+///                                  `avb_ops()` returns
 ///                                  `AvbOps` (C) containing:
 ///                                  1. `UserData*` (C)
 ///                                  2. our callbacks (C)
@@ -130,45 +130,50 @@ pub trait Ops {
 /// perform `Ops` (Rust)
 /// callback
 /// ```
-struct UserData<'a>(&'a mut dyn Ops);
+struct UserData<'a> {
+    ops: &'a mut dyn Ops,
+    /// Do not access this directly from outside this struct, use the `avb_ops()` method instead.
+    _avb_ops: AvbOps,
+}
 
 impl<'a> UserData<'a> {
     fn new(ops: &'a mut impl Ops) -> Self {
-        Self(ops)
+        Self {
+            ops,
+            _avb_ops: AvbOps {
+                // We don't have a stable pointer to `self` yet, initialize to NULL and we'll
+                // configure it properly in the `avb_ops()` accessor method.
+                user_data: ptr::null_mut(),
+                ab_ops: ptr::null_mut(),  // Deprecated, no need to support.
+                atx_ops: ptr::null_mut(), // TODO: support optional ATX.
+                read_from_partition: Some(read_from_partition),
+                get_preloaded_partition: Some(get_preloaded_partition),
+                write_to_partition: None, // Not needed, only used for deprecated A/B.
+                validate_vbmeta_public_key: Some(validate_vbmeta_public_key),
+                // TODO: add callback wrappers for the remaining API.
+                read_rollback_index: None,
+                write_rollback_index: None,
+                read_is_device_unlocked: None,
+                get_unique_guid_for_partition: None,
+                get_size_of_partition: None,
+                read_persistent_value: None,
+                write_persistent_value: None,
+                validate_public_key_for_partition: None,
+            },
+        }
     }
 
-    /// Creates the `AvbOps` with a mutable pointer to this `UserData` to pass into libavb.
+    /// Returns the `AvbOps` with a mutable pointer to this `UserData` to pass into libavb.
     ///
-    /// # Safety
-    /// The returned `AvbOps` contains a mutable pointer to this `UserData`, which means the caller
-    /// must manually enforce the rules around mutable borrows and lifetimes.
-    ///
-    /// In particular, this `UserData`:
-    /// * must remain alive and unmoved while the returned `AvbOps` exists, or it will result in
-    ///   a dangling pointer
-    /// * must not be directly accessed (including the contained `Ops`) while the returned `AvbOps`
-    ///   exists, or it will violate Rust's mutable borrowing rules
-    unsafe fn create_avb_ops(&mut self) -> AvbOps {
-        AvbOps {
-            // Rust won't transitively cast so we need to cast twice manually, but the compiler is
-            // smart enough to deduce the types we need.
-            user_data: self as *mut _ as *mut _,
-            ab_ops: ptr::null_mut(),  // Deprecated, no need to support.
-            atx_ops: ptr::null_mut(), // TODO: support optional ATX.
-            read_from_partition: Some(read_from_partition),
-            get_preloaded_partition: Some(get_preloaded_partition),
-            write_to_partition: None, // Not needed, only used for deprecated A/B.
-            validate_vbmeta_public_key: Some(validate_vbmeta_public_key),
-            // TODO: add callback wrappers for the remaining API.
-            read_rollback_index: None,
-            write_rollback_index: None,
-            read_is_device_unlocked: None,
-            get_unique_guid_for_partition: None,
-            get_size_of_partition: None,
-            read_persistent_value: None,
-            write_persistent_value: None,
-            validate_public_key_for_partition: None,
-        }
+    /// Use this rather than accessing `_avb_ops` directly, as this:
+    /// 1. sets up the raw `user_data` pointer
+    /// 2. returns a reference so that the Rust lifetime checker can ensure the `UserData`
+    ///    outlives the returned `AvbOps`
+    fn avb_ops(&mut self) -> &mut AvbOps {
+        // Rust won't transitively cast so we need to cast twice manually, but the compiler is
+        // smart enough to deduce the types we need.
+        self._avb_ops.user_data = self as *mut _ as *mut _;
+        &mut self._avb_ops
     }
 }
 
@@ -181,13 +186,12 @@ impl<'a> UserData<'a> {
 /// The Rust `Ops` extracted from `avb_ops.user_data`.
 ///
 /// # Safety
-/// Only call this function on an `AvbOps` created via `create_avb_ops()`.
+/// Only call this function on an `AvbOps` obtained from `UserData.avb_ops()`.
 ///
 /// Additionally, this should be considered a mutable borrow of the contained `Ops`:
 /// * do not return back to libavb while still holding the returned reference, or it will result
 ///   in a dangling reference
-/// * do not call this again until the previous `Ops` goes out of scope, or it will violate Rust's
-///   mutable borrowing rules
+/// * while the returned reference exists, it must be the only thing that accesses the `Ops`
 ///
 /// In practice, these conditions are met since we call this exactly once in each callback
 /// to extract the `Ops`, and drop it at callback completion.
@@ -199,7 +203,7 @@ unsafe fn as_ops<'a>(avb_ops: *mut AvbOps) -> Result<&'a mut dyn Ops> {
     let user_data = avb_ops.user_data as *mut UserData;
     // SAFETY: we created this UserData object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
-    Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.0)
+    Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.ops)
 }
 
 /// Converts a non-NULL `ptr` to `()`, NULL to `Err(IoError::Io)`.
@@ -234,7 +238,7 @@ unsafe extern "C" fn read_from_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `create_avb_ops()`.
+/// * `ops` must have been obtained via `UserData.avb_ops()`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 /// * `out_num_read` must adhere to the requirements of `ptr::write()`.
@@ -257,7 +261,7 @@ unsafe fn try_read_from_partition(
     unsafe { ptr::write(out_num_read, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `create_avb_ops()` as required.
+    // * we only use `ops` objects obtained via `UserData.avb_ops()` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -303,7 +307,7 @@ unsafe extern "C" fn get_preloaded_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `create_avb_ops()`.
+/// * `ops` must have been obtained via `UserData.avb_ops()`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_pointer` and `out_num_bytes_preloaded` must adhere to the requirements of `ptr::write()`.
 /// * `out_pointer` will become an alias to the `ops` preloaded partition data, so the preloaded
@@ -329,7 +333,7 @@ unsafe fn try_get_preloaded_partition(
     }
 
     // SAFETY:
-    // * we only use `ops` objects created via `create_avb_ops()` as required.
+    // * we only use `ops` objects obtained via `UserData.avb_ops()` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -389,7 +393,7 @@ unsafe extern "C" fn validate_vbmeta_public_key(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `create_avb_ops()`.
+/// * `ops` must have been obtained via `UserData.avb_ops()`.
 /// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
 /// * `out_is_trusted` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_validate_vbmeta_public_key(
@@ -410,7 +414,7 @@ unsafe fn try_validate_vbmeta_public_key(
     unsafe { ptr::write(out_is_trusted, false) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `create_avb_ops()` as required.
+    // * we only use `ops` objects obtained via `UserData.avb_ops()` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -528,16 +532,15 @@ mod tests {
         buffer: &mut [u8],
         out_num_read: &mut usize,
     ) -> AvbIOResult {
-        let mut user_data = UserData(ops);
-        // SAFETY: `user_data` remains in place and untouched while `avb_ops` exists.
-        let mut avb_ops = unsafe { user_data.create_avb_ops() };
+        let mut user_data = UserData::new(ops);
+        let mut avb_ops = user_data.avb_ops();
         let part_name = CString::new(partition).unwrap();
 
         // SAFETY: we've properly created and initialized all the raw pointers being passed into
         // this C function.
         unsafe {
             avb_ops.read_from_partition.unwrap()(
-                &mut avb_ops,
+                avb_ops,
                 part_name.as_ptr(),
                 offset,
                 num_bytes,
@@ -563,9 +566,8 @@ mod tests {
     where
         'a: 'b,
     {
-        let mut user_data = UserData(ops);
-        // SAFETY: `user_data` remains in place and untouched while `avb_ops` exists.
-        let mut avb_ops = unsafe { user_data.create_avb_ops() };
+        let mut user_data = UserData::new(ops);
+        let mut avb_ops = user_data.avb_ops();
         let part_name = CString::new(partition).unwrap();
         let mut out_ptr: *mut u8 = ptr::null_mut();
 
@@ -575,7 +577,7 @@ mod tests {
         //   `out_buffer` which wraps the data.
         let result = unsafe {
             avb_ops.get_preloaded_partition.unwrap()(
-                &mut avb_ops,
+                avb_ops,
                 part_name.as_ptr(),
                 num_bytes,
                 &mut out_ptr,
@@ -601,16 +603,15 @@ mod tests {
         public_key_metadata: Option<&[u8]>,
         out_is_trusted: &mut bool,
     ) -> AvbIOResult {
-        let mut user_data = UserData(ops);
-        // SAFETY: `user_data` remains in place and untouched while `avb_ops` exists.
-        let mut avb_ops = unsafe { user_data.create_avb_ops() };
+        let mut user_data = UserData::new(ops);
+        let mut avb_ops = user_data.avb_ops();
         let (metadata_ptr, metadata_size) =
             public_key_metadata.map_or((ptr::null(), 0), |m| (m.as_ptr(), m.len()));
 
         // SAFETY: we've properly created and initialized all the raw pointers being passed in.
         unsafe {
             avb_ops.validate_vbmeta_public_key.unwrap()(
-                &mut avb_ops,
+                avb_ops,
                 public_key.as_ptr(),
                 public_key.len(),
                 metadata_ptr,
