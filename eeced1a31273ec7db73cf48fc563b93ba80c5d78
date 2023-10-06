@@ -1,6 +1,29 @@
 {
   "comments": [
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "3127ee83_e83fc094",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-06T08:51:32Z",
+      "side": 1,
+      "message": "tbh, I think the code would be clearer if `UserData` remained a simple wrapper around `Ops`. The current implementation makes the relationship between `UserData` and `AvbOps` confusing, as both types now contain references to each other. This convolution adds complexity and makes it harder to reason about the lifetimes involved.\n\nIf this is the goal, we can get rid of `unsafe fn create_avb_ops(\u0026mut self)` by adding an AvbOps wrapper struct that contains both the `bindgen::AvbOps` and a PhantomData of `UserData`. Then this function can become a safe `TryFrom\u003cUserData\u003e for AvbOps`.",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c9e82c82_9ae49699",
@@ -14,6 +37,75 @@
       "writtenOn": "2023-10-05T23:03:30Z",
       "side": 1,
       "message": "I looked at `PhantomData` as you suggested in https://android-review.git.corp.google.com/c/platform/external/avb/+/2745947/comment/1aa1947c_400c1fa3/, but after playing around I realized I could achieve the same goal without an additional wrapper struct by accessing `AvbOps` itself as a `\u0026mut` and tying it to the parent structure that way.\n\nBut LMK if this isn\u0027t what you were envisioning and I can adjust further.",
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "58282e9d_0e884eac",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-06T08:51:32Z",
+      "side": 1,
+      "message": "This is awkward, usually the prefix `_` indicate that a variable is unused.",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 5
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ea402073_808a8432",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-06T08:51:32Z",
+      "side": 1,
+      "message": "When will this function be used? It looks like for now it\u0027s only used in tests. In that case can we just remove this function for now?",
+      "range": {
+        "startLine": 172,
+        "startChar": 4,
+        "endLine": 172,
+        "endChar": 40
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deb8d917_1de740f1",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-06T08:51:32Z",
+      "side": 1,
+      "message": "It is weird to alter the state in a getter function.",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 59
+      },
       "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
