@@ -13,3 +13,4 @@
 // limitations under the License.
 
 mod test_ops;
+mod verify_tests;
