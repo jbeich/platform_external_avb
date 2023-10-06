@@ -279,10 +279,16 @@ pub struct PublicKeyForPartitionInfo {
 /// perform `Ops` (Rust)
 /// callback
 /// ```
-struct UserData<'a>(&'a mut dyn Ops);
+pub(crate) struct UserData<'a>(&'a mut dyn Ops);
+
+impl<'a> UserData<'a> {
+    pub(crate) fn new(ops: &'a mut dyn Ops) -> Self {
+        Self(ops)
+    }
+}
 
 /// Wraps the C `AvbOps` struct with lifetime information for the compiler.
-struct ScopedAvbOps<'a> {
+pub(crate) struct ScopedAvbOps<'a> {
     /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
     avb_ops: AvbOps,
     /// This provides the necessary lifetime information so the compiler can make sure that
@@ -291,7 +297,7 @@ struct ScopedAvbOps<'a> {
 }
 
 impl<'a> ScopedAvbOps<'a> {
-    fn new(user_data: &'a mut UserData<'a>) -> Self {
+    pub(crate) fn new(user_data: &'a mut UserData<'a>) -> Self {
         Self {
             avb_ops: AvbOps {
                 // Rust won't transitively cast so we need to cast twice manually, but the compiler
@@ -1079,7 +1085,7 @@ unsafe fn try_validate_public_key_for_partition(
 }
 
 #[cfg(test)]
-mod tests {
+pub(crate) mod tests {
     use super::*;
 
     use std::collections::HashMap;
@@ -1093,42 +1099,42 @@ mod tests {
 
     /// Represents a single fake partition.
     #[derive(Default)]
-    struct FakePartition {
-        contents: Vec<u8>, // Partition contents
-        preloaded: bool,   // Whether it should report as preloaded or not
+    pub(crate) struct FakePartition {
+        pub(crate) contents: Vec<u8>, // Partition contents
+        pub(crate) preloaded: bool,   // Whether it should report as preloaded or not
         #[cfg(feature = "uuid")]
-        uuid: Uuid, // Partition UUID
+        pub(crate) uuid: Uuid, // Partition UUID
     }
 
     /// Fake vbmeta key state.
-    struct FakeVbmetaKeyState {
+    pub(crate) struct FakeVbmetaKeyState {
         /// Key trust & rollback index info.
-        info: PublicKeyForPartitionInfo,
+        pub(crate) info: PublicKeyForPartitionInfo,
         /// If specified, indicates the specific partition this vbmeta is tied to (for
         /// `validate_public_key_for_partition()`).
-        for_partition: Option<&'static str>,
+        pub(crate) for_partition: Option<&'static str>,
     }
 
     /// Ops implementation for testing.
     ///
     /// In addition to being used to exercise individual callback wrappers, this will be used for
     /// full verification tests so behavior needs to be correct.
-    struct TestOps {
+    pub(crate) struct TestOps {
         /// Partitions to provide to libavb callbacks.
-        partitions: HashMap<&'static str, FakePartition>,
+        pub(crate) partitions: HashMap<&'static str, FakePartition>,
         /// Vbmeta public keys as a map of {(key, metadata): state}. Querying unknown keys will
         /// return `IoError::Io`.
         ///
         /// See `add_vbmeta_key*()` functions for simpler wrappers to inject these keys.
-        vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), FakeVbmetaKeyState>,
+        pub(crate) vbmeta_keys: HashMap<(Vec<u8>, Option<Vec<u8>>), FakeVbmetaKeyState>,
         /// Rollback indices. Accessing unknown locations will return `IoError::Io`.
-        rollbacks: HashMap<usize, u64>,
+        pub(crate) rollbacks: HashMap<usize, u64>,
         /// Unlock state. Set an error to simulate IoError during access.
-        unlock_state: Result<bool>,
+        pub(crate) unlock_state: Result<bool>,
         /// Persistent named values. Set an error to simulate `IoError` during access. Writing
         /// a non-existent persistent value will create it; to simulate `NoSuchValue` instead,
         /// create an entry with `Err(IoError::NoSuchValue)` as the value.
-        persistent_values: HashMap<String, Result<Vec<u8>>>,
+        pub(crate) persistent_values: HashMap<String, Result<Vec<u8>>>,
     }
 
     impl TestOps {
@@ -1141,10 +1147,10 @@ mod tests {
         /// test_ops.add_partition("foo", [1, 2, 3, 4]);
         /// test_ops.add_partition("bar", [0, 0]).preloaded = true;
         /// ```
-        fn add_partition<const N: usize>(
+        pub(crate) fn add_partition<T: Into<Vec<u8>>>(
             &mut self,
             name: &'static str,
-            contents: [u8; N],
+            contents: T,
         ) -> &mut FakePartition {
             self.partitions.insert(
                 name,
@@ -1164,16 +1170,16 @@ mod tests {
         /// test_ops.add_persistent_value("foo", Ok(b"contents"));
         /// test_ops.add_persistent_value("bar", Err(IoError::NoSuchValue));
         /// ```
-        fn add_persistent_value(&mut self, name: &str, contents: Result<&[u8]>) {
+        pub(crate) fn add_persistent_value(&mut self, name: &str, contents: Result<&[u8]>) {
             self.persistent_values
                 .insert(name.into(), contents.map(|b| b.into()));
         }
 
         /// Adds a fake vbmeta key not tied to any partition.
-        fn add_vbmeta_key(
+        pub(crate) fn add_vbmeta_key(
             &mut self,
-            key: &'static [u8],
-            metadata: Option<&'static [u8]>,
+            key: Vec<u8>,
+            metadata: Option<Vec<u8>>,
             trusted: bool,
         ) {
             self.vbmeta_keys.insert(
@@ -1191,10 +1197,10 @@ mod tests {
         }
 
         /// Adds a fake vbmeta key tied to the given partition and rollback index location.
-        fn add_vbmeta_key_for_partition(
+        pub(crate) fn add_vbmeta_key_for_partition(
             &mut self,
-            key: &'static [u8],
-            metadata: Option<&'static [u8]>,
+            key: Vec<u8>,
+            metadata: Option<Vec<u8>>,
             trusted: bool,
             partition: &'static str,
             rollback_index_location: u32,
@@ -1286,7 +1292,10 @@ mod tests {
             public_key_metadata: Option<&[u8]>,
         ) -> Result<bool> {
             self.vbmeta_keys
-                .get(&(public_key, public_key_metadata))
+                // The compiler can't match (&[u8], Option<&[u8]>) to keys of type
+                // (Vec<u8>, Option<Vec<u8>>) so we turn the &[u8] into vectors here. This is a bit
+                // inefficient, but it's simple which is more important for tests than efficiency.
+                .get(&(public_key.to_vec(), public_key_metadata.map(|m| m.to_vec())))
                 .ok_or(IoError::Io)
                 .map(|k| k.info.trusted)
         }
@@ -1370,7 +1379,7 @@ mod tests {
         ) -> Result<PublicKeyForPartitionInfo> {
             let key = self
                 .vbmeta_keys
-                .get(&(public_key, public_key_metadata))
+                .get(&(public_key.to_vec(), public_key_metadata.map(|m| m.to_vec())))
                 .ok_or(IoError::Io)?;
 
             if let Some(for_partition) = key.for_partition {
@@ -1758,7 +1767,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key(b"testkey", None, true);
+        ops.add_vbmeta_key(b"testkey".to_vec(), None, true);
 
         let mut is_trusted = false;
         let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
@@ -1770,7 +1779,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key_with_metadata() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key(b"testkey", Some(b"testmeta"), true);
+        ops.add_vbmeta_key(b"testkey".to_vec(), Some(b"testmeta".to_vec()), true);
 
         let mut is_trusted = false;
         let result = call_validate_vbmeta_public_key(
@@ -1787,7 +1796,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key_rejected() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key(b"testkey", None, false);
+        ops.add_vbmeta_key(b"testkey".to_vec(), None, false);
 
         let mut is_trusted = true;
         let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
@@ -2095,7 +2104,7 @@ mod tests {
     #[test]
     fn test_validate_public_key_for_partition() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key_for_partition(b"testkey", None, true, "foo", 1);
+        ops.add_vbmeta_key_for_partition(b"testkey".to_vec(), None, true, "foo", 1);
 
         let mut is_trusted = false;
         let mut rollback_location = 0;
@@ -2116,7 +2125,7 @@ mod tests {
     #[test]
     fn test_validate_public_key_for_partition_with_metadata() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key_for_partition(b"testkey", Some(b"testmeta"), true, "foo", 1);
+        ops.add_vbmeta_key_for_partition(b"testkey".to_vec(), Some(b"testmeta".to_vec()), true, "foo", 1);
 
         let mut is_trusted = false;
         let mut rollback_location = 0;
@@ -2137,7 +2146,7 @@ mod tests {
     #[test]
     fn test_validate_public_key_for_partition_rejected() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key_for_partition(b"testkey", None, false, "foo", 1);
+        ops.add_vbmeta_key_for_partition(b"testkey".to_vec(), None, false, "foo", 1);
 
         let mut is_trusted = true;
         let mut rollback_location = 0;
@@ -2178,7 +2187,7 @@ mod tests {
     #[test]
     fn test_validate_public_key_for_partition_unknown_partition() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key_for_partition(b"testkey", None, true, "foo", 1);
+        ops.add_vbmeta_key_for_partition(b"testkey".to_vec(), None, true, "foo", 1);
 
         let mut is_trusted = true;
         let mut rollback_location = 10;

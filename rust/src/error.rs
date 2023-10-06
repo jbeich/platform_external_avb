@@ -30,8 +30,7 @@
 //             wrapped in a Rust `Result<>` in public API.
 // * `Result<T, *Error>`: top-level `Result<>` type used in this library's public API.
 
-use avb_bindgen::{AvbIOResult, AvbSlotVerifyResult};
-
+use avb_bindgen::{AvbIOResult, AvbSlotVerifyResult, AvbVBMetaVerifyResult};
 use core::{fmt, str::Utf8Error};
 
 /// `AvbSlotVerifyResult` error wrapper.
@@ -203,6 +202,63 @@ pub fn result_to_io_enum(result: Result<(), IoError>) -> AvbIOResult {
     result.map_or_else(|e| e.into(), |_| AvbIOResult::AVB_IO_RESULT_OK)
 }
 
+/// `AvbVBMetaVerifyResult` error wrapper.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum VbmetaVerifyError {
+    // `AVB_VBMETA_VERIFY_RESULT_OK_NOT_SIGNED`
+    NotSigned,
+    // `AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER`
+    InvalidVbmetaHeader,
+    // `AVB_VBMETA_VERIFY_RESULT_UNSUPPORTED_VERSION`
+    UnsupportedVersion,
+    // `AVB_VBMETA_VERIFY_RESULT_HASH_MISMATCH`
+    HashMismatch,
+    // `AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH`
+    SignatureMismatch,
+}
+
+impl fmt::Display for VbmetaVerifyError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::NotSigned => write!(f, "vbmeta is unsigned"),
+            Self::InvalidVbmetaHeader => write!(f, "invalid vbmeta header"),
+            Self::UnsupportedVersion => write!(f, "unsupported vbmeta version"),
+            Self::HashMismatch => write!(f, "vbmeta hash mismatch"),
+            Self::SignatureMismatch => write!(f, "vbmeta signature mismatch"),
+        }
+    }
+}
+
+// Converts a bindgen `AvbVBMetaVerifyResult` enum to a `Result<>`, mapping
+// `AVB_VBMETA_VERIFY_RESULT_OK` to the Rust equivalent `Ok(())` and errors to the corresponding
+// `Err(SlotVerifyError)`.
+//
+// This function is also important to serve as a compile-time check that we're handling all the
+// libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
+// until it is updated to match.
+pub fn vbmeta_verify_enum_to_result(
+    result: AvbVBMetaVerifyResult,
+) -> Result<(), VbmetaVerifyError> {
+    match result {
+        AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK => Ok(()),
+        AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK_NOT_SIGNED => {
+            Err(VbmetaVerifyError::NotSigned)
+        }
+        AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER => {
+            Err(VbmetaVerifyError::InvalidVbmetaHeader)
+        }
+        AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_UNSUPPORTED_VERSION => {
+            Err(VbmetaVerifyError::UnsupportedVersion)
+        }
+        AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_HASH_MISMATCH => {
+            Err(VbmetaVerifyError::HashMismatch)
+        }
+        AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH => {
+            Err(VbmetaVerifyError::SignatureMismatch)
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -254,6 +310,30 @@ mod tests {
         assert_eq!(
             result_to_io_enum(Err(IoError::Io)),
             AvbIOResult::AVB_IO_RESULT_ERROR_IO
+        );
+    }
+
+    #[test]
+    fn test_VbmetaVerifyError_display() {
+        // The actual error message can change as needed, the point of the test is just to make sure
+        // the fmt::Display trait is properly implemented.
+        assert_eq!(
+            format!("{}", VbmetaVerifyError::NotSigned),
+            "vbmeta is unsigned"
+        );
+    }
+
+    #[test]
+    fn test_VbmetaVerifyError_from_raw() {
+        assert_eq!(
+            vbmeta_verify_enum_to_result(AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK),
+            Ok(())
+        );
+        assert_eq!(
+            vbmeta_verify_enum_to_result(
+                AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_HASH_MISMATCH
+            ),
+            Err(VbmetaVerifyError::HashMismatch)
         );
     }
 }
