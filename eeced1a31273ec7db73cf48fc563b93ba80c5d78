@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "2a1b214e_3a1652f3",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-06T18:21:19Z",
+      "side": 1,
+      "message": "Ack, I thought that this seemed less confusing than adding yet another wrapper but I\u0027ll switch over.\n\nIn experiments it seemed that it was cleaner for the `AvbOps` wrapper to just take a full `\u0026mut UserData` rather than a `PhantomData`. I tried `PhantomData` but it still allowed me to modify the `UserData`, whereas I really want the ops wrapper to be the sole owner while it exists so nothing else is messing with the `UserData` while we have a raw `*mut` to it. LMK if this seems OK to you, it makes the struct a few bytes bigger than `PhantomData` but seems worth it for proper borrow-checking.",
+      "parentUuid": "3127ee83_e83fc094",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c9e82c82_9ae49699",
@@ -64,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "cfe554a8_41cfe2d1",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-06T18:21:19Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "58282e9d_0e884eac",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 136,
+        "endChar": 5
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ea402073_808a8432",
@@ -87,6 +135,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3184c744_9fc9aa42",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 172,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-06T18:21:19Z",
+      "side": 1,
+      "message": "It\u0027s going to be used in the main `avb_slot_verify()` API to convert the user-provided Rust callbacks into a C struct libavb can work with.\n\nIt is still necessary for tests in the meantime in order to test calling these functions from C the way libavb will, in order to check that all the C/Rust type conversions are working properly.",
+      "parentUuid": "ea402073_808a8432",
+      "range": {
+        "startLine": 172,
+        "startChar": 4,
+        "endLine": 172,
+        "endChar": 40
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "deb8d917_1de740f1",
@@ -100,6 +172,30 @@
       "writtenOn": "2023-10-06T08:51:32Z",
       "side": 1,
       "message": "It is weird to alter the state in a getter function.",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 59
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7e15229_bf365c3d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-06T18:21:19Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "deb8d917_1de740f1",
       "range": {
         "startLine": 175,
         "startChar": 0,
