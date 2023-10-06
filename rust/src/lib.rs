@@ -23,6 +23,7 @@
 
 #![cfg_attr(not(test), no_std)]
 
+extern crate avb_bindgen;
 mod error;
 mod verify;
 
