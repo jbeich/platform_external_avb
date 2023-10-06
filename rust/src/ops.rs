@@ -31,7 +31,7 @@ use core::{
 use uuid::Uuid;
 
 /// Common `Result` type for `IoError` errors.
-type Result<T> = core::result::Result<T, IoError>;
+pub type Result<T> = core::result::Result<T, IoError>;
 
 /// Base implementation-provided callbacks for verification.
 ///
@@ -279,10 +279,16 @@ pub struct PublicKeyForPartitionInfo {
 /// perform `Ops` (Rust)
 /// callback
 /// ```
-struct UserData<'a>(&'a mut dyn Ops);
+pub(crate) struct UserData<'a>(&'a mut dyn Ops);
+
+impl<'a> UserData<'a> {
+    pub(crate) fn new(ops: &'a mut dyn Ops) -> Self {
+        Self(ops)
+    }
+}
 
 /// Wraps the C `AvbOps` struct with lifetime information for the compiler.
-struct ScopedAvbOps<'a> {
+pub(crate) struct ScopedAvbOps<'a> {
     /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
     avb_ops: AvbOps,
     /// This provides the necessary lifetime information so the compiler can make sure that
@@ -291,7 +297,7 @@ struct ScopedAvbOps<'a> {
 }
 
 impl<'a> ScopedAvbOps<'a> {
-    fn new(user_data: &'a mut UserData<'a>) -> Self {
+    pub(crate) fn new(user_data: &'a mut UserData<'a>) -> Self {
         Self {
             avb_ops: AvbOps {
                 // Rust won't transitively cast so we need to cast twice manually, but the compiler
@@ -1079,10 +1085,10 @@ unsafe fn try_validate_public_key_for_partition(
 }
 
 #[cfg(test)]
-mod tests {
+pub mod tests {
     use super::*;
 
-    use std::collections::HashMap;
+    use crate::test_utils::TestOps;
     use std::ffi::CString;
     #[cfg(feature = "uuid")]
     use uuid::uuid;
@@ -1090,300 +1096,6 @@ mod tests {
     /// Length of a UUID C-string representation including hyphens and a null-terminator.
     #[cfg(feature = "uuid")]
     const UUID_CSTRING_LENGTH: usize = uuid::fmt::Hyphenated::LENGTH + 1;
-
-    /// Represents a single fake partition.
-    #[derive(Default)]
-    struct FakePartition {
-        contents: Vec<u8>, // Partition contents
-        preloaded: bool,   // Whether it should report as preloaded or not
-        #[cfg(feature = "uuid")]
-        uuid: Uuid, // Partition UUID
-    }
-
-    /// Fake vbmeta key state.
-    struct FakeVbmetaKeyState {
-        /// Key trust & rollback index info.
-        info: PublicKeyForPartitionInfo,
-        /// If specified, indicates the specific partition this vbmeta is tied to (for
-        /// `validate_public_key_for_partition()`).
-        for_partition: Option<&'static str>,
-    }
-
-    /// Ops implementation for testing.
-    ///
-    /// In addition to being used to exercise individual callback wrappers, this will be used for
-    /// full verification tests so behavior needs to be correct.
-    struct TestOps {
-        /// Partitions to provide to libavb callbacks.
-        partitions: HashMap<&'static str, FakePartition>,
-        /// Vbmeta public keys as a map of {(key, metadata): state}. Querying unknown keys will
-        /// return `IoError::Io`.
-        ///
-        /// See `add_vbmeta_key*()` functions for simpler wrappers to inject these keys.
-        vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), FakeVbmetaKeyState>,
-        /// Rollback indices. Accessing unknown locations will return `IoError::Io`.
-        rollbacks: HashMap<usize, u64>,
-        /// Unlock state. Set an error to simulate IoError during access.
-        unlock_state: Result<bool>,
-        /// Persistent named values. Set an error to simulate `IoError` during access. Writing
-        /// a non-existent persistent value will create it; to simulate `NoSuchValue` instead,
-        /// create an entry with `Err(IoError::NoSuchValue)` as the value.
-        persistent_values: HashMap<String, Result<Vec<u8>>>,
-    }
-
-    impl TestOps {
-        /// Adds a partition with the given contents.
-        ///
-        /// Reduces boilerplate a bit by taking in a raw array and returning a &mut so tests can
-        /// do something like this:
-        ///
-        /// ```
-        /// test_ops.add_partition("foo", [1, 2, 3, 4]);
-        /// test_ops.add_partition("bar", [0, 0]).preloaded = true;
-        /// ```
-        fn add_partition<const N: usize>(
-            &mut self,
-            name: &'static str,
-            contents: [u8; N],
-        ) -> &mut FakePartition {
-            self.partitions.insert(
-                name,
-                FakePartition {
-                    contents: contents.into(),
-                    ..Default::default()
-                },
-            );
-            self.partitions.get_mut(name).unwrap()
-        }
-
-        /// Adds a persistent value with the given state.
-        ///
-        /// Reduces boilerplate by allowing array input:
-        ///
-        /// ```
-        /// test_ops.add_persistent_value("foo", Ok(b"contents"));
-        /// test_ops.add_persistent_value("bar", Err(IoError::NoSuchValue));
-        /// ```
-        fn add_persistent_value(&mut self, name: &str, contents: Result<&[u8]>) {
-            self.persistent_values
-                .insert(name.into(), contents.map(|b| b.into()));
-        }
-
-        /// Adds a fake vbmeta key not tied to any partition.
-        fn add_vbmeta_key(
-            &mut self,
-            key: &'static [u8],
-            metadata: Option<&'static [u8]>,
-            trusted: bool,
-        ) {
-            self.vbmeta_keys.insert(
-                (key, metadata),
-                FakeVbmetaKeyState {
-                    // `rollback_index_location` doesn't matter in this case, it will be read from
-                    // the vbmeta blob.
-                    info: PublicKeyForPartitionInfo {
-                        trusted,
-                        rollback_index_location: 0,
-                    },
-                    for_partition: None,
-                },
-            );
-        }
-
-        /// Adds a fake vbmeta key tied to the given partition and rollback index location.
-        fn add_vbmeta_key_for_partition(
-            &mut self,
-            key: &'static [u8],
-            metadata: Option<&'static [u8]>,
-            trusted: bool,
-            partition: &'static str,
-            rollback_index_location: u32,
-        ) {
-            self.vbmeta_keys.insert(
-                (key, metadata),
-                FakeVbmetaKeyState {
-                    info: PublicKeyForPartitionInfo {
-                        trusted,
-                        rollback_index_location,
-                    },
-                    for_partition: Some(partition),
-                },
-            );
-        }
-    }
-
-    impl Default for TestOps {
-        fn default() -> Self {
-            Self {
-                partitions: HashMap::new(),
-                vbmeta_keys: HashMap::new(),
-                rollbacks: HashMap::new(),
-                unlock_state: Err(IoError::Io),
-                persistent_values: HashMap::new(),
-            }
-        }
-    }
-
-    impl Ops for TestOps {
-        fn read_from_partition(
-            &mut self,
-            partition: &CStr,
-            offset: i64,
-            buffer: &mut [u8],
-        ) -> Result<usize> {
-            let partition = self
-                .partitions
-                .get(partition.to_str()?)
-                .ok_or(IoError::NoSuchPartition)?;
-
-            // We should never be trying to read a preloaded partition from disk since we already
-            // have it available in memory.
-            assert!(!partition.preloaded);
-
-            let contents = &partition.contents;
-
-            // Negative offset means count backwards from the end.
-            let offset = {
-                if offset < 0 {
-                    offset
-                        .checked_add(i64::try_from(contents.len()).unwrap())
-                        .unwrap()
-                } else {
-                    offset
-                }
-            };
-            if offset < 0 {
-                return Err(IoError::RangeOutsidePartition);
-            }
-            let offset = usize::try_from(offset).unwrap();
-
-            if offset >= contents.len() {
-                return Err(IoError::RangeOutsidePartition);
-            }
-
-            // Truncating is allowed for reads past the partition end.
-            let end = min(offset.checked_add(buffer.len()).unwrap(), contents.len());
-            let bytes_read = end - offset;
-
-            buffer[..bytes_read].copy_from_slice(&contents[offset..end]);
-            Ok(bytes_read)
-        }
-
-        fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8]> {
-            match self.partitions.get(partition.to_str()?) {
-                Some(FakePartition {
-                    contents,
-                    preloaded: true,
-                    ..
-                }) => Ok(&contents[..]),
-                _ => Err(IoError::NotImplemented),
-            }
-        }
-
-        fn validate_vbmeta_public_key(
-            &mut self,
-            public_key: &[u8],
-            public_key_metadata: Option<&[u8]>,
-        ) -> Result<bool> {
-            self.vbmeta_keys
-                .get(&(public_key, public_key_metadata))
-                .ok_or(IoError::Io)
-                .map(|k| k.info.trusted)
-        }
-
-        fn read_rollback_index(&mut self, location: usize) -> Result<u64> {
-            self.rollbacks.get(&location).ok_or(IoError::Io).copied()
-        }
-
-        fn write_rollback_index(&mut self, location: usize, index: u64) -> Result<()> {
-            *(self.rollbacks.get_mut(&location).ok_or(IoError::Io)?) = index;
-            Ok(())
-        }
-
-        fn read_is_device_unlocked(&mut self) -> Result<bool> {
-            self.unlock_state.clone()
-        }
-
-        #[cfg(feature = "uuid")]
-        fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> Result<Uuid> {
-            self.partitions
-                .get(partition.to_str()?)
-                .map(|p| p.uuid)
-                .ok_or(IoError::NoSuchPartition)
-        }
-
-        fn get_size_of_partition(&mut self, partition: &CStr) -> Result<u64> {
-            self.partitions
-                .get(partition.to_str()?)
-                .map(|p| u64::try_from(p.contents.len()).unwrap())
-                .ok_or(IoError::NoSuchPartition)
-        }
-
-        fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> Result<usize> {
-            match self
-                .persistent_values
-                .get(name.to_str()?)
-                .ok_or(IoError::NoSuchValue)?
-            {
-                // If we were given enough space, write the value contents.
-                Ok(contents) if contents.len() <= value.len() => {
-                    value[..contents.len()].clone_from_slice(contents);
-                    Ok(contents.len())
-                }
-                // Not enough space, tell the caller how much we need.
-                Ok(contents) => Err(IoError::InsufficientSpace(contents.len())),
-                // Simulated error, return it.
-                Err(e) => Err(e.clone()),
-            }
-        }
-
-        fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> Result<()> {
-            let name = name.to_str()?;
-
-            // If the test requested a simulated error on this value, return it.
-            if let Some(Err(e)) = self.persistent_values.get(name) {
-                return Err(e.clone());
-            }
-
-            self.persistent_values
-                .insert(name.to_string(), Ok(value.to_vec()));
-            Ok(())
-        }
-
-        fn erase_persistent_value(&mut self, name: &CStr) -> Result<()> {
-            let name = name.to_str()?;
-
-            // If the test requested a simulated error on this value, return it.
-            if let Some(Err(e)) = self.persistent_values.get(name) {
-                return Err(e.clone());
-            }
-
-            self.persistent_values.remove(name);
-            Ok(())
-        }
-
-        fn validate_public_key_for_partition(
-            &mut self,
-            partition: &CStr,
-            public_key: &[u8],
-            public_key_metadata: Option<&[u8]>,
-        ) -> Result<PublicKeyForPartitionInfo> {
-            let key = self
-                .vbmeta_keys
-                .get(&(public_key, public_key_metadata))
-                .ok_or(IoError::Io)?;
-
-            if let Some(for_partition) = key.for_partition {
-                if (for_partition == partition.to_str()?) {
-                    // The key is registered for this partition; return its info.
-                    return Ok(key.info);
-                }
-            }
-
-            // No match.
-            Err(IoError::Io)
-        }
-    }
 
     /// Calls the `read_from_partition()` C callback the same way libavb would.
     fn call_read_from_partition(
@@ -1758,7 +1470,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key(b"testkey", None, true);
+        ops.add_vbmeta_key(b"testkey".to_vec(), None, true);
 
         let mut is_trusted = false;
         let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
@@ -1770,7 +1482,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key_with_metadata() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key(b"testkey", Some(b"testmeta"), true);
+        ops.add_vbmeta_key(b"testkey".to_vec(), Some(b"testmeta".to_vec()), true);
 
         let mut is_trusted = false;
         let result = call_validate_vbmeta_public_key(
@@ -1787,7 +1499,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key_rejected() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key(b"testkey", None, false);
+        ops.add_vbmeta_key(b"testkey".to_vec(), None, false);
 
         let mut is_trusted = true;
         let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
@@ -2095,7 +1807,7 @@ mod tests {
     #[test]
     fn test_validate_public_key_for_partition() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key_for_partition(b"testkey", None, true, "foo", 1);
+        ops.add_vbmeta_key_for_partition(b"testkey".to_vec(), None, true, "foo", 1);
 
         let mut is_trusted = false;
         let mut rollback_location = 0;
@@ -2116,7 +1828,13 @@ mod tests {
     #[test]
     fn test_validate_public_key_for_partition_with_metadata() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key_for_partition(b"testkey", Some(b"testmeta"), true, "foo", 1);
+        ops.add_vbmeta_key_for_partition(
+            b"testkey".to_vec(),
+            Some(b"testmeta".to_vec()),
+            true,
+            "foo",
+            1,
+        );
 
         let mut is_trusted = false;
         let mut rollback_location = 0;
@@ -2137,7 +1855,7 @@ mod tests {
     #[test]
     fn test_validate_public_key_for_partition_rejected() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key_for_partition(b"testkey", None, false, "foo", 1);
+        ops.add_vbmeta_key_for_partition(b"testkey".to_vec(), None, false, "foo", 1);
 
         let mut is_trusted = true;
         let mut rollback_location = 0;
@@ -2178,7 +1896,7 @@ mod tests {
     #[test]
     fn test_validate_public_key_for_partition_unknown_partition() {
         let mut ops = TestOps::default();
-        ops.add_vbmeta_key_for_partition(b"testkey", None, true, "foo", 1);
+        ops.add_vbmeta_key_for_partition(b"testkey".to_vec(), None, true, "foo", 1);
 
         let mut is_trusted = true;
         let mut rollback_location = 10;

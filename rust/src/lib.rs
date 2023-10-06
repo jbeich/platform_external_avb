@@ -28,9 +28,14 @@
 
 mod error;
 mod ops;
+mod verify;
+
+#[cfg(test)]
+mod test_utils;
 
 pub use error::{IoError, SlotVerifyError};
 pub use ops::{Ops, PublicKeyForPartitionInfo};
+pub use verify::{slot_verify, SlotVerifyData};
 
 /// APIs that will eventually be internal-only to this library, but while this library is split need
 /// to be exposed externally.
