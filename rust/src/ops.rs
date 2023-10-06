@@ -279,10 +279,16 @@ pub struct PublicKeyForPartitionInfo {
 /// perform `Ops` (Rust)
 /// callback
 /// ```
-struct UserData<'a>(&'a mut dyn Ops);
+pub(crate) struct UserData<'a>(&'a mut dyn Ops);
+
+impl<'a> UserData<'a> {
+    pub(crate) fn new(ops: &'a mut dyn Ops) -> Self {
+        Self(ops)
+    }
+}
 
 /// Wraps the C `AvbOps` struct with lifetime information for the compiler.
-struct ScopedAvbOps<'a> {
+pub(crate) struct ScopedAvbOps<'a> {
     /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
     avb_ops: AvbOps,
     /// This provides the necessary lifetime information so the compiler can make sure that
@@ -291,7 +297,7 @@ struct ScopedAvbOps<'a> {
 }
 
 impl<'a> ScopedAvbOps<'a> {
-    fn new(user_data: &'a mut UserData<'a>) -> Self {
+    pub(crate) fn new(user_data: &'a mut UserData<'a>) -> Self {
         Self {
             avb_ops: AvbOps {
                 // Rust won't transitively cast so we need to cast twice manually, but the compiler
