@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "b83e5115_2ccb62e4",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-09T23:21:25Z",
+      "side": 1,
+      "message": "OK, patchset 3 has `ScopedAvbOps` wrapping the bindgen `AvbOps` and `PhantomData\u003cUserData\u003e`, which does seem to properly transfer ownership of `UserData` to `ScopedAvbOps` as you mention.\n\n(If you prefer the naming `AvbOps` and `bindgen::AvbOps` I can change it, I just chose `ScopedAvbOps` for now to try to differentiate a bit)\n\n\n LMK if I\u0027m still misunderstanding your vision here.",
+      "parentUuid": "584b9837_4d99c735",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c9e82c82_9ae49699",
