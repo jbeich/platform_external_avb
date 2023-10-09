@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": true,
+      "key": {
+        "uuid": "584b9837_4d99c735",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-09T07:19:17Z",
+      "side": 1,
+      "message": "The problem with the current approach is that UserData and AvbOps are nesting each other, resulting in a complicated initialization process for these objects.\n\n\u003e whereas I really want the ops wrapper to be the sole owner while it exists so nothing else is messing with the UserData while we have a raw *mut to it\n\nI completely agree. I mean making `AvbOps` wrapping a `bindgen::AvbOps` and a `UserData`. Since `bindgen::AvbOps` already contains a pointer to `UserData`, thus it can be Phantom, it seems redundant to maintain a separate `\u0026mut UserData` reference for the same data. Once we convert `UserData` to `AvbOps`, we can transfer the ownership of `UserData` to `AvbOps`, simplifying the ownership structure.",
+      "parentUuid": "2a1b214e_3a1652f3",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": false,
       "key": {
         "uuid": "c9e82c82_9ae49699",
