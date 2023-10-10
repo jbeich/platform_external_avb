@@ -34,6 +34,24 @@
       "parentUuid": "73fa6c89_6864f27e",
       "revId": "9a7c8e9162304d243dee3e15783c1018ebb90b38",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9326ca8b_6e96e383",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2029650
+      },
+      "writtenOn": "2023-10-10T22:09:26Z",
+      "side": 1,
+      "message": "Sure, I\u0027ll keep local typedef in my GBL changes:\n```\n// TODO use public result type from `avb` when ready\ntype AvbResult\u003cT\u003e \u003d core::result::Result\u003cT, IoError\u003e;\n```",
+      "parentUuid": "fffbce2c_505da0db",
+      "revId": "9a7c8e9162304d243dee3e15783c1018ebb90b38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
