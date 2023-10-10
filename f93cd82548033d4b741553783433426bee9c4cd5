@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d82f6ce6_57d61533",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-10T18:11:08Z",
+      "side": 1,
+      "message": "@sergiip@google.com I have a few upcoming changes to the build file as well, let me go ahead and move this into the `rust/` subdir first and we can iterate on it there: https://r.android.com/2781847.",
+      "revId": "f93cd82548033d4b741553783433426bee9c4cd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
