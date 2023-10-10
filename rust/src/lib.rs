@@ -21,7 +21,7 @@
 //!
 //! This library is [no_std] for portability.
 
-#![cfg_attr(not(test), no_std)]
+#![cfg_attr(not(any(test, android_dylib)), no_std)]
 
 mod error;
 mod verify;
