@@ -98,6 +98,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "da034c6c_254ade78",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 11,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-10T19:09:30Z",
+      "side": 1,
+      "message": "It\u0027s fine like this. Thanks for the adjustment.",
+      "parentUuid": "b83e5115_2ccb62e4",
+      "range": {
+        "startLine": 11,
+        "startChar": 6,
+        "endLine": 11,
+        "endChar": 69
+      },
+      "revId": "eeced1a31273ec7db73cf48fc563b93ba80c5d78",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "c9e82c82_9ae49699",
         "filename": "/PATCHSET_LEVEL",
         "patchSetId": 1
