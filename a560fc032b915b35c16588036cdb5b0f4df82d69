@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "189d31f7_ca5fea3f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-10T14:35:52Z",
+      "side": 1,
+      "message": "Usually the TryFrom conversion is from value to value. Why don\u0027t we take the UserData here directly?",
+      "range": {
+        "startLine": 145,
+        "startChar": 14,
+        "endLine": 145,
+        "endChar": 22
+      },
+      "revId": "a560fc032b915b35c16588036cdb5b0f4df82d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af9333fe_ca105209",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-10T14:35:52Z",
+      "side": 1,
+      "message": "You can implement `AsMut` for `ScopedAvbOps` to get `\u0026mut AvbOps` from it",
+      "range": {
+        "startLine": 566,
+        "startChar": 22,
+        "endLine": 566,
+        "endChar": 45
+      },
+      "revId": "a560fc032b915b35c16588036cdb5b0f4df82d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
