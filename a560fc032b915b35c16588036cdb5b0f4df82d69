@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0065034f_364a224a",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-10T16:20:34Z",
+      "side": 1,
+      "message": "The other alternative I looked at was the patchset 1 approach where we initialize the `AvbOps::user_data` pointer to NULL initially and then fix it up to the correct address in the accessor function, since we do have the final `UserData` address at that point as we\u0027re no longer in the constructor. But as you mentioned it is weird to be changing state in accessors so this seems a bit cleaner.",
+      "parentUuid": "724ba681_52a8c02b",
+      "range": {
+        "startLine": 145,
+        "startChar": 14,
+        "endLine": 145,
+        "endChar": 22
+      },
+      "revId": "a560fc032b915b35c16588036cdb5b0f4df82d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "af9333fe_ca105209",
         "filename": "rust/src/verify.rs",
         "patchSetId": 3
