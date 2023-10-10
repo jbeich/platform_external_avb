@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "73fa6c89_6864f27e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-10T18:17:03Z",
+      "side": 1,
+      "message": "It turns out there are a few different Result types we need to expose from libavb (`SlotVerifyResult`, `IoResult`, and `VbmetaVerifyResult`) so this naming might need to change to help differentiate them.\n\nIf you can just use a local fake type for now until we have the final naming scheme figured out it would make it slightly easier later to change. But if you need this type now to make progress it\u0027s fine to land and we can just add an extra CL to update it later.",
+      "revId": "9a7c8e9162304d243dee3e15783c1018ebb90b38",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
