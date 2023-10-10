@@ -74,6 +74,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9aa36299_ea6c9486",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-10T19:06:30Z",
+      "side": 1,
+      "message": "Indeed. `UserData` needs to stay unmoved for the pointer to be valid. In that sense, we should avoid implementing `From\u003c..\u003e` since that\u0027s really from value to value, we can implement `ScopedAvbOps::new` instead and let it take the same parameter.\n\nI think the current version is more clear without the nesting reference. Also with PhantomData, we can tell exactly what\u0027s the lifetem of `ScopedAvbOps` should be.",
+      "parentUuid": "0065034f_364a224a",
+      "range": {
+        "startLine": 145,
+        "startChar": 14,
+        "endLine": 145,
+        "endChar": 22
+      },
+      "revId": "a560fc032b915b35c16588036cdb5b0f4df82d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "af9333fe_ca105209",
         "filename": "rust/src/verify.rs",
         "patchSetId": 3
