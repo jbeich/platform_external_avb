@@ -1,0 +1,11 @@
+{
+    // We can move to presubmit once we have the necessary SLO data.
+    "postsubmit": [
+        {
+            "name": "libavb_bindgen_test"
+        },
+        {
+            "name": "libavb_rs_test"
+        }
+    ]
+}
