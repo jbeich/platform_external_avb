@@ -96,6 +96,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "09532b52_13f80c3d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-10T21:52:12Z",
+      "side": 1,
+      "message": "Ack done re: `new()`, thanks for the help!",
+      "parentUuid": "9aa36299_ea6c9486",
+      "range": {
+        "startLine": 145,
+        "startChar": 14,
+        "endLine": 145,
+        "endChar": 22
+      },
+      "revId": "a560fc032b915b35c16588036cdb5b0f4df82d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "af9333fe_ca105209",
