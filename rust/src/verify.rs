@@ -26,7 +26,7 @@ use core::{
 };
 
 /// Common `Result` type for `IoError` errors.
-type Result<T> = core::result::Result<T, IoError>;
+pub type Result<T> = core::result::Result<T, IoError>;
 
 /// Base implementation-provided callbacks for verification.
 ///
