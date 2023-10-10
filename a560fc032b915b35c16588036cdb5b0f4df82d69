@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "724ba681_52a8c02b",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-10T16:13:14Z",
+      "side": 1,
+      "message": "The `UserData` must remain alive and unmoved from the point we create the bindgen `AvbOps` structure since `AvbOps` holds a raw pointer to the `UserData`. Rust doesn\u0027t track this raw pointer ownership though, so if we take the full `UserData` object here the compiler thinks we\u0027re done with it and drops it after this function, causing a runtime fault when we later try to dereference the pointer.\n\nSimilarly, we can\u0027t have `ScopedAvbOps` just own the full `UserData` itself because its address is not fixed in its own constructor. Inside the constructor we can assign the current address of the `UserData` object, but it may change later when the parent `ScopedAvbOps` is returned, moved, etc (in practice this also causes a runtime fault when I attempt it).\n\nSo somehow we must have the fixed final address to the `UserData` object at the time we create the bindgen `AvbOps`, which is what taking it by `\u0026mut` does.\n\nMy understanding is that the more idiomatic Rust way to do this kind of thing is with `Box`/`Pin`, but since we want to avoid dynamic allocation it requires a bit more complication here.",
+      "parentUuid": "189d31f7_ca5fea3f",
+      "range": {
+        "startLine": 145,
+        "startChar": 14,
+        "endLine": 145,
+        "endChar": 22
+      },
+      "revId": "a560fc032b915b35c16588036cdb5b0f4df82d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "af9333fe_ca105209",
         "filename": "rust/src/verify.rs",
         "patchSetId": 3
@@ -37,6 +61,30 @@
       "writtenOn": "2023-10-10T14:35:52Z",
       "side": 1,
       "message": "You can implement `AsMut` for `ScopedAvbOps` to get `\u0026mut AvbOps` from it",
+      "range": {
+        "startLine": 566,
+        "startChar": 22,
+        "endLine": 566,
+        "endChar": 45
+      },
+      "revId": "a560fc032b915b35c16588036cdb5b0f4df82d69",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7683f39_47e3e9aa",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 566,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-10T16:13:14Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af9333fe_ca105209",
       "range": {
         "startLine": 566,
         "startChar": 22,
