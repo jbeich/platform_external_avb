@@ -16,6 +16,24 @@
       "message": "@sergiip@google.com I have a few upcoming changes to the build file as well, let me go ahead and move this into the `rust/` subdir first and we can iterate on it there: https://r.android.com/2781847.",
       "revId": "f93cd82548033d4b741553783433426bee9c4cd5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f462a3a6_70910d38",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2029650
+      },
+      "writtenOn": "2023-10-10T22:04:01Z",
+      "side": 1,
+      "message": "sg, let me know when your changes land.",
+      "parentUuid": "d82f6ce6_57d61533",
+      "revId": "f93cd82548033d4b741553783433426bee9c4cd5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
