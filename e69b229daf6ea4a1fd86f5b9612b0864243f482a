@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ee7b81e2_945ef43e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-10T18:10:07Z",
+      "side": 1,
+      "message": "Moving the Rust build and test targets to the `rust/` subdir",
+      "revId": "e69b229daf6ea4a1fd86f5b9612b0864243f482a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
