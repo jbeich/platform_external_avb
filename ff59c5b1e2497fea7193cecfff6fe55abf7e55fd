@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6f7351f_86c9c3a0",
+        "filename": "rust/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 85,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-11T17:28:21Z",
+      "side": 1,
+      "message": "Removed, good catch thanks! Must have been leftover from some earlier test code.",
+      "parentUuid": "8eb8cb14_d2e05e8f",
+      "range": {
+        "startLine": 85,
+        "startChar": 8,
+        "endLine": 85,
+        "endChar": 27
+      },
+      "revId": "ff59c5b1e2497fea7193cecfff6fe55abf7e55fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eb9605a9_8e888a96",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-10-11T09:40:02Z",
       "side": 1,
       "message": "Can we change this to presubmit? We should have SLO data now.",
+      "range": {
+        "startLine": 3,
+        "startChar": 5,
+        "endLine": 3,
+        "endChar": 15
+      },
+      "revId": "ff59c5b1e2497fea7193cecfff6fe55abf7e55fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d63f04b_6952e50f",
+        "filename": "rust/TEST_MAPPING",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-11T17:28:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eb9605a9_8e888a96",
       "range": {
         "startLine": 3,
         "startChar": 5,
