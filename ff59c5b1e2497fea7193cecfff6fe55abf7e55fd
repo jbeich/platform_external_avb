@@ -93,6 +93,30 @@
       },
       "revId": "ff59c5b1e2497fea7193cecfff6fe55abf7e55fd",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f2d809b7_82e477ef",
+        "filename": "rust/TEST_MAPPING",
+        "patchSetId": 2
+      },
+      "lineNbr": 3,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-11T17:48:22Z",
+      "side": 1,
+      "message": "Hmm the presubmit checker didn\u0027t seem to like that for some reason, not sure why, the stats on http://android-build/test_hub/search/?filter\u003d\u0026invfilter\u003dunhealthyInvocations\u0026invfilter\u003dstaleInvocations\u0026query\u003dmodule%3Alibavb_rs_test\u0026tab\u003dtests look OK as far as I can tell.\n\nMaybe it uses the TEST_MAPPING file path to identify the tests so moving the file \"resets\" the stats?",
+      "parentUuid": "7d63f04b_6952e50f",
+      "range": {
+        "startLine": 3,
+        "startChar": 5,
+        "endLine": 3,
+        "endChar": 15
+      },
+      "revId": "ff59c5b1e2497fea7193cecfff6fe55abf7e55fd",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
