@@ -85,6 +85,31 @@ pub trait Ops {
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
     ) -> Result<bool>;
+
+    /// Reads the rollback index at the given location.
+    ///
+    /// # Arguments
+    /// * `rollback_index_location`: the rollback location.
+    ///
+    /// # Returns
+    /// The rollback index at this location or `IoError` on error.
+    fn read_rollback_index(&mut self, rollback_index_location: usize) -> Result<u64>;
+
+    /// Writes the rollback index at the given location.
+    ///
+    /// This API is never actually used by libavb; the purpose of having it here is to group it
+    /// with `read_rollback_index()` and indicate to the implementation that it is responsible
+    /// for providing this functionality. However, it's up to the implementation to call this
+    /// function at the proper time after verification, which is a device-specific decision that
+    /// depends on things like the A/B strategy. See the libavb documentation for more information.
+    ///
+    /// # Arguments
+    /// * `rollback_index_location`: the rollback location.
+    /// * `index`: the rollback index to write.
+    ///
+    /// # Returns
+    /// Unit on success or `IoError` on error.
+    fn write_rollback_index(&mut self, rollback_index_location: usize, index: u64) -> Result<()>;
 }
 
 /// Helper to pass user-provided `Ops` through libavb via the `user_data` pointer.
@@ -155,9 +180,9 @@ impl<'a> ScopedAvbOps<'a> {
                 get_preloaded_partition: Some(get_preloaded_partition),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
                 validate_vbmeta_public_key: Some(validate_vbmeta_public_key),
+                read_rollback_index: Some(read_rollback_index),
+                write_rollback_index: Some(write_rollback_index),
                 // TODO: add callback wrappers for the remaining API.
-                read_rollback_index: None,
-                write_rollback_index: None,
                 read_is_device_unlocked: None,
                 get_unique_guid_for_partition: None,
                 get_size_of_partition: None,
@@ -442,6 +467,83 @@ unsafe fn try_validate_vbmeta_public_key(
     Ok(())
 }
 
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_rollback_index(
+    ops: *mut AvbOps,
+    rollback_index_location: usize,
+    out_rollback_index: *mut u64,
+) -> AvbIOResult {
+    result_to_io_enum(try_read_rollback_index(
+        ops,
+        rollback_index_location,
+        out_rollback_index,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `out_rollback_index` must adhere to the requirements of `ptr::write()`.
+unsafe fn try_read_rollback_index(
+    ops: *mut AvbOps,
+    rollback_index_location: usize,
+    out_rollback_index: *mut u64,
+) -> Result<()> {
+    check_nonnull(out_rollback_index)?;
+
+    // Initialize the output variables first in case something fails.
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_rollback_index`.
+    unsafe { ptr::write(out_rollback_index, 0) };
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    let index = ops.read_rollback_index(rollback_index_location)?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_rollback_index`.
+    unsafe { ptr::write(out_rollback_index, index) };
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn write_rollback_index(
+    ops: *mut AvbOps,
+    rollback_index_location: usize,
+    rollback_index: u64,
+) -> AvbIOResult {
+    result_to_io_enum(try_write_rollback_index(
+        ops,
+        rollback_index_location,
+        rollback_index,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+unsafe fn try_write_rollback_index(
+    ops: *mut AvbOps,
+    rollback_index_location: usize,
+    rollback_index: u64,
+) -> Result<()> {
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    ops.write_rollback_index(rollback_index_location, rollback_index)
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -456,13 +558,15 @@ mod tests {
     #[derive(Default)]
     struct TestOps {
         /// Partitions to "read" on request.
-        pub partitions: HashMap<&'static str, Vec<u8>>,
+        partitions: HashMap<&'static str, Vec<u8>>,
         /// Preloaded partitions. Same functionality as `partitions`, just separated to be able
         /// to test reading and preloading callbacks independently.
-        pub preloaded: HashMap<&'static str, Vec<u8>>,
+        preloaded: HashMap<&'static str, Vec<u8>>,
         /// Vbmeta public keys as a map of {(key, metadata): trusted}. Querying unknown keys will
         /// return `IoError::Io`.
-        pub vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), bool>,
+        vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), bool>,
+        /// Rollback indices. Accessing unknown locations will return `IoError::Io`.
+        rollbacks: HashMap<usize, u64>,
     }
 
     impl Ops for TestOps {
@@ -520,6 +624,15 @@ mod tests {
                 .get(&(public_key, public_key_metadata))
                 .ok_or(IoError::Io)
                 .copied()
+        }
+
+        fn read_rollback_index(&mut self, location: usize) -> Result<u64> {
+            self.rollbacks.get(&location).ok_or(IoError::Io).copied()
+        }
+
+        fn write_rollback_index(&mut self, location: usize, index: u64) -> Result<()> {
+            *(self.rollbacks.get_mut(&location).ok_or(IoError::Io)?) = index;
+            Ok(())
         }
     }
 
@@ -622,6 +735,34 @@ mod tests {
                 out_is_trusted,
             )
         }
+    }
+
+    /// Calls the `read_rollback_index()` C callback the same way libavb would.
+    fn call_read_rollback_index(
+        ops: &mut impl Ops,
+        rollback_index_location: usize,
+        out_index: &mut u64,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe { avb_ops.read_rollback_index.unwrap()(avb_ops, rollback_index_location, out_index) }
+    }
+
+    /// Calls the `write_rollback_index()` C callback the same way libavb would.
+    fn call_write_rollback_index(
+        ops: &mut impl Ops,
+        rollback_index_location: usize,
+        index: u64,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe { avb_ops.write_rollback_index.unwrap()(avb_ops, rollback_index_location, index) }
     }
 
     #[test]
@@ -795,5 +936,42 @@ mod tests {
 
         assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_IO);
         assert!(!is_trusted);
+    }
+
+    #[test]
+    fn test_read_rollback_index() {
+        let mut ops = TestOps::default();
+        ops.rollbacks.insert(10, 20);
+
+        let mut index = 0u64;
+        assert_eq!(
+            call_read_rollback_index(&mut ops, 10, &mut index),
+            AvbIOResult::AVB_IO_RESULT_OK
+        );
+        assert_eq!(index, 20);
+    }
+
+    #[test]
+    fn test_read_rollback_index_not_found() {
+        let mut ops = TestOps::default();
+
+        let mut index = 30u64;
+        assert_eq!(
+            call_read_rollback_index(&mut ops, 10, &mut index),
+            AvbIOResult::AVB_IO_RESULT_ERROR_IO
+        );
+        assert_eq!(index, 0);
+    }
+
+    #[test]
+    fn test_write_rollback_index() {
+        let mut ops = TestOps::default();
+        ops.rollbacks.insert(10, 20);
+
+        assert_eq!(
+            call_write_rollback_index(&mut ops, 10, 30),
+            AvbIOResult::AVB_IO_RESULT_OK
+        );
+        assert_eq!(*ops.rollbacks.get(&10).unwrap(), 30);
     }
 }
