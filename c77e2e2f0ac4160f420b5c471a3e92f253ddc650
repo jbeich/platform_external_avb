@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f1a2e6b4_ff81c75a",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-12T07:11:14Z",
+      "side": 1,
+      "message": "Since this struct is only private to the tests, we don\u0027t really need to expose the fields as public.",
+      "range": {
+        "startLine": 569,
+        "startChar": 8,
+        "endLine": 569,
+        "endChar": 12
+      },
+      "revId": "c77e2e2f0ac4160f420b5c471a3e92f253ddc650",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bc866204_3edf50df",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 962,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-12T07:11:14Z",
+      "side": 1,
+      "message": "Should we also check that the index is set to 0 in this case?",
+      "range": {
+        "startLine": 962,
+        "startChar": 9,
+        "endLine": 962,
+        "endChar": 10
+      },
+      "revId": "c77e2e2f0ac4160f420b5c471a3e92f253ddc650",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "48c8a12e_cc1937be",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-12T07:11:14Z",
+      "side": 1,
+      "message": "nit: This test checks that when a rollback location doesn\u0027t exist, we can\u0027t write an index. That\u0027s the logic of the `HashMap.get_mut` in the test struct, rather the code itself. FWIW, I don\u0027t think the tests should contain too complex logic or be tested [1].\n\n[1] go/unit-testing-practices#logic",
+      "range": {
+        "startLine": 981,
+        "startChar": 8,
+        "endLine": 984,
+        "endChar": 10
+      },
+      "revId": "c77e2e2f0ac4160f420b5c471a3e92f253ddc650",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
