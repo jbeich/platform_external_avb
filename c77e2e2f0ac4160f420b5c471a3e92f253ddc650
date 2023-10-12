@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "76202a7c_d43c4527",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 569,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-12T18:05:01Z",
+      "side": 1,
+      "message": "Done thanks, I forgot that you can access private struct fields from within the same module.",
+      "parentUuid": "f1a2e6b4_ff81c75a",
+      "range": {
+        "startLine": 569,
+        "startChar": 8,
+        "endLine": 569,
+        "endChar": 12
+      },
+      "revId": "c77e2e2f0ac4160f420b5c471a3e92f253ddc650",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bc866204_3edf50df",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "40c6dba5_329fe32f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 962,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-12T18:05:01Z",
+      "side": 1,
+      "message": "Good idea, done.",
+      "parentUuid": "bc866204_3edf50df",
+      "range": {
+        "startLine": 962,
+        "startChar": 9,
+        "endLine": 962,
+        "endChar": 10
+      },
+      "revId": "c77e2e2f0ac4160f420b5c471a3e92f253ddc650",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "48c8a12e_cc1937be",
@@ -60,6 +108,30 @@
       "writtenOn": "2023-10-12T07:11:14Z",
       "side": 1,
       "message": "nit: This test checks that when a rollback location doesn\u0027t exist, we can\u0027t write an index. That\u0027s the logic of the `HashMap.get_mut` in the test struct, rather the code itself. FWIW, I don\u0027t think the tests should contain too complex logic or be tested [1].\n\n[1] go/unit-testing-practices#logic",
+      "range": {
+        "startLine": 981,
+        "startChar": 8,
+        "endLine": 984,
+        "endChar": 10
+      },
+      "revId": "c77e2e2f0ac4160f420b5c471a3e92f253ddc650",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dc4ef871_1652fcfd",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 984,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-12T18:05:01Z",
+      "side": 1,
+      "message": "Ack, I was on the fence about this as well. My purpose in having this here was to make sure our `write_rollback_index()`/`try_write_rollback_index()` wrapper functions properly translate callback failures back to libavb, since the only way to exercise that particular code path is to simulate an error in our text fixture like this.\n\nIn this case the `write_rollback_index()` functions are very straightforward, so it seems fine to omit this test. IMO though most of the more complex callback handlers should explicitly test callback failure even if it means a bit more complexity in the test fixture.",
+      "parentUuid": "48c8a12e_cc1937be",
       "range": {
         "startLine": 981,
         "startChar": 8,
