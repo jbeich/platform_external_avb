@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e507d6ed_7fa6d8cf",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-14T00:05:38Z",
+      "side": 1,
+      "message": "I had thought this would be useful to be able to selectively enable the Uuid feature, in particular for when this gets ported to out-of-tree bootloaders who may really want to minimize dependencies, but now I\u0027m not 100% convinced.\n\nIf we were using Cargo to build I think this would be easy since the end user can [select features for each dependency](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html#choosing-features) in their own `cargo.toml` file.\n\nBut as far as I can tell in Soong we need to pre-configure each build target with its own dependencies, which means we need separate targets for +uuid and -uuid (and it also scales horribly as we add more features).\n\nWDYT, should I just remove this feature selection and just force our users to depend on the uuid crate, or keep it optional?",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 27
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
