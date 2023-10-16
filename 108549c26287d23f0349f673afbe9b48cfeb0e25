@@ -22,6 +22,122 @@
       },
       "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7385248_50750bf5",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 93,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-16T12:53:50Z",
+      "side": 1,
+      "message": "It\u0027s true that not all users may require the UUID feature, I agree that it is beneficial to keep it optional.",
+      "parentUuid": "e507d6ed_7fa6d8cf",
+      "range": {
+        "startLine": 93,
+        "startChar": 0,
+        "endLine": 93,
+        "endChar": 27
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "69d414f1_5a182e21",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-16T12:53:50Z",
+      "side": 1,
+      "message": "Can we merge this into `libavb_rs_nostd.defaults`? The following definition is also for `nostd`.",
+      "range": {
+        "startLine": 106,
+        "startChar": 11,
+        "endLine": 106,
+        "endChar": 40
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3d027cf4_09fc095e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-16T12:53:50Z",
+      "side": 1,
+      "message": "This is already imported in the header.\n\nSame for all the `c_char` below",
+      "range": {
+        "startLine": 617,
+        "startChar": 22,
+        "endLine": 617,
+        "endChar": 39
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0bb647ec_bca7adff",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-16T12:53:50Z",
+      "side": 1,
+      "message": "Mm, I feel it is safer here to first convert the uuid to a `CString` or `CStr` then to bytes, rather than appending `\\0` directly. The first approach also enforces some checks on the input `\u0026str` to ensure that there\u0027s no invalid characters in the sequence.",
+      "range": {
+        "startLine": 681,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 24
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a0d1e094_06815b4e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1023,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-16T12:53:50Z",
+      "side": 1,
+      "message": "not related to this cl: In general, I think the current testing is a bit too low-level. This forces us to frequently adapt the tests when the implementation changes. Testing could be more efficient if we focus on testing behaviors rather than low-level implementation details.",
+      "range": {
+        "startLine": 1023,
+        "startChar": 12,
+        "endLine": 1023,
+        "endChar": 25
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
