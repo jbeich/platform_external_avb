@@ -71,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4027174d_411e43f3",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-16T23:55:53Z",
+      "side": 1,
+      "message": "That does seem to work thanks.",
+      "parentUuid": "69d414f1_5a182e21",
+      "range": {
+        "startLine": 106,
+        "startChar": 11,
+        "endLine": 106,
+        "endChar": 40
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3d027cf4_09fc095e",
@@ -84,6 +108,30 @@
       "writtenOn": "2023-10-16T12:53:50Z",
       "side": 1,
       "message": "This is already imported in the header.\n\nSame for all the `c_char` below",
+      "range": {
+        "startLine": 617,
+        "startChar": 22,
+        "endLine": 617,
+        "endChar": 39
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "74d29803_126c7c09",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 617,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-16T23:55:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3d027cf4_09fc095e",
       "range": {
         "startLine": 617,
         "startChar": 22,
@@ -119,6 +167,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "56c3e074_38ee7d9d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-16T23:55:53Z",
+      "side": 1,
+      "message": "The problem I\u0027m running into is that there is no API I can find that can convert the UUID to either `CString` or `CStr`. The only one I see is this [`encode_lower()`](https://docs.rs/uuid/latest/uuid/fmt/struct.Hyphenated.html#method.encode_lower) which always writes an unterminated string to an existing buffer, forcing us to terminate it manually for libavb.\n\nI tried using the `fmt` library to write into the buffer directly:\n\n```\nbuffer.write(\"{}\\0\", guid.as_hyphenated()).or(Err(IoError::Oom))?\n```\n\nbut it looks like the Write trait on `\u0026mut [u8]` is only available in `std`, I couldn\u0027t find any equivalent in `core`.",
+      "parentUuid": "0bb647ec_bca7adff",
+      "range": {
+        "startLine": 681,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 24
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a0d1e094_06815b4e",
         "filename": "rust/src/verify.rs",
         "patchSetId": 1
@@ -130,6 +202,30 @@
       "writtenOn": "2023-10-16T12:53:50Z",
       "side": 1,
       "message": "not related to this cl: In general, I think the current testing is a bit too low-level. This forces us to frequently adapt the tests when the implementation changes. Testing could be more efficient if we focus on testing behaviors rather than low-level implementation details.",
+      "range": {
+        "startLine": 1023,
+        "startChar": 12,
+        "endLine": 1023,
+        "endChar": 25
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec11fd55_6f3c0cff",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1023,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-16T23:55:53Z",
+      "side": 1,
+      "message": "That\u0027s partially what I\u0027m trying to get at here re: behaviors rather than impl details - e.g. for this test here, I\u0027m aiming for the logic to be \"if we have a partition with these contents, then call this function, it should return these values\".\n\nWe\u0027ll get more end-to-end tests once we can actually do full verification runs against libavb which will be more high-level behavioral (e.g. given this kernel image and this vbmeta, verification should be successful) but even to do that we will need this test fixture to be fully functional and implement the callbacks properly, so it seems valuable to make sure the smaller pieces are behaving according to the libavb requirements as we go.\n\nCould you provide a quick example of what you\u0027re envisioning as a more behavioral test for these callbacks?",
+      "parentUuid": "a0d1e094_06815b4e",
       "range": {
         "startLine": 1023,
         "startChar": 12,
