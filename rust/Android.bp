@@ -76,10 +76,16 @@ rust_test {
 
 // Rust library wrapping libavb C implementation.
 rust_defaults {
-    name: "libavb_rs.defaults",
+    name: "libavb_rs_common.defaults",
+    crate_name: "avb",
     srcs: ["src/lib.rs"],
     // Require unsafe blocks for inside unsafe functions.
     flags: ["-Dunsafe_op_in_unsafe_fn"],
+}
+
+rust_defaults {
+    name: "libavb_rs_nostd.defaults",
+    defaults: ["libavb_rs_common.defaults"],
     rustlibs: [
         "libavb_bindgen_nostd",
     ],
@@ -88,11 +94,27 @@ rust_defaults {
     ],
 }
 
+rust_defaults {
+    name: "libavb_rs.defaults",
+    defaults: ["libavb_rs_common.defaults"],
+    host_supported: true,
+    rustlibs: [
+        "libavb_bindgen",
+    ],
+    whole_static_libs: [
+        "libavb",
+    ],
+}
+
+rust_library {
+    name: "libavb_rs",
+    defaults: ["libavb_rs.defaults"],
+}
+
 rust_library_rlib {
     name: "libavb_rs_nostd",
-    crate_name: "avb",
     prefer_rlib: true,
-    defaults: ["libavb_rs.defaults"],
+    defaults: ["libavb_rs_nostd.defaults"],
     no_stdlibs: true,
     stdlibs: [
         "libcore.rust_sysroot",
