@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "642b84d0_6290170f",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 2029650
+      },
+      "writtenOn": "2023-10-17T04:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "96c78073_24e916a0",
+      "revId": "227a2c8ca5eaece802f6d28c4d66ce0b936d5251",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "722eefd2_ebb4f061",
@@ -41,6 +59,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "82c155e4_175607b6",
+        "filename": "rust/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 103,
+      "author": {
+        "id": 2029650
+      },
+      "writtenOn": "2023-10-17T04:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "722eefd2_ebb4f061",
+      "range": {
+        "startLine": 103,
+        "startChar": 9,
+        "endLine": 103,
+        "endChar": 19
+      },
+      "revId": "227a2c8ca5eaece802f6d28c4d66ce0b936d5251",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "eadc1e14_16a47c45",
@@ -54,6 +96,30 @@
       "writtenOn": "2023-10-16T21:51:14Z",
       "side": 1,
       "message": "Could we add a brief comment here about why we use std when building `android_dylib`? Is it just because dylibs don\u0027t actually support nostd? (I seem to remember struggling with them when first playing with GBL nostd build rules)",
+      "range": {
+        "startLine": 24,
+        "startChar": 26,
+        "endLine": 24,
+        "endChar": 39
+      },
+      "revId": "227a2c8ca5eaece802f6d28c4d66ce0b936d5251",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "527e92a8_fe6924ac",
+        "filename": "rust/src/lib.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 24,
+      "author": {
+        "id": 2029650
+      },
+      "writtenOn": "2023-10-17T04:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eadc1e14_16a47c45",
       "range": {
         "startLine": 24,
         "startChar": 26,
