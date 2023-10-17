@@ -21,7 +21,10 @@
 //!
 //! This library is [no_std] for portability.
 
-#![cfg_attr(not(test), no_std)]
+// ANDROID: Use std to allow building as a dylib.
+// This condition lets us make the hack to add a dependency on std for the
+// panic_handler and eh_personality conditional on actually building a dylib.
+#![cfg_attr(not(any(test, android_dylib)), no_std)]
 
 mod error;
 mod verify;
