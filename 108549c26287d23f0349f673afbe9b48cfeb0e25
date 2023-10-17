@@ -191,6 +191,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "e9dd2d3d_eb82081a",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-17T12:54:54Z",
+      "side": 1,
+      "message": "What I actually meant is that we can do the following: first, we write the encoded string `\u0026str` to `Uuid::encode_buffer()`. Then, we can construct a `CString` by using `CString::new` and passing the buffer as an argument. Finally, we can copy the bytes from the CString to the buffer using `buffer.copy_from_slice(c_str.to_bytes())`.",
+      "parentUuid": "56c3e074_38ee7d9d",
+      "range": {
+        "startLine": 681,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 24
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a0d1e094_06815b4e",
         "filename": "rust/src/verify.rs",
         "patchSetId": 1
@@ -226,6 +250,30 @@
       "side": 1,
       "message": "That\u0027s partially what I\u0027m trying to get at here re: behaviors rather than impl details - e.g. for this test here, I\u0027m aiming for the logic to be \"if we have a partition with these contents, then call this function, it should return these values\".\n\nWe\u0027ll get more end-to-end tests once we can actually do full verification runs against libavb which will be more high-level behavioral (e.g. given this kernel image and this vbmeta, verification should be successful) but even to do that we will need this test fixture to be fully functional and implement the callbacks properly, so it seems valuable to make sure the smaller pieces are behaving according to the libavb requirements as we go.\n\nCould you provide a quick example of what you\u0027re envisioning as a more behavioral test for these callbacks?",
       "parentUuid": "a0d1e094_06815b4e",
+      "range": {
+        "startLine": 1023,
+        "startChar": 12,
+        "endLine": 1023,
+        "endChar": 25
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "45d4ef2b_1f086a7d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1023,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-17T12:54:54Z",
+      "side": 1,
+      "message": "I feel that these tests may be too low-level since we find ourselves needing to modify them frequently when introducing new features. Since each test only covers a small portion of the code (a single callback), I\u0027m uncertain if they can effectively detect significant regressions. Additionally, the effort required to maintain them seems quite high.\n\nIMHO, it would be preferable to prioritize testing the public API[1] and focusing on the user-observable behavior, we tested this way in pvmfw/avb[2]. However, it\u0027s possible that we can only adopt this approach once the library is complete.\n\n[1] http://engdoc/eng/doc/devguide/testing/unit/best-practices?polyglot\u003djava#public-apis\n[2] https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/Virtualization/pvmfw/avb/tests/api_test.rs",
+      "parentUuid": "ec11fd55_6f3c0cff",
       "range": {
         "startLine": 1023,
         "startChar": 12,
