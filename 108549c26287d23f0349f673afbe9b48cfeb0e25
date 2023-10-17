@@ -215,6 +215,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "73239744_8200203e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-17T17:08:50Z",
+      "side": 1,
+      "message": "Ah gotcha, but `CString::new()` performs heap-allocation which we were trying to avoid in this lib - are you thinking it\u0027s worth heap-allocating here because it\u0027s only short-lived and we\u0027re going to free the memory once the data is copied into `buffer`?",
+      "parentUuid": "e9dd2d3d_eb82081a",
+      "range": {
+        "startLine": 681,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 24
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a0d1e094_06815b4e",
         "filename": "rust/src/verify.rs",
         "patchSetId": 1
@@ -274,6 +298,30 @@
       "side": 1,
       "message": "I feel that these tests may be too low-level since we find ourselves needing to modify them frequently when introducing new features. Since each test only covers a small portion of the code (a single callback), I\u0027m uncertain if they can effectively detect significant regressions. Additionally, the effort required to maintain them seems quite high.\n\nIMHO, it would be preferable to prioritize testing the public API[1] and focusing on the user-observable behavior, we tested this way in pvmfw/avb[2]. However, it\u0027s possible that we can only adopt this approach once the library is complete.\n\n[1] http://engdoc/eng/doc/devguide/testing/unit/best-practices?polyglot\u003djava#public-apis\n[2] https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/Virtualization/pvmfw/avb/tests/api_test.rs",
       "parentUuid": "ec11fd55_6f3c0cff",
+      "range": {
+        "startLine": 1023,
+        "startChar": 12,
+        "endLine": 1023,
+        "endChar": 25
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8f00179b_31c7ca2f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1023,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-17T17:08:50Z",
+      "side": 1,
+      "message": "Ack got it thanks for the links. Yeah once we have all the callbacks in place we will definitely be able to do tests that look more like [2] above but I don\u0027t think it\u0027s possible quite yet.",
+      "parentUuid": "45d4ef2b_1f086a7d",
       "range": {
         "startLine": 1023,
         "startChar": 12,
