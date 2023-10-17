@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3da89d55_5e2d1c53",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-17T15:16:22Z",
+      "side": 1,
+      "message": "+alice FYI - this seems reasonably low-impact so just going to +2 it myself, but if you\u0027d prefer to also review all CLs before they go in LMK and I\u0027m happy to make sure you get added :)",
+      "revId": "cfb21e96639f3b8037f8dd47d74a30503c02b739",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
