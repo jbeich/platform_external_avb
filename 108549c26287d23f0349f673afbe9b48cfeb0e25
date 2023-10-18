@@ -239,6 +239,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9a498758_2d5d7ac4",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-18T08:00:30Z",
+      "side": 1,
+      "message": "Indeed, in this case, we do require heap allocation for `CString::new`. However, given that the `CString` is constructed from `Uuid::encode_buffer`, we can be certain that its length will not exceed 45 bytes. Considering the benefits of the checks it imposes, I think this small overhead of the heap allocation is worthwhile.",
+      "parentUuid": "73239744_8200203e",
+      "range": {
+        "startLine": 681,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 24
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "a0d1e094_06815b4e",
         "filename": "rust/src/verify.rs",
         "patchSetId": 1
