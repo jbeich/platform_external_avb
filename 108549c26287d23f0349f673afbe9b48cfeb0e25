@@ -261,6 +261,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9bb71c1f_c3925bfd",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 681,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-18T16:54:22Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "9a498758_2d5d7ac4",
+      "range": {
+        "startLine": 681,
+        "startChar": 0,
+        "endLine": 681,
+        "endChar": 24
+      },
+      "revId": "108549c26287d23f0349f673afbe9b48cfeb0e25",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a0d1e094_06815b4e",
