@@ -75,6 +75,8 @@ rust_test {
 }
 
 // Rust library wrapping libavb C implementation.
+
+// Common defaults for all variations.
 rust_defaults {
     name: "libavb_rs_common.defaults",
     crate_name: "avb",
@@ -83,17 +85,26 @@ rust_defaults {
     flags: ["-Dunsafe_op_in_unsafe_fn"],
 }
 
+// No std, no features.
 rust_defaults {
     name: "libavb_rs_nostd.defaults",
     defaults: ["libavb_rs_common.defaults"],
+    // Only rlib can build without the required nostd hooks (eh_personality,
+    // panic_handler, etc) to defer them for the final binary to implement.
+    prefer_rlib: true,
+    no_stdlibs: true,
     rustlibs: [
         "libavb_bindgen_nostd",
     ],
     whole_static_libs: [
         "libavb_baremetal",
     ],
+    stdlibs: [
+        "libcore.rust_sysroot",
+    ],
 }
 
+// Std, no features.
 rust_defaults {
     name: "libavb_rs.defaults",
     defaults: ["libavb_rs_common.defaults"],
@@ -106,23 +117,75 @@ rust_defaults {
     ],
 }
 
+// Adds UUID feature for nostd.
+rust_defaults {
+    name: "libavb_rs_nostd.uuid.defaults",
+    features: [
+        "uuid",
+    ],
+    rustlibs: [
+        "libuuid_nostd",
+    ],
+}
+
+// Adds UUID feature for std.
+rust_defaults {
+    name: "libavb_rs.uuid.defaults",
+    features: [
+        "uuid",
+    ],
+    rustlibs: [
+        "libuuid",
+    ],
+}
+
+// lib: no std, no features.
+rust_library_rlib {
+    name: "libavb_rs_nostd",
+    defaults: ["libavb_rs_nostd.defaults"],
+}
+
+// lib: no std, UUID feature.
+rust_library_rlib {
+    name: "libavb_rs_nostd_uuid",
+    defaults: [
+        "libavb_rs_nostd.defaults",
+        "libavb_rs_nostd.uuid.defaults",
+    ],
+}
+
+// lib: std, no features.
 rust_library {
     name: "libavb_rs",
     defaults: ["libavb_rs.defaults"],
 }
 
-rust_library_rlib {
-    name: "libavb_rs_nostd",
-    prefer_rlib: true,
-    defaults: ["libavb_rs_nostd.defaults"],
-    no_stdlibs: true,
-    stdlibs: [
-        "libcore.rust_sysroot",
+// lib: std, UUID feature.
+rust_library {
+    name: "libavb_rs_uuid",
+    defaults: [
+        "libavb_rs.defaults",
+        "libavb_rs.uuid.defaults",
     ],
 }
 
+// device test: no std, no features.
+// Note: we are testing the nostd version of the library but the tests
+// themselves do use std.
 rust_test {
     name: "libavb_rs_test",
-    defaults: ["libavb_rs.defaults"],
+    defaults: [
+        "libavb_rs_nostd.defaults",
+    ],
+    test_suites: ["general-tests"],
+}
+
+// device test: no std, UUID feature.
+rust_test {
+    name: "libavb_rs_uuid_test",
+    defaults: [
+        "libavb_rs_nostd.defaults",
+        "libavb_rs_nostd.uuid.defaults",
+    ],
     test_suites: ["general-tests"],
 }
