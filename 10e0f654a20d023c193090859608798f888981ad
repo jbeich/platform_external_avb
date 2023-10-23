@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "16f63f04_8b6b7b7d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 158,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-23T23:59:10Z",
+      "side": 1,
+      "message": "These APIs feel overly-complicated, but they mirror what libavb requires. LMK if you can think of any better way to express this in Rust without deviating from the original libavb API too much.\n\nI thought about using `Option\u003c\u003e` so that `None` could be the query-only case rather than a 0-length slice, but I think it just makes it harder on the user since they now have to handle 3 cases (None, too small, big enough) rather than just 2 (too small, big enough).",
+      "range": {
+        "startLine": 155,
+        "startChar": 0,
+        "endLine": 158,
+        "endChar": 72
+      },
+      "revId": "10e0f654a20d023c193090859608798f888981ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
