@@ -135,6 +135,15 @@ pub trait Ops {
     /// The partition GUID or `IoError` on error.
     #[cfg(feature = "uuid")]
     fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> Result<Uuid>;
+
+    /// Returns the size of the requested partition.
+    ///
+    /// # Arguments
+    /// * `partition`: partition name.
+    ///
+    /// # Returns
+    /// The partition size in bytes or `IoError` on error.
+    fn get_size_of_partition(&mut self, partition: &CStr) -> Result<u64>;
 }
 
 /// Helper to pass user-provided `Ops` through libavb via the `user_data` pointer.
@@ -209,8 +218,8 @@ impl<'a> ScopedAvbOps<'a> {
                 write_rollback_index: Some(write_rollback_index),
                 read_is_device_unlocked: Some(read_is_device_unlocked),
                 get_unique_guid_for_partition: Some(get_unique_guid_for_partition),
+                get_size_of_partition: Some(get_size_of_partition),
                 // TODO: add callback wrappers for the remaining API.
-                get_size_of_partition: None,
                 read_persistent_value: None,
                 write_persistent_value: None,
                 validate_public_key_for_partition: None,
@@ -688,6 +697,60 @@ unsafe fn try_get_unique_guid_for_partition(
     Ok(())
 }
 
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn get_size_of_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    out_size_num_bytes: *mut u64,
+) -> AvbIOResult {
+    result_to_io_enum(try_get_size_of_partition(
+        ops,
+        partition,
+        out_size_num_bytes,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `out_size_num_bytes` must adhere to the requirements of `ptr::write()`.
+unsafe fn try_get_size_of_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    out_size_num_bytes: *mut u64,
+) -> Result<()> {
+    check_nonnull(partition)?;
+    check_nonnull(out_size_num_bytes)?;
+
+    // Initialize the output variables first in case something fails.
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_size_num_bytes`.
+    unsafe { ptr::write(out_size_num_bytes, 0) };
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `partition`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let partition = unsafe { CStr::from_ptr(partition) };
+    let size = ops.get_size_of_partition(partition)?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_size_num_bytes`.
+    unsafe { ptr::write(out_size_num_bytes, size) };
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -848,6 +911,13 @@ mod tests {
             self.partitions
                 .get(partition.to_str()?)
                 .map(|p| p.uuid)
+                .ok_or(IoError::NoSuchPartition)
+        }
+
+        fn get_size_of_partition(&mut self, partition: &CStr) -> Result<u64> {
+            self.partitions
+                .get(partition.to_str()?)
+                .map(|p| u64::try_from(p.contents.len()).unwrap())
                 .ok_or(IoError::NoSuchPartition)
         }
     }
@@ -1011,6 +1081,21 @@ mod tests {
                 out_guid_str.len(),
             )
         }
+    }
+
+    /// Calls the `get_size_of_partition()` C callback the same way libavb would.
+    fn call_get_size_of_partition(
+        ops: &mut impl Ops,
+        partition: &str,
+        out_size: &mut u64,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let part_name = CString::new(partition).unwrap();
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe { avb_ops.get_size_of_partition.unwrap()(avb_ops, part_name.as_ptr(), out_size) }
     }
 
     #[test]
@@ -1317,5 +1402,28 @@ mod tests {
             call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
             AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
         );
+    }
+
+    #[test]
+    fn test_get_size_of_partition() {
+        let mut ops = TestOps::default();
+        ops.add_partition("foo", [1, 2, 3, 4]);
+
+        let mut size = 0;
+        let result = call_get_size_of_partition(&mut ops, "foo", &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert_eq!(size, 4);
+    }
+
+    #[test]
+    fn test_get_size_of_partition_unknown() {
+        let mut ops = TestOps::default();
+
+        let mut size = 10;
+        let result = call_get_size_of_partition(&mut ops, "foo", &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION);
+        assert_eq!(size, 0);
     }
 }
