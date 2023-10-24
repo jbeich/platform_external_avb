@@ -71,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "54dc3557_572d9457",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 176,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-24T23:49:22Z",
+      "side": 1,
+      "message": "Yeah I think that\u0027s nicer, it deviates from the libavb C API but seems worth it. Done.",
+      "parentUuid": "da2b8533_e2a618c7",
+      "range": {
+        "startLine": 176,
+        "startChar": 55,
+        "endLine": 176,
+        "endChar": 89
+      },
+      "revId": "10e0f654a20d023c193090859608798f888981ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a16d28fa_46e18ce2",
@@ -94,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "faa72036_6958084c",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-24T23:49:22Z",
+      "side": 1,
+      "message": "The `result?` below will properly convert `NotImplemented` into something libavb understands (generic `IoError`) in the case that it\u0027s needed but not implemented.\n\nThe reason we have to specifically handle `InsufficientSpace` here instead is because we have to extract the actual space required and write it to the out-param before we bubble the error up (should hopefully be more readable with the below adjustments).",
+      "parentUuid": "a16d28fa_46e18ce2",
+      "range": {
+        "startLine": 860,
+        "startChar": 53,
+        "endLine": 860,
+        "endChar": 59
+      },
+      "revId": "10e0f654a20d023c193090859608798f888981ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "01f7619d_e2d33df5",
@@ -107,6 +155,30 @@
       "writtenOn": "2023-10-24T14:26:10Z",
       "side": 1,
       "message": "nit: I think this part can be more clear if we match the result directly.",
+      "range": {
+        "startLine": 859,
+        "startChar": 4,
+        "endLine": 873,
+        "endChar": 10
+      },
+      "revId": "10e0f654a20d023c193090859608798f888981ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3b98fa36_a13d0ab6",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 873,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-24T23:49:22Z",
+      "side": 1,
+      "message": "Ack yeah this is a bit awkward. Tried switching to `match` which was better, then realized I could combine the success and insufficient case handling into a single `if` which seemed even nicer, but LMK if it still feels like `match` would work better here.",
+      "parentUuid": "01f7619d_e2d33df5",
       "range": {
         "startLine": 859,
         "startChar": 4,
