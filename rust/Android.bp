@@ -52,6 +52,10 @@ rust_bindgen {
     shared_libs: [
         "libcrypto",
     ],
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.virt",
+    ],
 }
 
 rust_bindgen {
