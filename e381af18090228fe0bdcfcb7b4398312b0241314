@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec125e6e_6c96f71e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-26T07:33:15Z",
+      "side": 1,
+      "message": "Sorry I was OOO yesterday.",
+      "revId": "e381af18090228fe0bdcfcb7b4398312b0241314",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f6ae47a0_0b96371f",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-26T07:33:15Z",
+      "side": 1,
+      "message": "Could you also explain what will happen if the requested persistent value for the given name doesn\u0027t exist?",
+      "range": {
+        "startLine": 187,
+        "startChar": 19,
+        "endLine": 187,
+        "endChar": 45
+      },
+      "revId": "e381af18090228fe0bdcfcb7b4398312b0241314",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
