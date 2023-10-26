@@ -168,6 +168,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4d8ba0fb_2f851c34",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 860,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-26T22:06:31Z",
+      "side": 1,
+      "message": "`get_preloaded_partition()` is an optional optimization; libavb is OK with calling this function even if it\u0027s not implemented, since it will have a fallback path by calling `read_from_partition()` instead. libavb docs say we can indicate this is unimplemented by setting the out pointer to NULL and returning success, which is why we can map unimplemented -\u003e success here.\n\nThe persistent value callbacks are slightly different; they are optional in the sense that they will not be called unless certain features are requested (it\u0027s not the absence or presence of the function pointer that tells libavb to use these callbacks, but just whether the feature flags are set or not). So mapping unimplemented -\u003e success is not appropriate here; if libavb calls these functions, they must work.\n\nI\u0027ll remove the default implementation in the trait for now, it may be misleading, and this will at least force users to look at these functions and explicitly decide if they need to implement them or not.",
+      "parentUuid": "5bf0adbe_17bce526",
+      "range": {
+        "startLine": 860,
+        "startChar": 53,
+        "endLine": 860,
+        "endChar": 59
+      },
+      "revId": "10e0f654a20d023c193090859608798f888981ad",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "01f7619d_e2d33df5",
         "filename": "rust/src/verify.rs",
         "patchSetId": 2
