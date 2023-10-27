@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "33a429b6_fb2cf34e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 871,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-27T14:11:36Z",
+      "side": 1,
+      "message": "nit: is this needed?",
+      "range": {
+        "startLine": 871,
+        "startChar": 57,
+        "endLine": 871,
+        "endChar": 68
+      },
+      "revId": "f38cc3223de4e8336c4426534f1ff8b3ce66ba3f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
