@@ -5,6 +5,9 @@
         },
         {
             "name": "libavb_rs_test"
+        },
+        {
+            "name": "libavb_rs_uuid_test"
         }
     ]
 }
