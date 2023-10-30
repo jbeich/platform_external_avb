@@ -17,6 +17,8 @@
 //! This module is responsible for all the conversions required to pass information between
 //! libavb and Rust for verifying images.
 
+extern crate alloc;
+
 use crate::{error::result_to_io_enum, IoError};
 use avb_bindgen::{AvbIOResult, AvbOps};
 use core::{
@@ -25,6 +27,8 @@ use core::{
     marker::PhantomData,
     ptr, slice,
 };
+#[cfg(feature = "uuid")]
+use uuid::Uuid;
 
 /// Common `Result` type for `IoError` errors.
 type Result<T> = core::result::Result<T, IoError>;
@@ -116,6 +120,119 @@ pub trait Ops {
     /// # Returns
     /// True if the device is unlocked, false if locked, `IoError` on error.
     fn read_is_device_unlocked(&mut self) -> Result<bool>;
+
+    /// Returns the GUID of the requested partition.
+    ///
+    /// This is only necessary if the kernel commandline requires GUID substitution, and is omitted
+    /// from the library by default to avoid unnecessary dependencies. To implement:
+    /// 1. Enable the `uuid` feature during compilation
+    /// 2. Provide the [`uuid` crate](https://docs.rs/uuid/latest/uuid/) dependency
+    ///
+    /// # Arguments
+    /// * `partition`: partition name.
+    ///
+    /// # Returns
+    /// The partition GUID or `IoError` on error.
+    #[cfg(feature = "uuid")]
+    fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> Result<Uuid>;
+
+    /// Returns the size of the requested partition.
+    ///
+    /// # Arguments
+    /// * `partition`: partition name.
+    ///
+    /// # Returns
+    /// The partition size in bytes or `IoError` on error.
+    fn get_size_of_partition(&mut self, partition: &CStr) -> Result<u64>;
+
+    /// Reads the requested persistent value.
+    ///
+    /// This is only necessary if using persistent digests or the "managed restart and EIO"
+    /// hashtree verification mode; if verification is not using these features, this function will
+    /// never be called.
+    ///
+    /// # Arguments
+    /// * `name`: persistent value name.
+    /// * `value`: buffer to read persistent value into; if too small to hold the persistent value,
+    ///            `IoError::InsufficientSpace` should be returned and this function will be called
+    ///            again with an appropriately-sized buffer. This may be an empty slice if the
+    ///            caller only wants to query the persistent value size.
+    ///
+    /// # Returns
+    /// * The number of bytes written into `value` on success.
+    /// * `IoError::NoSuchValue` if `name` is not a known persistent value.
+    /// * `IoError::InsufficientSpace` with the required size if the `value` buffer is too small.
+    /// * Any other `IoError` on failure.
+    fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> Result<usize>;
+
+    /// Writes the requested persistent value.
+    ///
+    /// This is only necessary if using persistent digests or the "managed restart and EIO"
+    /// hashtree verification mode; if verification is not using these features, this function will
+    /// never be called.
+    ///
+    /// # Arguments
+    /// * `name`: persistent value name.
+    /// * `value`: bytes to write as the new value.
+    ///
+    /// # Returns
+    /// * Unit on success.
+    /// * `IoError::NoSuchValue` if `name` is not a supported persistent value.
+    /// * `IoError::InvalidValueSize` if `value` is too large to save as a persistent value.
+    /// * Any other `IoError` on failure.
+    fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> Result<()>;
+
+    /// Erases the requested persistent value.
+    ///
+    /// This is only necessary if using persistent digests or the "managed restart and EIO"
+    /// hashtree verification mode; if verification is not using these features, this function will
+    /// never be called.
+    ///
+    /// If the requested persistent value is already erased, this function is a no-op and should
+    /// return `Ok(())`.
+    ///
+    /// # Arguments
+    /// * `name`: persistent value name.
+    ///
+    /// # Returns
+    /// * Unit on success.
+    /// * `IoError::NoSuchValue` if `name` is not a supported persistent value.
+    /// * Any other `IoError` on failure.
+    fn erase_persistent_value(&mut self, name: &CStr) -> Result<()>;
+
+    /// Checks if the given public key is valid for the given partition.
+    ///
+    /// This is only used if the "no vbmeta" verification flag is passed, meaning the partitions
+    /// to verify have an embedded vbmeta image rather than locating it in a separate vbmeta
+    /// partition. If this flag is not used, the `validate_vbmeta_public_key()` callback is used
+    /// instead, and this function will never be called.
+    ///
+    /// # Arguments
+    /// * `partition`: partition name.
+    /// * `public_key`: the public key.
+    /// * `public_key_metadata`: public key metadata set by the `--public_key_metadata` arg in
+    ///                          `avbtool`, or None if no metadata was provided.
+    ///
+    /// # Returns
+    /// On success, returns a `PublicKeyForPartitionInfo` object indicating whether the given
+    /// key is trusted and its rollback index location.
+    ///
+    /// On failure, returns an error.
+    fn validate_public_key_for_partition(
+        &mut self,
+        partition: &CStr,
+        public_key: &[u8],
+        public_key_metadata: Option<&[u8]>,
+    ) -> Result<PublicKeyForPartitionInfo>;
+}
+
+/// Info returned from `validare_public_key_for_partition()`.
+#[derive(Clone, Copy, Debug)]
+pub struct PublicKeyForPartitionInfo {
+    /// Whether the key is trusted for the given partition..
+    pub trusted: bool,
+    /// The rollback index to use for the given partition.
+    pub rollback_index_location: u32,
 }
 
 /// Helper to pass user-provided `Ops` through libavb via the `user_data` pointer.
@@ -189,12 +306,11 @@ impl<'a> ScopedAvbOps<'a> {
                 read_rollback_index: Some(read_rollback_index),
                 write_rollback_index: Some(write_rollback_index),
                 read_is_device_unlocked: Some(read_is_device_unlocked),
-                // TODO: add callback wrappers for the remaining API.
-                get_unique_guid_for_partition: None,
-                get_size_of_partition: None,
-                read_persistent_value: None,
-                write_persistent_value: None,
-                validate_public_key_for_partition: None,
+                get_unique_guid_for_partition: Some(get_unique_guid_for_partition),
+                get_size_of_partition: Some(get_size_of_partition),
+                read_persistent_value: Some(read_persistent_value),
+                write_persistent_value: Some(write_persistent_value),
+                validate_public_key_for_partition: Some(validate_public_key_for_partition),
             },
             _user_data: PhantomData,
         }
@@ -587,40 +703,510 @@ unsafe fn try_read_is_device_unlocked(ops: *mut AvbOps, out_is_unlocked: *mut bo
     Ok(())
 }
 
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+#[cfg(feature = "uuid")]
+unsafe extern "C" fn get_unique_guid_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    guid_buf: *mut c_char,
+    guid_buf_size: usize,
+) -> AvbIOResult {
+    result_to_io_enum(try_get_unique_guid_for_partition(
+        ops,
+        partition,
+        guid_buf,
+        guid_buf_size,
+    ))
+}
+
+/// When compiled without the `uuid` feature this callback is not used, just return error.
+#[cfg(not(feature = "uuid"))]
+unsafe extern "C" fn get_unique_guid_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    guid_buf: *mut c_char,
+    guid_buf_size: usize,
+) -> AvbIOResult {
+    AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `guid_buf` must adhere to the requirements of `slice::from_raw_parts_mut()`.
+#[cfg(feature = "uuid")]
+unsafe fn try_get_unique_guid_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    guid_buf: *mut c_char,
+    guid_buf_size: usize,
+) -> Result<()> {
+    check_nonnull(partition)?;
+    check_nonnull(guid_buf)?;
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `partition`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let partition = unsafe { CStr::from_ptr(partition) };
+    let guid = ops.get_unique_guid_for_partition(partition)?;
+
+    // Write the UUID string to a uuid buffer which is guaranteed to be large enough, then use
+    // `CString` to apply nul-termination.
+    // This does allocate memory, but it's short-lived and discarded as soon as we copy the
+    // properly-terminated string back to the buffer.
+    let mut encode_buffer = uuid::Uuid::encode_buffer();
+    let guid_str = guid.as_hyphenated().encode_lower(&mut encode_buffer);
+    let guid_cstring = alloc::ffi::CString::new(guid_str.as_bytes()).or(Err(IoError::Io))?;
+    let guid_bytes = guid_cstring.to_bytes_with_nul();
+
+    if guid_buf_size < guid_bytes.len() {
+        // This would indicate some internal error - the uuid library needs more
+        // space to print the UUID string than libavb provided.
+        return Err(IoError::Oom);
+    }
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `guid_buf` with size `guid_buf_size`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let buffer = unsafe { slice::from_raw_parts_mut(guid_buf as *mut u8, guid_buf_size) };
+    buffer[..guid_bytes.len()].copy_from_slice(guid_bytes);
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn get_size_of_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    out_size_num_bytes: *mut u64,
+) -> AvbIOResult {
+    result_to_io_enum(try_get_size_of_partition(
+        ops,
+        partition,
+        out_size_num_bytes,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `out_size_num_bytes` must adhere to the requirements of `ptr::write()`.
+unsafe fn try_get_size_of_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    out_size_num_bytes: *mut u64,
+) -> Result<()> {
+    check_nonnull(partition)?;
+    check_nonnull(out_size_num_bytes)?;
+
+    // Initialize the output variables first in case something fails.
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_size_num_bytes`.
+    unsafe { ptr::write(out_size_num_bytes, 0) };
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `partition`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let partition = unsafe { CStr::from_ptr(partition) };
+    let size = ops.get_size_of_partition(partition)?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_size_num_bytes`.
+    unsafe { ptr::write(out_size_num_bytes, size) };
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_persistent_value(
+    ops: *mut AvbOps,
+    name: *const c_char,
+    buffer_size: usize,
+    out_buffer: *mut u8,
+    out_num_bytes_read: *mut usize,
+) -> AvbIOResult {
+    result_to_io_enum(try_read_persistent_value(
+        ops,
+        name,
+        buffer_size,
+        out_buffer,
+        out_num_bytes_read,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `name` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
+/// * `out_num_bytes_read` must adhere to the requirements of `ptr::write()`.
+unsafe fn try_read_persistent_value(
+    ops: *mut AvbOps,
+    name: *const c_char,
+    buffer_size: usize,
+    out_buffer: *mut u8,
+    out_num_bytes_read: *mut usize,
+) -> Result<()> {
+    check_nonnull(name)?;
+    check_nonnull(out_num_bytes_read)?;
+
+    // Initialize the output variables first in case something fails.
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `out_num_bytes_read`.
+    unsafe { ptr::write(out_num_bytes_read, 0) };
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `name`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let name = unsafe { CStr::from_ptr(name) };
+    let mut empty: [u8; 0] = [];
+    let value = match out_buffer.is_null() {
+        // NULL buffer => empty slice, used to just query the value size.
+        true => &mut empty,
+        false => {
+            // SAFETY:
+            // * we've checked that the pointer is non-NULL.
+            // * libavb gives us a properly-allocated `out_buffer` with size `buffer_size`.
+            // * we only access the contents via the returned slice.
+            // * the returned slice is not held past the scope of this callback.
+            unsafe { slice::from_raw_parts_mut(out_buffer, buffer_size) }
+        }
+    };
+
+    let result = ops.read_persistent_value(name, value);
+    // On success or insufficient space we need to write the property size back.
+    if let Ok(size) | Err(IoError::InsufficientSpace(size)) = result {
+        // SAFETY:
+        // * we've checked that the pointer is non-NULL.
+        // * libavb gives us a properly-allocated `out_num_bytes_read`.
+        unsafe { ptr::write(out_num_bytes_read, size) };
+    };
+    // We've written the size back and can drop it now.
+    result.map(|_| ())
+}
+
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn write_persistent_value(
+    ops: *mut AvbOps,
+    name: *const c_char,
+    value_size: usize,
+    value: *const u8,
+) -> AvbIOResult {
+    result_to_io_enum(try_write_persistent_value(ops, name, value_size, value))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `name` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts()`.
+unsafe fn try_write_persistent_value(
+    ops: *mut AvbOps,
+    name: *const c_char,
+    value_size: usize,
+    value: *const u8,
+) -> Result<()> {
+    check_nonnull(name)?;
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `name`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let name = unsafe { CStr::from_ptr(name) };
+
+    if value_size == 0 {
+        ops.erase_persistent_value(name)
+    } else {
+        check_nonnull(value)?;
+        // SAFETY:
+        // * we've checked that the pointer is non-NULL.
+        // * libavb gives us a properly-allocated `value` with size `value_size`.
+        // * we only access the contents via the returned slice.
+        // * the returned slice is not held past the scope of this callback.
+        let value = unsafe { slice::from_raw_parts(value, value_size) };
+        ops.write_persistent_value(name, value)
+    }
+}
+
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn validate_public_key_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    public_key_data: *const u8,
+    public_key_length: usize,
+    public_key_metadata: *const u8,
+    public_key_metadata_length: usize,
+    out_is_trusted: *mut bool,
+    out_rollback_index_location: *mut u32,
+) -> AvbIOResult {
+    result_to_io_enum(try_validate_public_key_for_partition(
+        ops,
+        partition,
+        public_key_data,
+        public_key_length,
+        public_key_metadata,
+        public_key_metadata_length,
+        out_is_trusted,
+        out_rollback_index_location,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
+/// * `out_*` must adhere to the requirements of `ptr::write()`.
+unsafe fn try_validate_public_key_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    public_key_data: *const u8,
+    public_key_length: usize,
+    public_key_metadata: *const u8,
+    public_key_metadata_length: usize,
+    out_is_trusted: *mut bool,
+    out_rollback_index_location: *mut u32,
+) -> Result<()> {
+    check_nonnull(partition)?;
+    check_nonnull(public_key_data)?;
+    check_nonnull(out_is_trusted)?;
+    check_nonnull(out_rollback_index_location)?;
+
+    // Initialize the output variables first in case something fails.
+    // SAFETY:
+    // * we've checked that the pointers are non-NULL.
+    // * libavb gives us a properly-allocated `out_*`.
+    unsafe {
+        ptr::write(out_is_trusted, false);
+        ptr::write(out_rollback_index_location, 0);
+    }
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `partition`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let partition = unsafe { CStr::from_ptr(partition) };
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `public_key_data` with size `public_key_length`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let public_key = unsafe { slice::from_raw_parts(public_key_data, public_key_length) };
+    let metadata = check_nonnull(public_key_metadata).ok().map(
+        // SAFETY:
+        // * we've checked that the pointer is non-NULL.
+        // * libavb gives us a properly-allocated `public_key_metadata` with size
+        //   `public_key_metadata_length`.
+        // * we only access the contents via the returned slice.
+        // * the returned slice is not held past the scope of this callback.
+        |_| unsafe { slice::from_raw_parts(public_key_metadata, public_key_metadata_length) },
+    );
+
+    let key_info = ops.validate_public_key_for_partition(partition, public_key, metadata)?;
+
+    // SAFETY:
+    // * we've checked that the pointers are non-NULL.
+    // * libavb gives us a properly-allocated `out_*`.
+    unsafe {
+        ptr::write(out_is_trusted, key_info.trusted);
+        ptr::write(
+            out_rollback_index_location,
+            key_info.rollback_index_location,
+        );
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
 
     use std::collections::HashMap;
     use std::ffi::CString;
+    #[cfg(feature = "uuid")]
+    use uuid::uuid;
+
+    /// Length of a UUID C-string representation including hyphens and a null-terminator.
+    #[cfg(feature = "uuid")]
+    const UUID_CSTRING_LENGTH: usize = uuid::fmt::Hyphenated::LENGTH + 1;
+
+    /// Represents a single fake partition.
+    #[derive(Default)]
+    struct FakePartition {
+        contents: Vec<u8>, // Partition contents
+        preloaded: bool,   // Whether it should report as preloaded or not
+        #[cfg(feature = "uuid")]
+        uuid: Uuid, // Partition UUID
+    }
+
+    /// Fake vbmeta key state.
+    struct FakeVbmetaKeyState {
+        /// Key trust & rollback index info.
+        info: PublicKeyForPartitionInfo,
+        /// If specified, indicates the specific partition this vbmeta is tied to (for
+        /// `validate_public_key_for_partition()`).
+        for_partition: Option<&'static str>,
+    }
 
     /// Ops implementation for testing.
     ///
     /// In addition to being used to exercise individual callback wrappers, this will be used for
     /// full verification tests so behavior needs to be correct.
     struct TestOps {
-        /// Partitions to "read" on request.
-        partitions: HashMap<&'static str, Vec<u8>>,
-        /// Preloaded partitions. Same functionality as `partitions`, just separated to be able
-        /// to test reading and preloading callbacks independently.
-        preloaded: HashMap<&'static str, Vec<u8>>,
-        /// Vbmeta public keys as a map of {(key, metadata): trusted}. Querying unknown keys will
+        /// Partitions to provide to libavb callbacks.
+        partitions: HashMap<&'static str, FakePartition>,
+        /// Vbmeta public keys as a map of {(key, metadata): state}. Querying unknown keys will
         /// return `IoError::Io`.
-        vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), bool>,
+        ///
+        /// See `add_vbmeta_key*()` functions for simpler wrappers to inject these keys.
+        vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), FakeVbmetaKeyState>,
         /// Rollback indices. Accessing unknown locations will return `IoError::Io`.
         rollbacks: HashMap<usize, u64>,
         /// Unlock state. Set an error to simulate IoError during access.
         unlock_state: Result<bool>,
+        /// Persistent named values. Set an error to simulate `IoError` during access. Writing
+        /// a non-existent persistent value will create it; to simulate `NoSuchValue` instead,
+        /// create an entry with `Err(IoError::NoSuchValue)` as the value.
+        persistent_values: HashMap<String, Result<Vec<u8>>>,
+    }
+
+    impl TestOps {
+        /// Adds a partition with the given contents.
+        ///
+        /// Reduces boilerplate a bit by taking in a raw array and returning a &mut so tests can
+        /// do something like this:
+        ///
+        /// ```
+        /// test_ops.add_partition("foo", [1, 2, 3, 4]);
+        /// test_ops.add_partition("bar", [0, 0]).preloaded = true;
+        /// ```
+        fn add_partition<const N: usize>(
+            &mut self,
+            name: &'static str,
+            contents: [u8; N],
+        ) -> &mut FakePartition {
+            self.partitions.insert(
+                name,
+                FakePartition {
+                    contents: contents.into(),
+                    ..Default::default()
+                },
+            );
+            self.partitions.get_mut(name).unwrap()
+        }
+
+        /// Adds a persistent value with the given state.
+        ///
+        /// Reduces boilerplate by allowing array input:
+        ///
+        /// ```
+        /// test_ops.add_persistent_value("foo", Ok(b"contents"));
+        /// test_ops.add_persistent_value("bar", Err(IoError::NoSuchValue));
+        /// ```
+        fn add_persistent_value(&mut self, name: &str, contents: Result<&[u8]>) {
+            self.persistent_values
+                .insert(name.into(), contents.map(|b| b.into()));
+        }
+
+        /// Adds a fake vbmeta key not tied to any partition.
+        fn add_vbmeta_key(
+            &mut self,
+            key: &'static [u8],
+            metadata: Option<&'static [u8]>,
+            trusted: bool,
+        ) {
+            self.vbmeta_keys.insert(
+                (key, metadata),
+                FakeVbmetaKeyState {
+                    // `rollback_index_location` doesn't matter in this case, it will be read from
+                    // the vbmeta blob.
+                    info: PublicKeyForPartitionInfo {
+                        trusted,
+                        rollback_index_location: 0,
+                    },
+                    for_partition: None,
+                },
+            );
+        }
+
+        /// Adds a fake vbmeta key tied to the given partition and rollback index location.
+        fn add_vbmeta_key_for_partition(
+            &mut self,
+            key: &'static [u8],
+            metadata: Option<&'static [u8]>,
+            trusted: bool,
+            partition: &'static str,
+            rollback_index_location: u32,
+        ) {
+            self.vbmeta_keys.insert(
+                (key, metadata),
+                FakeVbmetaKeyState {
+                    info: PublicKeyForPartitionInfo {
+                        trusted,
+                        rollback_index_location,
+                    },
+                    for_partition: Some(partition),
+                },
+            );
+        }
     }
 
     impl Default for TestOps {
         fn default() -> Self {
             Self {
                 partitions: HashMap::new(),
-                preloaded: HashMap::new(),
                 vbmeta_keys: HashMap::new(),
                 rollbacks: HashMap::new(),
                 unlock_state: Err(IoError::Io),
+                persistent_values: HashMap::new(),
             }
         }
     }
@@ -632,10 +1218,16 @@ mod tests {
             offset: i64,
             buffer: &mut [u8],
         ) -> Result<usize> {
-            let contents = self
+            let partition = self
                 .partitions
                 .get(partition.to_str()?)
                 .ok_or(IoError::NoSuchPartition)?;
+
+            // We should never be trying to read a preloaded partition from disk since we already
+            // have it available in memory.
+            assert!(!partition.preloaded);
+
+            let contents = &partition.contents;
 
             // Negative offset means count backwards from the end.
             let offset = {
@@ -665,10 +1257,14 @@ mod tests {
         }
 
         fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8]> {
-            self.preloaded
-                .get(partition.to_str()?)
-                .ok_or(IoError::NotImplemented)
-                .map(|vec| &vec[..])
+            match self.partitions.get(partition.to_str()?) {
+                Some(FakePartition {
+                    contents,
+                    preloaded: true,
+                    ..
+                }) => Ok(&contents[..]),
+                _ => Err(IoError::NotImplemented),
+            }
         }
 
         fn validate_vbmeta_public_key(
@@ -679,7 +1275,7 @@ mod tests {
             self.vbmeta_keys
                 .get(&(public_key, public_key_metadata))
                 .ok_or(IoError::Io)
-                .copied()
+                .map(|k| k.info.trusted)
         }
 
         fn read_rollback_index(&mut self, location: usize) -> Result<u64> {
@@ -693,6 +1289,86 @@ mod tests {
 
         fn read_is_device_unlocked(&mut self) -> Result<bool> {
             self.unlock_state.clone()
+        }
+
+        #[cfg(feature = "uuid")]
+        fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> Result<Uuid> {
+            self.partitions
+                .get(partition.to_str()?)
+                .map(|p| p.uuid)
+                .ok_or(IoError::NoSuchPartition)
+        }
+
+        fn get_size_of_partition(&mut self, partition: &CStr) -> Result<u64> {
+            self.partitions
+                .get(partition.to_str()?)
+                .map(|p| u64::try_from(p.contents.len()).unwrap())
+                .ok_or(IoError::NoSuchPartition)
+        }
+
+        fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> Result<usize> {
+            match self
+                .persistent_values
+                .get(name.to_str()?)
+                .ok_or(IoError::NoSuchValue)?
+            {
+                // If we were given enough space, write the value contents.
+                Ok(contents) if contents.len() <= value.len() => {
+                    value[..contents.len()].clone_from_slice(contents);
+                    Ok(contents.len())
+                }
+                // Not enough space, tell the caller how much we need.
+                Ok(contents) => Err(IoError::InsufficientSpace(contents.len())),
+                // Simulated error, return it.
+                Err(e) => Err(e.clone()),
+            }
+        }
+
+        fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> Result<()> {
+            let name = name.to_str()?;
+
+            // If the test requested a simulated error on this value, return it.
+            if let Some(Err(e)) = self.persistent_values.get(name) {
+                return Err(e.clone());
+            }
+
+            self.persistent_values
+                .insert(name.to_string(), Ok(value.to_vec()));
+            Ok(())
+        }
+
+        fn erase_persistent_value(&mut self, name: &CStr) -> Result<()> {
+            let name = name.to_str()?;
+
+            // If the test requested a simulated error on this value, return it.
+            if let Some(Err(e)) = self.persistent_values.get(name) {
+                return Err(e.clone());
+            }
+
+            self.persistent_values.remove(name);
+            Ok(())
+        }
+
+        fn validate_public_key_for_partition(
+            &mut self,
+            partition: &CStr,
+            public_key: &[u8],
+            public_key_metadata: Option<&[u8]>,
+        ) -> Result<PublicKeyForPartitionInfo> {
+            let key = self
+                .vbmeta_keys
+                .get(&(public_key, public_key_metadata))
+                .ok_or(IoError::Io)?;
+
+            if let Some(for_partition) = key.for_partition {
+                if (for_partition == partition.to_str()?) {
+                    // The key is registered for this partition; return its info.
+                    return Ok(key.info);
+                }
+            }
+
+            // No match.
+            Err(IoError::Io)
         }
     }
 
@@ -719,7 +1395,7 @@ mod tests {
                 offset,
                 num_bytes,
                 buffer.as_mut_ptr() as *mut c_void,
-                out_num_read as *mut usize,
+                out_num_read,
             )
         }
     }
@@ -756,7 +1432,7 @@ mod tests {
                 part_name.as_ptr(),
                 num_bytes,
                 &mut out_ptr,
-                out_num_bytes_preloaded as *mut usize,
+                out_num_bytes_preloaded,
             )
         };
 
@@ -835,10 +1511,121 @@ mod tests {
         unsafe { avb_ops.read_is_device_unlocked.unwrap()(avb_ops, out_is_unlocked) }
     }
 
+    /// Calls the `get_unique_guid_for_partition()` C callback the same way libavb would.
+    fn call_get_unique_guid_for_partition(
+        ops: &mut impl Ops,
+        partition: &str,
+        out_guid_str: &mut [u8],
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let part_name = CString::new(partition).unwrap();
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.get_unique_guid_for_partition.unwrap()(
+                avb_ops,
+                part_name.as_ptr(),
+                out_guid_str.as_mut_ptr() as *mut _,
+                out_guid_str.len(),
+            )
+        }
+    }
+
+    /// Calls the `get_size_of_partition()` C callback the same way libavb would.
+    fn call_get_size_of_partition(
+        ops: &mut impl Ops,
+        partition: &str,
+        out_size: &mut u64,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let part_name = CString::new(partition).unwrap();
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe { avb_ops.get_size_of_partition.unwrap()(avb_ops, part_name.as_ptr(), out_size) }
+    }
+
+    /// Calls the `read_persistent_value()` C callback the same way libavb would.
+    fn call_read_persistent_value(
+        ops: &mut impl Ops,
+        name: &str,
+        out_buffer: Option<&mut [u8]>,
+        out_num_bytes_read: &mut usize,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let name = CString::new(name).unwrap();
+        let (buffer_ptr, buffer_size) =
+            out_buffer.map_or((ptr::null_mut(), 0), |b| (b.as_mut_ptr(), b.len()));
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.read_persistent_value.unwrap()(
+                avb_ops,
+                name.as_ptr(),
+                buffer_size,
+                buffer_ptr,
+                out_num_bytes_read,
+            )
+        }
+    }
+
+    /// Calls the `write_persistent_value()` C callback the same way libavb would.
+    fn call_write_persistent_value(
+        ops: &mut impl Ops,
+        name: &str,
+        value: Option<&[u8]>,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let name = CString::new(name).unwrap();
+        let (value_ptr, value_size) = value.map_or((ptr::null(), 0), |v| (v.as_ptr(), v.len()));
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.write_persistent_value.unwrap()(avb_ops, name.as_ptr(), value_size, value_ptr)
+        }
+    }
+
+    fn call_validate_public_key_for_partition(
+        ops: &mut impl Ops,
+        partition: &str,
+        public_key: &[u8],
+        public_key_metadata: Option<&[u8]>,
+        out_is_trusted: &mut bool,
+        out_rollback_index_location: &mut u32,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let part_name = CString::new(partition).unwrap();
+        let (metadata_ptr, metadata_size) =
+            public_key_metadata.map_or((ptr::null(), 0), |m| (m.as_ptr(), m.len()));
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.validate_public_key_for_partition.unwrap()(
+                avb_ops,
+                part_name.as_ptr(),
+                public_key.as_ptr(),
+                public_key.len(),
+                metadata_ptr,
+                metadata_size,
+                out_is_trusted,
+                out_rollback_index_location,
+            )
+        }
+    }
+
     #[test]
     fn test_read_from_partition() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -852,7 +1639,7 @@ mod tests {
     #[test]
     fn test_read_from_partition_with_offset() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -866,7 +1653,7 @@ mod tests {
     #[test]
     fn test_read_from_partition_negative_offset() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -880,7 +1667,7 @@ mod tests {
     #[test]
     fn test_read_from_partition_truncate() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 0;
@@ -894,7 +1681,7 @@ mod tests {
     #[test]
     fn test_read_from_partition_unknown() {
         let mut ops = TestOps::default();
-        ops.partitions = HashMap::from([("foo", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo", [1, 2, 3, 4]);
 
         let mut buffer: [u8; 8] = [0; 8];
         let mut bytes_read: usize = 10;
@@ -908,7 +1695,7 @@ mod tests {
     #[test]
     fn test_get_preloaded_partition() {
         let mut ops = TestOps::default();
-        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo_preload", [1, 2, 3, 4]).preloaded = true;
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 0;
@@ -925,7 +1712,7 @@ mod tests {
     #[test]
     fn test_get_preloaded_partition_truncate() {
         let mut ops = TestOps::default();
-        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo_preload", [1, 2, 3, 4]).preloaded = true;
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 0;
@@ -942,7 +1729,7 @@ mod tests {
     #[test]
     fn test_get_preloaded_partition_unknown() {
         let mut ops = TestOps::default();
-        ops.preloaded = HashMap::from([("foo_preload", vec![1u8, 2u8, 3u8, 4u8])]);
+        ops.add_partition("foo_preload", [1, 2, 3, 4]).preloaded = true;
 
         let mut contents: &mut [u8] = &mut [];
         let mut size: usize = 10;
@@ -958,7 +1745,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key() {
         let mut ops = TestOps::default();
-        ops.vbmeta_keys = HashMap::from([((b"testkey".as_ref(), None), true)]);
+        ops.add_vbmeta_key(b"testkey", None, true);
 
         let mut is_trusted = false;
         let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
@@ -970,8 +1757,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key_with_metadata() {
         let mut ops = TestOps::default();
-        ops.vbmeta_keys =
-            HashMap::from([((b"testkey".as_ref(), Some(b"testmeta".as_ref())), true)]);
+        ops.add_vbmeta_key(b"testkey", Some(b"testmeta"), true);
 
         let mut is_trusted = false;
         let result = call_validate_vbmeta_public_key(
@@ -988,7 +1774,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key_rejected() {
         let mut ops = TestOps::default();
-        ops.vbmeta_keys = HashMap::from([((b"testkey".as_ref(), None), false)]);
+        ops.add_vbmeta_key(b"testkey", None, false);
 
         let mut is_trusted = true;
         let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
@@ -1082,5 +1868,304 @@ mod tests {
             AvbIOResult::AVB_IO_RESULT_ERROR_IO
         );
         assert_eq!(unlocked, false);
+    }
+
+    #[cfg(feature = "uuid")]
+    #[test]
+    fn test_get_unique_guid_for_partition() {
+        let mut ops = TestOps::default();
+        ops.add_partition("foo", []).uuid = uuid!("01234567-89ab-cdef-0123-456789abcdef");
+
+        let mut uuid_str = [b'?'; UUID_CSTRING_LENGTH];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_OK
+        );
+        assert_eq!(
+            String::from_utf8(uuid_str.into()).unwrap(),
+            "01234567-89ab-cdef-0123-456789abcdef\0"
+        )
+    }
+
+    #[cfg(feature = "uuid")]
+    #[test]
+    fn test_get_unique_guid_for_partition_unknown() {
+        let mut ops = TestOps::default();
+
+        let mut uuid_str = [b'?'; UUID_CSTRING_LENGTH];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
+        );
+    }
+
+    #[cfg(feature = "uuid")]
+    #[test]
+    fn test_get_unique_guid_for_partition_undersize_buffer() {
+        let mut ops = TestOps::default();
+        ops.add_partition("foo", []).uuid = uuid!("01234567-89ab-cdef-0123-456789abcdef");
+
+        let mut uuid_str = [b'?'; UUID_CSTRING_LENGTH - 1];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_ERROR_OOM
+        );
+    }
+
+    #[cfg(not(feature = "uuid"))]
+    #[test]
+    fn test_get_unique_guid_for_partition_not_implemented() {
+        let mut ops = TestOps::default();
+        ops.add_partition("foo", []);
+
+        // Without the `uuid` feature enabled, get_unique_guid_for_partition() should
+        // unconditionally fail without trying to call any Ops functions.
+        let mut uuid_str = [b'?'; 0];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
+        );
+    }
+
+    #[test]
+    fn test_get_size_of_partition() {
+        let mut ops = TestOps::default();
+        ops.add_partition("foo", [1, 2, 3, 4]);
+
+        let mut size = 0;
+        let result = call_get_size_of_partition(&mut ops, "foo", &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert_eq!(size, 4);
+    }
+
+    #[test]
+    fn test_get_size_of_partition_unknown() {
+        let mut ops = TestOps::default();
+
+        let mut size = 10;
+        let result = call_get_size_of_partition(&mut ops, "foo", &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION);
+        assert_eq!(size, 0);
+    }
+
+    #[test]
+    fn test_read_persistent_value() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let mut size = 0;
+        let mut buffer = [b'.'; 8];
+        let result = call_read_persistent_value(&mut ops, "foo", Some(&mut buffer), &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert_eq!(size, 4);
+        assert_eq!(&buffer[..], b"1234....");
+    }
+
+    #[test]
+    fn test_read_persistent_value_buffer_too_small() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let mut size = 0;
+        let mut buffer = [b'.'; 2];
+        let result = call_read_persistent_value(&mut ops, "foo", Some(&mut buffer), &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE);
+        assert_eq!(size, 4);
+        assert_eq!(&buffer[..], b"..");
+    }
+
+    #[test]
+    fn test_read_persistent_value_buffer_null() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let mut size = 0;
+        let result = call_read_persistent_value(&mut ops, "foo", None, &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE);
+        assert_eq!(size, 4);
+    }
+
+    #[test]
+    fn test_read_persistent_value_error() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Err(IoError::Io));
+
+        let mut size = 10;
+        let mut buffer = [b'.'; 8];
+        let result = call_read_persistent_value(&mut ops, "foo", Some(&mut buffer), &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_IO);
+        assert_eq!(size, 0);
+        assert_eq!(&buffer[..], b"........");
+    }
+
+    #[test]
+    fn test_read_persistent_value_unknown() {
+        let mut ops = TestOps::default();
+
+        let mut size = 10;
+        let mut buffer = [b'.'; 8];
+        let result = call_read_persistent_value(&mut ops, "foo", Some(&mut buffer), &mut size);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE);
+        assert_eq!(size, 0);
+        assert_eq!(&buffer[..], b"........");
+    }
+
+    #[test]
+    fn test_write_persistent_value() {
+        let mut ops = TestOps::default();
+
+        let result = call_write_persistent_value(&mut ops, "foo", Some(b"1234"));
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert_eq!(
+            ops.persistent_values.get("foo").unwrap().as_ref().unwrap(),
+            b"1234"
+        );
+    }
+
+    #[test]
+    fn test_write_persistent_value_overwrite_existing() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let result = call_write_persistent_value(&mut ops, "foo", Some(b"5678"));
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert_eq!(
+            ops.persistent_values.get("foo").unwrap().as_ref().unwrap(),
+            b"5678"
+        );
+    }
+
+    #[test]
+    fn test_write_persistent_value_erase_existing() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Ok(b"1234"));
+
+        let result = call_write_persistent_value(&mut ops, "foo", None);
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(ops.persistent_values.is_empty());
+    }
+
+    #[test]
+    fn test_write_persistent_value_error() {
+        let mut ops = TestOps::default();
+        ops.add_persistent_value("foo", Err(IoError::NoSuchValue));
+
+        let result = call_write_persistent_value(&mut ops, "foo", Some(b"1234"));
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition() {
+        let mut ops = TestOps::default();
+        ops.add_vbmeta_key_for_partition(b"testkey", None, true, "foo", 1);
+
+        let mut is_trusted = false;
+        let mut rollback_location = 0;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "foo",
+            b"testkey",
+            None,
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(is_trusted);
+        assert_eq!(rollback_location, 1);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition_with_metadata() {
+        let mut ops = TestOps::default();
+        ops.add_vbmeta_key_for_partition(b"testkey", Some(b"testmeta"), true, "foo", 1);
+
+        let mut is_trusted = false;
+        let mut rollback_location = 0;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "foo",
+            b"testkey",
+            Some(b"testmeta"),
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(is_trusted);
+        assert_eq!(rollback_location, 1);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition_rejected() {
+        let mut ops = TestOps::default();
+        ops.add_vbmeta_key_for_partition(b"testkey", None, false, "foo", 1);
+
+        let mut is_trusted = true;
+        let mut rollback_location = 0;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "foo",
+            b"testkey",
+            None,
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(!is_trusted);
+        assert_eq!(rollback_location, 1);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition_unknown_key() {
+        let mut ops = TestOps::default();
+
+        let mut is_trusted = true;
+        let mut rollback_location = 10;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "foo",
+            b"testkey",
+            None,
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_ne!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(!is_trusted);
+        assert_eq!(rollback_location, 0);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition_unknown_partition() {
+        let mut ops = TestOps::default();
+        ops.add_vbmeta_key_for_partition(b"testkey", None, true, "foo", 1);
+
+        let mut is_trusted = true;
+        let mut rollback_location = 10;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "bar",
+            b"testkey",
+            None,
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_ne!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(!is_trusted);
+        assert_eq!(rollback_location, 0);
     }
 }
