@@ -16,6 +16,29 @@
       "message": "Last callback function!",
       "revId": "65b51c1b8c43991aea87199d1187516cd505c866",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1e895961_d83fb479",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 227,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-10-30T12:43:48Z",
+      "side": 1,
+      "message": "We can return a struct with names to make this more clear.",
+      "range": {
+        "startLine": 227,
+        "startChar": 16,
+        "endLine": 227,
+        "endChar": 27
+      },
+      "revId": "65b51c1b8c43991aea87199d1187516cd505c866",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
