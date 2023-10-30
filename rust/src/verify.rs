@@ -199,6 +199,40 @@ pub trait Ops {
     /// * `IoError::NoSuchValue` if `name` is not a supported persistent value.
     /// * Any other `IoError` on failure.
     fn erase_persistent_value(&mut self, name: &CStr) -> Result<()>;
+
+    /// Checks if the given public key is valid for the given partition.
+    ///
+    /// This is only used if the "no vbmeta" verification flag is passed, meaning the partitions
+    /// to verify have an embedded vbmeta image rather than locating it in a separate vbmeta
+    /// partition. If this flag is not used, the `validate_vbmeta_public_key()` callback is used
+    /// instead, and this function will never be called.
+    ///
+    /// # Arguments
+    /// * `partition`: partition name.
+    /// * `public_key`: the public key.
+    /// * `public_key_metadata`: public key metadata set by the `--public_key_metadata` arg in
+    ///                          `avbtool`, or None if no metadata was provided.
+    ///
+    /// # Returns
+    /// On success, returns a `PublicKeyForPartitionInfo` object indicating whether the given
+    /// key is trusted and its rollback index location.
+    ///
+    /// On failure, returns an error.
+    fn validate_public_key_for_partition(
+        &mut self,
+        partition: &CStr,
+        public_key: &[u8],
+        public_key_metadata: Option<&[u8]>,
+    ) -> Result<PublicKeyForPartitionInfo>;
+}
+
+/// Info returned from `validare_public_key_for_partition()`.
+#[derive(Clone, Copy, Debug)]
+pub struct PublicKeyForPartitionInfo {
+    /// Whether the key is trusted for the given partition..
+    pub trusted: bool,
+    /// The rollback index to use for the given partition.
+    pub rollback_index_location: u32,
 }
 
 /// Helper to pass user-provided `Ops` through libavb via the `user_data` pointer.
@@ -276,8 +310,7 @@ impl<'a> ScopedAvbOps<'a> {
                 get_size_of_partition: Some(get_size_of_partition),
                 read_persistent_value: Some(read_persistent_value),
                 write_persistent_value: Some(write_persistent_value),
-                // TODO: add callback wrappers for the remaining API.
-                validate_public_key_for_partition: None,
+                validate_public_key_for_partition: Some(validate_public_key_for_partition),
             },
             _user_data: PhantomData,
         }
@@ -935,6 +968,103 @@ unsafe fn try_write_persistent_value(
     }
 }
 
+/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn validate_public_key_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    public_key_data: *const u8,
+    public_key_length: usize,
+    public_key_metadata: *const u8,
+    public_key_metadata_length: usize,
+    out_is_trusted: *mut bool,
+    out_rollback_index_location: *mut u32,
+) -> AvbIOResult {
+    result_to_io_enum(try_validate_public_key_for_partition(
+        ops,
+        partition,
+        public_key_data,
+        public_key_length,
+        public_key_metadata,
+        public_key_metadata_length,
+        out_is_trusted,
+        out_rollback_index_location,
+    ))
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
+/// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
+/// * `out_*` must adhere to the requirements of `ptr::write()`.
+unsafe fn try_validate_public_key_for_partition(
+    ops: *mut AvbOps,
+    partition: *const c_char,
+    public_key_data: *const u8,
+    public_key_length: usize,
+    public_key_metadata: *const u8,
+    public_key_metadata_length: usize,
+    out_is_trusted: *mut bool,
+    out_rollback_index_location: *mut u32,
+) -> Result<()> {
+    check_nonnull(partition)?;
+    check_nonnull(public_key_data)?;
+    check_nonnull(out_is_trusted)?;
+    check_nonnull(out_rollback_index_location)?;
+
+    // Initialize the output variables first in case something fails.
+    // SAFETY:
+    // * we've checked that the pointers are non-NULL.
+    // * libavb gives us a properly-allocated `out_*`.
+    unsafe {
+        ptr::write(out_is_trusted, false);
+        ptr::write(out_rollback_index_location, 0);
+    }
+
+    // SAFETY:
+    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * `ops` is only extracted once and is dropped at the end of the callback.
+    let ops = unsafe { as_ops(ops) }?;
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated and nul-terminated `partition`.
+    // * the string contents are not modified while the returned `&CStr` exists.
+    // * the returned `&CStr` is not held past the scope of this callback.
+    let partition = unsafe { CStr::from_ptr(partition) };
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `public_key_data` with size `public_key_length`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let public_key = unsafe { slice::from_raw_parts(public_key_data, public_key_length) };
+    let metadata = check_nonnull(public_key_metadata).ok().map(
+        // SAFETY:
+        // * we've checked that the pointer is non-NULL.
+        // * libavb gives us a properly-allocated `public_key_metadata` with size
+        //   `public_key_metadata_length`.
+        // * we only access the contents via the returned slice.
+        // * the returned slice is not held past the scope of this callback.
+        |_| unsafe { slice::from_raw_parts(public_key_metadata, public_key_metadata_length) },
+    );
+
+    let key_info = ops.validate_public_key_for_partition(partition, public_key, metadata)?;
+
+    // SAFETY:
+    // * we've checked that the pointers are non-NULL.
+    // * libavb gives us a properly-allocated `out_*`.
+    unsafe {
+        ptr::write(out_is_trusted, key_info.trusted);
+        ptr::write(
+            out_rollback_index_location,
+            key_info.rollback_index_location,
+        );
+    }
+    Ok(())
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -957,6 +1087,15 @@ mod tests {
         uuid: Uuid, // Partition UUID
     }
 
+    /// Fake vbmeta key state.
+    struct FakeVbmetaKeyState {
+        /// Key trust & rollback index info.
+        info: PublicKeyForPartitionInfo,
+        /// If specified, indicates the specific partition this vbmeta is tied to (for
+        /// `validate_public_key_for_partition()`).
+        for_partition: Option<&'static str>,
+    }
+
     /// Ops implementation for testing.
     ///
     /// In addition to being used to exercise individual callback wrappers, this will be used for
@@ -964,9 +1103,11 @@ mod tests {
     struct TestOps {
         /// Partitions to provide to libavb callbacks.
         partitions: HashMap<&'static str, FakePartition>,
-        /// Vbmeta public keys as a map of {(key, metadata): trusted}. Querying unknown keys will
+        /// Vbmeta public keys as a map of {(key, metadata): state}. Querying unknown keys will
         /// return `IoError::Io`.
-        vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), bool>,
+        ///
+        /// See `add_vbmeta_key*()` functions for simpler wrappers to inject these keys.
+        vbmeta_keys: HashMap<(&'static [u8], Option<&'static [u8]>), FakeVbmetaKeyState>,
         /// Rollback indices. Accessing unknown locations will return `IoError::Io`.
         rollbacks: HashMap<usize, u64>,
         /// Unlock state. Set an error to simulate IoError during access.
@@ -1013,6 +1154,48 @@ mod tests {
         fn add_persistent_value(&mut self, name: &str, contents: Result<&[u8]>) {
             self.persistent_values
                 .insert(name.into(), contents.map(|b| b.into()));
+        }
+
+        /// Adds a fake vbmeta key not tied to any partition.
+        fn add_vbmeta_key(
+            &mut self,
+            key: &'static [u8],
+            metadata: Option<&'static [u8]>,
+            trusted: bool,
+        ) {
+            self.vbmeta_keys.insert(
+                (key, metadata),
+                FakeVbmetaKeyState {
+                    // `rollback_index_location` doesn't matter in this case, it will be read from
+                    // the vbmeta blob.
+                    info: PublicKeyForPartitionInfo {
+                        trusted,
+                        rollback_index_location: 0,
+                    },
+                    for_partition: None,
+                },
+            );
+        }
+
+        /// Adds a fake vbmeta key tied to the given partition and rollback index location.
+        fn add_vbmeta_key_for_partition(
+            &mut self,
+            key: &'static [u8],
+            metadata: Option<&'static [u8]>,
+            trusted: bool,
+            partition: &'static str,
+            rollback_index_location: u32,
+        ) {
+            self.vbmeta_keys.insert(
+                (key, metadata),
+                FakeVbmetaKeyState {
+                    info: PublicKeyForPartitionInfo {
+                        trusted,
+                        rollback_index_location,
+                    },
+                    for_partition: Some(partition),
+                },
+            );
         }
     }
 
@@ -1092,7 +1275,7 @@ mod tests {
             self.vbmeta_keys
                 .get(&(public_key, public_key_metadata))
                 .ok_or(IoError::Io)
-                .copied()
+                .map(|k| k.info.trusted)
         }
 
         fn read_rollback_index(&mut self, location: usize) -> Result<u64> {
@@ -1164,6 +1347,28 @@ mod tests {
 
             self.persistent_values.remove(name);
             Ok(())
+        }
+
+        fn validate_public_key_for_partition(
+            &mut self,
+            partition: &CStr,
+            public_key: &[u8],
+            public_key_metadata: Option<&[u8]>,
+        ) -> Result<PublicKeyForPartitionInfo> {
+            let key = self
+                .vbmeta_keys
+                .get(&(public_key, public_key_metadata))
+                .ok_or(IoError::Io)?;
+
+            if let Some(for_partition) = key.for_partition {
+                if (for_partition == partition.to_str()?) {
+                    // The key is registered for this partition; return its info.
+                    return Ok(key.info);
+                }
+            }
+
+            // No match.
+            Err(IoError::Io)
         }
     }
 
@@ -1387,6 +1592,36 @@ mod tests {
         }
     }
 
+    fn call_validate_public_key_for_partition(
+        ops: &mut impl Ops,
+        partition: &str,
+        public_key: &[u8],
+        public_key_metadata: Option<&[u8]>,
+        out_is_trusted: &mut bool,
+        out_rollback_index_location: &mut u32,
+    ) -> AvbIOResult {
+        let mut user_data = UserData(ops);
+        let mut scoped_ops = ScopedAvbOps::new(&mut user_data);
+        let avb_ops = scoped_ops.as_mut();
+        let part_name = CString::new(partition).unwrap();
+        let (metadata_ptr, metadata_size) =
+            public_key_metadata.map_or((ptr::null(), 0), |m| (m.as_ptr(), m.len()));
+
+        // SAFETY: we've properly created and initialized all the raw pointers being passed in.
+        unsafe {
+            avb_ops.validate_public_key_for_partition.unwrap()(
+                avb_ops,
+                part_name.as_ptr(),
+                public_key.as_ptr(),
+                public_key.len(),
+                metadata_ptr,
+                metadata_size,
+                out_is_trusted,
+                out_rollback_index_location,
+            )
+        }
+    }
+
     #[test]
     fn test_read_from_partition() {
         let mut ops = TestOps::default();
@@ -1510,7 +1745,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key() {
         let mut ops = TestOps::default();
-        ops.vbmeta_keys = HashMap::from([((b"testkey".as_ref(), None), true)]);
+        ops.add_vbmeta_key(b"testkey", None, true);
 
         let mut is_trusted = false;
         let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
@@ -1522,8 +1757,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key_with_metadata() {
         let mut ops = TestOps::default();
-        ops.vbmeta_keys =
-            HashMap::from([((b"testkey".as_ref(), Some(b"testmeta".as_ref())), true)]);
+        ops.add_vbmeta_key(b"testkey", Some(b"testmeta"), true);
 
         let mut is_trusted = false;
         let result = call_validate_vbmeta_public_key(
@@ -1540,7 +1774,7 @@ mod tests {
     #[test]
     fn test_validate_vbmeta_public_key_rejected() {
         let mut ops = TestOps::default();
-        ops.vbmeta_keys = HashMap::from([((b"testkey".as_ref(), None), false)]);
+        ops.add_vbmeta_key(b"testkey", None, false);
 
         let mut is_trusted = true;
         let result = call_validate_vbmeta_public_key(&mut ops, b"testkey", None, &mut is_trusted);
@@ -1829,5 +2063,109 @@ mod tests {
         let result = call_write_persistent_value(&mut ops, "foo", Some(b"1234"));
 
         assert_eq!(result, AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition() {
+        let mut ops = TestOps::default();
+        ops.add_vbmeta_key_for_partition(b"testkey", None, true, "foo", 1);
+
+        let mut is_trusted = false;
+        let mut rollback_location = 0;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "foo",
+            b"testkey",
+            None,
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(is_trusted);
+        assert_eq!(rollback_location, 1);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition_with_metadata() {
+        let mut ops = TestOps::default();
+        ops.add_vbmeta_key_for_partition(b"testkey", Some(b"testmeta"), true, "foo", 1);
+
+        let mut is_trusted = false;
+        let mut rollback_location = 0;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "foo",
+            b"testkey",
+            Some(b"testmeta"),
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(is_trusted);
+        assert_eq!(rollback_location, 1);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition_rejected() {
+        let mut ops = TestOps::default();
+        ops.add_vbmeta_key_for_partition(b"testkey", None, false, "foo", 1);
+
+        let mut is_trusted = true;
+        let mut rollback_location = 0;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "foo",
+            b"testkey",
+            None,
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_eq!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(!is_trusted);
+        assert_eq!(rollback_location, 1);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition_unknown_key() {
+        let mut ops = TestOps::default();
+
+        let mut is_trusted = true;
+        let mut rollback_location = 10;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "foo",
+            b"testkey",
+            None,
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_ne!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(!is_trusted);
+        assert_eq!(rollback_location, 0);
+    }
+
+    #[test]
+    fn test_validate_public_key_for_partition_unknown_partition() {
+        let mut ops = TestOps::default();
+        ops.add_vbmeta_key_for_partition(b"testkey", None, true, "foo", 1);
+
+        let mut is_trusted = true;
+        let mut rollback_location = 10;
+        let result = call_validate_public_key_for_partition(
+            &mut ops,
+            "bar",
+            b"testkey",
+            None,
+            &mut is_trusted,
+            &mut rollback_location,
+        );
+
+        assert_ne!(result, AvbIOResult::AVB_IO_RESULT_OK);
+        assert!(!is_trusted);
+        assert_eq!(rollback_location, 0);
     }
 }
