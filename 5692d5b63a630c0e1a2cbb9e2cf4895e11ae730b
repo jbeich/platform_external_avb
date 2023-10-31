@@ -16,6 +16,24 @@
       "message": "I\u0027m still fairly new to Soong, is this necessary because you have a dependency on a library in `packages/modules/Virtualization`, and every transitive dependency also needs to be marked `apex_available`?\n\n+cc @aliceywang@google.com",
       "revId": "5692d5b63a630c0e1a2cbb9e2cf4895e11ae730b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "99d2a4ca_cb3e8089",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1950816
+      },
+      "writtenOn": "2023-10-31T05:41:28Z",
+      "side": 1,
+      "message": "Correct. I was also surprised that I needed to mark through the dependencies, but it was required. It throws a build error when not adding `apex_available`.",
+      "parentUuid": "54c19bdd_7b7e0641",
+      "revId": "5692d5b63a630c0e1a2cbb9e2cf4895e11ae730b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
