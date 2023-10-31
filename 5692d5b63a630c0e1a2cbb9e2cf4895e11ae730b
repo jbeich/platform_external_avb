@@ -34,6 +34,24 @@
       "parentUuid": "54c19bdd_7b7e0641",
       "revId": "5692d5b63a630c0e1a2cbb9e2cf4895e11ae730b",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ac7eb5d_3e85d06b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-10-31T16:28:43Z",
+      "side": 1,
+      "message": "Thanks, makes sense. My main concern is this bit from https://android.googlesource.com/platform/system/apex/+/master/docs/howto.md#apex_available:\n\n\u003e Being included in an APEX means that the module will be portable, i.e., running on multiple versions of the current and previous platforms, whereas it usually was expected to run on the current (the up-to-date) platform.\n\nI *think* this is OK, the only system dependencies I can think of are:\n\n* some Posix APIs (malloc, printf, etc): seems safe to assume those will be available on all platform versions\n* `libcrypto`: already `apex_available` so shouldn\u0027t be a problem\n\nThe libavb API itself isn\u0027t guaranteed to be stable IIUC, but I don\u0027t think that\u0027s what this text is requiring.\n\nSo it seems relatively safe to me, but the top-level avb reviewers will have final say.",
+      "parentUuid": "99d2a4ca_cb3e8089",
+      "revId": "5692d5b63a630c0e1a2cbb9e2cf4895e11ae730b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
