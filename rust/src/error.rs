@@ -121,8 +121,8 @@ pub enum IoError {
     NoSuchValue,
     /// `AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE`
     InvalidValueSize,
-    /// `AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE`
-    InsufficientSpace,
+    /// `AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE`. Also contains the space that would be required.
+    InsufficientSpace(usize),
     /// Custom error code to indicate that an optional callback method has not been implemented.
     /// If this is returned from a required callback method, it will bubble up as an `Io` error.
     NotImplemented,
@@ -137,7 +137,7 @@ impl fmt::Display for IoError {
             Self::RangeOutsidePartition => write!(f, "Range is outside the partition"),
             Self::NoSuchValue => write!(f, "No such named persistent value"),
             Self::InvalidValueSize => write!(f, "Invalid named persistent value size"),
-            Self::InsufficientSpace => write!(f, "Buffer is too small"),
+            Self::InsufficientSpace(size) => write!(f, "Buffer is too small (requires {})", size),
             Self::NotImplemented => write!(f, "Function not implemented"),
         }
     }
@@ -167,7 +167,7 @@ pub(crate) fn io_enum_to_result(result: AvbIOResult) -> Result<(), IoError> {
         }
         AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE => Err(IoError::NoSuchValue),
         AvbIOResult::AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE => Err(IoError::InvalidValueSize),
-        AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE => Err(IoError::InsufficientSpace),
+        AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE => Err(IoError::InsufficientSpace(0)),
     }
 }
 
@@ -187,7 +187,7 @@ impl From<IoError> for AvbIOResult {
             }
             IoError::NoSuchValue => AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE,
             IoError::InvalidValueSize => AvbIOResult::AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE,
-            IoError::InsufficientSpace => AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE,
+            IoError::InsufficientSpace(_) => AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE,
             // `NotImplemented` is internal to this library and doesn't have a libavb equivalent,
             // convert it to the default I/O error.
             IoError::NotImplemented => AvbIOResult::AVB_IO_RESULT_ERROR_IO,
