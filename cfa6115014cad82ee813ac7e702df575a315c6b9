@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "87c10ef8_3d73ad9e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1561651
+      },
+      "writtenOn": "2023-11-01T00:26:31Z",
+      "side": 1,
+      "message": "LGTM, but I want to make sure that David is happy with it. Thanks.",
+      "revId": "cfa6115014cad82ee813ac7e702df575a315c6b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
