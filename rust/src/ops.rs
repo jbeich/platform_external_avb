@@ -706,7 +706,6 @@ unsafe fn try_read_is_device_unlocked(ops: *mut AvbOps, out_is_unlocked: *mut bo
 /// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-#[cfg(feature = "uuid")]
 unsafe extern "C" fn get_unique_guid_for_partition(
     ops: *mut AvbOps,
     partition: *const c_char,
@@ -721,24 +720,12 @@ unsafe extern "C" fn get_unique_guid_for_partition(
     ))
 }
 
-/// When compiled without the `uuid` feature this callback is not used, just return error.
-#[cfg(not(feature = "uuid"))]
-unsafe extern "C" fn get_unique_guid_for_partition(
-    ops: *mut AvbOps,
-    partition: *const c_char,
-    guid_buf: *mut c_char,
-    guid_buf_size: usize,
-) -> AvbIOResult {
-    AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
-}
-
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `guid_buf` must adhere to the requirements of `slice::from_raw_parts_mut()`.
-#[cfg(feature = "uuid")]
 unsafe fn try_get_unique_guid_for_partition(
     ops: *mut AvbOps,
     partition: *const c_char,
@@ -749,40 +736,66 @@ unsafe fn try_get_unique_guid_for_partition(
     check_nonnull(guid_buf)?;
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
-    // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
-    // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `partition`.
     // * the string contents are not modified while the returned `&CStr` exists.
     // * the returned `&CStr` is not held past the scope of this callback.
     let partition = unsafe { CStr::from_ptr(partition) };
-    let guid = ops.get_unique_guid_for_partition(partition)?;
-
-    // Write the UUID string to a uuid buffer which is guaranteed to be large enough, then use
-    // `CString` to apply nul-termination.
-    // This does allocate memory, but it's short-lived and discarded as soon as we copy the
-    // properly-terminated string back to the buffer.
-    let mut encode_buffer = uuid::Uuid::encode_buffer();
-    let guid_str = guid.as_hyphenated().encode_lower(&mut encode_buffer);
-    let guid_cstring = alloc::ffi::CString::new(guid_str.as_bytes()).or(Err(IoError::Io))?;
-    let guid_bytes = guid_cstring.to_bytes_with_nul();
-
-    if guid_buf_size < guid_bytes.len() {
-        // This would indicate some internal error - the uuid library needs more
-        // space to print the UUID string than libavb provided.
-        return Err(IoError::Oom);
-    }
-
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated `guid_buf` with size `guid_buf_size`.
     // * we only access the contents via the returned slice.
     // * the returned slice is not held past the scope of this callback.
     let buffer = unsafe { slice::from_raw_parts_mut(guid_buf as *mut u8, guid_buf_size) };
-    buffer[..guid_bytes.len()].copy_from_slice(guid_bytes);
-    Ok(())
+
+    // Initialize the output buffer to the empty string.
+    if buffer.is_empty() {
+        return Err(IoError::Oom);
+    }
+    buffer[0] = b'\0';
+
+    #[cfg(feature = "uuid")]
+    {
+        // SAFETY:
+        // * we only use `ops` objects created via `ScopedAvbOps` as required.
+        // * `ops` is only extracted once and is dropped at the end of the callback.
+        let ops = unsafe { as_ops(ops) }?;
+        let guid = ops.get_unique_guid_for_partition(partition)?;
+
+        // Write the UUID string to a uuid buffer which is guaranteed to be large enough, then use
+        // `CString` to apply nul-termination.
+        // This does allocate memory, but it's short-lived and discarded as soon as we copy the
+        // properly-terminated string back to the buffer.
+        let mut encode_buffer = uuid::Uuid::encode_buffer();
+        let guid_str = guid.as_hyphenated().encode_lower(&mut encode_buffer);
+        let guid_cstring = alloc::ffi::CString::new(guid_str.as_bytes()).or(Err(IoError::Io))?;
+        let guid_bytes = guid_cstring.to_bytes_with_nul();
+
+        if buffer.len() < guid_bytes.len() {
+            // This would indicate some internal error - the uuid library needs more
+            // space to print the UUID string than libavb provided.
+            return Err(IoError::Oom);
+        }
+        buffer[..guid_bytes.len()].copy_from_slice(guid_bytes);
+        Ok(())
+    }
+
+    #[cfg(not(feature = "uuid"))]
+    {
+        // The user doesn't need this feature, but libavb may still attempt to inject the vbmeta
+        // partition GUID into the commandline, depending on the verification flags. In this case
+        // the function needs to return success or verification will fail, but leaving the buffer
+        // as the empty string is sufficient since nobody will be reading the value.
+        //
+        // We restrict this to only "vbmeta*" partitions because if we return success for all
+        // partitions, libavb will also try to inject a "system" partition GUID into the
+        // commandline, which the user doesn't need.
+        partition
+            .to_bytes()
+            .starts_with(b"vbmeta")
+            .then_some(())
+            .ok_or(IoError::NoSuchPartition)
+    }
 }
 
 /// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
@@ -1914,17 +1927,31 @@ mod tests {
 
     #[cfg(not(feature = "uuid"))]
     #[test]
-    fn test_get_unique_guid_for_partition_not_implemented() {
+    fn test_get_unique_guid_for_partition_not_implemented_vbmeta() {
         let mut ops = TestOps::default();
-        ops.add_partition("foo", []);
 
-        // Without the `uuid` feature enabled, get_unique_guid_for_partition() should
-        // unconditionally fail without trying to call any Ops functions.
-        let mut uuid_str = [b'?'; 0];
+        // Any partition starting with "vbmeta" should write the empty string and return OK.
+        let mut uuid_str = [b'?'; 4];
+        assert_eq!(
+            call_get_unique_guid_for_partition(&mut ops, "vbmeta_a", &mut uuid_str[..]),
+            AvbIOResult::AVB_IO_RESULT_OK
+        );
+        assert_eq!(&uuid_str, b"\0???")
+    }
+
+    #[cfg(not(feature = "uuid"))]
+    #[test]
+    fn test_get_unique_guid_for_partition_not_implemented_not_vbmeta() {
+        let mut ops = TestOps::default();
+
+        // Any partition not starting with "vbmeta" should write the empty string and return
+        // NO_SUCH_PARTITION.
+        let mut uuid_str = [b'?'; 4];
         assert_eq!(
             call_get_unique_guid_for_partition(&mut ops, "foo", &mut uuid_str[..]),
             AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION
         );
+        assert_eq!(&uuid_str, b"\0???")
     }
 
     #[test]
