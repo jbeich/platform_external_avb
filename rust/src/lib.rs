@@ -30,7 +30,7 @@ mod error;
 mod verify;
 
 pub use error::{IoError, SlotVerifyError};
-pub use verify::Ops;
+pub use verify::{Ops, PublicKeyForPartitionInfo};
 
 /// APIs that will eventually be internal-only to this library, but while this library is split need
 /// to be exposed externally.
