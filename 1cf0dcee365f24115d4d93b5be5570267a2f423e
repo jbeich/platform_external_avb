@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dd7467d8_7f5ca1c0",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-02T22:09:43Z",
+      "side": 1,
+      "message": "Side note: I noticed that the current [pvmfw implementation](https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/Virtualization/pvmfw/avb/src/ops.rs;l\u003d243;drc\u003da26f16aee1e340449c05fc52dfe143f5f6927fa4) doesn\u0027t appear to nul-terminate the GUID buffer either, which I think can lead to undefined behavior if libavb tries to [copy this string around](https://cs.android.com/android/platform/superproject/main/+/main:external/avb/libavb/avb_cmdline.c;l\u003d89;drc\u003d45ec542fae38b7a938774033ab85fb128edbab9f) since libavb will just read this buffer until it happens to hit a `\\0`.",
+      "range": {
+        "startLine": 786,
+        "startChar": 85,
+        "endLine": 788,
+        "endChar": 84
+      },
+      "revId": "1cf0dcee365f24115d4d93b5be5570267a2f423e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
