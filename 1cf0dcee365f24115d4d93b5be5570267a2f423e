@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "95c80b87_b6ae81fe",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-03T14:14:19Z",
+      "side": 1,
+      "message": "nit: `buffer.is_empty()` ?",
+      "range": {
+        "startLine": 752,
+        "startChar": 7,
+        "endLine": 752,
+        "endChar": 23
+      },
+      "revId": "1cf0dcee365f24115d4d93b5be5570267a2f423e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "dd7467d8_7f5ca1c0",
         "filename": "rust/src/ops.rs",
         "patchSetId": 4
@@ -19,6 +42,53 @@
         "startChar": 85,
         "endLine": 788,
         "endChar": 84
+      },
+      "revId": "1cf0dcee365f24115d4d93b5be5570267a2f423e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "68205dd1_334f6196",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-03T14:14:19Z",
+      "side": 1,
+      "message": "It looks like this substitution only happens when the flag |AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED| is on or has kernel cmdline descriptor [1], right? That is not the usecase for pvmfw but you are right, we should definitely fix it.\n\n[1] https://cs.android.com/android/platform/superproject/main/+/main:external/avb/libavb/avb_slot_verify.h;l\u003d220;drc\u003deaf60784f41774d1f883547aa9e442f4ca37cca5",
+      "parentUuid": "dd7467d8_7f5ca1c0",
+      "range": {
+        "startLine": 786,
+        "startChar": 85,
+        "endLine": 788,
+        "endChar": 84
+      },
+      "revId": "1cf0dcee365f24115d4d93b5be5570267a2f423e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "23335d15_67e899de",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-03T14:14:19Z",
+      "side": 1,
+      "message": "Why do we only special case \"vbmeta*\" when this feature is disabled, what about when \"boot\" is used as \"vbmeta\"?",
+      "range": {
+        "startLine": 795,
+        "startChar": 13,
+        "endLine": 795,
+        "endChar": 35
       },
       "revId": "1cf0dcee365f24115d4d93b5be5570267a2f423e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
