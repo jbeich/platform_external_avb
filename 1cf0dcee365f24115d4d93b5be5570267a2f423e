@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "250b504f_3fb1bbd5",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 752,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-03T19:16:03Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "95c80b87_b6ae81fe",
+      "range": {
+        "startLine": 752,
+        "startChar": 7,
+        "endLine": 752,
+        "endChar": 23
+      },
+      "revId": "1cf0dcee365f24115d4d93b5be5570267a2f423e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "dd7467d8_7f5ca1c0",
@@ -71,6 +95,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8ff15c9b_0497d612",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 788,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-03T19:16:03Z",
+      "side": 1,
+      "message": "It looks to me that unless the `AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION` flag is provided, libavb will [automatically create some commandline params](https://cs.android.com/android/platform/superproject/main/+/main:external/avb/libavb/avb_cmdline.c;l\u003d226;drc\u003d45ec542fae38b7a938774033ab85fb128edbab9f) including the `$(ANDROID_VBMETA_PARTUUID)` GUID substitution string, which it later attempts to replace with the actual GUID using this callback. This appears to happen even if there\u0027s no pre-existing kernel cmdline descriptor - libavb will create a new one itself in this case.\n\nAlthough it\u0027s also very possible I\u0027m misreading the code :)",
+      "parentUuid": "68205dd1_334f6196",
+      "range": {
+        "startLine": 786,
+        "startChar": 85,
+        "endLine": 788,
+        "endChar": 84
+      },
+      "revId": "1cf0dcee365f24115d4d93b5be5570267a2f423e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "23335d15_67e899de",
@@ -84,6 +132,30 @@
       "writtenOn": "2023-11-03T14:14:19Z",
       "side": 1,
       "message": "Why do we only special case \"vbmeta*\" when this feature is disabled, what about when \"boot\" is used as \"vbmeta\"?",
+      "range": {
+        "startLine": 795,
+        "startChar": 13,
+        "endLine": 795,
+        "endChar": 35
+      },
+      "revId": "1cf0dcee365f24115d4d93b5be5570267a2f423e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e193e91f_12163b20",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 795,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-03T19:16:03Z",
+      "side": 1,
+      "message": "As far as I can tell, the `$(ANDROID_VBMETA_PARTUUID)` substitution string is the only one that libavb will automatically inject into the commandline itself and requires to be functional for validation.\n\n`$(ANDROID_SYSTEM_PARTUUID)` is [only injected](https://cs.android.com/android/platform/superproject/main/+/main:external/avb/libavb/avb_slot_verify.c;l\u003d1566;drc\u003da1fe228b86543a21739c51352f5ce72f134fccfa) if this `get_unique_guid_for_partition()` callback returns OK for \"system*\", but since we return `NoSuchPartition` in this case, it never gets into the commandline so we don\u0027t need an implementation.\n\nThe last one `$(ANDROID_BOOT_PARTUUID)` never appears to be added to the commandline by libavb at all, it would have to be present in a commandline descriptor explicitly created by the user, in which case they need to implement this callback themselves instead.",
+      "parentUuid": "23335d15_67e899de",
       "range": {
         "startLine": 795,
         "startChar": 13,
