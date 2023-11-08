@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-//! Verification APIs.
+//! User callback APIs.
 //!
-//! This module is responsible for all the conversions required to pass information between
-//! libavb and Rust for verifying images.
+//! This module is responsible for bridging the user-implemented callbacks so that they can be
+//! written in safe Rust but libavb can call them from C.
 
 extern crate alloc;
 

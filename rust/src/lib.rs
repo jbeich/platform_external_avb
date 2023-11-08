@@ -27,10 +27,10 @@
 #![cfg_attr(not(any(test, android_dylib)), no_std)]
 
 mod error;
-mod verify;
+mod ops;
 
 pub use error::{IoError, SlotVerifyError};
-pub use verify::Ops;
+pub use ops::{Ops, PublicKeyForPartitionInfo};
 
 /// APIs that will eventually be internal-only to this library, but while this library is split need
 /// to be exposed externally.
