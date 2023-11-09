@@ -18,6 +18,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "baf32ff6_7ba85a1c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-11-09T17:30:02Z",
+      "side": 1,
+      "message": "LGTM for unsafe Rust review.",
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "70b9d2ca_95460b90",
@@ -129,6 +146,23 @@
         "endLine": 1102,
         "endChar": 15
       },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1ac5abfa_8dfbf427",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-11-09T17:30:02Z",
+      "side": 1,
+      "message": "Nit: Usually we use a Markdown heading for this like `# Safety`, see http://go/android-rust-style#unsafe.",
       "revId": "cb21b1525240b0f180956e67012ed173adab6033",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
