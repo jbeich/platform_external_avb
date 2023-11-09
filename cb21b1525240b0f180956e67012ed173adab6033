@@ -1,0 +1,136 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a1eba132_5c5c4485",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-09T15:11:11Z",
+      "side": 1,
+      "message": "Hi Andrew, could you take a look at the unsafe rust usage in this cl?",
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70b9d2ca_95460b90",
+        "filename": "rust/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-09T15:11:11Z",
+      "side": 1,
+      "message": "Perhaps use `avb_gen_vbmeta_image` for this since it\u0027s supported in soong?",
+      "range": {
+        "startLine": 230,
+        "startChar": 0,
+        "endLine": 230,
+        "endChar": 7
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d049099d_4b00f799",
+        "filename": "rust/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-09T15:11:11Z",
+      "side": 1,
+      "message": "Can we use `avb_add_hash_footer` for it?",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 241,
+        "endChar": 7
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5b3319f_3cf0f79b",
+        "filename": "rust/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-09T15:11:11Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 7
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e4cd2275_1df5d188",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-09T15:11:11Z",
+      "side": 1,
+      "message": "`///` to document enum items",
+      "range": {
+        "startLine": 208,
+        "startChar": 4,
+        "endLine": 208,
+        "endChar": 6
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e11d242_931f061e",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 1102,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-09T15:11:11Z",
+      "side": 1,
+      "message": "This doesn\u0027t look very nice. Maybe create a `testutil.rs` module and only compiles it in tests?",
+      "range": {
+        "startLine": 1102,
+        "startChar": 4,
+        "endLine": 1102,
+        "endChar": 15
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
