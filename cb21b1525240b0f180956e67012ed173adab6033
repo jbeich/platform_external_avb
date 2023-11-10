@@ -58,6 +58,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "932b93a8_f6ce7a71",
+        "filename": "rust/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 230,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-10T00:05:52Z",
+      "side": 1,
+      "message": "Thanks that\u0027s much nicer.",
+      "parentUuid": "70b9d2ca_95460b90",
+      "range": {
+        "startLine": 230,
+        "startChar": 0,
+        "endLine": 230,
+        "endChar": 7
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d049099d_4b00f799",
@@ -71,6 +95,30 @@
       "writtenOn": "2023-11-09T15:11:11Z",
       "side": 1,
       "message": "Can we use `avb_add_hash_footer` for it?",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 241,
+        "endChar": 7
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "29f0ada1_c9702858",
+        "filename": "rust/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-10T00:05:52Z",
+      "side": 1,
+      "message": "I can\u0027t seem to make it work here, `avb_add_hash_footer` puts the vbmeta blob at the end of a given partition image but I want to create a standalone `vbmeta` partition image. I tried passing in a 0-length image to see if it would give me just the vbmeta blob, but `avbtool` didn\u0027t accept it.\n\nI also tried using the [`vbmeta` Soong rule](https://cs.android.com/android/platform/superproject/main/+/main:build/soong/filesystem/vbmeta.go) but it has some expectations to be used with the actual produced filesystems and doesn\u0027t support arbitrary partition hash descriptors.\n\nI will add some tests that use `avb_add_hash_footer` and combined image + vbmeta partitions though, that\u0027s a use case I\u0027m not covering at the moment.",
+      "parentUuid": "d049099d_4b00f799",
       "range": {
         "startLine": 241,
         "startChar": 0,
@@ -104,6 +152,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5ff97e03_ed287a09",
+        "filename": "rust/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-10T00:05:52Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "f5b3319f_3cf0f79b",
+      "range": {
+        "startLine": 253,
+        "startChar": 0,
+        "endLine": 253,
+        "endChar": 7
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e4cd2275_1df5d188",
@@ -117,6 +189,30 @@
       "writtenOn": "2023-11-09T15:11:11Z",
       "side": 1,
       "message": "`///` to document enum items",
+      "range": {
+        "startLine": 208,
+        "startChar": 4,
+        "endLine": 208,
+        "endChar": 6
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5b1d80ec_4ba4e259",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 208,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-10T00:05:52Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e4cd2275_1df5d188",
       "range": {
         "startLine": 208,
         "startChar": 4,
@@ -150,6 +246,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fe36b083_93ee9bbc",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 1102,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-10T00:05:52Z",
+      "side": 1,
+      "message": "That\u0027s much nicer thanks.",
+      "parentUuid": "4e11d242_931f061e",
+      "range": {
+        "startLine": 1102,
+        "startChar": 4,
+        "endLine": 1102,
+        "endChar": 15
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1ac5abfa_8dfbf427",
@@ -163,6 +283,24 @@
       "writtenOn": "2023-11-09T17:30:02Z",
       "side": 1,
       "message": "Nit: Usually we use a Markdown heading for this like `# Safety`, see http://go/android-rust-style#unsafe.",
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e101ea87_a0e9afd6",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 125,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-10T00:05:52Z",
+      "side": 1,
+      "message": "Oops good catch thanks, done.",
+      "parentUuid": "1ac5abfa_8dfbf427",
       "revId": "cb21b1525240b0f180956e67012ed173adab6033",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
