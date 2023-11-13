@@ -129,6 +129,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "20f07352_b6165d65",
+        "filename": "rust/Android.bp",
+        "patchSetId": 7
+      },
+      "lineNbr": 241,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-13T09:42:26Z",
+      "side": 1,
+      "message": "I see the mismatch here. The output of [avb_gen_vbmeta_image](https://cs.android.com/android/platform/superproject/main/+/main:build/soong/filesystem/avb_gen_vbmeta_image.go;drc\u003d000e3a396ca89155e817841195d44b9aeda1155f) cannot be used here because it doesn\u0027t implement `FileSystem`, as it doesn\u0027t provide a signed output needed for this interface. However, the `vbmeta` rule specifically accepts the descriptors from a signed vbmeta for `--include_descriptors_from_image`.\n\nif you take `avbrs_test_image_with_vbmeta_footer` as `partitions` instead of `avbrs_test_image_descriptor`, it should work with `vbmeta`. The result should be the same for the descriptor part. However, `vbmeta` also [configures](https://cs.android.com/android/platform/superproject/main/+/main:build/soong/filesystem/vbmeta.go;l\u003d192;drc\u003d27c00f6c61a6334af1626cc49adc416ecbd7d589) the rollback index, which may not be necessary for this test. Nevertheless, the current version appears to be satisfactory.",
+      "parentUuid": "29f0ada1_c9702858",
+      "range": {
+        "startLine": 241,
+        "startChar": 0,
+        "endLine": 241,
+        "endChar": 7
+      },
+      "revId": "cb21b1525240b0f180956e67012ed173adab6033",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f5b3319f_3cf0f79b",

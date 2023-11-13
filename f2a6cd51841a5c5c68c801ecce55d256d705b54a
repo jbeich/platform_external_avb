@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "108e94fc_1abeec23",
+        "filename": "rust/Android.bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-13T09:42:26Z",
+      "side": 1,
+      "message": "nit: TBH, I think it would be clearer to have the API tests placed [outside the crate](https://doc.rust-lang.org/book/ch11-03-test-organization.html#integration-tests). By doing so, the tests can just access the crate like a regular user of the crate, and we will also avoid testing private methods.\n\nAdditionally, this approach allows for easy testing of the crate with different flags, by including the different libraries as test dependencies.",
+      "range": {
+        "startLine": 179,
+        "startChar": 8,
+        "endLine": 180,
+        "endChar": 33
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd0df37d_cb101bea",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-13T09:42:26Z",
+      "side": 1,
+      "message": "Why does this need to be public ?",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 4
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7181f55b_98ecdce3",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-13T09:42:26Z",
+      "side": 1,
+      "message": "Does this need to be public?\n\nBTW, can we make the test util module refactoring a separate cl to facilitate the review?",
+      "range": {
+        "startLine": 1088,
+        "startChar": 0,
+        "endLine": 1088,
+        "endChar": 4
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d79800c_d93fa827",
+        "filename": "rust/src/test_utils.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-13T09:42:26Z",
+      "side": 1,
+      "message": "This module can be a different crate totally outside `src/` to keep the source code more focused and easy to understand.",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 13
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "65080dc1_5a3de7a6",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-13T09:42:26Z",
+      "side": 1,
+      "message": "This is weird as API, if the verification failed, why do we need SlotVerifyData? If the purpose of having SlotVerifyData is to access different errors within it, a possible alternative could be to directly encapsulate those errors within the main Error itself.\n\nFurthermore, this design hinders the ability of API callers to easily forward the error using the `?` or other error processing mechanism in rust as `anyhow` or `thiserror`.",
+      "range": {
+        "startLine": 290,
+        "startChar": 28,
+        "endLine": 290,
+        "endChar": 49
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
