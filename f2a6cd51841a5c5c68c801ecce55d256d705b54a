@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4f1d464c_b5140979",
+        "filename": "rust/Android.bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-14T14:44:42Z",
+      "side": 1,
+      "message": "Yep, I think it\u0027s cleaner to move all the test utils in a separate module than to add a lot of branches with flags in the code.",
+      "parentUuid": "caec12c0_7fc85c28",
+      "range": {
+        "startLine": 179,
+        "startChar": 8,
+        "endLine": 180,
+        "endChar": 33
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "bd0df37d_cb101bea",
         "filename": "rust/src/ops.rs",
         "patchSetId": 8
