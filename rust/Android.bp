@@ -169,23 +169,25 @@ rust_library {
     ],
 }
 
-// device test: no std, no features.
-// Note: we are testing the nostd version of the library but the tests
-// themselves do use std.
-rust_test {
-    name: "libavb_rs_test",
-    defaults: [
-        "libavb_rs_nostd.defaults",
-    ],
+rust_defaults {
+    name: "libavb_rs_test.defaults",
+    srcs: ["tests/main.rs"],
     test_suites: ["general-tests"],
 }
 
-// device test: no std, UUID feature.
+// device test: no features.
+rust_test {
+    name: "libavb_rs_test",
+    defaults: ["libavb_rs_test.defaults"],
+    rustlibs: ["libavb_rs"],
+}
+
+// device test: UUID feature.
 rust_test {
     name: "libavb_rs_uuid_test",
     defaults: [
-        "libavb_rs_nostd.defaults",
-        "libavb_rs_nostd.uuid.defaults",
+        "libavb_rs_test.defaults",
+        "libavb_rs.uuid.defaults",
     ],
-    test_suites: ["general-tests"],
+    rustlibs: ["libavb_rs_uuid"],
 }
