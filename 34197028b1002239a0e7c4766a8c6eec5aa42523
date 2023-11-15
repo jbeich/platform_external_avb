@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3cec5b79_093f12c2",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-15T01:07:30Z",
+      "side": 1,
+      "message": "Will continue to add more tests here either in this CL or a follow-up to cover some of the cases that were previously only covered in unittests.",
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
