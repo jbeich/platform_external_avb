@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d602683b_be1415d4",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T15:32:54Z",
+      "side": 1,
+      "message": "I think it\u0027s more common to have a `test.rs` module to group all the tests module declaration inside based on the search [1]. `main.rs` feels more like for a binary with a single entry point.\n\n[1] http://cs/f:tests%2Ftests.rs%20l:rs%20-f:prebuilt",
+      "range": {
+        "startLine": 174,
+        "startChar": 18,
+        "endLine": 174,
+        "endChar": 22
+      },
+      "revId": "e77c1fd0cb34a51b77366921761fe6a1948c044c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
