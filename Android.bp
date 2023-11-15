@@ -182,6 +182,10 @@ cc_library_static {
             cflags: ["-fno-stack-protector"],
         },
     },
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.virt",
+    ],
 }
 
 // A variant of the library that can run in baremetal environments.
@@ -397,4 +401,8 @@ cc_library_headers {
             enabled: true,
         },
     },
+    apex_available: [
+        "//apex_available:platform",
+        "com.android.virt",
+    ],
 }
