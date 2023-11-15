@@ -3,6 +3,190 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "c80b0751_c86039ad",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "doc is required for public functions. Same for the functions below.",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 7
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "72370678_795ee649",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "It\u0027s not always convenient to work with `assert`. Instead of having all these asserts, what about implementing the `TryFrom` from AvbVBMetaData to VbmetaData, and we can check all the conditions inside. The error raised here can be of a new enum, something like `DataParsingError` or `PostProcessingError`. wdyt?",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 21
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "881e5f8b_2b2971cf",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "Can we directly return `AvbVBMetaVerifyResult`?\n\nI don\u0027t think it\u0027s necessary to convert the `result` value to a `Result` here.",
+      "range": {
+        "startLine": 66,
+        "startChar": 35,
+        "endLine": 66,
+        "endChar": 64
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "16d6a04a_c9169e32",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "It can be convenient to implement `Display` for this struct. That\u0027s quite useful for debuggging, maybe with `avb_slot_verify_result_to_string`?",
+      "range": {
+        "startLine": 111,
+        "startChar": 11,
+        "endLine": 111,
+        "endChar": 25
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9f4258a1_ffc50640",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "Can we just use the bindgen bitflag support for the flag with `\"--bitfield-enum AvbSlotVerifyFlags\"` in bindgen_flags ? Like this we don\u0027t need this code and `bitflags` crate.",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 1
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7869019a_2c9114e5",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "PartialEq and Eq usually come together, why don\u0027t want to derive `Eq` here?\n\nBTW, do we really need this enum? Can we just expose `AvbHashtreeErrorMode` as public directly? Same for `AvbSlotVerifyFlags`.",
+      "range": {
+        "startLine": 231,
+        "startChar": 29,
+        "endLine": 231,
+        "endChar": 38
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40581090_6beb17b8",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "s/../MAX_PARTITION_ARRAY_SIZE ?",
+      "range": {
+        "startLine": 318,
+        "startChar": 10,
+        "endLine": 318,
+        "endChar": 30
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9a31453d_d42db425",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "With `--bitfield-enum`, we can pass the flags directly.",
+      "range": {
+        "startLine": 347,
+        "startChar": 17,
+        "endLine": 347,
+        "endChar": 24
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "3cec5b79_093f12c2",
         "filename": "rust/tests/verify_tests.rs",
         "patchSetId": 10
@@ -14,6 +198,52 @@
       "writtenOn": "2023-11-15T01:07:30Z",
       "side": 1,
       "message": "Will continue to add more tests here either in this CL or a follow-up to cover some of the cases that were previously only covered in unittests.",
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "de1fd5c7_f0702922",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "We don\u0027t need `test_` prefix in rust, the function annotation already indicates this is a test. IMO, it is clearer to name the test using a readable sentence that describes the condition, action, and outcome [1]. For example:\n\n[..]_passes_verification\ncorrupted_vbmeta_fails_verification\n\n[1] go/unit-testing-practices#naming",
+      "range": {
+        "startLine": 64,
+        "startChar": 3,
+        "endLine": 64,
+        "endChar": 8
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5cc93bbb_04d0513f",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-15T16:26:48Z",
+      "side": 1,
+      "message": "Can we just build a VbmetaData array and check that two arrays are equal?\n\nThe current way of testing will not detect the problem if one day a new field will be added to Vbmeta.",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 52
+      },
       "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
