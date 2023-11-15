@@ -16,6 +16,24 @@
       "message": "Hi David, could you review this cl?",
       "revId": "f380ef74a5993ac0304fbb7650cf8adfc4c6a053",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eeb97b5e_012180b2",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-15T00:46:48Z",
+      "side": 1,
+      "message": "Quick ping @zeuthen@google.com, would you have a moment to take a look at this in the next day or two?\n\nI think mostly we are looking for confirmation that a minimal GUID implementation could be to return an empty string for `vbmeta` partition GUID, and return `NoSuchPartition` for any other partition. This seems to work in practice since `vbmeta` is the only partition that always wants GUID substitution on the commandline.",
+      "parentUuid": "55bbb056_a2ddbd89",
+      "revId": "f380ef74a5993ac0304fbb7650cf8adfc4c6a053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
