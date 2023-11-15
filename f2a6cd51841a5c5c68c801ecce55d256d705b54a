@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d34e306_e81205a3",
+        "filename": "rust/Android.bp",
+        "patchSetId": 8
+      },
+      "lineNbr": 180,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-15T00:52:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "4f1d464c_b5140979",
+      "range": {
+        "startLine": 179,
+        "startChar": 8,
+        "endLine": 180,
+        "endChar": 33
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "bd0df37d_cb101bea",
@@ -109,6 +133,30 @@
       "side": 1,
       "message": "The `Ops` trait functions use this as a return type, so the user will want it as well so they can just copy-paste the trait code as a starter point for their implementation.\n\nIf we expect the implementation to instead use the full `Result\u003cT, IoError\u003e` type in the function signatures, then we should do the same here as well, but either way is fine with me.",
       "parentUuid": "bd0df37d_cb101bea",
+      "range": {
+        "startLine": 34,
+        "startChar": 0,
+        "endLine": 34,
+        "endChar": 4
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a486dfb5_18a2e0d1",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-15T00:52:01Z",
+      "side": 1,
+      "message": "Now that it\u0027s in a separate crate this is a bit more awkward, it\u0027s not the only `Result` type in libavb so exposing it as a top-level `avb::Result` seems confusing.\n\nFor now I\u0027m just re-defining this type in the user crate as well. Other options could be to change the name to e.g. `avb::IoResult`, or stop pushing these APIs into the top-level namespace and keep them as `avb::ops::Result`, `avb::ops::Ops`, etc.",
+      "parentUuid": "e698cda4_0aea79a3",
       "range": {
         "startLine": 34,
         "startChar": 0,
@@ -166,6 +214,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7f102c41_0d1fe848",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 1088,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-15T00:52:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "83847bb8_7432a695",
+      "range": {
+        "startLine": 1088,
+        "startChar": 0,
+        "endLine": 1088,
+        "endChar": 4
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9d79800c_d93fa827",
@@ -213,6 +285,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eee5826f_ff966fa8",
+        "filename": "rust/src/test_utils.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 17,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-15T00:52:01Z",
+      "side": 1,
+      "message": "Deleted unittests and moved `TestOps` to a separate crate as requested.",
+      "parentUuid": "78780f25_e2f044a2",
+      "range": {
+        "startLine": 17,
+        "startChar": 0,
+        "endLine": 17,
+        "endChar": 13
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "65080dc1_5a3de7a6",
@@ -250,6 +346,30 @@
       "side": 1,
       "message": "Yeah I agree it\u0027s a bit awkward, but if `AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR` is set then libavb does return a full `SlotVerifyData` object even on verification error so we need to handle it somehow.\n\nI\u0027ll try tucking it inside the appropriate Error enum.",
       "parentUuid": "65080dc1_5a3de7a6",
+      "range": {
+        "startLine": 290,
+        "startChar": 28,
+        "endLine": 290,
+        "endChar": 49
+      },
+      "revId": "f2a6cd51841a5c5c68c801ecce55d256d705b54a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03c1d157_a6e7918a",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 290,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-15T00:52:01Z",
+      "side": 1,
+      "message": "Putting it in the `Error` enum seems to work.",
+      "parentUuid": "677b8987_5111df20",
       "range": {
         "startLine": 290,
         "startChar": 28,
