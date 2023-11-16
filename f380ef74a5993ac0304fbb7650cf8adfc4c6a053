@@ -34,6 +34,24 @@
       "parentUuid": "55bbb056_a2ddbd89",
       "revId": "f380ef74a5993ac0304fbb7650cf8adfc4c6a053",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "92c94e00_9d1e9f02",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2023-11-16T23:34:00Z",
+      "side": 1,
+      "message": "Yes, I think it\u0027s accurate that in practice and on modern Android, only `$(ANDROID_VBMETA_PARTUUID)` is ever used (IOW, I think OEMs been setting up dm-verity from the initramfs for a long time).",
+      "parentUuid": "eeb97b5e_012180b2",
+      "revId": "f380ef74a5993ac0304fbb7650cf8adfc4c6a053",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
