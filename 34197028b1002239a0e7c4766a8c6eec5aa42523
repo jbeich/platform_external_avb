@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86864941_fc8d655e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 50,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c80b0751_c86039ad",
+      "range": {
+        "startLine": 50,
+        "startChar": 4,
+        "endLine": 50,
+        "endChar": 7
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "72370678_795ee649",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-11-15T16:26:48Z",
       "side": 1,
       "message": "It\u0027s not always convenient to work with `assert`. Instead of having all these asserts, what about implementing the `TryFrom` from AvbVBMetaData to VbmetaData, and we can check all the conditions inside. The error raised here can be of a new enum, something like `DataParsingError` or `PostProcessingError`. wdyt?",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 21
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2eaf9f78_190771c1",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "I don\u0027t think `TryFrom` quite fits here, because we aren\u0027t creating a new slice of `VbmetaData` objects (which would require allocation) but are just casting an existing array of `AvbVBMetaData` objects into a `\u0026[VbmetaData]`. And IIUC we cannot implement `TryFrom` for slice.\n\nI tried two approaches here, the first was to have each accessor return `Result\u003c\u003e` so they could fail if the pointer is null, but it made usage a lot more verbose and awkward.\n\nSo what I ended up doing is explicitly verifying all these pointers on instantiation of the top-level `SlotVerifyData` object. It\u0027s not perfect, I don\u0027t love that the validation logic is separated from the actual usage, but this way we can fail out early if the underlying data doesn\u0027t look like we expect, and accessors can be fail-free.\n\nLMK if I was misunderstanding what you were going for here.",
+      "parentUuid": "72370678_795ee649",
       "range": {
         "startLine": 51,
         "startChar": 8,
@@ -72,6 +120,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "d0fd2dfb_3055b358",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "So far we haven\u0027t exposed any API surface from the underlying C code.\n\nIt would feel a bit odd if in most cases the user can use our naming conventions (e.g. `avb::SlotVerifyError::Io`) but then in some APIs they have to use the underlying enums (e.g. `avb::AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER`).\n\nAdditionally, if the user does want to wrap this in the standard Rust `Result` mechanisms, they also then have to handle the weirdness around the C enums explicitly providing an \"OK\" case (`AVB_VBMETA_VERIFY_RESULT_OK` here) which doesn\u0027t interact well with Rust `Result` since you could potentially put the \"OK\" enum inside an `Err()` which doesn\u0027t make sense. By handling this case internally and converting to `Result` we make it impossible to create such a state.",
+      "parentUuid": "881e5f8b_2b2971cf",
+      "range": {
+        "startLine": 66,
+        "startChar": 35,
+        "endLine": 66,
+        "endChar": 64
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "16d6a04a_c9169e32",
         "filename": "rust/src/verify.rs",
         "patchSetId": 10
@@ -83,6 +155,30 @@
       "writtenOn": "2023-11-15T16:26:48Z",
       "side": 1,
       "message": "It can be convenient to implement `Display` for this struct. That\u0027s quite useful for debuggging, maybe with `avb_slot_verify_result_to_string`?",
+      "range": {
+        "startLine": 111,
+        "startChar": 11,
+        "endLine": 111,
+        "endChar": 25
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e594904f_9011c8a5",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "Done, `avb_slot_verify_result_to_string()` is just a single-enum print not the whole verification struct but I added some functions to print a few high-level details from `SlotVerifyData` here.",
+      "parentUuid": "16d6a04a_c9169e32",
       "range": {
         "startLine": 111,
         "startChar": 11,
@@ -118,6 +214,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "68588f48_5676fa72",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "Good idea, thanks.\n\nThe bindgen naming is a bit mismatched from the rest of the library, similar to above where we wrap most types with our own naming but here the user would have to do something like\n\n```\nslot_verify(\n   ...,\n   avb::AvbSlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR |\n       avb::AvbSlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION,\n   ...\n);\n```\n\nSo I\u0027ve moved away from `bitflags!` but for now am still providing a thin wrapper which returns the underlying type but with a more consistent naming scheme. But if you would prefer to mix and match our wrapper names (e.g. `avb::IoError::Oom`) with the raw names (e.g. `avb::AvbSlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_NONE`) then I can do that instead.",
+      "parentUuid": "9f4258a1_ffc50640",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 1
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7869019a_2c9114e5",
         "filename": "rust/src/verify.rs",
         "patchSetId": 10
@@ -129,6 +249,30 @@
       "writtenOn": "2023-11-15T16:26:48Z",
       "side": 1,
       "message": "PartialEq and Eq usually come together, why don\u0027t want to derive `Eq` here?\n\nBTW, do we really need this enum? Can we just expose `AvbHashtreeErrorMode` as public directly? Same for `AvbSlotVerifyFlags`.",
+      "range": {
+        "startLine": 231,
+        "startChar": 29,
+        "endLine": 231,
+        "endChar": 38
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9fd541f6_b5b2b123",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "\u003e PartialEq and Eq usually come together, why don\u0027t want to derive Eq here?\n\nIt just wasn\u0027t necessary yet but seems good to have, added `Hash` as well since that seems to be part of the standard set of useful derives.\n\n\u003e Can we just expose AvbHashtreeErrorMode as public directly?\n\nWill apply the above decision here.",
+      "parentUuid": "7869019a_2c9114e5",
       "range": {
         "startLine": 231,
         "startChar": 29,
@@ -162,6 +306,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4fcfe68_f849375e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 318,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "40581090_6beb17b8",
+      "range": {
+        "startLine": 318,
+        "startChar": 10,
+        "endLine": 318,
+        "endChar": 30
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9a31453d_d42db425",
@@ -175,6 +343,30 @@
       "writtenOn": "2023-11-15T16:26:48Z",
       "side": 1,
       "message": "With `--bitfield-enum`, we can pass the flags directly.",
+      "range": {
+        "startLine": 347,
+        "startChar": 17,
+        "endLine": 347,
+        "endChar": 24
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5625b8f_911b65b0",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9a31453d_d42db425",
       "range": {
         "startLine": 347,
         "startChar": 17,
@@ -225,6 +417,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e26cdb6_6746ac73",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "de1fd5c7_f0702922",
+      "range": {
+        "startLine": 64,
+        "startChar": 3,
+        "endLine": 64,
+        "endChar": 8
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5cc93bbb_04d0513f",
@@ -238,6 +454,30 @@
       "writtenOn": "2023-11-15T16:26:48Z",
       "side": 1,
       "message": "Can we just build a VbmetaData array and check that two arrays are equal?\n\nThe current way of testing will not detect the problem if one day a new field will be added to Vbmeta.",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 52
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "21f4ec2d_7d9269f0",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:18Z",
+      "side": 1,
+      "message": "`VbmetaData` wraps the raw C data as a private field so IIUC we cannot construct these objects outside the module. And I don\u0027t think we want to expose this field since it would allow a user to trigger undefined behavior e.g. by manipulating the internal pointers.\n\nWe could expose a `VbmetaData::new()` function from the library but I don\u0027t think real users would ever need this so it would purely be for testing purposes. But I can do that if you think it\u0027s worth it.\n\nI don\u0027t quite understand the issue with a new field added, since we\u0027re wrapping the C struct with bindgen we will automatically get any new fields in our structure as well so nothing should break. Are you saying that we just might not realize that a new field is added so won\u0027t have any tests for that field? If that\u0027s the case I could add an assertion on the size of the `VbmetaData` struct so that if it ever changes the test will start failing.",
+      "parentUuid": "5cc93bbb_04d0513f",
       "range": {
         "startLine": 84,
         "startChar": 4,
