@@ -22,6 +22,30 @@
       },
       "revId": "e77c1fd0cb34a51b77366921761fe6a1948c044c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "596ff58e_2a4b4b3b",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 174,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T01:10:07Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d602683b_be1415d4",
+      "range": {
+        "startLine": 174,
+        "startChar": 18,
+        "endLine": 174,
+        "endChar": 22
+      },
+      "revId": "e77c1fd0cb34a51b77366921761fe6a1948c044c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
