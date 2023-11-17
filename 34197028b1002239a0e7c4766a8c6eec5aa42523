@@ -97,6 +97,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "fe871522_fab21d20",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-17T15:37:20Z",
+      "side": 1,
+      "message": "I\u0027m not suggesting implementing TryFrom for the slice, but only for the two structs. Alternatively, we can add a `VbmetaData::new(AvbVBMetaData)` method and create the object only if all the checks pass.\n\nHaving all the null checks at the top level doesn\u0027t seem very modular. It\u0027s easy to overlook the check when new fields are added in the future.",
+      "parentUuid": "2eaf9f78_190771c1",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 21
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "881e5f8b_2b2971cf",
         "filename": "rust/src/verify.rs",
         "patchSetId": 10
@@ -226,6 +250,30 @@
       "side": 1,
       "message": "Good idea, thanks.\n\nThe bindgen naming is a bit mismatched from the rest of the library, similar to above where we wrap most types with our own naming but here the user would have to do something like\n\n```\nslot_verify(\n   ...,\n   avb::AvbSlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR |\n       avb::AvbSlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION,\n   ...\n);\n```\n\nSo I\u0027ve moved away from `bitflags!` but for now am still providing a thin wrapper which returns the underlying type but with a more consistent naming scheme. But if you would prefer to mix and match our wrapper names (e.g. `avb::IoError::Oom`) with the raw names (e.g. `avb::AvbSlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_NONE`) then I can do that instead.",
       "parentUuid": "9f4258a1_ffc50640",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 1
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50238626_035b1ff6",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-17T15:37:20Z",
+      "side": 1,
+      "message": "Euh it\u0027s possible to create an alias for the bindgen naming such as `pub use bindgen::AvbSlotVerifyFlags as SlotVerifyFlags` to be consistent with our naming at the enum level.",
+      "parentUuid": "68588f48_5676fa72",
       "range": {
         "startLine": 219,
         "startChar": 0,
@@ -478,6 +526,30 @@
       "side": 1,
       "message": "`VbmetaData` wraps the raw C data as a private field so IIUC we cannot construct these objects outside the module. And I don\u0027t think we want to expose this field since it would allow a user to trigger undefined behavior e.g. by manipulating the internal pointers.\n\nWe could expose a `VbmetaData::new()` function from the library but I don\u0027t think real users would ever need this so it would purely be for testing purposes. But I can do that if you think it\u0027s worth it.\n\nI don\u0027t quite understand the issue with a new field added, since we\u0027re wrapping the C struct with bindgen we will automatically get any new fields in our structure as well so nothing should break. Are you saying that we just might not realize that a new field is added so won\u0027t have any tests for that field? If that\u0027s the case I could add an assertion on the size of the `VbmetaData` struct so that if it ever changes the test will start failing.",
       "parentUuid": "5cc93bbb_04d0513f",
+      "range": {
+        "startLine": 84,
+        "startChar": 4,
+        "endLine": 87,
+        "endChar": 52
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5012fbab_a46295ad",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-17T15:37:20Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "21f4ec2d_7d9269f0",
       "range": {
         "startLine": 84,
         "startChar": 4,

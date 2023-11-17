@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "63c25aa0_296a2675",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-17T15:37:20Z",
+      "side": 1,
+      "message": "Is this really needed? Can\u0027t we just call `write!(f, \"{:?}\", result)` directly?",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 48,
+        "endChar": 17
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e073f18b_60a3bb1c",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-17T15:37:20Z",
+      "side": 1,
+      "message": "Is this the same as the following?\n```\nwrite!(f, \"[{}]\", s.iter().map(|item| format!(\"{}\", item)).collect().join(\", \"))\n```\nDoes this `write!(f, \"{:?}\", s)` work?\n\nAlso I think we can just inline it.",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 1
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
