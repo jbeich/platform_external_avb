@@ -121,6 +121,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3078860f_508230a4",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 51,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T20:13:53Z",
+      "side": 1,
+      "message": "Right the problem is that we never actually instantiate new `VbmetaData` or `PartitionData` objects, they are only cast from existing arrays:\n\n1. libavb allocates and provides `AvbVBMetaData` and `AvbPartitionData` arrays\n2. we cast these arrays to `\u0026VbmetaData[]` and `\u0026PartitionData[]` slices using `slice::from_raw_parts()`\n\nWe can\u0027t use `new()` or `TryFrom()` on the individual structs because that would require dynamic allocation since we don\u0027t know the size of these arrays ahead of time.\n\nThe possible alternatives I am aware of are:\n\n* use dynamic allocation\n* provide an iterator interface for `VbmetaData` and `PartitionData` objects instead of a slice - that way we do instantiate them but just one at a time on the stack, no need for dynamic allocation\n* pre-allocate arrays with fixed size, then error out at runtime if libavb gives us more entries than we allocated space for",
+      "parentUuid": "fe871522_fab21d20",
+      "range": {
+        "startLine": 51,
+        "startChar": 8,
+        "endLine": 51,
+        "endChar": 21
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "881e5f8b_2b2971cf",
         "filename": "rust/src/verify.rs",
         "patchSetId": 10
@@ -156,6 +180,30 @@
       "side": 1,
       "message": "So far we haven\u0027t exposed any API surface from the underlying C code.\n\nIt would feel a bit odd if in most cases the user can use our naming conventions (e.g. `avb::SlotVerifyError::Io`) but then in some APIs they have to use the underlying enums (e.g. `avb::AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER`).\n\nAdditionally, if the user does want to wrap this in the standard Rust `Result` mechanisms, they also then have to handle the weirdness around the C enums explicitly providing an \"OK\" case (`AVB_VBMETA_VERIFY_RESULT_OK` here) which doesn\u0027t interact well with Rust `Result` since you could potentially put the \"OK\" enum inside an `Err()` which doesn\u0027t make sense. By handling this case internally and converting to `Result` we make it impossible to create such a state.",
       "parentUuid": "881e5f8b_2b2971cf",
+      "range": {
+        "startLine": 66,
+        "startChar": 35,
+        "endLine": 66,
+        "endChar": 64
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7afbcca2_33bff263",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 66,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T20:13:53Z",
+      "side": 1,
+      "message": "\u003e It would feel a bit odd if in most cases the user can use our naming conventions [...] but then in some APIs they have to use the underlying enums\n\nSwitched some other defs over to use pass-through `ALL_CAPS_WITH_UNDERSCORE` naming so this point is no longer relevant.\n\n\u003e they also then have to handle the weirdness around the C enums\n\nIt\u0027s still valuable to provide `Result\u003c\u003e` here to handle this case. Allowing the user to call something like `result.is_ok()` is much more idiomatic than `result \u003d\u003d AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK` and it\u0027s worth a small wrapper to provide that.",
+      "parentUuid": "d0fd2dfb_3055b358",
       "range": {
         "startLine": 66,
         "startChar": 35,
@@ -284,6 +332,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1b184927_8d9e6358",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T20:13:53Z",
+      "side": 1,
+      "message": "Sure, the definitions will still be `ALL_CAPS_WITH_UNDERSCORE` unless you know of a way to alias internal struct constants, but I\u0027ll switch to that.",
+      "parentUuid": "50238626_035b1ff6",
+      "range": {
+        "startLine": 219,
+        "startChar": 0,
+        "endLine": 224,
+        "endChar": 1
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7869019a_2c9114e5",
@@ -321,6 +393,30 @@
       "side": 1,
       "message": "\u003e PartialEq and Eq usually come together, why don\u0027t want to derive Eq here?\n\nIt just wasn\u0027t necessary yet but seems good to have, added `Hash` as well since that seems to be part of the standard set of useful derives.\n\n\u003e Can we just expose AvbHashtreeErrorMode as public directly?\n\nWill apply the above decision here.",
       "parentUuid": "7869019a_2c9114e5",
+      "range": {
+        "startLine": 231,
+        "startChar": 29,
+        "endLine": 231,
+        "endChar": 38
+      },
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4cf3aac_26971da4",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 231,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T20:13:53Z",
+      "side": 1,
+      "message": "Done, switched to expose C names as above.",
+      "parentUuid": "9fd541f6_b5b2b123",
       "range": {
         "startLine": 231,
         "startChar": 29,
@@ -438,6 +534,24 @@
       "writtenOn": "2023-11-15T01:07:30Z",
       "side": 1,
       "message": "Will continue to add more tests here either in this CL or a follow-up to cover some of the cases that were previously only covered in unittests.",
+      "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8f1183d_c574de11",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T20:13:53Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3cec5b79_093f12c2",
       "revId": "34197028b1002239a0e7c4766a8c6eec5aa42523",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },

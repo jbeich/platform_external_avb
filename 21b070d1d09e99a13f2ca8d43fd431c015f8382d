@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0857ffda_1158dc18",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T20:13:53Z",
+      "side": 1,
+      "message": "If we\u0027re going to just implement `Debug` then `{:?}` makes sense, but IIUC `Display` is specifically meant to provide a more human-friendly output so this little helper seemed worth it, for example:\n\n* `Ok(())` --\u003e `Ok`\n* `Err(Verification(None))` --\u003e `Verification failure`\n\nBut I don\u0027t care too much, I\u0027ll switch over to `{:?}` formatting.",
+      "parentUuid": "63c25aa0_296a2675",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 48,
+        "endChar": 17
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e073f18b_60a3bb1c",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-11-17T15:37:20Z",
       "side": 1,
       "message": "Is this the same as the following?\n```\nwrite!(f, \"[{}]\", s.iter().map(|item| format!(\"{}\", item)).collect().join(\", \"))\n```\nDoes this `write!(f, \"{:?}\", s)` work?\n\nAlso I think we can just inline it.",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 1
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7d19893f_72cd8afe",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-17T20:13:53Z",
+      "side": 1,
+      "message": "\u003e write!(f, \"[{}]\", s.iter().map(|item| format!(\"{}\", item)).collect().join(\", \"))\n\nIIUC `collect()` and `format!()` require allocation which we are trying to avoid in this library.\n\n\u003e Does this write!(f, \"{:?}\", s) work?\n\n`{:?}` uses `Debug` printing for each element in the slice, not `Display`. Since these objects wrap the raw C structs, this dumps some pointer information as well, in practice it looks like this:\n\n```\nPartitionData(AvbPartitionData { partition_name: 0x72289e457130, data: 0x72281e455010, data_size: 16384, preloaded: false, verify_result: AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION })\n```\n\nIf we\u0027re going to do this we might as well not implement `Display` at all for these types and just use `#[derive(Debug)]`.",
+      "parentUuid": "e073f18b_60a3bb1c",
       "range": {
         "startLine": 59,
         "startChar": 0,
