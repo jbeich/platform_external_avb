@@ -48,6 +48,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7e8d1945_69cbaa40",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 48,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "Actually, my point is not about whether to implement the `Debug` or not. What I meant is that the functionality of this function seems somewhat redundant. If we directly print the result, it displays essentially the same information: Ok() if the operation succeeds and Err(error) if it fails.",
+      "parentUuid": "0857ffda_1158dc18",
+      "range": {
+        "startLine": 48,
+        "startChar": 3,
+        "endLine": 48,
+        "endChar": 17
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e073f18b_60a3bb1c",
@@ -90,6 +114,53 @@
         "startChar": 0,
         "endLine": 70,
         "endChar": 1
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b081a2a3_fd39edfb",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "I meant using `write!(f, \"{:?}\", s)` on the slice here instead of `PartitionData` directly. What we passed to this function is not a `PartitionData` but simply a slice.",
+      "parentUuid": "7d19893f_72cd8afe",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 1
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9608ed8d_71a2f88d",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "nit: I think this structure is more clear than assigning the token in a new variable.",
+      "range": {
+        "startLine": 184,
+        "startChar": 8,
+        "endLine": 187,
+        "endChar": 9
       },
       "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"

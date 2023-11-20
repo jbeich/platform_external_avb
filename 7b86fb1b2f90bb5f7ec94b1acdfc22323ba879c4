@@ -1,0 +1,165 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bd7a8242_061dc270",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 12
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "This won\u0027t print the same result as Display if the debug printing is needed (see [1]). If debug printing is necessary, calling the display implementation in debug would be a better approach to ensure that the same result is printed as in the display.\n\n```\nimpl fmt::Debug for VbmetaData {\n    fn fmt(\u0026self, f: \u0026mut fmt::Formatter) -\u003e fmt::Result {\n        fmt::Display::fmt(self, f)\n    }\n}\n```\n\n[1] https://play.rust-lang.org/?version\u003dstable\u0026mode\u003ddebug\u0026edition\u003d2021\u0026gist\u003dd9a3c2bcc18846ba28168f2bfb7d0e38",
+      "range": {
+        "startLine": 74,
+        "startChar": 0,
+        "endLine": 74,
+        "endChar": 16
+      },
+      "revId": "7b86fb1b2f90bb5f7ec94b1acdfc22323ba879c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d187a031_43f54dfb",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 12
+      },
+      "lineNbr": 123,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "ditto",
+      "range": {
+        "startLine": 123,
+        "startChar": 0,
+        "endLine": 123,
+        "endChar": 16
+      },
+      "revId": "7b86fb1b2f90bb5f7ec94b1acdfc22323ba879c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "83e9e370_a915249e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 12
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "Perhaps printing the same result as Display if `Debug` result is required? I don\u0027t think the debug result with raw pointers in `raw_data` is very helpful here.",
+      "range": {
+        "startLine": 190,
+        "startChar": 9,
+        "endLine": 190,
+        "endChar": 14
+      },
+      "revId": "7b86fb1b2f90bb5f7ec94b1acdfc22323ba879c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a36c6b07_4e3bdf5e",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 12
+      },
+      "lineNbr": 236,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "nit: Maybe with `try_for_each` to make this more compact?\n```suggestion\n        ret.vbmeta_data().try_for_each(|d| d.validate())?;\n```",
+      "range": {
+        "startLine": 234,
+        "startChar": 8,
+        "endLine": 236,
+        "endChar": 9
+      },
+      "revId": "7b86fb1b2f90bb5f7ec94b1acdfc22323ba879c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8f225f83_3be47eba",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 12
+      },
+      "lineNbr": 295,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "Is this needed? `resolved_hashtree_error_mode` is already of type `bindgen::AvbHashtreeErrorMode`",
+      "range": {
+        "startLine": 295,
+        "startChar": 50,
+        "endLine": 295,
+        "endChar": 57
+      },
+      "revId": "7b86fb1b2f90bb5f7ec94b1acdfc22323ba879c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67bbc08e_12b78dd2",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 12
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "Cann\u0027t the following print a similar result? Assuming that `Debug` prints the same result as `Display`.\n\n```suggestion\n        write!(f, \"vbmeta: {:?}\", self.vbmeta_data())?;\n```",
+      "range": {
+        "startLine": 314,
+        "startChar": 8,
+        "endLine": 315,
+        "endChar": 46
+      },
+      "revId": "7b86fb1b2f90bb5f7ec94b1acdfc22323ba879c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c8fc613_a9cf9f63",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 12
+      },
+      "lineNbr": 388,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-20T09:54:19Z",
+      "side": 1,
+      "message": "Is this needed ? `hashtree_error_mode` is already of type `avb_bindgen::AvbHashtreeErrorMode`",
+      "range": {
+        "startLine": 388,
+        "startChar": 31,
+        "endLine": 388,
+        "endChar": 38
+      },
+      "revId": "7b86fb1b2f90bb5f7ec94b1acdfc22323ba879c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
