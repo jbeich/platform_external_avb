@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "88c2b878_b993c896",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 13
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-21T13:34:35Z",
+      "side": 1,
+      "message": "nit: It feels somewhat awkward for the struct to claim ownership of a mutable reference, as it is not an owned value. To convey the intention of taking ownership and assuming responsibility for deallocation, it feels more natural to change the type of raw_data to `*mut AvbSlotVerifyData` or `NonNull\u003cAvbSlotVerifyData\u003e` to indicate that the struct assumes ownership of the data and carries the responsibility for its proper deallocation.\n\nAn accompanying `AsRef\u003cAvbSlotVerifyData\u003e` will allow the code to access the fields of raw_data as easily as before.",
+      "range": {
+        "startLine": 189,
+        "startChar": 4,
+        "endLine": 190,
+        "endChar": 40
+      },
+      "revId": "6c4fde33785bd46934c689ff1c0ecadb1aed909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
