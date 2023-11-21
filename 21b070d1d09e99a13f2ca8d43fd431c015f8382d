@@ -143,6 +143,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "e3849e85_e4a92dc9",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-21T02:07:48Z",
+      "side": 1,
+      "message": "With your suggestion below to forward `Debug` to the `Display` implementation for each type, this does work and this helper can be deleted, thanks.",
+      "parentUuid": "b081a2a3_fd39edfb",
+      "range": {
+        "startLine": 59,
+        "startChar": 0,
+        "endLine": 70,
+        "endChar": 1
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9608ed8d_71a2f88d",
@@ -156,6 +180,30 @@
       "writtenOn": "2023-11-20T09:54:19Z",
       "side": 1,
       "message": "nit: I think this structure is more clear than assigning the token in a new variable.",
+      "range": {
+        "startLine": 184,
+        "startChar": 8,
+        "endLine": 187,
+        "endChar": 9
+      },
+      "revId": "21b070d1d09e99a13f2ca8d43fd431c015f8382d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d338cc5_07070235",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 187,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-21T02:07:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "9608ed8d_71a2f88d",
       "range": {
         "startLine": 184,
         "startChar": 8,
