@@ -185,6 +185,7 @@ impl<'a> fmt::Debug for PartitionData {
 /// Wraps a raw C `AvbSlotVerifyData` struct.
 ///
 /// This provides a Rust safe view over the raw data; no copies are made.
+#[derive(PartialEq, Eq)]
 pub struct SlotVerifyData<'a> {
     /// Internally owns the underlying data and deletes it on drop.
     raw_data: NonNull<AvbSlotVerifyData>,
