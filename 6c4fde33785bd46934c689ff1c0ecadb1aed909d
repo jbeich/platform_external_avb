@@ -22,6 +22,30 @@
       },
       "revId": "6c4fde33785bd46934c689ff1c0ecadb1aed909d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a82469a2_a0b0be54",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 13
+      },
+      "lineNbr": 190,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-21T20:19:38Z",
+      "side": 1,
+      "message": "Makes sense, done.",
+      "parentUuid": "88c2b878_b993c896",
+      "range": {
+        "startLine": 189,
+        "startChar": 4,
+        "endLine": 190,
+        "endChar": 40
+      },
+      "revId": "6c4fde33785bd46934c689ff1c0ecadb1aed909d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
