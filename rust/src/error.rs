@@ -35,7 +35,7 @@ use avb_bindgen::{AvbIOResult, AvbSlotVerifyResult, AvbVBMetaVerifyResult};
 use core::{fmt, str::Utf8Error};
 
 /// `AvbSlotVerifyResult` error wrapper.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum SlotVerifyError<'a> {
     /// `AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_ARGUMENT`
     InvalidArgument,
@@ -58,6 +58,26 @@ pub enum SlotVerifyError<'a> {
     Verification(Option<SlotVerifyData<'a>>),
     /// Unexpected internal error. This does not have a corresponding libavb error code.
     Internal,
+}
+
+impl<'a> SlotVerifyError<'a> {
+    /// Returns a copy of this error without any contained `SlotVerifyData`.
+    ///
+    /// This can simplify usage if the user doesn't care about the `SlotVerifyData` by turning the
+    /// current lifetime bound into `'static`.
+    pub fn without_verify_data(&self) -> SlotVerifyError<'static> {
+        match self {
+            Self::InvalidArgument => SlotVerifyError::InvalidArgument,
+            Self::InvalidMetadata => SlotVerifyError::InvalidMetadata,
+            Self::Io => SlotVerifyError::Io,
+            Self::Oom => SlotVerifyError::Oom,
+            Self::PublicKeyRejected => SlotVerifyError::PublicKeyRejected,
+            Self::RollbackIndex => SlotVerifyError::RollbackIndex,
+            Self::UnsupportedVersion => SlotVerifyError::UnsupportedVersion,
+            Self::Verification(_) => SlotVerifyError::Verification(None),
+            Self::Internal => SlotVerifyError::Internal,
+        }
+    }
 }
 
 impl<'a> fmt::Display for SlotVerifyError<'a> {

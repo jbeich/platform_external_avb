@@ -31,7 +31,7 @@ use core::{
     ffi::{c_char, CStr},
     fmt,
     marker::PhantomData,
-    ptr::{null, null_mut},
+    ptr::{self, null, null_mut},
     slice,
 };
 
@@ -193,6 +193,15 @@ pub struct SlotVerifyData<'a> {
     /// the `Ops` stays alive at least as long as we do.
     _ops: PhantomData<&'a dyn Ops>,
 }
+
+/// A `SlotVerifyData` instance exclusively owns the underlying data, so is only equal to itself.
+impl<'a> PartialEq for SlotVerifyData<'a> {
+    fn eq(&self, other: &Self) -> bool {
+        ptr::eq(self.raw_data, other.raw_data)
+    }
+}
+
+impl<'a> Eq for SlotVerifyData<'a> {}
 
 impl<'a> SlotVerifyData<'a> {
     /// Creates a `SlotVerifyData` wrapping the given raw `AvbSlotVerifyData`.
