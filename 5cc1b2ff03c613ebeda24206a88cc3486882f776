@@ -16,6 +16,24 @@
       "message": "I don\u0027t think it\u0027s possible to submit a change like this. It shows as independent on Gerrit, but it will clearly break the CI if submitted alone.",
       "revId": "5cc1b2ff03c613ebeda24206a88cc3486882f776",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "68bd7b67_a100bb92",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-22T17:20:06Z",
+      "side": 1,
+      "message": "Ack, combined the changes.",
+      "parentUuid": "81c1c142_92410757",
+      "revId": "5cc1b2ff03c613ebeda24206a88cc3486882f776",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
