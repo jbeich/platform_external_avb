@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "81c1c142_92410757",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-22T14:13:52Z",
+      "side": 1,
+      "message": "I don\u0027t think it\u0027s possible to submit a change like this. It shows as independent on Gerrit, but it will clearly break the CI if submitted alone.",
+      "revId": "5cc1b2ff03c613ebeda24206a88cc3486882f776",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
