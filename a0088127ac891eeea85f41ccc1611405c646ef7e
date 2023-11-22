@@ -16,6 +16,24 @@
       "message": "I think we should stash this change and merge it with the previous one to avoid confusion in the merge order for Gerrit.",
       "revId": "a0088127ac891eeea85f41ccc1611405c646ef7e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1dd1c8e1_e1f0894b",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-22T17:19:22Z",
+      "side": 1,
+      "message": "Ack, done.",
+      "parentUuid": "c4e4ac96_8f239898",
+      "revId": "a0088127ac891eeea85f41ccc1611405c646ef7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
