@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4e4ac96_8f239898",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-22T14:15:48Z",
+      "side": 1,
+      "message": "I think we should stash this change and merge it with the previous one to avoid confusion in the merge order for Gerrit.",
+      "revId": "a0088127ac891eeea85f41ccc1611405c646ef7e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
