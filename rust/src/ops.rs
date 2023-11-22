@@ -788,19 +788,16 @@ unsafe fn try_get_unique_guid_for_partition(
 
     #[cfg(not(feature = "uuid"))]
     {
-        // The user doesn't need this feature, but libavb may still attempt to inject the vbmeta
-        // partition GUID into the commandline, depending on the verification flags. In this case
-        // the function needs to return success or verification will fail, but leaving the buffer
-        // as the empty string is sufficient since nobody will be reading the value.
+        // The user doesn't need this feature, but libavb may still attempt to inject the `vbmeta`
+        // or `boot` partition GUID into the commandline, depending on the verification settings.
         //
-        // We restrict this to only "vbmeta*" partitions because if we return success for all
-        // partitions, libavb will also try to inject a "system" partition GUID into the
-        // commandline, which the user doesn't need.
-        partition
-            .to_bytes()
-            .starts_with(b"vbmeta")
-            .then_some(())
-            .ok_or(IoError::NoSuchPartition)
+        // For these partitions the function needs to return success or verification will fail, but
+        // leaving the buffer as the empty string is sufficient since nobody cares about the value.
+        //
+        // Returning `Ok(())` for all partitions here does have the side-effect of making libavb
+        // also try to substitute the `system` partition GUID on the commandline, which causes one
+        // additional allocation. We could filter out `system` here if that becomes an issue.
+        Ok(())
     }
 }
 

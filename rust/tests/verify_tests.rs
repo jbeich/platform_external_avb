@@ -29,6 +29,8 @@ const TEST_VBMETA_PATH: &str = "test_vbmeta.img";
 const TEST_VBMETA_2_PARTITIONS_PATH: &str = "test_vbmeta_2_parts.img";
 const TEST_VBMETA_PERSISTENT_DIGEST_PATH: &str = "test_vbmeta_persistent_digest.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_PATH: &str = "avbrs_test_image_with_vbmeta_footer.img";
+const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH: &str =
+    "avbrs_test_image_with_vbmeta_footer_for_boot.img";
 const TEST_PUBLIC_KEY_PATH: &str = "data/testkey_rsa4096_pub.bin";
 const TEST_PARTITION_NAME: &str = "test_part";
 const TEST_PARTITION_SLOT_C_NAME: &str = "test_part_c";
@@ -82,6 +84,34 @@ fn verify_two_images_one_vbmeta<'a>(
             &CString::new(TEST_PARTITION_2_NAME).unwrap(),
         ],
         None,
+        SlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_NONE,
+        HashtreeErrorMode::AVB_HASHTREE_ERROR_MODE_EIO,
+    )
+}
+
+/// Initializes a `TestOps` object such that verification will succeed on the `boot` partition with
+/// a combined image + vbmeta.
+fn test_ops_boot_partition() -> TestOps {
+    let mut ops = test_ops_one_image_one_vbmeta();
+    ops.partitions.clear();
+    ops.add_partition(
+        "boot",
+        fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH).unwrap(),
+    );
+    ops
+}
+
+/// Calls `slot_verify()` using standard args for `test_ops_boot_partition()` setup.
+fn verify_boot_partition<'a>(
+    ops: &'a mut TestOps,
+) -> Result<SlotVerifyData<'a>, SlotVerifyError<'a>> {
+    slot_verify(
+        ops,
+        &[&CString::new("boot").unwrap()],
+        None,
+        // libavb has some special-case handling to automatically detect a combined image + vbmeta
+        // in the `boot` partition; don't pass the `AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION` flag
+        // so we can test this behavior.
         SlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_NONE,
         HashtreeErrorMode::AVB_HASHTREE_ERROR_MODE_EIO,
     )
@@ -276,6 +306,27 @@ fn combined_image_vbmeta_partition_passes_verification() {
     assert_eq!(partition_data.data(), fs::read(TEST_IMAGE_PATH).unwrap());
 }
 
+// Validate the custom behavior if the combined image + vbmeta live in the `boot` partition.
+#[test]
+fn combined_image_vbmeta_partition_in_boot_passes_verification() {
+    let mut ops = test_ops_boot_partition();
+
+    let result = verify_boot_partition(&mut ops);
+
+    let data = result.unwrap();
+
+    // Vbmeta should indicate that it came from `boot`.
+    assert_eq!(data.vbmeta_data().len(), 1);
+    let vbmeta_data = &data.vbmeta_data()[0];
+    assert_eq!(vbmeta_data.partition_name().to_str().unwrap(), "boot");
+
+    // Partition should indicate that it came from `boot`, but only contain the image contents.
+    assert_eq!(data.partition_data().len(), 1);
+    let partition_data = &data.partition_data()[0];
+    assert_eq!(partition_data.partition_name().to_str().unwrap(), "boot");
+    assert_eq!(partition_data.data(), fs::read(TEST_IMAGE_PATH).unwrap());
+}
+
 #[test]
 fn persistent_digest_verification_updates_persistent_value() {
     // With persistent digests, the image hash isn't stored in the descriptor, but is instead
@@ -304,6 +355,23 @@ fn successful_verification_substitutes_partition_guid() {
     let result = verify_one_image_one_vbmeta(&mut ops);
 
     let data = result.unwrap();
+    assert!(data
+        .cmdline()
+        .to_str()
+        .unwrap()
+        .contains("androidboot.vbmeta.device=PARTUUID=01234567-89ab-cdef-0123-456789abcdef"));
+}
+
+#[cfg(feature = "uuid")]
+#[test]
+fn successful_verification_substitutes_partition_guid_boot() {
+    let mut ops = test_ops_boot_partition();
+    ops.partitions.get_mut("boot").unwrap().uuid = uuid!("01234567-89ab-cdef-0123-456789abcdef");
+
+    let result = verify_boot_partition(&mut ops);
+
+    let data = result.unwrap();
+    // In this case libavb substitutes the `boot` partition GUID in for `vbmeta`.
     assert!(data
         .cmdline()
         .to_str()
