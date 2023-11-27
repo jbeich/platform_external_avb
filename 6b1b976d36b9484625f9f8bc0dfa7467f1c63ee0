@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6ac2b28_90bf4ebe",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 801,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-27T17:12:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fcf5f575_7757ce1a",
+      "range": {
+        "startLine": 786,
+        "startChar": 4,
+        "endLine": 801,
+        "endChar": 5
+      },
+      "revId": "6b1b976d36b9484625f9f8bc0dfa7467f1c63ee0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6cd9370f_ce7e2539",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-11-24T14:30:35Z",
       "side": 1,
       "message": "perhaps more clear with \"vbmeta_with_boot_partition\"?",
+      "range": {
+        "startLine": 311,
+        "startChar": 3,
+        "endLine": 311,
+        "endChar": 34
+      },
+      "revId": "6b1b976d36b9484625f9f8bc0dfa7467f1c63ee0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3509b0f3_5008eab3",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 311,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-27T17:12:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6cd9370f_ce7e2539",
       "range": {
         "startLine": 311,
         "startChar": 3,
