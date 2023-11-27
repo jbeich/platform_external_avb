@@ -181,6 +181,7 @@ rust_defaults {
         ":avb_testkey_rsa4096_pub_bin",
         ":avbrs_test_image",
         ":avbrs_test_image_with_vbmeta_footer",
+        ":avbrs_test_image_with_vbmeta_footer_for_boot",
         ":avbrs_test_vbmeta",
         ":avbrs_test_vbmeta_2_parts",
         ":avbrs_test_vbmeta_persistent_digest",
@@ -288,4 +289,13 @@ avb_add_hash_footer {
     partition_name: "test_part",
     private_key: ":avb_testkey_rsa4096",
     salt: "A000",
+}
+
+// Combined test image + signed vbmeta footer for "boot".
+avb_add_hash_footer {
+    name: "avbrs_test_image_with_vbmeta_footer_for_boot",
+    src: ":avbrs_test_image",
+    partition_name: "boot",
+    private_key: ":avb_testkey_rsa4096",
+    salt: "A001",
 }
