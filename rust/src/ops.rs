@@ -755,6 +755,12 @@ unsafe fn try_get_unique_guid_for_partition(
     let buffer = unsafe { slice::from_raw_parts_mut(guid_buf as *mut u8, guid_buf_size) };
 
     // Initialize the output buffer to the empty string.
+    //
+    // When the `uuid` feature is not selected, the user doesn't need commandline GUIDs but libavb
+    // may still attempt to inject the `vmbeta` or `boot` partition GUIDs into the commandline,
+    // depending on the verification settings. In order to satisfy libavb's requirements we must:
+    // * write a nul-terminated string to avoid undefined behavior (empty string is sufficient)
+    // * return `Ok(())` or verification will fail
     if buffer.is_empty() {
         return Err(IoError::Oom);
     }
@@ -783,25 +789,9 @@ unsafe fn try_get_unique_guid_for_partition(
             return Err(IoError::Oom);
         }
         buffer[..guid_bytes.len()].copy_from_slice(guid_bytes);
-        Ok(())
     }
 
-    #[cfg(not(feature = "uuid"))]
-    {
-        // The user doesn't need this feature, but libavb may still attempt to inject the vbmeta
-        // partition GUID into the commandline, depending on the verification flags. In this case
-        // the function needs to return success or verification will fail, but leaving the buffer
-        // as the empty string is sufficient since nobody will be reading the value.
-        //
-        // We restrict this to only "vbmeta*" partitions because if we return success for all
-        // partitions, libavb will also try to inject a "system" partition GUID into the
-        // commandline, which the user doesn't need.
-        partition
-            .to_bytes()
-            .starts_with(b"vbmeta")
-            .then_some(())
-            .ok_or(IoError::NoSuchPartition)
-    }
+    Ok(())
 }
 
 /// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
