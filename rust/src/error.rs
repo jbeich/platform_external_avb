@@ -60,6 +60,15 @@ pub enum SlotVerifyError<'a> {
     Internal,
 }
 
+/// `Result` type for `SlotVerifyError` errors.
+pub type SlotVerifyResult<'a, T> = Result<T, SlotVerifyError<'a>>;
+
+/// `Result` type for `SlotVerifyError` errors without any `SlotVerifyData`.
+///
+/// If the contained error will never hold a `SlotVerifyData`, this is easier to work with compared
+/// to `SlotVerifyResult` due to the static lifetime bound.
+pub type SlotVerifyNoDataResult<T> = SlotVerifyResult<'static, T>;
+
 impl<'a> SlotVerifyError<'a> {
     /// Returns a copy of this error without any contained `SlotVerifyData`.
     ///
@@ -109,9 +118,7 @@ impl<'a> fmt::Display for SlotVerifyError<'a> {
 ///
 /// TODO(b/290110273): this can be limited to pub(crate) once we've moved the full libavb wrapper
 /// here.
-pub fn slot_verify_enum_to_result(
-    result: AvbSlotVerifyResult,
-) -> Result<(), SlotVerifyError<'static>> {
+pub fn slot_verify_enum_to_result(result: AvbSlotVerifyResult) -> SlotVerifyNoDataResult<()> {
     match result {
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_OK => Ok(()),
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_ARGUMENT => {
@@ -159,6 +166,9 @@ pub enum IoError {
     NotImplemented,
 }
 
+/// `Result` type for `IoError` errors.
+pub type IoResult<T> = Result<T, IoError>;
+
 impl fmt::Display for IoError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -187,7 +197,7 @@ impl From<Utf8Error> for IoError {
 // libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
 // until it is updated to match.
 #[allow(dead_code)]
-pub(crate) fn io_enum_to_result(result: AvbIOResult) -> Result<(), IoError> {
+pub(crate) fn io_enum_to_result(result: AvbIOResult) -> IoResult<()> {
     match result {
         AvbIOResult::AVB_IO_RESULT_OK => Ok(()),
         AvbIOResult::AVB_IO_RESULT_ERROR_OOM => Err(IoError::Oom),
@@ -249,6 +259,9 @@ pub enum VbmetaVerifyError {
     SignatureMismatch,
 }
 
+/// `Result` type for `VbmetaVerifyError` errors.
+pub type VbmetaVerifyResult<T> = Result<T, VbmetaVerifyError>;
+
 impl fmt::Display for VbmetaVerifyError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -268,9 +281,7 @@ impl fmt::Display for VbmetaVerifyError {
 // This function is also important to serve as a compile-time check that we're handling all the
 // libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
 // until it is updated to match.
-pub fn vbmeta_verify_enum_to_result(
-    result: AvbVBMetaVerifyResult,
-) -> Result<(), VbmetaVerifyError> {
+pub fn vbmeta_verify_enum_to_result(result: AvbVBMetaVerifyResult) -> VbmetaVerifyResult<()> {
     match result {
         AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK => Ok(()),
         AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK_NOT_SIGNED => {
