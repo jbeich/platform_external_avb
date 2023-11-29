@@ -69,6 +69,30 @@
       },
       "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "48e7ea5d_98a4b5a5",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-29T16:30:50Z",
+      "side": 1,
+      "message": "Actually, after playing around with it a bit more it does seem to compile still even without this. Maybe being used in tests is enough? In any case I will remove for now, thanks.",
+      "parentUuid": "cd79cc73_0fdcd714",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 19
+      },
+      "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
