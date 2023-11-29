@@ -22,6 +22,29 @@
       },
       "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fe33bd32_4be05de4",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-11-29T12:23:59Z",
+      "side": 1,
+      "message": "can this be removed now?",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 19
+      },
+      "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
