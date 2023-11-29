@@ -45,6 +45,30 @@
       },
       "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "cd79cc73_0fdcd714",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-29T16:24:23Z",
+      "side": 1,
+      "message": "I think we still need this here as this function is never actually used, I just have it here as a compile-time check that we\u0027re handling all the different enum cases since it will break if a new `AvbIOResult` is added, which should then serve as a reminder to add the new value to our `IoError` wrapper.\n\nIt doesn\u0027t need to be `pub(crate)` though, I\u0027ll remove that. And if you think we should just delete it and not worry about new avb enums I can do that in a follow-on CL - it does seem very unlikely any new I/O error types will actually be added to libavb at this point.",
+      "parentUuid": "fe33bd32_4be05de4",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 19
+      },
+      "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
