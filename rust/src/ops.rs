@@ -19,7 +19,7 @@
 
 extern crate alloc;
 
-use crate::{error::result_to_io_enum, IoError};
+use crate::{error::result_to_io_enum, IoError, IoResult};
 use avb_bindgen::{AvbIOResult, AvbOps};
 use core::{
     cmp::min,
@@ -29,9 +29,6 @@ use core::{
 };
 #[cfg(feature = "uuid")]
 use uuid::Uuid;
-
-/// Common `Result` type for `IoError` errors.
-type Result<T> = core::result::Result<T, IoError>;
 
 /// Base implementation-provided callbacks for verification.
 ///
@@ -54,7 +51,7 @@ pub trait Ops {
         partition: &CStr,
         offset: i64,
         buffer: &mut [u8],
-    ) -> Result<usize>;
+    ) -> IoResult<usize>;
 
     /// Returns a reference to preloaded partition contents.
     ///
@@ -71,7 +68,7 @@ pub trait Ops {
     /// * `Err<IoError::NotImplemented>` if the requested partition has not been preloaded;
     ///   verification will next attempt to load the partition via `read_from_partition()`.
     /// * Any other `Err<IoError>` if an error occurred; verification will exit immediately.
-    fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8]> {
+    fn get_preloaded_partition(&mut self, partition: &CStr) -> IoResult<&[u8]> {
         Err(IoError::NotImplemented)
     }
 
@@ -88,7 +85,7 @@ pub trait Ops {
         &mut self,
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
-    ) -> Result<bool>;
+    ) -> IoResult<bool>;
 
     /// Reads the rollback index at the given location.
     ///
@@ -97,7 +94,7 @@ pub trait Ops {
     ///
     /// # Returns
     /// The rollback index at this location or `IoError` on error.
-    fn read_rollback_index(&mut self, rollback_index_location: usize) -> Result<u64>;
+    fn read_rollback_index(&mut self, rollback_index_location: usize) -> IoResult<u64>;
 
     /// Writes the rollback index at the given location.
     ///
@@ -113,13 +110,13 @@ pub trait Ops {
     ///
     /// # Returns
     /// Unit on success or `IoError` on error.
-    fn write_rollback_index(&mut self, rollback_index_location: usize, index: u64) -> Result<()>;
+    fn write_rollback_index(&mut self, rollback_index_location: usize, index: u64) -> IoResult<()>;
 
     /// Returns the device unlock state.
     ///
     /// # Returns
     /// True if the device is unlocked, false if locked, `IoError` on error.
-    fn read_is_device_unlocked(&mut self) -> Result<bool>;
+    fn read_is_device_unlocked(&mut self) -> IoResult<bool>;
 
     /// Returns the GUID of the requested partition.
     ///
@@ -134,7 +131,7 @@ pub trait Ops {
     /// # Returns
     /// The partition GUID or `IoError` on error.
     #[cfg(feature = "uuid")]
-    fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> Result<Uuid>;
+    fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> IoResult<Uuid>;
 
     /// Returns the size of the requested partition.
     ///
@@ -143,7 +140,7 @@ pub trait Ops {
     ///
     /// # Returns
     /// The partition size in bytes or `IoError` on error.
-    fn get_size_of_partition(&mut self, partition: &CStr) -> Result<u64>;
+    fn get_size_of_partition(&mut self, partition: &CStr) -> IoResult<u64>;
 
     /// Reads the requested persistent value.
     ///
@@ -163,7 +160,7 @@ pub trait Ops {
     /// * `IoError::NoSuchValue` if `name` is not a known persistent value.
     /// * `IoError::InsufficientSpace` with the required size if the `value` buffer is too small.
     /// * Any other `IoError` on failure.
-    fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> Result<usize>;
+    fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> IoResult<usize>;
 
     /// Writes the requested persistent value.
     ///
@@ -180,7 +177,7 @@ pub trait Ops {
     /// * `IoError::NoSuchValue` if `name` is not a supported persistent value.
     /// * `IoError::InvalidValueSize` if `value` is too large to save as a persistent value.
     /// * Any other `IoError` on failure.
-    fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> Result<()>;
+    fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> IoResult<()>;
 
     /// Erases the requested persistent value.
     ///
@@ -198,7 +195,7 @@ pub trait Ops {
     /// * Unit on success.
     /// * `IoError::NoSuchValue` if `name` is not a supported persistent value.
     /// * Any other `IoError` on failure.
-    fn erase_persistent_value(&mut self, name: &CStr) -> Result<()>;
+    fn erase_persistent_value(&mut self, name: &CStr) -> IoResult<()>;
 
     /// Checks if the given public key is valid for the given partition.
     ///
@@ -223,7 +220,7 @@ pub trait Ops {
         partition: &CStr,
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
-    ) -> Result<PublicKeyForPartitionInfo>;
+    ) -> IoResult<PublicKeyForPartitionInfo>;
 }
 
 /// Info returned from `validare_public_key_for_partition()`.
@@ -348,7 +345,7 @@ impl<'a> AsMut<AvbOps> for ScopedAvbOps<'a> {
 ///
 /// In practice, these conditions are met since we call this exactly once in each callback
 /// to extract the `Ops`, and drop it at callback completion.
-unsafe fn as_ops<'a>(avb_ops: *mut AvbOps) -> Result<&'a mut dyn Ops> {
+unsafe fn as_ops<'a>(avb_ops: *mut AvbOps) -> IoResult<&'a mut dyn Ops> {
     // SAFETY: we created this AvbOps object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     let avb_ops = unsafe { avb_ops.as_mut() }.ok_or(IoError::Io)?;
@@ -360,14 +357,14 @@ unsafe fn as_ops<'a>(avb_ops: *mut AvbOps) -> Result<&'a mut dyn Ops> {
 }
 
 /// Converts a non-NULL `ptr` to `()`, NULL to `Err(IoError::Io)`.
-fn check_nonnull<T>(ptr: *const T) -> Result<()> {
+fn check_nonnull<T>(ptr: *const T) -> IoResult<()> {
     match ptr.is_null() {
         true => Err(IoError::Io),
         false => Ok(()),
     }
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn read_from_partition(
@@ -402,7 +399,7 @@ unsafe fn try_read_from_partition(
     num_bytes: usize,
     buffer: *mut c_void,
     out_num_read: *mut usize,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(partition)?;
     check_nonnull(buffer)?;
     check_nonnull(out_num_read)?;
@@ -438,7 +435,7 @@ unsafe fn try_read_from_partition(
     Ok(())
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn get_preloaded_partition(
@@ -471,7 +468,7 @@ unsafe fn try_get_preloaded_partition(
     num_bytes: usize,
     out_pointer: *mut *mut u8,
     out_num_bytes_preloaded: *mut usize,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(partition)?;
     check_nonnull(out_pointer)?;
     check_nonnull(out_num_bytes_preloaded)?;
@@ -522,7 +519,7 @@ unsafe fn try_get_preloaded_partition(
     Ok(())
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn validate_vbmeta_public_key(
@@ -556,7 +553,7 @@ unsafe fn try_validate_vbmeta_public_key(
     public_key_metadata: *const u8,
     public_key_metadata_length: usize,
     out_is_trusted: *mut bool,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(public_key_data)?;
     check_nonnull(out_is_trusted)?;
 
@@ -595,7 +592,7 @@ unsafe fn try_validate_vbmeta_public_key(
     Ok(())
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn read_rollback_index(
@@ -619,7 +616,7 @@ unsafe fn try_read_rollback_index(
     ops: *mut AvbOps,
     rollback_index_location: usize,
     out_rollback_index: *mut u64,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(out_rollback_index)?;
 
     // Initialize the output variables first in case something fails.
@@ -641,7 +638,7 @@ unsafe fn try_read_rollback_index(
     Ok(())
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn write_rollback_index(
@@ -664,7 +661,7 @@ unsafe fn try_write_rollback_index(
     ops: *mut AvbOps,
     rollback_index_location: usize,
     rollback_index: u64,
-) -> Result<()> {
+) -> IoResult<()> {
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
@@ -672,7 +669,7 @@ unsafe fn try_write_rollback_index(
     ops.write_rollback_index(rollback_index_location, rollback_index)
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn read_is_device_unlocked(
@@ -687,7 +684,10 @@ unsafe extern "C" fn read_is_device_unlocked(
 /// # Safety
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `out_is_unlocked` must adhere to the requirements of `ptr::write()`.
-unsafe fn try_read_is_device_unlocked(ops: *mut AvbOps, out_is_unlocked: *mut bool) -> Result<()> {
+unsafe fn try_read_is_device_unlocked(
+    ops: *mut AvbOps,
+    out_is_unlocked: *mut bool,
+) -> IoResult<()> {
     check_nonnull(out_is_unlocked)?;
 
     // Initialize the output variables first in case something fails.
@@ -709,7 +709,7 @@ unsafe fn try_read_is_device_unlocked(ops: *mut AvbOps, out_is_unlocked: *mut bo
     Ok(())
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn get_unique_guid_for_partition(
@@ -737,7 +737,7 @@ unsafe fn try_get_unique_guid_for_partition(
     partition: *const c_char,
     guid_buf: *mut c_char,
     guid_buf_size: usize,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(partition)?;
     check_nonnull(guid_buf)?;
 
@@ -794,7 +794,7 @@ unsafe fn try_get_unique_guid_for_partition(
     Ok(())
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn get_size_of_partition(
@@ -819,7 +819,7 @@ unsafe fn try_get_size_of_partition(
     ops: *mut AvbOps,
     partition: *const c_char,
     out_size_num_bytes: *mut u64,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(partition)?;
     check_nonnull(out_size_num_bytes)?;
 
@@ -848,7 +848,7 @@ unsafe fn try_get_size_of_partition(
     Ok(())
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn read_persistent_value(
@@ -880,7 +880,7 @@ unsafe fn try_read_persistent_value(
     buffer_size: usize,
     out_buffer: *mut u8,
     out_num_bytes_read: *mut usize,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(name)?;
     check_nonnull(out_num_bytes_read)?;
 
@@ -926,7 +926,7 @@ unsafe fn try_read_persistent_value(
     result.map(|_| ())
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn write_persistent_value(
@@ -949,7 +949,7 @@ unsafe fn try_write_persistent_value(
     name: *const c_char,
     value_size: usize,
     value: *const u8,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(name)?;
 
     // SAFETY:
@@ -977,7 +977,7 @@ unsafe fn try_write_persistent_value(
     }
 }
 
-/// Wraps a callback to convert the given `Result<>` to raw `AvbIOResult` for libavb.
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
 unsafe extern "C" fn validate_public_key_for_partition(
@@ -1018,7 +1018,7 @@ unsafe fn try_validate_public_key_for_partition(
     public_key_metadata_length: usize,
     out_is_trusted: *mut bool,
     out_rollback_index_location: *mut u32,
-) -> Result<()> {
+) -> IoResult<()> {
     check_nonnull(partition)?;
     check_nonnull(public_key_data)?;
     check_nonnull(out_is_trusted)?;
