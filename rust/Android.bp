@@ -85,8 +85,8 @@ rust_defaults {
     name: "libavb_rs_common.defaults",
     crate_name: "avb",
     srcs: ["src/lib.rs"],
-    // Require unsafe blocks for inside unsafe functions.
-    flags: ["-Dunsafe_op_in_unsafe_fn"],
+    clippy_lints: "android",
+    lints: "android",
 }
 
 // No std, no features.
@@ -164,6 +164,12 @@ rust_library {
     defaults: ["libavb_rs.defaults"],
 }
 
+// Unit tests: std, no features.
+rust_test {
+    name: "libavb_rs_unittest",
+    defaults: ["libavb_rs.defaults"],
+}
+
 // lib: std, UUID feature.
 rust_library {
     name: "libavb_rs_uuid",
@@ -173,7 +179,16 @@ rust_library {
     ],
 }
 
-// device test defaults.
+// Unit tests: std, UUID feature.
+rust_test {
+    name: "libavb_rs_uuid_unittest",
+    defaults: [
+        "libavb_rs.defaults",
+        "libavb_rs.uuid.defaults",
+    ],
+}
+
+// Integration test defaults.
 rust_defaults {
     name: "libavb_rs_test.defaults",
     srcs: ["tests/tests.rs"],
@@ -187,16 +202,18 @@ rust_defaults {
         ":avbrs_test_vbmeta_persistent_digest",
     ],
     test_suites: ["general-tests"],
+    clippy_lints: "android",
+    lints: "android",
 }
 
-// device test: no features.
+// Integration test: no features.
 rust_test {
     name: "libavb_rs_test",
     defaults: ["libavb_rs_test.defaults"],
     rustlibs: ["libavb_rs"],
 }
 
-// device test: UUID feature.
+// Integration test: UUID feature.
 rust_test {
     name: "libavb_rs_uuid_test",
     defaults: [
