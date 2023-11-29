@@ -602,3 +602,43 @@ fn corrupted_image_verification_data_display() {
         r#"slot: "", vbmeta: ["vbmeta": Ok(())], images: ["test_part": Err(Verification(None))]"#
     );
 }
+
+#[test]
+fn one_image_gives_single_descriptor() {
+    let mut ops = test_ops_one_image_one_vbmeta();
+
+    let result = verify_one_image_one_vbmeta(&mut ops);
+
+    let data = result.unwrap();
+    assert_eq!(data.vbmeta_data()[0].descriptor_iter().unwrap().count(), 1);
+}
+
+#[test]
+fn two_images_gives_two_descriptors() {
+    let mut ops = test_ops_two_images_one_vbmeta();
+
+    let result = verify_two_images_one_vbmeta(&mut ops);
+
+    let data = result.unwrap();
+    assert_eq!(data.vbmeta_data()[0].descriptor_iter().unwrap().count(), 2);
+}
+
+#[test]
+fn reset_descriptor_iterator() {
+    let mut ops = test_ops_two_images_one_vbmeta();
+
+    let result = verify_two_images_one_vbmeta(&mut ops);
+
+    let data = result.unwrap();
+    let mut iter = data.vbmeta_data()[0].descriptor_iter().unwrap();
+
+    // We should pull 2 descriptors then `None`.
+    assert!(iter.next().is_some());
+    assert!(iter.next().is_some());
+    assert!(iter.next().is_none());
+    // After resetting we should get both descriptors again.
+    iter.reset();
+    assert!(iter.next().is_some());
+    assert!(iter.next().is_some());
+    assert!(iter.next().is_none());
+}

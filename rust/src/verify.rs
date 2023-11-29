@@ -18,6 +18,7 @@
 //! libavb and Rust for verifying images.
 
 use crate::{
+    descriptor::DescriptorIterator,
     error::{
         slot_verify_enum_to_result, vbmeta_verify_enum_to_result, SlotVerifyError,
         SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
@@ -90,6 +91,12 @@ impl VbmetaData {
     /// Returns the vbmeta verification result.
     pub fn verify_result(&self) -> VbmetaVerifyResult<()> {
         vbmeta_verify_enum_to_result(self.0.verify_result)
+    }
+
+    /// Returns an iterator that can be used to access the contained descriptors, or
+    /// `Err(SlotVerifyError::Internal)` on failure
+    pub fn descriptor_iter(&self) -> SlotVerifyNoDataResult<DescriptorIterator> {
+        DescriptorIterator::new(self).ok_or(SlotVerifyError::Internal)
     }
 }
 
