@@ -22,7 +22,7 @@ use crate::{
         slot_verify_enum_to_result, vbmeta_verify_enum_to_result, SlotVerifyError,
         SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
     },
-    ops, IoError, Ops,
+    ops, Ops,
 };
 use avb_bindgen::{
     avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
@@ -102,7 +102,7 @@ impl fmt::Display for VbmetaData {
 
 /// Forwards to `Display` formatting; the default `Debug` formatting implementation isn't very
 /// useful as it's mostly raw pointer addresses.
-impl<'a> fmt::Debug for VbmetaData {
+impl fmt::Debug for VbmetaData {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
@@ -176,7 +176,7 @@ impl fmt::Display for PartitionData {
 
 /// Forwards to `Display` formatting; the default `Debug` formatting implementation isn't very
 /// useful as it's mostly raw pointer addresses.
-impl<'a> fmt::Debug for PartitionData {
+impl fmt::Debug for PartitionData {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
@@ -214,7 +214,7 @@ impl<'a> SlotVerifyData<'a> {
     /// * after calling this function, do not access `data` except through the returned object
     unsafe fn new(
         data: *mut AvbSlotVerifyData,
-        ops: &'a mut dyn Ops,
+        _ops: &'a mut dyn Ops,
     ) -> SlotVerifyNoDataResult<Self> {
         let ret = Self {
             raw_data: NonNull::new(data).ok_or(SlotVerifyError::Internal)?,

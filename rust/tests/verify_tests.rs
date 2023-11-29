@@ -21,7 +21,7 @@ use avb::{
 };
 use std::{ffi::CString, fs};
 #[cfg(feature = "uuid")]
-use uuid::{uuid, Uuid};
+use uuid::uuid;
 
 // These constants must match the values used to create the images in Android.bp.
 const TEST_IMAGE_PATH: &str = "test_image.img";

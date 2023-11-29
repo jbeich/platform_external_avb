@@ -68,6 +68,7 @@ pub trait Ops {
     /// * `Err<IoError::NotImplemented>` if the requested partition has not been preloaded;
     ///   verification will next attempt to load the partition via `read_from_partition()`.
     /// * Any other `Err<IoError>` if an error occurred; verification will exit immediately.
+    #[allow(unused_variables)] // Keep trait arg name as `partition` (not `_partition`).
     fn get_preloaded_partition(&mut self, partition: &CStr) -> IoResult<&[u8]> {
         Err(IoError::NotImplemented)
     }
@@ -375,14 +376,17 @@ unsafe extern "C" fn read_from_partition(
     buffer: *mut c_void,
     out_num_read: *mut usize,
 ) -> AvbIOResult {
-    result_to_io_enum(try_read_from_partition(
-        ops,
-        partition,
-        offset,
-        num_bytes,
-        buffer,
-        out_num_read,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_read_from_partition(
+            ops,
+            partition,
+            offset,
+            num_bytes,
+            buffer,
+            out_num_read,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -445,13 +449,16 @@ unsafe extern "C" fn get_preloaded_partition(
     out_pointer: *mut *mut u8,
     out_num_bytes_preloaded: *mut usize,
 ) -> AvbIOResult {
-    result_to_io_enum(try_get_preloaded_partition(
-        ops,
-        partition,
-        num_bytes,
-        out_pointer,
-        out_num_bytes_preloaded,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_get_preloaded_partition(
+            ops,
+            partition,
+            num_bytes,
+            out_pointer,
+            out_num_bytes_preloaded,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -530,14 +537,17 @@ unsafe extern "C" fn validate_vbmeta_public_key(
     public_key_metadata_length: usize,
     out_is_trusted: *mut bool,
 ) -> AvbIOResult {
-    result_to_io_enum(try_validate_vbmeta_public_key(
-        ops,
-        public_key_data,
-        public_key_length,
-        public_key_metadata,
-        public_key_metadata_length,
-        out_is_trusted,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_validate_vbmeta_public_key(
+            ops,
+            public_key_data,
+            public_key_length,
+            public_key_metadata,
+            public_key_metadata_length,
+            out_is_trusted,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -600,11 +610,14 @@ unsafe extern "C" fn read_rollback_index(
     rollback_index_location: usize,
     out_rollback_index: *mut u64,
 ) -> AvbIOResult {
-    result_to_io_enum(try_read_rollback_index(
-        ops,
-        rollback_index_location,
-        out_rollback_index,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_read_rollback_index(
+            ops,
+            rollback_index_location,
+            out_rollback_index,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -646,11 +659,14 @@ unsafe extern "C" fn write_rollback_index(
     rollback_index_location: usize,
     rollback_index: u64,
 ) -> AvbIOResult {
-    result_to_io_enum(try_write_rollback_index(
-        ops,
-        rollback_index_location,
-        rollback_index,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_write_rollback_index(
+            ops,
+            rollback_index_location,
+            rollback_index,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -676,7 +692,8 @@ unsafe extern "C" fn read_is_device_unlocked(
     ops: *mut AvbOps,
     out_is_unlocked: *mut bool,
 ) -> AvbIOResult {
-    result_to_io_enum(try_read_is_device_unlocked(ops, out_is_unlocked))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe { result_to_io_enum(try_read_is_device_unlocked(ops, out_is_unlocked)) }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -718,12 +735,15 @@ unsafe extern "C" fn get_unique_guid_for_partition(
     guid_buf: *mut c_char,
     guid_buf_size: usize,
 ) -> AvbIOResult {
-    result_to_io_enum(try_get_unique_guid_for_partition(
-        ops,
-        partition,
-        guid_buf,
-        guid_buf_size,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_get_unique_guid_for_partition(
+            ops,
+            partition,
+            guid_buf,
+            guid_buf_size,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -732,27 +752,26 @@ unsafe extern "C" fn get_unique_guid_for_partition(
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `guid_buf` must adhere to the requirements of `slice::from_raw_parts_mut()`.
+#[allow(unused_variables)] // Some vars are only used when `uuid` feature is enabled.
 unsafe fn try_get_unique_guid_for_partition(
     ops: *mut AvbOps,
     partition: *const c_char,
     guid_buf: *mut c_char,
     guid_buf_size: usize,
 ) -> IoResult<()> {
-    check_nonnull(partition)?;
     check_nonnull(guid_buf)?;
 
-    // SAFETY:
-    // * we've checked that the pointer is non-NULL.
-    // * libavb gives us a properly-allocated and nul-terminated `partition`.
-    // * the string contents are not modified while the returned `&CStr` exists.
-    // * the returned `&CStr` is not held past the scope of this callback.
-    let partition = unsafe { CStr::from_ptr(partition) };
+    // On some architectures `c_char` is `u8`, and on others `i8`. We make sure it's `u8` here
+    // since that's what `CStr::to_bytes_with_nul()` always provides.
+    #[allow(clippy::unnecessary_cast)]
+    let guid_buf = guid_buf as *mut u8;
+
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated `guid_buf` with size `guid_buf_size`.
     // * we only access the contents via the returned slice.
     // * the returned slice is not held past the scope of this callback.
-    let buffer = unsafe { slice::from_raw_parts_mut(guid_buf as *mut u8, guid_buf_size) };
+    let buffer = unsafe { slice::from_raw_parts_mut(guid_buf, guid_buf_size) };
 
     // Initialize the output buffer to the empty string.
     //
@@ -768,6 +787,15 @@ unsafe fn try_get_unique_guid_for_partition(
 
     #[cfg(feature = "uuid")]
     {
+        check_nonnull(partition)?;
+
+        // SAFETY:
+        // * we've checked that the pointer is non-NULL.
+        // * libavb gives us a properly-allocated and nul-terminated `partition`.
+        // * the string contents are not modified while the returned `&CStr` exists.
+        // * the returned `&CStr` is not held past the scope of this callback.
+        let partition = unsafe { CStr::from_ptr(partition) };
+
         // SAFETY:
         // * we only use `ops` objects created via `ScopedAvbOps` as required.
         // * `ops` is only extracted once and is dropped at the end of the callback.
@@ -802,11 +830,14 @@ unsafe extern "C" fn get_size_of_partition(
     partition: *const c_char,
     out_size_num_bytes: *mut u64,
 ) -> AvbIOResult {
-    result_to_io_enum(try_get_size_of_partition(
-        ops,
-        partition,
-        out_size_num_bytes,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_get_size_of_partition(
+            ops,
+            partition,
+            out_size_num_bytes,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -858,13 +889,16 @@ unsafe extern "C" fn read_persistent_value(
     out_buffer: *mut u8,
     out_num_bytes_read: *mut usize,
 ) -> AvbIOResult {
-    result_to_io_enum(try_read_persistent_value(
-        ops,
-        name,
-        buffer_size,
-        out_buffer,
-        out_num_bytes_read,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_read_persistent_value(
+            ops,
+            name,
+            buffer_size,
+            out_buffer,
+            out_num_bytes_read,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -935,7 +969,8 @@ unsafe extern "C" fn write_persistent_value(
     value_size: usize,
     value: *const u8,
 ) -> AvbIOResult {
-    result_to_io_enum(try_write_persistent_value(ops, name, value_size, value))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe { result_to_io_enum(try_write_persistent_value(ops, name, value_size, value)) }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -990,16 +1025,19 @@ unsafe extern "C" fn validate_public_key_for_partition(
     out_is_trusted: *mut bool,
     out_rollback_index_location: *mut u32,
 ) -> AvbIOResult {
-    result_to_io_enum(try_validate_public_key_for_partition(
-        ops,
-        partition,
-        public_key_data,
-        public_key_length,
-        public_key_metadata,
-        public_key_metadata_length,
-        out_is_trusted,
-        out_rollback_index_location,
-    ))
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    unsafe {
+        result_to_io_enum(try_validate_public_key_for_partition(
+            ops,
+            partition,
+            public_key_data,
+            public_key_length,
+            public_key_metadata,
+            public_key_metadata_length,
+            out_is_trusted,
+            out_rollback_index_location,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -1009,6 +1047,7 @@ unsafe extern "C" fn validate_public_key_for_partition(
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
 /// * `out_*` must adhere to the requirements of `ptr::write()`.
+#[allow(clippy::too_many_arguments)] // Mirroring libavb C API.
 unsafe fn try_validate_public_key_for_partition(
     ops: *mut AvbOps,
     partition: *const c_char,

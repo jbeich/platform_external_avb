@@ -115,10 +115,9 @@ impl<'a> fmt::Display for SlotVerifyError<'a> {
 /// This function is also important to serve as a compile-time check that we're handling all the
 /// libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
 /// until it is updated to match.
-///
-/// TODO(b/290110273): this can be limited to pub(crate) once we've moved the full libavb wrapper
-/// here.
-pub fn slot_verify_enum_to_result(result: AvbSlotVerifyResult) -> SlotVerifyNoDataResult<()> {
+pub(crate) fn slot_verify_enum_to_result(
+    result: AvbSlotVerifyResult,
+) -> SlotVerifyNoDataResult<()> {
     match result {
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_OK => Ok(()),
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_ARGUMENT => {
@@ -196,6 +195,7 @@ impl From<Utf8Error> for IoError {
 // This function is not currently used, but serves as a compile-time check that we're handling all
 // the libavb enums; if a new one is added to or removed from the C code, this will fail to compile
 // until it is updated to match.
+#[allow(dead_code)]
 fn io_enum_to_result(result: AvbIOResult) -> IoResult<()> {
     match result {
         AvbIOResult::AVB_IO_RESULT_OK => Ok(()),
@@ -235,11 +235,8 @@ impl From<IoError> for AvbIOResult {
     }
 }
 
-// Converts a `Result<>` to the bindgen `AvbIOResult` enum.
-//
-// TODO(b/290110273): this can be limited to pub(crate) once we've moved the full libavb wrapper
-// here.
-pub fn result_to_io_enum(result: Result<(), IoError>) -> AvbIOResult {
+/// Converts a `Result<>` to the bindgen `AvbIOResult` enum.
+pub(crate) fn result_to_io_enum(result: Result<(), IoError>) -> AvbIOResult {
     result.map_or_else(|e| e.into(), |_| AvbIOResult::AVB_IO_RESULT_OK)
 }
 
