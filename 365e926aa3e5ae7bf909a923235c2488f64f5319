@@ -93,6 +93,30 @@
       },
       "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a731fd6e_5e517535",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 199,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-29T17:42:44Z",
+      "side": 1,
+      "message": "One more update: turns out linters weren\u0027t being properly enabled here which is why this wasn\u0027t checked. Follow-up patch will turn on proper linting and fix.",
+      "parentUuid": "48e7ea5d_98a4b5a5",
+      "range": {
+        "startLine": 199,
+        "startChar": 0,
+        "endLine": 199,
+        "endChar": 19
+      },
+      "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
