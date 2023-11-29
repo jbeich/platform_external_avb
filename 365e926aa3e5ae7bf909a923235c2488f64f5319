@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2c80cab6_79f17bd6",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 70,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-11-29T01:23:03Z",
+      "side": 1,
+      "message": "It seems worth defining a `\u0027static` version of this type so users don\u0027t have to write `SlotVerifyResult\u003c\u0027static, ...\u003e` all the time, but I don\u0027t love this name. Couldn\u0027t think of anything better yet though.",
+      "range": {
+        "startLine": 70,
+        "startChar": 9,
+        "endLine": 70,
+        "endChar": 31
+      },
+      "revId": "365e926aa3e5ae7bf909a923235c2488f64f5319",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
