@@ -17,13 +17,17 @@
 //! This module is responsible for all the conversions required to pass information between
 //! libavb and Rust for verifying images.
 
+extern crate alloc;
+
 use crate::{
+    descriptor::{get_descriptors, Descriptor, DescriptorResult},
     error::{
         slot_verify_enum_to_result, vbmeta_verify_enum_to_result, SlotVerifyError,
         SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
     },
     ops, Ops,
 };
+use alloc::vec::Vec;
 use avb_bindgen::{
     avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
 };
@@ -90,6 +94,18 @@ impl VbmetaData {
     /// Returns the vbmeta verification result.
     pub fn verify_result(&self) -> VbmetaVerifyResult<()> {
         vbmeta_verify_enum_to_result(self.0.verify_result)
+    }
+
+    /// Extracts the descriptors from the vbmeta image.
+    ///
+    /// Note that this function allocates memory to hold the `Descriptor` objects.
+    ///
+    /// # Returns
+    /// A vector of descriptors, or `DescriptorError` on failure.
+    pub fn descriptors(&self) -> DescriptorResult<Vec<Descriptor>> {
+        // SAFETY: the only way to get a `VbmetaData` object is via the return value of
+        // `slot_verify()`, so we know we have been properly validated.
+        unsafe { get_descriptors(self) }
     }
 }
 
