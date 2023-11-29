@@ -20,7 +20,7 @@
 use crate::{
     error::{
         slot_verify_enum_to_result, vbmeta_verify_enum_to_result, SlotVerifyError,
-        VbmetaVerifyError,
+        SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
     },
     ops, IoError, Ops,
 };
@@ -41,7 +41,7 @@ pub use avb_bindgen::AvbHashtreeErrorMode as HashtreeErrorMode;
 pub use avb_bindgen::AvbSlotVerifyFlags as SlotVerifyFlags;
 
 /// Returns `Err(SlotVerifyError::Internal)` if the given pointer is `NULL`.
-fn check_nonnull<T>(ptr: *const T) -> Result<(), SlotVerifyError<'static>> {
+fn check_nonnull<T>(ptr: *const T) -> SlotVerifyNoDataResult<()> {
     match ptr.is_null() {
         true => Err(SlotVerifyError::Internal),
         false => Ok(()),
@@ -66,7 +66,7 @@ impl VbmetaData {
     /// objects ourselves, we just cast them from the C structs provided by libavb.
     ///
     /// Returns `Err(SlotVerifyError::Internal)` on failure.
-    fn validate(&self) -> Result<(), SlotVerifyError<'static>> {
+    fn validate(&self) -> SlotVerifyNoDataResult<()> {
         check_nonnull(self.0.partition_name)?;
         check_nonnull(self.0.vbmeta_data)?;
         Ok(())
@@ -89,7 +89,7 @@ impl VbmetaData {
     }
 
     /// Returns the vbmeta verification result.
-    pub fn verify_result(&self) -> Result<(), VbmetaVerifyError> {
+    pub fn verify_result(&self) -> VbmetaVerifyResult<()> {
         vbmeta_verify_enum_to_result(self.0.verify_result)
     }
 }
@@ -122,7 +122,7 @@ impl PartitionData {
     /// objects ourselves, we just cast them from the C structs provided by libavb.
     ///
     /// Returns `Err(SlotVerifyError::Internal)` on failure.
-    fn validate(&self) -> Result<(), SlotVerifyError<'static>> {
+    fn validate(&self) -> SlotVerifyNoDataResult<()> {
         check_nonnull(self.0.partition_name)?;
         check_nonnull(self.0.data)?;
         Ok(())
@@ -153,7 +153,7 @@ impl PartitionData {
     ///
     /// Only top-level `Verification` errors will contain valid `SlotVerifyData` objects, if this
     /// individual partition returns a `Verification` error the error will always contain `None`.
-    pub fn verify_result(&self) -> Result<(), SlotVerifyError<'static>> {
+    pub fn verify_result(&self) -> SlotVerifyNoDataResult<()> {
         slot_verify_enum_to_result(self.0.verify_result)
     }
 }
@@ -215,7 +215,7 @@ impl<'a> SlotVerifyData<'a> {
     unsafe fn new(
         data: *mut AvbSlotVerifyData,
         ops: &'a mut dyn Ops,
-    ) -> Result<Self, SlotVerifyError<'static>> {
+    ) -> SlotVerifyNoDataResult<Self> {
         let ret = Self {
             raw_data: NonNull::new(data).ok_or(SlotVerifyError::Internal)?,
             _ops: PhantomData,
@@ -356,7 +356,7 @@ pub fn slot_verify<'a>(
     ab_suffix: Option<&CStr>,
     flags: SlotVerifyFlags,
     hashtree_error_mode: HashtreeErrorMode,
-) -> Result<SlotVerifyData<'a>, SlotVerifyError<'a>> {
+) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     let mut user_data = ops::UserData::new(ops);
     let mut scoped_ops = ops::ScopedAvbOps::new(&mut user_data);
     let avb_ops = scoped_ops.as_mut();
