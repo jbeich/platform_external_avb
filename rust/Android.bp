@@ -85,8 +85,8 @@ rust_defaults {
     name: "libavb_rs_common.defaults",
     crate_name: "avb",
     srcs: ["src/lib.rs"],
-    // Require unsafe blocks for inside unsafe functions.
-    flags: ["-Dunsafe_op_in_unsafe_fn"],
+    clippy_lints: "android",
+    lints: "android",
 }
 
 // No std, no features.
@@ -187,6 +187,8 @@ rust_defaults {
         ":avbrs_test_vbmeta_persistent_digest",
     ],
     test_suites: ["general-tests"],
+    clippy_lints: "android",
+    lints: "android",
 }
 
 // device test: no features.
