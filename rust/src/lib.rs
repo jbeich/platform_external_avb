@@ -33,6 +33,7 @@ mod verify;
 
 pub use descriptor::{
     Descriptor, DescriptorError, DescriptorResult, HashDescriptor, HashDescriptorFlags,
+    PropertyDescriptor,
 };
 pub use error::{
     IoError, IoResult, SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult,
