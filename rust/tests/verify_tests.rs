@@ -17,6 +17,7 @@
 use crate::test_ops::TestOps;
 use avb::{
     slot_verify, HashtreeErrorMode, IoError, SlotVerifyData, SlotVerifyError, SlotVerifyFlags,
+    SlotVerifyResult,
 };
 use std::{ffi::CString, fs};
 #[cfg(feature = "uuid")]
@@ -50,9 +51,7 @@ fn test_ops_one_image_one_vbmeta() -> TestOps {
 }
 
 /// Calls `slot_verify()` using standard args for `test_ops_one_image_one_vbmeta()` setup.
-fn verify_one_image_one_vbmeta<'a>(
-    ops: &'a mut TestOps,
-) -> Result<SlotVerifyData<'a>, SlotVerifyError<'a>> {
+fn verify_one_image_one_vbmeta(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
     slot_verify(
         ops,
         &[&CString::new(TEST_PARTITION_NAME).unwrap()],
@@ -74,9 +73,7 @@ fn test_ops_two_images_one_vbmeta() -> TestOps {
 }
 
 /// Calls `slot_verify()` using standard args for `test_ops_two_images_one_vbmeta()` setup.
-fn verify_two_images_one_vbmeta<'a>(
-    ops: &'a mut TestOps,
-) -> Result<SlotVerifyData<'a>, SlotVerifyError<'a>> {
+fn verify_two_images_one_vbmeta(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
     slot_verify(
         ops,
         &[
@@ -102,9 +99,7 @@ fn test_ops_boot_partition() -> TestOps {
 }
 
 /// Calls `slot_verify()` using standard args for `test_ops_boot_partition()` setup.
-fn verify_boot_partition<'a>(
-    ops: &'a mut TestOps,
-) -> Result<SlotVerifyData<'a>, SlotVerifyError<'a>> {
+fn verify_boot_partition(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
     slot_verify(
         ops,
         &[&CString::new("boot").unwrap()],
@@ -133,9 +128,7 @@ fn test_ops_persistent_digest(image: Vec<u8>) -> TestOps {
 }
 
 /// Calls `slot_verify()` using standard args for `test_ops_persistent_digest()` setup.
-fn verify_persistent_digest<'a>(
-    ops: &'a mut TestOps,
-) -> Result<SlotVerifyData<'a>, SlotVerifyError<'a>> {
+fn verify_persistent_digest(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
     slot_verify(
         ops,
         &[&CString::new(TEST_PARTITION_PERSISTENT_DIGEST_NAME).unwrap()],
