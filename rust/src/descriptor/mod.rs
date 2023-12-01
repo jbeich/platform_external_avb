@@ -17,6 +17,9 @@
 //! Descriptors are information encoded into vbmeta images which can be
 //! extracted from the resulting data after performing verification.
 
+mod hash;
+mod util;
+
 use crate::VbmetaData;
 use avb_bindgen::{
     avb_descriptor_get_all, avb_descriptor_validate_and_byteswap, avb_free, AvbDescriptor,
@@ -24,16 +27,18 @@ use avb_bindgen::{
 };
 use core::{ffi::c_void, mem::size_of, ptr::NonNull, slice::from_raw_parts};
 
+pub use hash::{HashDescriptor, HashDescriptorFlags};
+
 /// A single descriptor.
 // TODO(b/290110273): add support for full descriptor contents.
 #[derive(Debug)]
-pub enum Descriptor {
+pub enum Descriptor<'a> {
     /// Wraps `AvbPropertyDescriptor`.
     Property,
     /// Wraps `AvbHashtreeDescriptor`.
     Hashtree,
     /// Wraps `AvbHashDescriptor`.
-    Hash,
+    Hash(HashDescriptor<'a>),
     /// Wraps `AvbKernelCmdlineDescriptor`.
     KernelCommandline,
     /// Wraps `AvbChainPartitionDescriptor`.
@@ -102,7 +107,7 @@ impl<'a> DescriptorIterator<'a> {
     /// # Safety
     /// `raw_descriptor` must point to a valid `AvbDescriptor` immediately followed by the number
     /// of data bytes indicated by `num_bytes_following`.
-    unsafe fn extract_descriptor(raw_descriptor: *const AvbDescriptor) -> Option<Descriptor> {
+    unsafe fn extract_descriptor(raw_descriptor: *const AvbDescriptor) -> Option<Descriptor<'a>> {
         // Transform header to host-endian.
         let mut descriptor = AvbDescriptor {
             tag: 0,
@@ -115,7 +120,7 @@ impl<'a> DescriptorIterator<'a> {
 
         // Extract the descriptor header and contents bytes.
         // SAFETY: `raw_descriptor` points to the header plus `num_bytes_following` bytes.
-        let _contents = unsafe {
+        let contents = unsafe {
             from_raw_parts(
                 raw_descriptor as *const u8,
                 size_of::<AvbDescriptor>()
@@ -126,7 +131,10 @@ impl<'a> DescriptorIterator<'a> {
         match descriptor.tag.try_into().ok()? {
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_PROPERTY => Some(Descriptor::Property),
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASHTREE => Some(Descriptor::Hashtree),
-            AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH => Some(Descriptor::Hash),
+            AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH => Some(Descriptor::Hash(
+                // SAFETY: `contents` points to a valid `AvbHashDescriptor`.
+                unsafe { HashDescriptor::new(contents) }?,
+            )),
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE => {
                 Some(Descriptor::KernelCommandline)
             }
@@ -158,7 +166,7 @@ impl<'a> Drop for DescriptorIterator<'a> {
 }
 
 impl<'a> Iterator for DescriptorIterator<'a> {
-    type Item = Descriptor;
+    type Item = Descriptor<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
         // Grab the next raw descriptor pointer and advance the index for next time.
