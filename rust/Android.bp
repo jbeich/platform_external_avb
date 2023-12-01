@@ -203,6 +203,7 @@ rust_defaults {
         ":avbrs_test_vbmeta_2_parts",
         ":avbrs_test_vbmeta_persistent_digest",
     ],
+    rustlibs: ["libhex"],
     test_suites: ["general-tests"],
     clippy_lints: "android",
     lints: "android",
@@ -240,7 +241,7 @@ avb_gen_vbmeta_image {
     name: "avbrs_test_image_descriptor",
     src: ":avbrs_test_image",
     partition_name: "test_part",
-    salt: "0000",
+    salt: "1000",
 }
 
 // Unsigned vbmeta blob containing the test image descriptor for partition name "test_part_2".
@@ -248,7 +249,7 @@ avb_gen_vbmeta_image {
     name: "avbrs_test_image_descriptor_2",
     src: ":avbrs_test_image",
     partition_name: "test_part_2",
-    salt: "0001",
+    salt: "1001",
 }
 
 // Unsigned vbmeta blob containing a persistent digest descriptor for partition name
