@@ -14,10 +14,12 @@
 
 //! Hash descriptors.
 
-use super::{util::split_slice, DescriptorError, DescriptorResult};
+use super::{
+    util::{parse_descriptor, split_slice, ValidateAndByteswap, ValidationFunc},
+    DescriptorError, DescriptorResult,
+};
 use avb_bindgen::{avb_hash_descriptor_validate_and_byteswap, AvbHashDescriptor};
 use core::{ffi::CStr, str::from_utf8};
-use zerocopy::Ref;
 
 /// `AvbHashDescriptorFlags`; see libavb docs for details.
 pub use avb_bindgen::AvbHashDescriptorFlags as HashDescriptorFlags;
@@ -50,6 +52,11 @@ pub struct HashDescriptor<'a> {
     pub digest: &'a [u8],
 }
 
+impl ValidateAndByteswap for AvbHashDescriptor {
+    const VALIDATE_AND_BYTESWAP_FUNC: ValidationFunc<Self> =
+        avb_hash_descriptor_validate_and_byteswap;
+}
+
 impl<'a> HashDescriptor<'a> {
     /// Extract a `HashDescriptor` from the given descriptor contents.
     ///
@@ -60,41 +67,26 @@ impl<'a> HashDescriptor<'a> {
     /// The new descriptor, or `DescriptorError` if the given `contents` aren't a valid
     /// `AvbHashDescriptor`.
     pub(super) fn new(contents: &'a [u8]) -> DescriptorResult<Self> {
-        let (raw_header, remainder) = Ref::<_, AvbHashDescriptor>::new_from_prefix(contents)
-            .ok_or(DescriptorError::InvalidHeader)?;
-        let raw_header = raw_header.into_ref();
+        // Descriptor contains: header + name + salt + digest.
+        let descriptor = parse_descriptor::<AvbHashDescriptor>(contents)?;
+        let (partition_name, remainder) =
+            split_slice(descriptor.body, descriptor.header.partition_name_len)?;
+        let (salt, remainder) = split_slice(remainder, descriptor.header.salt_len)?;
+        let (digest, _) = split_slice(remainder, descriptor.header.digest_len)?;
 
-        let header = {
-            let mut header = AvbHashDescriptor::default();
-            // SAFETY:
-            // * `avb_hash_descriptor_validate_and_byteswap()` checks the validity of the fields
-            // * even if `raw_header` is corrupted somehow, this will only give bogus header values
-            //   as output which will be caught below; it will never try to access memory outside
-            //   of the header.
-            if !unsafe { avb_hash_descriptor_validate_and_byteswap(raw_header, &mut header) } {
-                return Err(DescriptorError::InvalidHeader);
-            }
-            header
-        };
-
-        // Descriptor body contains: name + salt + digest.
-        let (partition_name, remainder) = split_slice(remainder, header.partition_name_len)?;
-        let (salt, remainder) = split_slice(remainder, header.salt_len)?;
-        let (digest, _) = split_slice(remainder, header.digest_len)?;
-
-        // Extract the hash algorithm from the original contents since the temporary `header`
-        // doesn't live past this function.
+        // Extract the hash algorithm from the original raw header since the temporary
+        // byte-swapped header doesn't live past this function.
         // The hash algorithm is a nul-terminated UTF-8 string which is identical in the raw
         // and byteswapped headers.
-        let hash_algorithm = CStr::from_bytes_until_nul(&raw_header.hash_algorithm)
+        let hash_algorithm = CStr::from_bytes_until_nul(&descriptor.raw_header.hash_algorithm)
             .map_err(|_| DescriptorError::InvalidValue)?
             .to_str()
             .map_err(|_| DescriptorError::InvalidUtf8)?;
 
         Ok(Self {
-            image_size: header.image_size,
+            image_size: descriptor.header.image_size,
             hash_algorithm,
-            flags: HashDescriptorFlags(header.flags),
+            flags: HashDescriptorFlags(descriptor.header.flags),
             partition_name: from_utf8(partition_name).map_err(|_| DescriptorError::InvalidUtf8)?,
             salt,
             digest,
