@@ -19,6 +19,9 @@
 
 extern crate alloc;
 
+mod hash;
+mod util;
+
 use crate::VbmetaData;
 use alloc::vec::Vec;
 use avb_bindgen::{
@@ -26,16 +29,18 @@ use avb_bindgen::{
 };
 use core::{ffi::c_void, mem::size_of, slice::from_raw_parts};
 
+pub use hash::{HashDescriptor, HashDescriptorFlags};
+
 /// A single descriptor.
 // TODO(b/290110273): add support for full descriptor contents.
 #[derive(Debug)]
-pub enum Descriptor {
+pub enum Descriptor<'a> {
     /// Wraps `AvbPropertyDescriptor`.
     Property,
     /// Wraps `AvbHashtreeDescriptor`.
     Hashtree,
     /// Wraps `AvbHashDescriptor`.
-    Hash,
+    Hash(HashDescriptor<'a>),
     /// Wraps `AvbKernelCmdlineDescriptor`.
     KernelCommandline,
     /// Wraps `AvbChainPartitionDescriptor`.
@@ -63,13 +68,23 @@ pub struct DescriptorIterator<'a> {
 
 impl<'a> DescriptorIterator<'a> {
     /// Creates a new iterator over the descriptors in the given vbmeta image, or `None` on error.
-    pub(crate) fn new(vbmeta: &'a VbmetaData) -> Option<Self> {
+    ///
+    /// # Safety
+    /// `vbmeta` must have been validated by `slot_verify()`.
+    pub(crate) unsafe fn new(vbmeta: &'a VbmetaData) -> Option<Self> {
         let mut descriptor_ptrs = Vec::<*const AvbDescriptor>::default();
 
+        // Use `avb_descriptor_foreach()` to grab all the descriptor pointers in `vmbeta.data()`.
+        // We will process these into full `Descriptor` objects during iteration so that we only
+        // have to allocate a single pointer per descriptor here.
+        //
         // SAFETY:
-        // * `vbmeta` wraps a valid vbmeta image which will not be modified while we exist
-        // * the user data is a valid `Vec<*const AvbDescriptor>` with no other concurrent access
-        //   as required by `fill_descriptor_ptrs_vec()`
+        // * the caller ensures that `vbmeta` has been validated by `slot_verify()`, which satisfies
+        //   the libavb `avb_vbmeta_image_verify()` requirement.
+        // * we retain a borrow of `vbmeta` below so it cannot be modified while we exist, which
+        //   ensures the resulting pointers will remain valid for at least `'a`.
+        // * the `user_data` param is a valid `Vec<*const AvbDescriptor>` with no other concurrent
+        //   access as required by `fill_descriptor_ptrs_vec()`
         unsafe {
             avb_descriptor_foreach(
                 vbmeta.data().as_ptr(),
@@ -95,9 +110,9 @@ impl<'a> DescriptorIterator<'a> {
     /// The fully-typed `Descriptor`, or `None` if parsing the descriptor failed.
     ///
     /// # Safety
-    /// `raw_descriptor` must point to a valid `AvbDescriptor` immediately followed by the number
-    /// of data bytes indicated by `num_bytes_following`.
-    unsafe fn extract_descriptor(raw_descriptor: *const AvbDescriptor) -> Option<Descriptor> {
+    /// `raw_descriptor` must point to a valid `AvbDescriptor`, including the `num_bytes_following`
+    /// data contents, that lives at least as long as `'a`.
+    unsafe fn extract_descriptor(raw_descriptor: *const AvbDescriptor) -> Option<Descriptor<'a>> {
         // Transform header to host-endian.
         let mut descriptor = AvbDescriptor {
             tag: 0,
@@ -110,7 +125,7 @@ impl<'a> DescriptorIterator<'a> {
 
         // Extract the descriptor header and contents bytes.
         // SAFETY: `raw_descriptor` points to the header plus `num_bytes_following` bytes.
-        let _contents = unsafe {
+        let contents = unsafe {
             from_raw_parts(
                 raw_descriptor as *const u8,
                 size_of::<AvbDescriptor>()
@@ -121,7 +136,9 @@ impl<'a> DescriptorIterator<'a> {
         match descriptor.tag.try_into().ok()? {
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_PROPERTY => Some(Descriptor::Property),
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASHTREE => Some(Descriptor::Hashtree),
-            AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH => Some(Descriptor::Hash),
+            AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH => {
+                Some(Descriptor::Hash(HashDescriptor::new(contents)?))
+            }
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE => {
                 Some(Descriptor::KernelCommandline)
             }
@@ -145,15 +162,18 @@ impl<'a> DescriptorIterator<'a> {
 }
 
 impl<'a> Iterator for DescriptorIterator<'a> {
-    type Item = Descriptor;
+    type Item = Descriptor<'a>;
 
     fn next(&mut self) -> Option<Self::Item> {
         // Grab the next raw descriptor pointer and advance the index for next time.
         let raw_descriptor = *self.descriptor_ptrs.get(self.index)?;
         self.index += 1;
 
-        // SAFETY: `raw_descriptor` points to a valid `AvbDescriptor` within the verified vbmeta
-        // image.
+        // SAFETY:
+        // * `raw_descriptor` was validated when we saved it in `new()`, so we know it points to a
+        //   valid `AvbDescriptor` within the verified vbmeta image.
+        // * `raw_descriptor` always points inside `self._vbmeta.data()` which we are borrowing,
+        //   so the pointed contents will not change for at least `'a`.
         match unsafe { Self::extract_descriptor(raw_descriptor) } {
             // If we failed to parse this descriptor, return `Unknown` rather than `None` so that
             // the caller can keep iterating. libavb has already verified that the descriptors are

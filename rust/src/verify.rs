@@ -96,7 +96,9 @@ impl VbmetaData {
     /// Returns an iterator that can be used to access the contained descriptors, or
     /// `Err(SlotVerifyError::Internal)` on failure
     pub fn descriptor_iter(&self) -> SlotVerifyNoDataResult<DescriptorIterator> {
-        DescriptorIterator::new(self).ok_or(SlotVerifyError::Internal)
+        // SAFETY: the only way to get a `VbmetaData` object is via the return value of
+        // `slot_verify()`, so we know we have been properly validated.
+        unsafe { DescriptorIterator::new(self) }.ok_or(SlotVerifyError::Internal)
     }
 }
 
