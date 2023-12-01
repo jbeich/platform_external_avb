@@ -30,14 +30,19 @@ rust_defaults {
     ],
     source_stem: "bindings",
     bindgen_flags: [
-        "--constified-enum-module AvbDescriptorTag",
+        "--constified-enum-module=AvbDescriptorTag",
+        "--bitfield-enum=AvbHashDescriptorFlags",
         "--bitfield-enum=AvbSlotVerifyFlags",
         "--default-enum-style rust",
+        "--with-derive-default",
+        "--with-derive-custom=Avb.*Descriptor=FromZeroes,FromBytes",
         "--allowlist-type=AvbDescriptorTag",
+        "--allowlist-type=AvbHashDescriptorFlags",
         "--allowlist-function=.*",
         "--allowlist-var=AVB.*",
         "--use-core",
         "--raw-line=#![no_std]",
+        "--raw-line=use zerocopy::{FromZeroes, FromBytes};",
         "--ctypes-prefix=core::ffi",
     ],
     cflags: ["-DBORINGSSL_NO_CXX"],
@@ -53,6 +58,9 @@ rust_bindgen {
     shared_libs: [
         "libcrypto",
     ],
+    rustlibs: [
+        "libzerocopy",
+    ],
     apex_available: [
         "com.android.virt",
     ],
@@ -65,6 +73,9 @@ rust_bindgen {
         "libavb_baremetal",
         "libcrypto_baremetal",
     ],
+    rustlibs: [
+        "libzerocopy_nostd_noalloc",
+    ],
 }
 
 rust_test {
@@ -76,6 +87,9 @@ rust_test {
     auto_gen_config: true,
     clippy_lints: "none",
     lints: "none",
+    rustlibs: [
+        "libzerocopy",
+    ],
 }
 
 // Rust library wrapping libavb C implementation.
@@ -99,6 +113,7 @@ rust_defaults {
     no_stdlibs: true,
     rustlibs: [
         "libavb_bindgen_nostd",
+        "libzerocopy_nostd_noalloc",
     ],
     whole_static_libs: [
         "libavb_baremetal",
@@ -115,6 +130,15 @@ rust_defaults {
     host_supported: true,
     rustlibs: [
         "libavb_bindgen",
+    ],
+    rlibs: [
+        // libzerocopy must explicitly be an rlib here; marking it as a rustlib
+        // instead causes the build to try to directly link the dylib via
+        // "--extern .../libzerocopy/${arch}_dylib", but indirectly link the
+        // rlib via "-L .../libzerocopy/${arch}_rlib_dylib-std", which causes a
+        // compiler error: "found crates (`zerocopy` and `zerocopy`) with
+        // colliding StableCrateId values.".
+        "libzerocopy",
     ],
     whole_static_libs: [
         "libavb",
@@ -203,6 +227,7 @@ rust_defaults {
         ":avbrs_test_vbmeta_2_parts",
         ":avbrs_test_vbmeta_persistent_digest",
     ],
+    rustlibs: ["libhex"],
     test_suites: ["general-tests"],
     clippy_lints: "android",
     lints: "android",
@@ -240,7 +265,7 @@ avb_gen_vbmeta_image {
     name: "avbrs_test_image_descriptor",
     src: ":avbrs_test_image",
     partition_name: "test_part",
-    salt: "0000",
+    salt: "1000",
 }
 
 // Unsigned vbmeta blob containing the test image descriptor for partition name "test_part_2".
@@ -248,7 +273,7 @@ avb_gen_vbmeta_image {
     name: "avbrs_test_image_descriptor_2",
     src: ":avbrs_test_image",
     partition_name: "test_part_2",
-    salt: "0001",
+    salt: "1001",
 }
 
 // Unsigned vbmeta blob containing a persistent digest descriptor for partition name
