@@ -31,6 +31,7 @@ mod error;
 mod ops;
 mod verify;
 
+pub use descriptor::{Descriptor, HashDescriptor, HashDescriptorFlags};
 pub use error::{
     IoError, IoResult, SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult,
     VbmetaVerifyError, VbmetaVerifyResult,
