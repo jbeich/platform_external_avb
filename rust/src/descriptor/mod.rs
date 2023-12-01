@@ -19,12 +19,17 @@
 
 extern crate alloc;
 
+mod hash;
+mod util;
+
 use crate::VbmetaData;
 use alloc::vec::Vec;
 use avb_bindgen::{
     avb_descriptor_foreach, avb_descriptor_validate_and_byteswap, AvbDescriptor, AvbDescriptorTag,
 };
 use core::{ffi::c_void, mem::size_of, slice::from_raw_parts};
+
+pub use hash::{HashDescriptor, HashDescriptorFlags};
 
 /// A single descriptor.
 // TODO(b/290110273): add support for full descriptor contents.
@@ -35,7 +40,7 @@ pub enum Descriptor<'a> {
     /// Wraps `AvbHashtreeDescriptor`.
     Hashtree(&'a [u8]),
     /// Wraps `AvbHashDescriptor`.
-    Hash(&'a [u8]),
+    Hash(HashDescriptor<'a>),
     /// Wraps `AvbKernelCmdlineDescriptor`.
     KernelCommandline(&'a [u8]),
     /// Wraps `AvbChainPartitionDescriptor`.
@@ -81,7 +86,9 @@ impl<'a> Descriptor<'a> {
         match descriptor.tag.try_into().ok()? {
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_PROPERTY => Some(Descriptor::Property(contents)),
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASHTREE => Some(Descriptor::Hashtree(contents)),
-            AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH => Some(Descriptor::Hash(contents)),
+            AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH => {
+                Some(Descriptor::Hash(HashDescriptor::new(contents)?))
+            }
             AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE => {
                 Some(Descriptor::KernelCommandline(contents))
             }
