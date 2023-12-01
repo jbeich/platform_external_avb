@@ -17,17 +17,30 @@
 //! Descriptors are information encoded into vbmeta images which can be
 //! extracted from the resulting data after performing verification.
 
+mod hash;
+mod util;
+
 use crate::VbmetaData;
-use avb_bindgen::{avb_descriptor_foreach, avb_descriptor_validate_and_byteswap, AvbDescriptor};
+use avb_bindgen::{
+    avb_descriptor_foreach, avb_descriptor_validate_and_byteswap, AvbDescriptor, AvbDescriptorTag,
+};
 use core::{ffi::c_void, mem::size_of, slice::from_raw_parts};
 
+pub use hash::{HashDescriptor, HashDescriptorFlags};
+
 /// A single descriptor.
-pub enum Descriptor {
-    // TODO: include the descriptor contents.
+// TODO: include the remaining descriptor types.
+#[derive(Debug)]
+pub enum Descriptor<'a> {
+    /// Wraps `AvbPropertyDescriptor`.
     Property,
+    /// Wraps `AvbHashtreeDescriptor`.
     Hashtree,
-    Hash,
+    /// Wraps `AvbHashDescriptor`.
+    Hash(HashDescriptor<'a>),
+    /// Wraps `AvbKernelCmdlineDescriptor`.
     KernelCommandline,
+    /// Wraps `AvbChainPartitionDescriptor`.
     ChainPartition,
 }
 
@@ -45,7 +58,7 @@ impl<'a> DescriptorIterator<'a> {
 }
 
 impl<'a> Iterator for DescriptorIterator<'a> {
-    type Item = Descriptor;
+    type Item = Descriptor<'a>;
 
     // libavb has two ways to iterate over descriptors:
     // 1. `avb_descriptor_foreach()`: executes a callback on each descriptor.
@@ -79,12 +92,23 @@ impl<'a> Iterator for DescriptorIterator<'a> {
             )
         };
 
-        if state.contents.is_some() {
+        if let Some(contents) = state.contents {
             // Advance the index for next time.
             self.index += 1;
 
-            // TODO: parse the proper descriptor type.
-            Some(Descriptor::Hash)
+            match state.descriptor.tag.try_into().ok()? {
+                AvbDescriptorTag::AVB_DESCRIPTOR_TAG_PROPERTY => None,
+                AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASHTREE => None,
+                AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH => {
+                    Some(Descriptor::Hash(
+                        // SAFETY: `contents` points to a valid `AvbHashDescriptor`.
+                        unsafe { HashDescriptor::new(contents) }?,
+                    ))
+                }
+                AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE => None,
+                AvbDescriptorTag::AVB_DESCRIPTOR_TAG_CHAIN_PARTITION => None,
+                _ => None,
+            }
         } else {
             None
         }
