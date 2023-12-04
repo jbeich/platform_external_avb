@@ -22,7 +22,7 @@ use crate::{
         slot_verify_enum_to_result, vbmeta_verify_enum_to_result, SlotVerifyError,
         SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
     },
-    ops, IoError, Ops,
+    ops, Ops,
 };
 use avb_bindgen::{
     avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
@@ -30,8 +30,7 @@ use avb_bindgen::{
 use core::{
     ffi::{c_char, CStr},
     fmt,
-    marker::PhantomData,
-    ptr::{null, null_mut, NonNull},
+    ptr::{self, null, null_mut, NonNull},
     slice,
 };
 
@@ -102,7 +101,7 @@ impl fmt::Display for VbmetaData {
 
 /// Forwards to `Display` formatting; the default `Debug` formatting implementation isn't very
 /// useful as it's mostly raw pointer addresses.
-impl<'a> fmt::Debug for VbmetaData {
+impl fmt::Debug for VbmetaData {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
@@ -176,7 +175,7 @@ impl fmt::Display for PartitionData {
 
 /// Forwards to `Display` formatting; the default `Debug` formatting implementation isn't very
 /// useful as it's mostly raw pointer addresses.
-impl<'a> fmt::Debug for PartitionData {
+impl fmt::Debug for PartitionData {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
@@ -185,15 +184,24 @@ impl<'a> fmt::Debug for PartitionData {
 /// Wraps a raw C `AvbSlotVerifyData` struct.
 ///
 /// This provides a Rust safe view over the raw data; no copies are made.
-#[derive(PartialEq, Eq)]
 pub struct SlotVerifyData<'a> {
     /// Internally owns the underlying data and deletes it on drop.
     raw_data: NonNull<AvbSlotVerifyData>,
 
-    /// This provides the necessary lifetime information so the compiler can make sure that
-    /// the `Ops` stays alive at least as long as we do.
-    _ops: PhantomData<&'a dyn Ops>,
+    /// This provides the necessary lifetime borrow so the compiler can make sure that the `Ops`
+    /// stays alive at least as long as we do, since it owns any preloaded partition data.
+    _ops: &'a dyn Ops,
 }
+
+// Useful so that `SlotVerifyError`, which may hold a `SlotVerifyData`, can derive `PartialEq`.
+impl<'a> PartialEq for SlotVerifyData<'a> {
+    fn eq(&self, other: &Self) -> bool {
+        // A `SlotVerifyData` uniquely owns the underlying data so is only equal to itself.
+        ptr::eq(self, other)
+    }
+}
+
+impl<'a> Eq for SlotVerifyData<'a> {}
 
 impl<'a> SlotVerifyData<'a> {
     /// Creates a `SlotVerifyData` wrapping the given raw `AvbSlotVerifyData`.
@@ -218,7 +226,7 @@ impl<'a> SlotVerifyData<'a> {
     ) -> SlotVerifyNoDataResult<Self> {
         let ret = Self {
             raw_data: NonNull::new(data).ok_or(SlotVerifyError::Internal)?,
-            _ops: PhantomData,
+            _ops: ops,
         };
 
         // Validate all the contained data here so accessors will never fail.
