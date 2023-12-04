@@ -236,6 +236,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb3e1b86_bf8e6106",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 755,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-04T15:49:09Z",
+      "side": 1,
+      "message": "Oh I see. That will make uuid mandatory even when the feature is not enabled.",
+      "parentUuid": "2f2ac5fa_96bbd7db",
+      "range": {
+        "startLine": 755,
+        "startChar": 0,
+        "endLine": 755,
+        "endChar": 85
+      },
+      "revId": "586a1b893bbbb67c6e705b71556c8e1ddb79261d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "061d113c_afbc2e2c",
