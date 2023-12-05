@@ -1,0 +1,96 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e0ce6620_bb27d5de",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-05T13:51:10Z",
+      "side": 1,
+      "message": "It\u0027s usually recommended to have `TODO(b/..)`",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 11
+      },
+      "revId": "417830c1707e1ca9ea5acffba7ce47ea4506c6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1eb35fb0_bbfdc60b",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-05T13:51:10Z",
+      "side": 1,
+      "message": "I agree that we should take this function, but with the current implementation appears to be quite inefficient tbh. As it stands, to scan N descriptors, we would need to execute `try_find_descriptor` N^2/2 times, this level of complexity is difficult to accept.\n\nThis is the main issue for this cl. I think we first need to change this.",
+      "range": {
+        "startLine": 74,
+        "startChar": 12,
+        "endLine": 74,
+        "endChar": 34
+      },
+      "revId": "417830c1707e1ca9ea5acffba7ce47ea4506c6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9b93ef20_94558aee",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-05T13:51:10Z",
+      "side": 1,
+      "message": "It\u0027s more straightforward if `try_find_descriptor` just returns true of false in this case.",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 115,
+        "endChar": 83
+      },
+      "revId": "417830c1707e1ca9ea5acffba7ce47ea4506c6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ae4beb9a_667f19d7",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-05T13:51:10Z",
+      "side": 1,
+      "message": "Can this work with option?",
+      "range": {
+        "startLine": 143,
+        "startChar": 75,
+        "endLine": 143,
+        "endChar": 77
+      },
+      "revId": "417830c1707e1ca9ea5acffba7ce47ea4506c6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
