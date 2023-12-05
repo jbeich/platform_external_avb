@@ -310,7 +310,7 @@ impl Ops for TestOps {
             .ok_or(IoError::Io)?;
 
         if let Some(for_partition) = key.for_partition {
-            if (for_partition == partition.to_str()?) {
+            if for_partition == partition.to_str()? {
                 // The key is registered for this partition; return its info.
                 return Ok(key.info);
             }
