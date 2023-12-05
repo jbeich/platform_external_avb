@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f6d7a733_3dfd76f6",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 26,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-05T22:07:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e0ce6620_bb27d5de",
+      "range": {
+        "startLine": 26,
+        "startChar": 7,
+        "endLine": 26,
+        "endChar": 11
+      },
+      "revId": "417830c1707e1ca9ea5acffba7ce47ea4506c6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "1eb35fb0_bbfdc60b",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-12-05T13:51:10Z",
       "side": 1,
       "message": "I agree that we should take this function, but with the current implementation appears to be quite inefficient tbh. As it stands, to scan N descriptors, we would need to execute `try_find_descriptor` N^2/2 times, this level of complexity is difficult to accept.\n\nThis is the main issue for this cl. I think we first need to change this.",
+      "range": {
+        "startLine": 74,
+        "startChar": 12,
+        "endLine": 74,
+        "endChar": 34
+      },
+      "revId": "417830c1707e1ca9ea5acffba7ce47ea4506c6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bda7425b_caa294c9",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 74,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-05T22:07:25Z",
+      "side": 1,
+      "message": "Ack as discussed offline, I will allocate a small amount of memory to simplify code and allow O(N) traversal.",
+      "parentUuid": "1eb35fb0_bbfdc60b",
       "range": {
         "startLine": 74,
         "startChar": 12,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8502720_4dcada01",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-05T22:07:25Z",
+      "side": 1,
+      "message": "Code has been deleted.",
+      "parentUuid": "9b93ef20_94558aee",
+      "range": {
+        "startLine": 114,
+        "startChar": 8,
+        "endLine": 115,
+        "endChar": 83
+      },
+      "revId": "417830c1707e1ca9ea5acffba7ce47ea4506c6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ae4beb9a_667f19d7",
@@ -83,6 +155,30 @@
       "writtenOn": "2023-12-05T13:51:10Z",
       "side": 1,
       "message": "Can this work with option?",
+      "range": {
+        "startLine": 143,
+        "startChar": 75,
+        "endLine": 143,
+        "endChar": 77
+      },
+      "revId": "417830c1707e1ca9ea5acffba7ce47ea4506c6ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "e212dc4d_1225028a",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-05T22:07:25Z",
+      "side": 1,
+      "message": "Code has been deleted.",
+      "parentUuid": "ae4beb9a_667f19d7",
       "range": {
         "startLine": 143,
         "startChar": 75,
