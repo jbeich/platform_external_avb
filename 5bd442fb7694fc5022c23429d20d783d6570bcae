@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d0a6809d_c433d120",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-06T11:11:47Z",
+      "side": 1,
+      "message": "This looks a bit weird, as `NonNull\u003cT\u003e` wraps `*mut T`. Actually instead of manipulating the pointer to pointer here, what about just re-adapt this code [1]?\nand we can still stay with `avb_descriptor_foreach`.\n\nWe also don\u0027t need drop on `Descriptors` with the structure in [1]. wdyt?\n\n\n[1] https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/Virtualization/libs/vbmeta/src/descriptor.rs;drc\u003db2de8c36b18cfa0231dbd823bb4749774c93159a",
+      "range": {
+        "startLine": 58,
+        "startChar": 21,
+        "endLine": 58,
+        "endChar": 50
+      },
+      "revId": "5bd442fb7694fc5022c23429d20d783d6570bcae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
