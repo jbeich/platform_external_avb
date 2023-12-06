@@ -22,6 +22,30 @@
       },
       "revId": "5bd442fb7694fc5022c23429d20d783d6570bcae",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2f34e4a_ddbf2641",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 58,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-06T18:15:56Z",
+      "side": 1,
+      "message": "Sg, I was on the fence whether to re-implement or use the existing libavb code, but building our own vector definitely has some advantages I\u0027ll go ahead and switch over.",
+      "parentUuid": "d0a6809d_c433d120",
+      "range": {
+        "startLine": 58,
+        "startChar": 21,
+        "endLine": 58,
+        "endChar": 50
+      },
+      "revId": "5bd442fb7694fc5022c23429d20d783d6570bcae",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
