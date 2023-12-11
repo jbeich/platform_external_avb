@@ -16,6 +16,40 @@
       "message": "Hi Andrew, would you mind taking a look at the unsafe code here when you have a moment? Thanks!",
       "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccef2e66_4881795d",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 113,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-12-11T16:24:27Z",
+      "side": 1,
+      "message": "Why get this if you\u0027re just going to ignore it?",
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fb79cdc8_baf2ce28",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-12-11T16:24:27Z",
+      "side": 1,
+      "message": "Shouldn\u0027t this be offset by the size of `AvbDescriptor`, if you\u0027re trying to get bytes after the header?",
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
