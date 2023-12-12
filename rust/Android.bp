@@ -32,12 +32,14 @@ rust_defaults {
     bindgen_flags: [
         "--constified-enum-module=AvbDescriptorTag",
         "--bitfield-enum=AvbHashDescriptorFlags",
+        "--bitfield-enum=AvbHashtreeDescriptorFlags",
         "--bitfield-enum=AvbSlotVerifyFlags",
         "--default-enum-style rust",
         "--with-derive-default",
         "--with-derive-custom=Avb.*Descriptor=FromZeroes,FromBytes",
         "--allowlist-type=AvbDescriptorTag",
         "--allowlist-type=AvbHashDescriptorFlags",
+        "--allowlist-type=AvbHashtreeDescriptorFlags",
         "--allowlist-function=.*",
         "--allowlist-var=AVB.*",
         "--use-core",
@@ -265,6 +267,7 @@ rust_defaults {
         ":avbrs_test_vbmeta_2_parts",
         ":avbrs_test_vbmeta_persistent_digest",
         ":avbrs_test_vbmeta_with_property",
+        ":avbrs_test_vbmeta_with_hashtree",
     ],
     rustlibs: ["libhex"],
     test_suites: ["general-tests"],
@@ -328,6 +331,18 @@ genrule {
     cmd: "$(location avbtool) add_hash_footer --image $(location :avbrs_test_image) --partition_name test_part_persistent_digest --dynamic_partition_size --do_not_append_vbmeta_image --use_persistent_digest --output_vbmeta_image $(out)",
 }
 
+// Unsigned vbmeta blob containing a hastree descriptor for partition name
+// "test_part_hashtree".
+genrule {
+    name: "avbrs_test_image_descriptor_hashtree",
+    tools: ["avbtool"],
+    srcs: [":avbrs_test_image"],
+    out: ["avbrs_test_image_descriptor_hashtree.img"],
+    // Generating FEC values requires the `fec` tool to be on $PATH, which does
+    // not seems to be possible here. For now pass `--do_not_generate_fec`.
+    cmd: "$(location avbtool) add_hashtree_footer --image $(location :avbrs_test_image) --partition_name test_part_hashtree --partition_size 0 --salt B000 --do_not_append_vbmeta_image --output_vbmeta_image $(out) --do_not_generate_fec",
+}
+
 // Standalone vbmeta image signing the test image descriptor.
 genrule {
     name: "avbrs_test_vbmeta",
@@ -375,6 +390,18 @@ genrule {
     ],
     out: ["test_vbmeta_with_property.img"],
     cmd: "$(location avbtool) make_vbmeta_image --prop test_prop_key:test_prop_value --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor) --output $(out)",
+}
+
+// Standalone vbmeta image with the test image hashtree descriptor.
+genrule {
+    name: "avbrs_test_vbmeta_with_hashtree",
+    tools: ["avbtool"],
+    srcs: [
+        ":avbrs_test_image_descriptor_hashtree",
+        ":avb_testkey_rsa4096",
+    ],
+    out: ["test_vbmeta_with_hashtree.img"],
+    cmd: "$(location avbtool) make_vbmeta_image --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor_hashtree) --output $(out)",
 }
 
 // Combined test image + signed vbmeta footer for "test_part".
