@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "928a5ffc_5b40c43d",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-12-12T10:49:05Z",
+      "side": 1,
+      "message": "What happens if it doesn\u0027t? Can you make this panic, rather than having undefined behaviour?",
+      "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "08bc8b52_5fb23463",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-12-12T10:49:05Z",
+      "side": 1,
+      "message": "And `raw_descriptor` must live at least as long as `\u0027a`.",
+      "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c7d30b9b_3a3bf72a",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-12-12T10:49:05Z",
+      "side": 1,
+      "message": "How do you know it is a valid `AvbHashDescriptor`? The descriptor could be corrupted in some way, couldn\u0027t it?",
+      "range": {
+        "startLine": 130,
+        "startChar": 57,
+        "endLine": 130,
+        "endChar": 74
+      },
+      "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
