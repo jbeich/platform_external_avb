@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "10635be9_dee3e258",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-14T18:19:56Z",
+      "side": 1,
+      "message": "Thank you for taking a look at this one as well! It made me think a lot more deeply about the safety issues here :)",
+      "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "928a5ffc_5b40c43d",
@@ -14,6 +31,24 @@
       "writtenOn": "2023-12-12T10:49:05Z",
       "side": 1,
       "message": "What happens if it doesn\u0027t? Can you make this panic, rather than having undefined behaviour?",
+      "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6936d042_ef97f41a",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-14T18:19:56Z",
+      "side": 1,
+      "message": "Hmm good question, thinking about it more we might actually be able to make this function safe.\n\nThe unsafe part is casting `contents` into an `AvbHashDescriptor` to pass to libavb, but if we verify that `contents` is at least as big as `AvbHashDescriptor` and properly-aligned then I think it will always be safe? And the libavb `validate_and_byteswap` function itself then does all the other required safety checking for magic values, lengths don\u0027t exceed the given buffer, etc. So I think we can ensure this always has well-defined behavior no matter what data gets passed in, as it\u0027s impossible to make this function access any data outside the bounds of the given `contents`.\n\nI\u0027ve given this a shot and added some tests, but LMK if you think it makes things too complicated or isn\u0027t correct.",
+      "parentUuid": "928a5ffc_5b40c43d",
       "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -35,6 +70,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5da961f5_52c37dff",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-14T18:19:56Z",
+      "side": 1,
+      "message": "Good point I was making the assumption that `raw_descriptor` pointed to data in our held `_vbmeta` but that should be explicit. Done.",
+      "parentUuid": "08bc8b52_5fb23463",
+      "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c7d30b9b_3a3bf72a",
@@ -48,6 +101,30 @@
       "writtenOn": "2023-12-12T10:49:05Z",
       "side": 1,
       "message": "How do you know it is a valid `AvbHashDescriptor`? The descriptor could be corrupted in some way, couldn\u0027t it?",
+      "range": {
+        "startLine": 130,
+        "startChar": 57,
+        "endLine": 130,
+        "endChar": 74
+      },
+      "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "db5c2bc8_ee3c08cf",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 130,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-14T18:19:56Z",
+      "side": 1,
+      "message": "Good question, my main thinking behind this (which I should have documented here) is that the current API doesn\u0027t allow callers to create descriptors themselves, but only allows fetching them from vbmeta blobs post-validation, so we know that libavb has already verified this data and there\u0027s no (safe) way for users to actually modify the raw bytes AFAIK.\n\nI\u0027ve pushed the `unsafe` requirement that the vbmeta contents are already verified into `new()` to make this clear and ensure that we know we can trust the data given here.",
+      "parentUuid": "c7d30b9b_3a3bf72a",
       "range": {
         "startLine": 130,
         "startChar": 57,
