@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "052c080b_1fd63919",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-15T17:48:33Z",
+      "side": 1,
+      "message": "Ah right that was leftover from some earlier experiments, constant makes more sense now, done.",
+      "parentUuid": "b72f1f05_fe714eab",
+      "revId": "f2de3fc586948f3a7940ac4eacfee394813e3e8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "24e208f9_5408d2b7",
@@ -31,6 +49,24 @@
       "writtenOn": "2023-12-15T12:10:22Z",
       "side": 1,
       "message": "Nit: I\u0027d be inclined to put this in hex so the bytes line up nicely, e.g. `0x00, 0x00, ...`.",
+      "revId": "f2de3fc586948f3a7940ac4eacfee394813e3e8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4bfdf1d4_29d33878",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-15T17:48:33Z",
+      "side": 1,
+      "message": "That\u0027s much cleaner thanks",
+      "parentUuid": "24e208f9_5408d2b7",
       "revId": "f2de3fc586948f3a7940ac4eacfee394813e3e8f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
