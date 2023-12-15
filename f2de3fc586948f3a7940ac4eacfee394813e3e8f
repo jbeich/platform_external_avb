@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b72f1f05_fe714eab",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-12-15T12:10:22Z",
+      "side": 1,
+      "message": "Why is this a struct rather than just a constant?",
+      "revId": "f2de3fc586948f3a7940ac4eacfee394813e3e8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "24e208f9_5408d2b7",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 137,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-12-15T12:10:22Z",
+      "side": 1,
+      "message": "Nit: I\u0027d be inclined to put this in hex so the bytes line up nicely, e.g. `0x00, 0x00, ...`.",
+      "revId": "f2de3fc586948f3a7940ac4eacfee394813e3e8f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

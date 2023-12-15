@@ -53,6 +53,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8a6792d7_cb3db537",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 54,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2023-12-15T12:10:22Z",
+      "side": 1,
+      "message": "That looks good to me, thanks for improving this.",
+      "parentUuid": "6936d042_ef97f41a",
+      "revId": "f81a875a0acb7abb587fb890045240cce36b6d86",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08bc8b52_5fb23463",
