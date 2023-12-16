@@ -14,13 +14,10 @@
 
 //! Provides `avb::Ops` test fixtures.
 
-use avb::{IoError, Ops, PublicKeyForPartitionInfo};
+use avb::{IoError, IoResult, Ops, PublicKeyForPartitionInfo};
 use std::{cmp::min, collections::HashMap, ffi::CStr};
 #[cfg(feature = "uuid")]
 use uuid::Uuid;
-
-/// Common `Result` type for `IoError` errors.
-type Result<T> = core::result::Result<T, IoError>;
 
 /// Represents a single fake partition.
 #[derive(Default)]
@@ -64,12 +61,12 @@ pub struct TestOps {
     pub rollbacks: HashMap<usize, u64>,
 
     /// Unlock state. Set an error to simulate IoError during access.
-    pub unlock_state: Result<bool>,
+    pub unlock_state: IoResult<bool>,
 
     /// Persistent named values. Set an error to simulate `IoError` during access. Writing
     /// a non-existent persistent value will create it; to simulate `NoSuchValue` instead,
     /// create an entry with `Err(IoError::NoSuchValue)` as the value.
-    pub persistent_values: HashMap<String, Result<Vec<u8>>>,
+    pub persistent_values: HashMap<String, IoResult<Vec<u8>>>,
 }
 
 impl TestOps {
@@ -105,7 +102,7 @@ impl TestOps {
     /// test_ops.add_persistent_value("foo", Ok(b"contents"));
     /// test_ops.add_persistent_value("bar", Err(IoError::NoSuchValue));
     /// ```
-    pub fn add_persistent_value(&mut self, name: &str, contents: Result<&[u8]>) {
+    pub fn add_persistent_value(&mut self, name: &str, contents: IoResult<&[u8]>) {
         self.persistent_values
             .insert(name.into(), contents.map(|b| b.into()));
     }
@@ -166,7 +163,7 @@ impl Ops for TestOps {
         partition: &CStr,
         offset: i64,
         buffer: &mut [u8],
-    ) -> Result<usize> {
+    ) -> IoResult<usize> {
         let partition = self
             .partitions
             .get(partition.to_str()?)
@@ -205,7 +202,7 @@ impl Ops for TestOps {
         Ok(bytes_read)
     }
 
-    fn get_preloaded_partition(&mut self, partition: &CStr) -> Result<&[u8]> {
+    fn get_preloaded_partition(&mut self, partition: &CStr) -> IoResult<&[u8]> {
         match self.partitions.get(partition.to_str()?) {
             Some(FakePartition {
                 contents,
@@ -220,7 +217,7 @@ impl Ops for TestOps {
         &mut self,
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
-    ) -> Result<bool> {
+    ) -> IoResult<bool> {
         self.vbmeta_keys
             // The compiler can't match (&[u8], Option<&[u8]>) to keys of type
             // (Vec<u8>, Option<Vec<u8>>) so we turn the &[u8] into vectors here. This is a bit
@@ -230,35 +227,35 @@ impl Ops for TestOps {
             .map(|k| k.info.trusted)
     }
 
-    fn read_rollback_index(&mut self, location: usize) -> Result<u64> {
+    fn read_rollback_index(&mut self, location: usize) -> IoResult<u64> {
         self.rollbacks.get(&location).ok_or(IoError::Io).copied()
     }
 
-    fn write_rollback_index(&mut self, location: usize, index: u64) -> Result<()> {
+    fn write_rollback_index(&mut self, location: usize, index: u64) -> IoResult<()> {
         *(self.rollbacks.get_mut(&location).ok_or(IoError::Io)?) = index;
         Ok(())
     }
 
-    fn read_is_device_unlocked(&mut self) -> Result<bool> {
+    fn read_is_device_unlocked(&mut self) -> IoResult<bool> {
         self.unlock_state.clone()
     }
 
     #[cfg(feature = "uuid")]
-    fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> Result<Uuid> {
+    fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> IoResult<Uuid> {
         self.partitions
             .get(partition.to_str()?)
             .map(|p| p.uuid)
             .ok_or(IoError::NoSuchPartition)
     }
 
-    fn get_size_of_partition(&mut self, partition: &CStr) -> Result<u64> {
+    fn get_size_of_partition(&mut self, partition: &CStr) -> IoResult<u64> {
         self.partitions
             .get(partition.to_str()?)
             .map(|p| u64::try_from(p.contents.len()).unwrap())
             .ok_or(IoError::NoSuchPartition)
     }
 
-    fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> Result<usize> {
+    fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> IoResult<usize> {
         match self
             .persistent_values
             .get(name.to_str()?)
@@ -276,7 +273,7 @@ impl Ops for TestOps {
         }
     }
 
-    fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> Result<()> {
+    fn write_persistent_value(&mut self, name: &CStr, value: &[u8]) -> IoResult<()> {
         let name = name.to_str()?;
 
         // If the test requested a simulated error on this value, return it.
@@ -289,7 +286,7 @@ impl Ops for TestOps {
         Ok(())
     }
 
-    fn erase_persistent_value(&mut self, name: &CStr) -> Result<()> {
+    fn erase_persistent_value(&mut self, name: &CStr) -> IoResult<()> {
         let name = name.to_str()?;
 
         // If the test requested a simulated error on this value, return it.
@@ -306,14 +303,14 @@ impl Ops for TestOps {
         partition: &CStr,
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
-    ) -> Result<PublicKeyForPartitionInfo> {
+    ) -> IoResult<PublicKeyForPartitionInfo> {
         let key = self
             .vbmeta_keys
             .get(&(public_key.to_vec(), public_key_metadata.map(|m| m.to_vec())))
             .ok_or(IoError::Io)?;
 
         if let Some(for_partition) = key.for_partition {
-            if (for_partition == partition.to_str()?) {
+            if for_partition == partition.to_str()? {
                 // The key is registered for this partition; return its info.
                 return Ok(key.info);
             }

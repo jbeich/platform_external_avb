@@ -28,16 +28,13 @@
 
 mod error;
 mod ops;
+mod verify;
 
-pub use error::{IoError, SlotVerifyError};
+pub use error::{
+    IoError, IoResult, SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult,
+    VbmetaVerifyError, VbmetaVerifyResult,
+};
 pub use ops::{Ops, PublicKeyForPartitionInfo};
-
-/// APIs that will eventually be internal-only to this library, but while this library is split need
-/// to be exposed externally.
-//
-// TODO(b/290110273): remove this module once we've moved the full libavb wrapper here.
-pub mod internal {
-    use super::*;
-
-    pub use error::{result_to_io_enum, slot_verify_enum_to_result};
-}
+pub use verify::{
+    slot_verify, HashtreeErrorMode, PartitionData, SlotVerifyData, SlotVerifyFlags, VbmetaData,
+};

@@ -31,6 +31,7 @@ rust_defaults {
     source_stem: "bindings",
     bindgen_flags: [
         "--constified-enum-module AvbDescriptorTag",
+        "--bitfield-enum=AvbSlotVerifyFlags",
         "--default-enum-style rust",
         "--allowlist-type=AvbDescriptorTag",
         "--allowlist-function=.*",
@@ -84,8 +85,8 @@ rust_defaults {
     name: "libavb_rs_common.defaults",
     crate_name: "avb",
     srcs: ["src/lib.rs"],
-    // Require unsafe blocks for inside unsafe functions.
-    flags: ["-Dunsafe_op_in_unsafe_fn"],
+    clippy_lints: "android",
+    lints: "android",
 }
 
 // No std, no features.
@@ -163,6 +164,13 @@ rust_library {
     defaults: ["libavb_rs.defaults"],
 }
 
+// Unit tests: std, no features.
+rust_test {
+    name: "libavb_rs_unittest",
+    defaults: ["libavb_rs.defaults"],
+    test_suites: ["general-tests"],
+}
+
 // lib: std, UUID feature.
 rust_library {
     name: "libavb_rs_uuid",
@@ -172,25 +180,141 @@ rust_library {
     ],
 }
 
-rust_defaults {
-    name: "libavb_rs_test.defaults",
-    srcs: ["tests/tests.rs"],
+// Unit tests: std, UUID feature.
+rust_test {
+    name: "libavb_rs_uuid_unittest",
+    defaults: [
+        "libavb_rs.defaults",
+        "libavb_rs.uuid.defaults",
+    ],
     test_suites: ["general-tests"],
 }
 
-// device test: no features.
+// Integration test defaults.
+rust_defaults {
+    name: "libavb_rs_test.defaults",
+    srcs: ["tests/tests.rs"],
+    data: [
+        ":avb_testkey_rsa4096_pub_bin",
+        ":avbrs_test_image",
+        ":avbrs_test_image_with_vbmeta_footer",
+        ":avbrs_test_image_with_vbmeta_footer_for_boot",
+        ":avbrs_test_vbmeta",
+        ":avbrs_test_vbmeta_2_parts",
+        ":avbrs_test_vbmeta_persistent_digest",
+    ],
+    test_suites: ["general-tests"],
+    clippy_lints: "android",
+    lints: "android",
+}
+
+// Integration test: no features.
 rust_test {
     name: "libavb_rs_test",
     defaults: ["libavb_rs_test.defaults"],
     rustlibs: ["libavb_rs"],
 }
 
-// device test: UUID feature.
+// Integration test: UUID feature.
 rust_test {
     name: "libavb_rs_uuid_test",
     defaults: [
-        "libavb_rs_test.defaults",
         "libavb_rs.uuid.defaults",
+        "libavb_rs_test.defaults",
     ],
     rustlibs: ["libavb_rs_uuid"],
+}
+
+// Test images for verification.
+
+// Unsigned 16KiB test image.
+genrule {
+    name: "avbrs_test_image",
+    tools: ["avbtool"],
+    out: ["test_image.img"],
+    cmd: "$(location avbtool) generate_test_image --image_size 16384 --output $(out)",
+}
+
+// Unsigned vbmeta blob containing the test image descriptor for partition name "test_part".
+avb_gen_vbmeta_image {
+    name: "avbrs_test_image_descriptor",
+    src: ":avbrs_test_image",
+    partition_name: "test_part",
+    salt: "0000",
+}
+
+// Unsigned vbmeta blob containing the test image descriptor for partition name "test_part_2".
+avb_gen_vbmeta_image {
+    name: "avbrs_test_image_descriptor_2",
+    src: ":avbrs_test_image",
+    partition_name: "test_part_2",
+    salt: "0001",
+}
+
+// Unsigned vbmeta blob containing a persistent digest descriptor for partition name
+// "test_part_persistent_digest".
+//
+// Currently this is the only in-tree usage of persistent digests, but if anyone else needs it
+// later on it may be worth folding support for this into the `avb_gen_vbmeta_image` rule.
+genrule {
+    name: "avbrs_test_image_descriptor_persistent_digest",
+    tools: ["avbtool"],
+    srcs: [":avbrs_test_image"],
+    out: ["avbrs_test_image_descriptor_persistent_digest.img"],
+    cmd: "$(location avbtool) add_hash_footer --image $(location :avbrs_test_image) --partition_name test_part_persistent_digest --dynamic_partition_size --do_not_append_vbmeta_image --use_persistent_digest --output_vbmeta_image $(out)",
+}
+
+// Standalone vbmeta image signing the test image descriptor.
+genrule {
+    name: "avbrs_test_vbmeta",
+    tools: ["avbtool"],
+    srcs: [
+        ":avbrs_test_image_descriptor",
+        ":avb_testkey_rsa4096",
+    ],
+    out: ["test_vbmeta.img"],
+    cmd: "$(location avbtool) make_vbmeta_image --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor) --output $(out)",
+}
+
+// Standalone vbmeta image signing the test image descriptors for "test_part" and "test_part_2".
+genrule {
+    name: "avbrs_test_vbmeta_2_parts",
+    tools: ["avbtool"],
+    srcs: [
+        ":avbrs_test_image_descriptor",
+        ":avbrs_test_image_descriptor_2",
+        ":avb_testkey_rsa4096",
+    ],
+    out: ["test_vbmeta_2_parts.img"],
+    cmd: "$(location avbtool) make_vbmeta_image --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor) --include_descriptors_from_image $(location :avbrs_test_image_descriptor_2) --output $(out)",
+}
+
+// Standalone vbmeta image signing the test image persistent digest descriptor.
+genrule {
+    name: "avbrs_test_vbmeta_persistent_digest",
+    tools: ["avbtool"],
+    srcs: [
+        ":avbrs_test_image_descriptor_persistent_digest",
+        ":avb_testkey_rsa4096",
+    ],
+    out: ["test_vbmeta_persistent_digest.img"],
+    cmd: "$(location avbtool) make_vbmeta_image --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor_persistent_digest) --output $(out)",
+}
+
+// Combined test image + signed vbmeta footer for "test_part".
+avb_add_hash_footer {
+    name: "avbrs_test_image_with_vbmeta_footer",
+    src: ":avbrs_test_image",
+    partition_name: "test_part",
+    private_key: ":avb_testkey_rsa4096",
+    salt: "A000",
+}
+
+// Combined test image + signed vbmeta footer for "boot".
+avb_add_hash_footer {
+    name: "avbrs_test_image_with_vbmeta_footer_for_boot",
+    src: ":avbrs_test_image",
+    partition_name: "boot",
+    private_key: ":avb_testkey_rsa4096",
+    salt: "A001",
 }
