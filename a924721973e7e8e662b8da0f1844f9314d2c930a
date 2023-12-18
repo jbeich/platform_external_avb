@@ -76,6 +76,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "536c6ce7_e9465e51",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-18T19:31:09Z",
+      "side": 1,
+      "message": "Removed in newest patchset.",
+      "parentUuid": "40fb84cb_a10d0f9f",
+      "range": {
+        "startLine": 46,
+        "startChar": 41,
+        "endLine": 46,
+        "endChar": 91
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ccef2e66_4881795d",
@@ -205,6 +229,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "028d012a_9780e363",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-18T19:31:09Z",
+      "side": 1,
+      "message": "Ack, new approach processes all iterators ahead of time to propagate errors early.",
+      "parentUuid": "756bc122_bbc7b3c3",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 119,
+        "endChar": 10
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3edbc1c6_eee021b3",
@@ -218,6 +266,30 @@
       "writtenOn": "2023-12-18T13:26:49Z",
       "side": 1,
       "message": "It\u0027s more clear to assign \"Unknown\" type here.",
+      "range": {
+        "startLine": 131,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 21
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae144a45_a4a33d7b",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-18T19:31:09Z",
+      "side": 1,
+      "message": "Removed `Unknown` type in latest patch, this now fails instead.",
+      "parentUuid": "3edbc1c6_eee021b3",
       "range": {
         "startLine": 131,
         "startChar": 12,
@@ -251,6 +323,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c07759a7_1c7c654c",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-18T19:31:09Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "da847496_30537506",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 5
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "a603ecfc_4e334ccf",
@@ -264,6 +360,30 @@
       "writtenOn": "2023-12-18T13:26:49Z",
       "side": 1,
       "message": "Why not build the `Descriptor` enum directly here? By doing so, the `Iterator` implementation will be much simpler, as we could directly return `self.descriptors.iter()`.\n\nAdditionally, we wouldn\u0027t need to an intermediate vector of `AvbDescriptor` pointers or track the current index, which doesn\u0027t seem to provide any immediate advantages.\n\nAnother benefit of building the `Descriptor` enum directly in `new()` is that we can return the errors encountered during the conversion process. Currently, when converting the pointer to an enum in `next()`, any errors during the conversion are completely ignored.",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 92
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "81d17bbf_00b37e0e",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-18T19:31:09Z",
+      "side": 1,
+      "message": "\u003e Why not build the Descriptor enum directly here? By doing so, the Iterator implementation will be much simpler, as we could directly return self.descriptors.iter().\n\nI was attempting to keep memory allocation to a minimum by only allocating one pointer rather than the full `Descriptor` objects. But maybe that\u0027s not super important here, it\u0027s not a huge amount of additional memory.\n\n\u003e Additionally, we wouldn\u0027t need to an intermediate vector of AvbDescriptor pointers or track the current index, which doesn\u0027t seem to provide any immediate advantages.\n\nlibavb doesn\u0027t provide any interface for accessing descriptors one at a time, only the entire set. So AFAIK the only options are:\n\n1. allocate some sort of storage such as a vector which does allow one-at-a-time access\n2. re-iterate over the set each time we need to access the next item (discarded as per [patch set 1](https://r.android.com/c/platform/external/avb/+/2857727/1..3/rust/src/descriptor/mod.rs#b74))\n3. expose a callback interface rather than an iterative interface - awkward and not user-friendly\n\nSo I think we will still need a vector unless we want to use option 2 or 3.\n\n\u003e Another benefit of building the Descriptor enum directly in new() is that we can return the errors encountered during the conversion process. Currently, when converting the pointer to an enum in next(), any errors during the conversion are completely ignored.\n\nI have reworked this to allocate and process the full Descriptor set up front so that we can return any errors immediately. It requires some extra memory but descriptors are fairly small so will still be less than the memory already allocated internally by libavb itself.",
+      "parentUuid": "a603ecfc_4e334ccf",
       "range": {
         "startLine": 183,
         "startChar": 0,
