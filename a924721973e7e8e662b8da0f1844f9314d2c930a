@@ -35,6 +35,47 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b4043bfe_0b5b0a78",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-18T13:26:49Z",
+      "side": 1,
+      "message": "Oh sorry. I didn\u0027t realize it was my turn to review since my name wasn\u0027t in bold on gerrit.",
+      "parentUuid": "4908b2ad_2aec388c",
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "40fb84cb_a10d0f9f",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 46,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-18T13:26:49Z",
+      "side": 1,
+      "message": "If one descriptor in the iteractor fails validation with functions like `avb_descriptor_validate_and_byteswap` or `checked_add`, it means the vbmeta is corrupted in some way. I don\u0027t think we should simply ignore this failure and continue processing the remaining descriptors.",
+      "range": {
+        "startLine": 46,
+        "startChar": 41,
+        "endLine": 46,
+        "endChar": 91
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ccef2e66_4881795d",
@@ -137,6 +178,98 @@
       "side": 1,
       "message": "Acknowledged",
       "parentUuid": "68646d7c_96774431",
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "756bc122_bbc7b3c3",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 119,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-18T13:26:49Z",
+      "side": 1,
+      "message": "Instead of treating all the errors in this part as an \"Unknown descriptor,\" it would be more appropriate to propagate the errors to the caller. For instance, if `avb_descriptor_validate_and_byteswap` or `checked_add` fail, it indicates that the underlying data is not a valid descriptor. In such cases, it would be clearer to send the respective error back to the caller rather than treating the data as an descriptor.",
+      "range": {
+        "startLine": 107,
+        "startChar": 8,
+        "endLine": 119,
+        "endChar": 10
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3edbc1c6_eee021b3",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-18T13:26:49Z",
+      "side": 1,
+      "message": "It\u0027s more clear to assign \"Unknown\" type here.",
+      "range": {
+        "startLine": 131,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 21
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "da847496_30537506",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 144,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-18T13:26:49Z",
+      "side": 1,
+      "message": "To be honest, instead of providing an iterator type with non-standart functions, it would be simpler to encapsulate the \"Descriptors\" within a vector of \"Descriptor\" enums. This approach would avoid any new memory allocation when iterating twice, and it removes the need for a separate \"reset\" function.",
+      "range": {
+        "startLine": 135,
+        "startChar": 4,
+        "endLine": 144,
+        "endChar": 5
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a603ecfc_4e334ccf",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-18T13:26:49Z",
+      "side": 1,
+      "message": "Why not build the `Descriptor` enum directly here? By doing so, the `Iterator` implementation will be much simpler, as we could directly return `self.descriptors.iter()`.\n\nAdditionally, we wouldn\u0027t need to an intermediate vector of `AvbDescriptor` pointers or track the current index, which doesn\u0027t seem to provide any immediate advantages.\n\nAnother benefit of building the `Descriptor` enum directly in `new()` is that we can return the errors encountered during the conversion process. Currently, when converting the pointer to an enum in `next()`, any errors during the conversion are completely ignored.",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 92
+      },
       "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
