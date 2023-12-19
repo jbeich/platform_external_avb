@@ -302,6 +302,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "044aa006_20367ead",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-19T09:55:56Z",
+      "side": 1,
+      "message": "I think we can keep the \"Unknown\" type and assign it here. When a descriptor successfully passes the avb descriptor validation, it is indeed a descriptor. However, since we don\u0027t know its specific type, treating it as an unknown descriptor and including the raw data within is seems to be reasonable. This is also consistent with the behavior of the descriptor parser in avbtool [1].\n\n[1] https://cs.android.com/android/platform/superproject/main/+/main:external/avb/avbtool.py;l\u003d1951;drc\u003dd00d02c390e267ef43d93562864dd6e45966c435",
+      "parentUuid": "ae144a45_a4a33d7b",
+      "range": {
+        "startLine": 131,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 21
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "da847496_30537506",
         "filename": "rust/src/descriptor/mod.rs",
         "patchSetId": 3
@@ -384,6 +408,30 @@
       "side": 1,
       "message": "\u003e Why not build the Descriptor enum directly here? By doing so, the Iterator implementation will be much simpler, as we could directly return self.descriptors.iter().\n\nI was attempting to keep memory allocation to a minimum by only allocating one pointer rather than the full `Descriptor` objects. But maybe that\u0027s not super important here, it\u0027s not a huge amount of additional memory.\n\n\u003e Additionally, we wouldn\u0027t need to an intermediate vector of AvbDescriptor pointers or track the current index, which doesn\u0027t seem to provide any immediate advantages.\n\nlibavb doesn\u0027t provide any interface for accessing descriptors one at a time, only the entire set. So AFAIK the only options are:\n\n1. allocate some sort of storage such as a vector which does allow one-at-a-time access\n2. re-iterate over the set each time we need to access the next item (discarded as per [patch set 1](https://r.android.com/c/platform/external/avb/+/2857727/1..3/rust/src/descriptor/mod.rs#b74))\n3. expose a callback interface rather than an iterative interface - awkward and not user-friendly\n\nSo I think we will still need a vector unless we want to use option 2 or 3.\n\n\u003e Another benefit of building the Descriptor enum directly in new() is that we can return the errors encountered during the conversion process. Currently, when converting the pointer to an enum in next(), any errors during the conversion are completely ignored.\n\nI have reworked this to allocate and process the full Descriptor set up front so that we can return any errors immediately. It requires some extra memory but descriptors are fairly small so will still be less than the memory already allocated internally by libavb itself.",
       "parentUuid": "a603ecfc_4e334ccf",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 92
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eb9dd9b4_2ee7af0d",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-19T09:55:56Z",
+      "side": 1,
+      "message": "\u003e I was attempting to keep memory allocation to a minimum by only allocating one pointer rather than the full Descriptor objects. But maybe that\u0027s not super important here, it\u0027s not a huge amount of additional memory.\n\nIn terms of memory, the structure `Vec\u003cconst* AvbDescriptor\u003e` in PS3 contains pointers, while `Vec\u003cDescriptor\u003c\u0027a\u003e\u003e` holds enums that hold references to byte slices. Since both structures store references or pointers to the data rather than the actual data itself, their memory usage would be quite similar.\n\nI agree that Option 1 is a good choice. It is straightforward and efficient in terms of memory usage since it only requires a vector that holds references to the data in VbMeta, there\u0027s no significant memory allocation.\n\n\u003e I have reworked this to allocate and process the full Descriptor set up front so that we can return any errors immediately. It requires some extra memory but descriptors are fairly small so will still be less than the memory already allocated internally by libavb itself.\n\nThank you!",
+      "parentUuid": "81d17bbf_00b37e0e",
       "range": {
         "startLine": 183,
         "startChar": 0,

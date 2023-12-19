@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "785cb976_87cef0b1",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-19T09:55:56Z",
+      "side": 1,
+      "message": "It would be helpful for debugging if this function returns a `Result`. By doing so, if an error occurs, the caller would know what went wrong. In the current implementation, all error types are grouped under `None`, making it challenging to understand the specific cause of the error.",
+      "range": {
+        "startLine": 106,
+        "startChar": 61,
+        "endLine": 106,
+        "endChar": 67
+      },
+      "revId": "321c0a5b2fd7f079246d7347a4140791295a61ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7a7f5afc_a17a4a91",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-19T09:55:56Z",
+      "side": 1,
+      "message": "Perhaps `descriptors(\u0026self)` to be consistent with other getters\u0027 names above?",
+      "range": {
+        "startLine": 102,
+        "startChar": 11,
+        "endLine": 102,
+        "endChar": 26
+      },
+      "revId": "321c0a5b2fd7f079246d7347a4140791295a61ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
