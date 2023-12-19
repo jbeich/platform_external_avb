@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "03baf0f6_97966247",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 106,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-19T23:42:54Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "785cb976_87cef0b1",
+      "range": {
+        "startLine": 106,
+        "startChar": 61,
+        "endLine": 106,
+        "endChar": 67
+      },
+      "revId": "321c0a5b2fd7f079246d7347a4140791295a61ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7a7f5afc_a17a4a91",
@@ -37,6 +61,30 @@
       "writtenOn": "2023-12-19T09:55:56Z",
       "side": 1,
       "message": "Perhaps `descriptors(\u0026self)` to be consistent with other getters\u0027 names above?",
+      "range": {
+        "startLine": 102,
+        "startChar": 11,
+        "endLine": 102,
+        "endChar": 26
+      },
+      "revId": "321c0a5b2fd7f079246d7347a4140791295a61ac",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0b0e23e9_b79ee238",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 102,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-19T23:42:54Z",
+      "side": 1,
+      "message": "Ack, I thought that maybe just `descriptors()` sounded like a low-cost accessor whereas `get_descriptors()` sort of implies that some work is being done. But I suppose it\u0027s best to leave that kind of context to the docs instead of trying to imply it in the name.",
+      "parentUuid": "7a7f5afc_a17a4a91",
       "range": {
         "startLine": 102,
         "startChar": 11,

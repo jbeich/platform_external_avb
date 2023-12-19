@@ -324,6 +324,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "979f7bdd_f6d9d768",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 131,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-19T23:42:54Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "044aa006_20367ead",
+      "range": {
+        "startLine": 131,
+        "startChar": 12,
+        "endLine": 131,
+        "endChar": 21
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "da847496_30537506",
@@ -432,6 +456,30 @@
       "side": 1,
       "message": "\u003e I was attempting to keep memory allocation to a minimum by only allocating one pointer rather than the full Descriptor objects. But maybe that\u0027s not super important here, it\u0027s not a huge amount of additional memory.\n\nIn terms of memory, the structure `Vec\u003cconst* AvbDescriptor\u003e` in PS3 contains pointers, while `Vec\u003cDescriptor\u003c\u0027a\u003e\u003e` holds enums that hold references to byte slices. Since both structures store references or pointers to the data rather than the actual data itself, their memory usage would be quite similar.\n\nI agree that Option 1 is a good choice. It is straightforward and efficient in terms of memory usage since it only requires a vector that holds references to the data in VbMeta, there\u0027s no significant memory allocation.\n\n\u003e I have reworked this to allocate and process the full Descriptor set up front so that we can return any errors immediately. It requires some extra memory but descriptors are fairly small so will still be less than the memory already allocated internally by libavb itself.\n\nThank you!",
       "parentUuid": "81d17bbf_00b37e0e",
+      "range": {
+        "startLine": 183,
+        "startChar": 0,
+        "endLine": 183,
+        "endChar": 92
+      },
+      "revId": "a924721973e7e8e662b8da0f1844f9314d2c930a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "18a2f04b_4136ac19",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 183,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-19T23:42:54Z",
+      "side": 1,
+      "message": "\u003e In terms of memory, the structure Vec\u003cconst* AvbDescriptor\u003e in PS3 contains pointers, while Vec\u003cDescriptor\u003c\u0027a\u003e\u003e holds enums that hold references to byte slices. Since both structures store references or pointers to the data rather than the actual data itself, their memory usage would be quite similar.\n\nAh right sorry you are correct that the current memory usage is basically the same, I was thinking that when we actually implement the various descriptor types we will probably use more memory (e.g. the follow-up patch [here](https://r.android.com/2857728)).\n\nThat\u0027s not necessarily the case though, we could choose to just hold the raw slice and re-parse it any time we need to access the data. We can make that decision on the next CL in any case.",
+      "parentUuid": "eb9dd9b4_2ee7af0d",
       "range": {
         "startLine": 183,
         "startChar": 0,
