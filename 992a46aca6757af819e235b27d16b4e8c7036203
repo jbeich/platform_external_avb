@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "af7ef19e_77e2277d",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-20T18:21:32Z",
+      "side": 1,
+      "message": "I think this is better because it eliminates one runtime failure case (64- to 32-bit conversion) which simplifies the code slightly, and since the tag can be 64-bits wide we should support all 64 bits to match libavb behavior.\n\nOne possible use case (I\u0027m not sure if anyone actually does this), but since avbtool accepts unknown descriptor types I believe it is possible to define and embed your own custom descriptors, which may want to use all 64 bits of tag.",
+      "parentUuid": "2475dc3f_31fb559b",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 0
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f9f72c37_d40d7109",
         "filename": "rust/src/descriptor/mod.rs",
         "patchSetId": 5
@@ -37,6 +61,30 @@
       "writtenOn": "2023-12-20T12:49:49Z",
       "side": 1,
       "message": "Perhaps `InvalidValue` to be more precise for the two use cases here?",
+      "range": {
+        "startLine": 98,
+        "startChar": 42,
+        "endLine": 98,
+        "endChar": 50
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fc08eb00_3298a3ca",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-20T18:21:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f9f72c37_d40d7109",
       "range": {
         "startLine": 98,
         "startChar": 42,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d7ef1eb_b27e3708",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-20T18:21:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "66c3d116_de06aff8",
+      "range": {
+        "startLine": 104,
+        "startChar": 32,
+        "endLine": 104,
+        "endChar": 46
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f215c277_2482f330",
@@ -93,6 +165,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd48ff22_5255312b",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-20T18:21:32Z",
+      "side": 1,
+      "message": "Neat looks like that works, thanks.",
+      "parentUuid": "f215c277_2482f330",
+      "range": {
+        "startLine": 128,
+        "startChar": 24,
+        "endLine": 128,
+        "endChar": 52
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f087e0b3_71fe4c6d",
@@ -106,6 +202,30 @@
       "writtenOn": "2023-12-20T12:49:49Z",
       "side": 1,
       "message": "Should we make the Descriptor enum and error public here?",
+      "range": {
+        "startLine": 41,
+        "startChar": 1,
+        "endLine": 41,
+        "endChar": 2
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "42ceadb8_bc20aed0",
+        "filename": "rust/src/lib.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-20T18:21:32Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f087e0b3_71fe4c6d",
       "range": {
         "startLine": 41,
         "startChar": 1,
