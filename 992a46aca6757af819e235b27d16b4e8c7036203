@@ -1,0 +1,119 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2475dc3f_31fb559b",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-20T12:49:49Z",
+      "side": 1,
+      "message": "Rather than converting all the enum variants to u64, what about converting the tag to u32? This would avoid having to individually convert each enum variant. The conversion failure could then be treated as an unknown descriptor as well to preserve the same behavior as the current PS.",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 0
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f9f72c37_d40d7109",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-20T12:49:49Z",
+      "side": 1,
+      "message": "Perhaps `InvalidValue` to be more precise for the two use cases here?",
+      "range": {
+        "startLine": 98,
+        "startChar": 42,
+        "endLine": 98,
+        "endChar": 50
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "66c3d116_de06aff8",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 104,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-20T12:49:49Z",
+      "side": 1,
+      "message": "nit: Usually, people import the `slice` module and call `slice::from_raw_parts` to provide more context for this function call.\n\n[1] Usage of `slice::from_raw_parts` https://cs.android.com/search?q\u003d%22slice::from_raw_parts%22%20-f:prebuilt%20l:rs\u0026sq\u003d\n[2] Usage of `from_raw_parts` alone  https://cs.android.com/search?q\u003d%22%5C%20from_raw_parts%22%20-f:prebuilt%20l:rs",
+      "range": {
+        "startLine": 104,
+        "startChar": 32,
+        "endLine": 104,
+        "endChar": 46
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f215c277_2482f330",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 128,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-20T12:49:49Z",
+      "side": 1,
+      "message": "nit: Could this simply be `Vec::new()`? The compiler should be able to deduce the type automatically.",
+      "range": {
+        "startLine": 128,
+        "startChar": 24,
+        "endLine": 128,
+        "endChar": 52
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f087e0b3_71fe4c6d",
+        "filename": "rust/src/lib.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 41,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-20T12:49:49Z",
+      "side": 1,
+      "message": "Should we make the Descriptor enum and error public here?",
+      "range": {
+        "startLine": 41,
+        "startChar": 1,
+        "endLine": 41,
+        "endChar": 2
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
