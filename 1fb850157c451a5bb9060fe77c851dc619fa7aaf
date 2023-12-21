@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4e3fb2b1_5b0baec7",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-21T17:48:12Z",
+      "side": 1,
+      "message": "@aliceywang@google.com no rush here, I imagine we\u0027ll both be taking time off so we can pick it up again in Jan. Thanks!",
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ad3724e2_7f20cc2a",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-21T17:48:12Z",
+      "side": 1,
+      "message": "I\u0027ve added a section to the [API design doc](http://docs/document/d/1SbZmMQWAfanGlo554j6NDHSrfYAUjirn0WaLksFfq6c?tab\u003dt.0#heading\u003dh.l4l2mvj2bmki) discussing this API a bit and a few other potential options, if it\u0027s useful.",
+      "range": {
+        "startLine": 30,
+        "startChar": 11,
+        "endLine": 30,
+        "endChar": 25
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
