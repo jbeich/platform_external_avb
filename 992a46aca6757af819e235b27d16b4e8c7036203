@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5b2a4dcc_19af4b1d",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2023-12-21T13:34:31Z",
+      "side": 1,
+      "message": "\u003e  eliminates one runtime failure case (64- to 32-bit conversion)...\n\nI meant we could use the `.try_into()` for the conversion instead of casting tag as a `u32` to catch any errors. The behavior would be exactly the same as the current implementation, except that we wouldn\u0027t need those five constant definitions. The match code could become:\n\n```\nmatch descriptor.tag.try_into() {\n    Ok(AVB_DESCRIPTOR_TAG_PROPERTY \u003d\u003e Ok(Descriptor::Property(contents)),\n    ...\n    _ \u003d\u003e Ok(Descriptor::Unknown(contents)),\n}\n```",
+      "parentUuid": "af7ef19e_77e2277d",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 0
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f9f72c37_d40d7109",
         "filename": "rust/src/descriptor/mod.rs",
         "patchSetId": 5
