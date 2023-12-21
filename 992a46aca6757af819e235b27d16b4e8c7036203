@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "360b4a47_211a7bf9",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2023-12-21T17:40:26Z",
+      "side": 1,
+      "message": "Ack gotcha thanks for the snippet that makes sense, done.",
+      "parentUuid": "5b2a4dcc_19af4b1d",
+      "range": {
+        "startLine": 61,
+        "startChar": 0,
+        "endLine": 68,
+        "endChar": 0
+      },
+      "revId": "992a46aca6757af819e235b27d16b4e8c7036203",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f9f72c37_d40d7109",
