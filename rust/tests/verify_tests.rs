@@ -602,3 +602,23 @@ fn corrupted_image_verification_data_display() {
         r#"slot: "", vbmeta: ["vbmeta": Ok(())], images: ["test_part": Err(Verification(None))]"#
     );
 }
+
+#[test]
+fn one_image_gives_single_descriptor() {
+    let mut ops = test_ops_one_image_one_vbmeta();
+
+    let result = verify_one_image_one_vbmeta(&mut ops);
+
+    let data = result.unwrap();
+    assert_eq!(data.vbmeta_data()[0].descriptors().unwrap().len(), 1);
+}
+
+#[test]
+fn two_images_gives_two_descriptors() {
+    let mut ops = test_ops_two_images_one_vbmeta();
+
+    let result = verify_two_images_one_vbmeta(&mut ops);
+
+    let data = result.unwrap();
+    assert_eq!(data.vbmeta_data()[0].descriptors().unwrap().len(), 2);
+}
