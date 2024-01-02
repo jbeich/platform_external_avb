@@ -39,6 +39,144 @@
       },
       "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "deed63b2_7d098943",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-02T10:56:19Z",
+      "side": 1,
+      "message": "We have consistently used `CStr` instead of `str` up to this point for partition names. Can we maintain this consistency by continuing to use `CStr` here, to allow users to handle the string in a uniform way?",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 32
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7709b4f6_6fa20bd3",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-02T10:56:19Z",
+      "side": 1,
+      "message": "How about creating a mutable instance of `AvbHashDescriptor` and using it in this context to avoid using `MaybeUninit`? we can include the `--with-derive-default` option in the bindgen configuration to easily generate a default value.",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 51
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f553d2fc_c6cda755",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-02T10:56:19Z",
+      "side": 1,
+      "message": "nit: Can we do this cast in the beginning of this function (line 69) to avoid casting the `contents.as_ptr()` to `*const AvbHashDescriptor` twice?",
+      "range": {
+        "startLine": 101,
+        "startChar": 35,
+        "endLine": 101,
+        "endChar": 80
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ca774dfc_18fe85e2",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-02T10:56:19Z",
+      "side": 1,
+      "message": "Should we keep `raw_data` even though all its information has already been parsed? It seems redundant to have this duplicate information in the struct.",
+      "range": {
+        "startLine": 110,
+        "startChar": 12,
+        "endLine": 110,
+        "endChar": 31
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4ab4020a_36e6adb7",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-02T10:56:19Z",
+      "side": 1,
+      "message": "Should we move this check to the beginning of the function `HashDescriptor::new` just before the casting?",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 55
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "55c79c98_a7704720",
+        "filename": "rust/src/descriptor/util.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-02T10:56:19Z",
+      "side": 1,
+      "message": "nit: The compiler should be able to deduce this type automatically.",
+      "range": {
+        "startLine": 36,
+        "startChar": 12,
+        "endLine": 36,
+        "endChar": 19
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
