@@ -112,6 +112,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "9ccc376c_feeeb992",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2024-01-03T16:49:33Z",
+      "side": 1,
+      "message": "If I understand this correctly you\u0027re converting an `\u0026[u8]` to an `\u0026AvbHashDescriptor` via a pointer. Could you use `zerocopy::FromBytes` to do this safely? You\u0027d need to derive `FromBytes` on `AvbHashDescriptor`.",
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ca774dfc_18fe85e2",
         "filename": "rust/src/descriptor/hash.rs",
         "patchSetId": 11
