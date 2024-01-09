@@ -66,6 +66,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "f574b7f1_306b8b94",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-09T01:15:36Z",
+      "side": 1,
+      "message": "Unfortunately it would require allocation. While libavb uses nul-terminated strings for partition names everywhere else, in the descriptor blob it uses a length + data encoding with no termination, so there is no valid `CStr` available.\n\nWe could allocate and transform to `CStr` here, but it seemed more flexible to provide the data we have and the user can allocate and transform it to `CStr` if needed. Most of the time I think they will be able to avoid allocation if they just want to compare strings by converting their `CStr` to `str` instead which is cheaper, e.g.:\n\n```\nif EXPECTED_PARTITION_CSTR.to_str()? \u003d\u003d hash_descriptor.partition_name() {\n  ...\n}\n```\n\nBut if you think we should just always allocate a `CStr` here for API consistency I can switch over.",
+      "parentUuid": "deed63b2_7d098943",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 32
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7709b4f6_6fa20bd3",
         "filename": "rust/src/descriptor/hash.rs",
         "patchSetId": 11
@@ -129,6 +153,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "0e658af4_bdd4030f",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-09T01:15:36Z",
+      "side": 1,
+      "message": "I\u0027ll try it out thanks.",
+      "parentUuid": "9ccc376c_feeeb992",
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "ca774dfc_18fe85e2",
         "filename": "rust/src/descriptor/hash.rs",
         "patchSetId": 11
@@ -140,6 +182,30 @@
       "writtenOn": "2024-01-02T10:56:19Z",
       "side": 1,
       "message": "Should we keep `raw_data` even though all its information has already been parsed? It seems redundant to have this duplicate information in the struct.",
+      "range": {
+        "startLine": 110,
+        "startChar": 12,
+        "endLine": 110,
+        "endChar": 31
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "70372a68_2ab104e4",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-09T01:15:36Z",
+      "side": 1,
+      "message": "Yeah I think this should be fine, I thought it might be useful for the user to have access to the raw data just in case they need to do something we don\u0027t support, but I can take it out.",
+      "parentUuid": "ca774dfc_18fe85e2",
       "range": {
         "startLine": 110,
         "startChar": 12,
