@@ -112,6 +112,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2216a930_be00525a",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-11T18:03:48Z",
+      "side": 1,
+      "message": "It does wrap existing data, but `CStr` requires that the wrapped data be nul-terminated, which this data is not. AFAIK there is no way to create a `CStr` directly from non-terminated data, we have to allocate a nul-terminated copy via `CString::new()`, and then you could get a `CStr` from that copy.\n\nAdded a bit more info to the docs to this effect, but LMK if you want me to just go ahead and allocate internally here.",
+      "parentUuid": "95dd795f_055f86f3",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 32
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7709b4f6_6fa20bd3",
@@ -125,6 +149,30 @@
       "writtenOn": "2024-01-02T10:56:19Z",
       "side": 1,
       "message": "How about creating a mutable instance of `AvbHashDescriptor` and using it in this context to avoid using `MaybeUninit`? we can include the `--with-derive-default` option in the bindgen configuration to easily generate a default value.",
+      "range": {
+        "startLine": 71,
+        "startChar": 0,
+        "endLine": 71,
+        "endChar": 51
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4168ba9f_f2a4b0d1",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 71,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-11T18:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7709b4f6_6fa20bd3",
       "range": {
         "startLine": 71,
         "startChar": 0,
@@ -189,6 +237,48 @@
       "side": 1,
       "message": "I\u0027ll try it out thanks.",
       "parentUuid": "9ccc376c_feeeb992",
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "051522da_04ce43c0",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-11T18:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f553d2fc_c6cda755",
+      "range": {
+        "startLine": 101,
+        "startChar": 35,
+        "endLine": 101,
+        "endChar": 80
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fbbb6c35_76ce2b81",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-11T18:03:48Z",
+      "side": 1,
+      "message": "Yeah that makes the code much nicer, thanks. I struggled a bit to get the `Android.bp` dependencies set up correctly so that `zerocopy` could be a dependency of both the bindgen and this lib, but eventually found something that seems to compile and hopefully isn\u0027t totally awful.",
+      "parentUuid": "0e658af4_bdd4030f",
       "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -264,6 +354,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8e87b55_4d5c7571",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 110,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-11T18:03:48Z",
+      "side": 1,
+      "message": "Ack, will remove.\n\nIIUC, since we\u0027re storing a non-`mut` slice the data is guaranteed to be constant so we don\u0027t need to worry about sync issues, but since I don\u0027t really have a use case for the raw data we might as well omit it for now.",
+      "parentUuid": "f80ea19e_1d37691b",
+      "range": {
+        "startLine": 110,
+        "startChar": 12,
+        "endLine": 110,
+        "endChar": 31
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4ab4020a_36e6adb7",
@@ -287,6 +401,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ae4e4218_92b7777a",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 175,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-11T18:03:48Z",
+      "side": 1,
+      "message": "Ack, alignment is now handled by `zerocopy` instead.",
+      "parentUuid": "4ab4020a_36e6adb7",
+      "range": {
+        "startLine": 175,
+        "startChar": 0,
+        "endLine": 175,
+        "endChar": 55
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "55c79c98_a7704720",
@@ -300,6 +438,30 @@
       "writtenOn": "2024-01-02T10:56:19Z",
       "side": 1,
       "message": "nit: The compiler should be able to deduce this type automatically.",
+      "range": {
+        "startLine": 36,
+        "startChar": 12,
+        "endLine": 36,
+        "endChar": 19
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9e6d90fe_e021d14b",
+        "filename": "rust/src/descriptor/util.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 36,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-11T18:03:48Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "55c79c98_a7704720",
       "range": {
         "startLine": 36,
         "startChar": 12,
