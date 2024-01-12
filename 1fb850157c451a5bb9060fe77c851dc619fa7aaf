@@ -283,6 +283,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "3d26dbc4_b6b713c7",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 101,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-12T00:48:54Z",
+      "side": 1,
+      "message": "Hmm nevermind, this seems to have broken another dependency\u0027s ability to find a totally unrelated crate (`zip`)? I\u0027ll have to keep poking around and see if I can find the magic configuration to allow this.",
+      "parentUuid": "fbbb6c35_76ce2b81",
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ca774dfc_18fe85e2",
