@@ -136,6 +136,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f7402342_e4698b90",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 11
+      },
+      "lineNbr": 44,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-12T14:24:23Z",
+      "side": 1,
+      "message": "Ah I see. I didn\u0027t notice that this isn\u0027t null-terminated.",
+      "parentUuid": "2216a930_be00525a",
+      "range": {
+        "startLine": 44,
+        "startChar": 8,
+        "endLine": 44,
+        "endChar": 32
+      },
+      "revId": "1fb850157c451a5bb9060fe77c851dc619fa7aaf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "7709b4f6_6fa20bd3",

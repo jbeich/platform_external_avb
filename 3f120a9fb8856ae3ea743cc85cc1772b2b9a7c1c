@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "367ac18e_a568a124",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 13
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-12T14:24:23Z",
+      "side": 1,
+      "message": "nit: It can be more clear here with `AvbHashDescriptor`.",
+      "range": {
+        "startLine": 68,
+        "startChar": 29,
+        "endLine": 68,
+        "endChar": 36
+      },
+      "revId": "3f120a9fb8856ae3ea743cc85cc1772b2b9a7c1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5cc38a2_8fc2d248",
+        "filename": "rust/src/descriptor/util.rs",
+        "patchSetId": 13
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-12T14:24:23Z",
+      "side": 1,
+      "message": "nit: Perhaps `split_slice` ? The doc also explains this functions as \"Splits `size` bytes..\"",
+      "range": {
+        "startLine": 32,
+        "startChar": 14,
+        "endLine": 32,
+        "endChar": 21
+      },
+      "revId": "3f120a9fb8856ae3ea743cc85cc1772b2b9a7c1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "29494c5b_39612f2c",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 13
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-12T14:24:23Z",
+      "side": 1,
+      "message": "Can we build an expected descriptor and check `assert_eq!(descriptor, expected_descriptor)`, this way if someone adds a new field to the descriptor, it will be caught automatically by this test if it\u0027s not checked.",
+      "range": {
+        "startLine": 645,
+        "startChar": 15,
+        "endLine": 645,
+        "endChar": 25
+      },
+      "revId": "3f120a9fb8856ae3ea743cc85cc1772b2b9a7c1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
