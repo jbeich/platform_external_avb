@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "799673d4_3540e436",
+        "filename": "rust/src/descriptor/hash.rs",
+        "patchSetId": 13
+      },
+      "lineNbr": 68,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-12T23:04:57Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "367ac18e_a568a124",
+      "range": {
+        "startLine": 68,
+        "startChar": 29,
+        "endLine": 68,
+        "endChar": 36
+      },
+      "revId": "3f120a9fb8856ae3ea743cc85cc1772b2b9a7c1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "d5cc38a2_8fc2d248",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c4853712_adebc904",
+        "filename": "rust/src/descriptor/util.rs",
+        "patchSetId": 13
+      },
+      "lineNbr": 32,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-12T23:04:57Z",
+      "side": 1,
+      "message": "Good idea, done.",
+      "parentUuid": "d5cc38a2_8fc2d248",
+      "range": {
+        "startLine": 32,
+        "startChar": 14,
+        "endLine": 32,
+        "endChar": 21
+      },
+      "revId": "3f120a9fb8856ae3ea743cc85cc1772b2b9a7c1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "29494c5b_39612f2c",
@@ -60,6 +108,30 @@
       "writtenOn": "2024-01-12T14:24:23Z",
       "side": 1,
       "message": "Can we build an expected descriptor and check `assert_eq!(descriptor, expected_descriptor)`, this way if someone adds a new field to the descriptor, it will be caught automatically by this test if it\u0027s not checked.",
+      "range": {
+        "startLine": 645,
+        "startChar": 15,
+        "endLine": 645,
+        "endChar": 25
+      },
+      "revId": "3f120a9fb8856ae3ea743cc85cc1772b2b9a7c1c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b81cc9c3_c8acc6ff",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 13
+      },
+      "lineNbr": 645,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-12T23:04:57Z",
+      "side": 1,
+      "message": "Much better thanks.",
+      "parentUuid": "29494c5b_39612f2c",
       "range": {
         "startLine": 645,
         "startChar": 15,
