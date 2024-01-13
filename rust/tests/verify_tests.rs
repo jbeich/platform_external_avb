@@ -16,9 +16,10 @@
 
 use crate::test_ops::TestOps;
 use avb::{
-    slot_verify, HashtreeErrorMode, IoError, SlotVerifyData, SlotVerifyError, SlotVerifyFlags,
-    SlotVerifyResult,
+    slot_verify, Descriptor, HashDescriptor, HashDescriptorFlags, HashtreeErrorMode, IoError,
+    SlotVerifyData, SlotVerifyError, SlotVerifyFlags, SlotVerifyResult,
 };
+use hex::decode;
 use std::{ffi::CString, fs};
 #[cfg(feature = "uuid")]
 use uuid::uuid;
@@ -26,6 +27,11 @@ use uuid::uuid;
 // These constants must match the values used to create the images in Android.bp.
 const TEST_IMAGE_PATH: &str = "test_image.img";
 const TEST_IMAGE_SIZE: usize = 16 * 1024;
+const TEST_IMAGE_SALT_HEX: &str = "1000";
+// Expected digest determined by examining the vbmeta image with `avbtool info_image`.
+const TEST_IMAGE_DIGEST_HEX: &str =
+    "89e6fd3142917b8c34ac7d30897a907a71bd3bf5d9b39d00bf938b41dcf3b84f";
+const TEST_IMAGE_HASH_ALGO: &str = "sha256"; // Default value, we don't explicitly set this.
 const TEST_VBMETA_PATH: &str = "test_vbmeta.img";
 const TEST_VBMETA_2_PARTITIONS_PATH: &str = "test_vbmeta_2_parts.img";
 const TEST_VBMETA_PERSISTENT_DIGEST_PATH: &str = "test_vbmeta_persistent_digest.img";
@@ -621,4 +627,30 @@ fn two_images_gives_two_descriptors() {
 
     let data = result.unwrap();
     assert_eq!(data.vbmeta_data()[0].descriptors().unwrap().len(), 2);
+}
+
+#[test]
+fn verify_hash_descriptor() {
+    let mut ops = test_ops_one_image_one_vbmeta();
+
+    let result = verify_one_image_one_vbmeta(&mut ops);
+
+    let data = result.unwrap();
+    let descriptors = &data.vbmeta_data()[0].descriptors().unwrap();
+    let descriptor = match &descriptors[0] {
+        Descriptor::Hash(d) => d,
+        d => panic!("Expected hash descriptor, got {:?}", d),
+    };
+
+    assert_eq!(
+        descriptor,
+        &HashDescriptor {
+            image_size: TEST_IMAGE_SIZE as u64,
+            hash_algorithm: TEST_IMAGE_HASH_ALGO,
+            flags: HashDescriptorFlags(0),
+            partition_name: TEST_PARTITION_NAME,
+            salt: &decode(TEST_IMAGE_SALT_HEX).unwrap(),
+            digest: &decode(TEST_IMAGE_DIGEST_HEX).unwrap()
+        }
+    )
 }
