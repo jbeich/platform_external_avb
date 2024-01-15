@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7b79bc39_1a2beb48",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 13,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-15T14:06:18Z",
+      "side": 1,
+      "message": "We usually need to give the test name for atest here to check this change.",
+      "range": {
+        "startLine": 13,
+        "startChar": 10,
+        "endLine": 13,
+        "endChar": 11
+      },
+      "revId": "2f3175d83ae3f330bcebb6deb81723994559850f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9f6e1a67_bf85ddc3",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-15T14:06:18Z",
+      "side": 1,
+      "message": "Very nice. Thank you!",
+      "revId": "2f3175d83ae3f330bcebb6deb81723994559850f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
