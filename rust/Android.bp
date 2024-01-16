@@ -264,6 +264,7 @@ rust_defaults {
         ":avbrs_test_vbmeta",
         ":avbrs_test_vbmeta_2_parts",
         ":avbrs_test_vbmeta_persistent_digest",
+        ":avbrs_test_vbmeta_with_property",
     ],
     rustlibs: ["libhex"],
     test_suites: ["general-tests"],
@@ -362,6 +363,18 @@ genrule {
     ],
     out: ["test_vbmeta_persistent_digest.img"],
     cmd: "$(location avbtool) make_vbmeta_image --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor_persistent_digest) --output $(out)",
+}
+
+// Standalone vbmeta image with property descriptor "test_prop_key" = "test_prop_value".
+genrule {
+    name: "avbrs_test_vbmeta_with_property",
+    tools: ["avbtool"],
+    srcs: [
+        ":avbrs_test_image_descriptor",
+        ":avb_testkey_rsa4096",
+    ],
+    out: ["test_vbmeta_with_property.img"],
+    cmd: "$(location avbtool) make_vbmeta_image --prop test_prop_key:test_prop_value --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor) --output $(out)",
 }
 
 // Combined test image + signed vbmeta footer for "test_part".
