@@ -19,6 +19,7 @@
 
 extern crate alloc;
 
+mod chain;
 mod commandline;
 mod hash;
 mod hashtree;
@@ -37,6 +38,7 @@ use core::{
     str::Utf8Error,
 };
 
+pub use chain::{ChainPartitionDescriptor, ChainPartitionDescriptorFlags};
 pub use commandline::{KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags};
 pub use hash::{HashDescriptor, HashDescriptorFlags};
 pub use hashtree::{HashtreeDescriptor, HashtreeDescriptorFlags};
@@ -55,7 +57,7 @@ pub enum Descriptor<'a> {
     /// Wraps `AvbKernelCmdlineDescriptor`.
     KernelCommandline(KernelCommandlineDescriptor<'a>),
     /// Wraps `AvbChainPartitionDescriptor`.
-    ChainPartition(&'a [u8]),
+    ChainPartition(ChainPartitionDescriptor<'a>),
     /// Unknown descriptor type.
     Unknown(&'a [u8]),
 }
@@ -140,9 +142,9 @@ impl<'a> Descriptor<'a> {
             Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE) => Ok(
                 Descriptor::KernelCommandline(KernelCommandlineDescriptor::new(contents)?),
             ),
-            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_CHAIN_PARTITION) => {
-                Ok(Descriptor::ChainPartition(contents))
-            }
+            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_CHAIN_PARTITION) => Ok(
+                Descriptor::ChainPartition(ChainPartitionDescriptor::new(contents)?),
+            ),
             _ => Ok(Descriptor::Unknown(contents)),
         }
     }
