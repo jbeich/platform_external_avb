@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b09daafb_a12d53c9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-16T22:30:54Z",
+      "side": 1,
+      "message": "Since descriptors are fairly similar now that we\u0027ve gotten the basic structure in place I went ahead and uploaded the remaining 3 descriptor implementations in this CL chain in case you want to just get it over with and review them all :) But we can definitely take them one by one as well.",
+      "revId": "2480660403f72e440d0c4d458abba72228ee573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
