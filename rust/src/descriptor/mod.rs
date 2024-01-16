@@ -19,6 +19,7 @@
 
 extern crate alloc;
 
+mod commandline;
 mod hash;
 mod hashtree;
 mod property;
@@ -31,6 +32,7 @@ use avb_bindgen::{
 };
 use core::{ffi::c_void, mem::size_of, slice};
 
+pub use commandline::{KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags};
 pub use hash::{HashDescriptor, HashDescriptorFlags};
 pub use hashtree::{HashtreeDescriptor, HashtreeDescriptorFlags};
 pub use property::PropertyDescriptor;
@@ -46,7 +48,7 @@ pub enum Descriptor<'a> {
     /// Wraps `AvbHashDescriptor`.
     Hash(HashDescriptor<'a>),
     /// Wraps `AvbKernelCmdlineDescriptor`.
-    KernelCommandline(&'a [u8]),
+    KernelCommandline(KernelCommandlineDescriptor<'a>),
     /// Wraps `AvbChainPartitionDescriptor`.
     ChainPartition(&'a [u8]),
     /// Unknown descriptor type.
@@ -118,9 +120,9 @@ impl<'a> Descriptor<'a> {
             Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH) => {
                 Ok(Descriptor::Hash(HashDescriptor::new(contents)?))
             }
-            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE) => {
-                Ok(Descriptor::KernelCommandline(contents))
-            }
+            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE) => Ok(
+                Descriptor::KernelCommandline(KernelCommandlineDescriptor::new(contents)?),
+            ),
             Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_CHAIN_PARTITION) => {
                 Ok(Descriptor::ChainPartition(contents))
             }
