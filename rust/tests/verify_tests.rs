@@ -17,8 +17,9 @@
 use crate::test_ops::TestOps;
 use avb::{
     slot_verify, Descriptor, HashDescriptor, HashDescriptorFlags, HashtreeDescriptor,
-    HashtreeDescriptorFlags, HashtreeErrorMode, IoError, PropertyDescriptor, SlotVerifyData,
-    SlotVerifyError, SlotVerifyFlags, SlotVerifyResult,
+    HashtreeDescriptorFlags, HashtreeErrorMode, IoError, KernelCommandlineDescriptor,
+    KernelCommandlineDescriptorFlags, PropertyDescriptor, SlotVerifyData, SlotVerifyError,
+    SlotVerifyFlags, SlotVerifyResult,
 };
 use hex::decode;
 use std::{ffi::CString, fs};
@@ -35,6 +36,7 @@ const TEST_VBMETA_2_PARTITIONS_PATH: &str = "test_vbmeta_2_parts.img";
 const TEST_VBMETA_PERSISTENT_DIGEST_PATH: &str = "test_vbmeta_persistent_digest.img";
 const TEST_VBMETA_WITH_PROPERTY_PATH: &str = "test_vbmeta_with_property.img";
 const TEST_VBMETA_WITH_HASHTREE_PATH: &str = "test_vbmeta_with_hashtree.img";
+const TEST_VBMETA_WITH_COMMANDLINE_PATH: &str = "test_vbmeta_with_commandline.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_PATH: &str = "avbrs_test_image_with_vbmeta_footer.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH: &str =
     "avbrs_test_image_with_vbmeta_footer_for_boot.img";
@@ -47,6 +49,7 @@ const TEST_PARTITION_HASH_TREE_NAME: &str = "test_part_hashtree";
 const TEST_VBMETA_ROLLBACK_LOCATION: usize = 0; // Default value, we don't explicitly set this.
 const TEST_PROPERTY_KEY: &str = "test_prop_key";
 const TEST_PROPERTY_VALUE: &[u8] = b"test_prop_value";
+const TEST_KERNEL_COMMANDLINE: &str = "test_cmdline_key=test_cmdline_value";
 
 // Expected values determined by examining the vbmeta image with `avbtool info_image`.
 // Images can be found in <out>/soong/.intermediates/external/avb/rust/.
@@ -706,4 +709,35 @@ fn verify_hashtree_descriptor() {
         root_digest: &decode(TEST_HASHTREE_DIGEST_HEX).unwrap(),
     };
     assert!(descriptors.contains(&Descriptor::Hashtree(expected)));
+}
+
+#[test]
+fn verify_kernel_commandline_descriptor() {
+    let mut ops = test_ops_one_image_one_vbmeta();
+    // Replace vbmeta with the version containing a kernel commandline descriptor.
+    ops.add_partition(
+        "vbmeta",
+        fs::read(TEST_VBMETA_WITH_COMMANDLINE_PATH).unwrap(),
+    );
+
+    let result = verify_one_image_one_vbmeta(&mut ops);
+
+    let data = result.unwrap();
+    let descriptors = &data.vbmeta_data()[0].descriptors().unwrap();
+    let descriptor = descriptors
+        .iter()
+        .filter_map(|d| match d {
+            Descriptor::KernelCommandline(k) => Some(k),
+            _ => None,
+        })
+        .next()
+        .unwrap();
+
+    assert_eq!(
+        descriptor,
+        &KernelCommandlineDescriptor {
+            flags: KernelCommandlineDescriptorFlags(0),
+            commandline: TEST_KERNEL_COMMANDLINE
+        }
+    )
 }
