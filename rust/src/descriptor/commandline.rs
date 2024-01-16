@@ -69,31 +69,23 @@ mod tests {
     use super::*;
 
     use crate::DescriptorError;
-    use std::mem::size_of;
+    use std::{fs, mem::size_of};
 
-    /// A valid kernel commandline descriptor in raw big-endian format.
-    const TEST_KERNEL_COMMANDLINE_DESCRIPTOR: &[u8] = &[
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x03, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x23, 0x74, 0x65, 0x73, 0x74, 0x5F, 0x63,
-        0x6D, 0x64, 0x6C, 0x69, 0x6E, 0x65, 0x5F, 0x6B, 0x65, 0x79, 0x3D, 0x74, 0x65, 0x73, 0x74,
-        0x5F, 0x63, 0x6D, 0x64, 0x6C, 0x69, 0x6E, 0x65, 0x5F, 0x76, 0x61, 0x6C, 0x75, 0x65, 0x00,
-        0x00, 0x00, 0x00, 0x00,
-    ];
+    /// A valid descriptor that we've pre-generated as test data.
+    fn test_contents() -> Vec<u8> {
+        fs::read("testdata/kernel_commandline_descriptor.bin").unwrap()
+    }
 
     #[test]
     fn new_commandline_descriptor_success() {
-        let descriptor = KernelCommandlineDescriptor::new(TEST_KERNEL_COMMANDLINE_DESCRIPTOR);
-        assert!(descriptor.is_ok());
+        assert!(KernelCommandlineDescriptor::new(&test_contents()).is_ok());
     }
 
     #[test]
     fn new_commandline_descriptor_too_short_header_fails() {
         let bad_header_size = size_of::<KernelCommandlineDescriptor>() - 1;
         assert_eq!(
-            KernelCommandlineDescriptor::new(
-                &TEST_KERNEL_COMMANDLINE_DESCRIPTOR[..bad_header_size]
-            )
-            .unwrap_err(),
+            KernelCommandlineDescriptor::new(&test_contents()[..bad_header_size]).unwrap_err(),
             DescriptorError::InvalidHeader
         );
     }
@@ -101,12 +93,9 @@ mod tests {
     #[test]
     fn new_commandline_descriptor_too_short_contents_fails() {
         // The last 5 bytes are padding, so we need to drop 6 bytes to trigger an error.
-        let bad_contents_size = TEST_KERNEL_COMMANDLINE_DESCRIPTOR.len() - 6;
+        let bad_contents_size = test_contents().len() - 6;
         assert_eq!(
-            KernelCommandlineDescriptor::new(
-                &TEST_KERNEL_COMMANDLINE_DESCRIPTOR[..bad_contents_size]
-            )
-            .unwrap_err(),
+            KernelCommandlineDescriptor::new(&test_contents()[..bad_contents_size]).unwrap_err(),
             DescriptorError::InvalidSize
         );
     }
