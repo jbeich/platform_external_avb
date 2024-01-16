@@ -17,7 +17,7 @@
 use crate::test_ops::TestOps;
 use avb::{
     slot_verify, Descriptor, HashDescriptor, HashDescriptorFlags, HashtreeErrorMode, IoError,
-    SlotVerifyData, SlotVerifyError, SlotVerifyFlags, SlotVerifyResult,
+    PropertyDescriptor, SlotVerifyData, SlotVerifyError, SlotVerifyFlags, SlotVerifyResult,
 };
 use hex::decode;
 use std::{ffi::CString, fs};
@@ -35,6 +35,7 @@ const TEST_IMAGE_HASH_ALGO: &str = "sha256"; // Default value, we don't explicit
 const TEST_VBMETA_PATH: &str = "test_vbmeta.img";
 const TEST_VBMETA_2_PARTITIONS_PATH: &str = "test_vbmeta_2_parts.img";
 const TEST_VBMETA_PERSISTENT_DIGEST_PATH: &str = "test_vbmeta_persistent_digest.img";
+const TEST_VBMETA_WITH_PROPERTY_PATH: &str = "test_vbmeta_with_property.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_PATH: &str = "avbrs_test_image_with_vbmeta_footer.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH: &str =
     "avbrs_test_image_with_vbmeta_footer_for_boot.img";
@@ -44,6 +45,8 @@ const TEST_PARTITION_SLOT_C_NAME: &str = "test_part_c";
 const TEST_PARTITION_2_NAME: &str = "test_part_2";
 const TEST_PARTITION_PERSISTENT_DIGEST_NAME: &str = "test_part_persistent_digest";
 const TEST_VBMETA_ROLLBACK_LOCATION: usize = 0; // Default value, we don't explicitly set this.
+const TEST_PROPERTY_KEY: &str = "test_prop_key";
+const TEST_PROPERTY_VALUE: &[u8] = b"test_prop_value";
 
 /// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME`.
 fn test_ops_one_image_one_vbmeta() -> TestOps {
@@ -651,6 +654,34 @@ fn verify_hash_descriptor() {
             partition_name: TEST_PARTITION_NAME,
             salt: &decode(TEST_IMAGE_SALT_HEX).unwrap(),
             digest: &decode(TEST_IMAGE_DIGEST_HEX).unwrap()
+        }
+    )
+}
+
+#[test]
+fn verify_property_descriptor() {
+    let mut ops = test_ops_one_image_one_vbmeta();
+    // Replace vbmeta with the version containing a property descriptor.
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
+
+    let result = verify_one_image_one_vbmeta(&mut ops);
+
+    let data = result.unwrap();
+    let descriptors = &data.vbmeta_data()[0].descriptors().unwrap();
+    let descriptor = descriptors
+        .iter()
+        .filter_map(|d| match d {
+            Descriptor::Property(p) => Some(p),
+            _ => None,
+        })
+        .next()
+        .unwrap();
+
+    assert_eq!(
+        descriptor,
+        &PropertyDescriptor {
+            key: TEST_PROPERTY_KEY,
+            value: TEST_PROPERTY_VALUE
         }
     )
 }
