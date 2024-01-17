@@ -19,6 +19,10 @@
 
 extern crate alloc;
 
+mod hash;
+mod property;
+mod util;
+
 use crate::VbmetaData;
 use alloc::vec::Vec;
 use avb_bindgen::{
@@ -26,16 +30,19 @@ use avb_bindgen::{
 };
 use core::{ffi::c_void, mem::size_of, slice};
 
+pub use hash::{HashDescriptor, HashDescriptorFlags};
+pub use property::PropertyDescriptor;
+
 /// A single descriptor.
 // TODO(b/290110273): add support for full descriptor contents.
 #[derive(Debug)]
 pub enum Descriptor<'a> {
     /// Wraps `AvbPropertyDescriptor`.
-    Property(&'a [u8]),
+    Property(PropertyDescriptor<'a>),
     /// Wraps `AvbHashtreeDescriptor`.
     Hashtree(&'a [u8]),
     /// Wraps `AvbHashDescriptor`.
-    Hash(&'a [u8]),
+    Hash(HashDescriptor<'a>),
     /// Wraps `AvbKernelCmdlineDescriptor`.
     KernelCommandline(&'a [u8]),
     /// Wraps `AvbChainPartitionDescriptor`.
@@ -51,6 +58,12 @@ pub enum DescriptorError {
     InvalidHeader,
     /// A value in the descriptor was invalid.
     InvalidValue,
+    /// The descriptor claimed to be larger than the available data.
+    InvalidSize,
+    /// A field that was supposed to be valid UTF-8 was not.
+    InvalidUtf8,
+    /// Descriptor contents don't match what we expect.
+    InvalidContents,
 }
 
 /// `Result` type for `DescriptorError` errors.
@@ -94,9 +107,13 @@ impl<'a> Descriptor<'a> {
         let contents = unsafe { slice::from_raw_parts(raw_descriptor as *const u8, total_size) };
 
         match descriptor.tag.try_into() {
-            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_PROPERTY) => Ok(Descriptor::Property(contents)),
+            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_PROPERTY) => {
+                Ok(Descriptor::Property(PropertyDescriptor::new(contents)?))
+            }
             Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASHTREE) => Ok(Descriptor::Hashtree(contents)),
-            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH) => Ok(Descriptor::Hash(contents)),
+            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH) => {
+                Ok(Descriptor::Hash(HashDescriptor::new(contents)?))
+            }
             Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE) => {
                 Ok(Descriptor::KernelCommandline(contents))
             }
