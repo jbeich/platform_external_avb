@@ -15,8 +15,8 @@
 //! Chain partition descriptors.
 
 use super::{
-    util::{parse_descriptor, split_slice, ValidateAndByteswap, ValidationFunc},
-    DescriptorResult,
+    util::{parse_descriptor, split_slice, MatchDescriptor, ValidateAndByteswap, ValidationFunc},
+    Descriptor, DescriptorResult,
 };
 use avb_bindgen::{
     avb_chain_partition_descriptor_validate_and_byteswap, AvbChainPartitionDescriptor,
@@ -46,6 +46,17 @@ pub struct ChainPartitionDescriptor<'a> {
 
     /// Flags.
     pub flags: ChainPartitionDescriptorFlags,
+}
+
+impl<'a> MatchDescriptor<'a> for ChainPartitionDescriptor<'_> {
+    type Matched = ChainPartitionDescriptor<'a>;
+
+    fn match_descriptor<'b>(descriptor: &'b Descriptor<'a>) -> Option<&'b Self::Matched> {
+        match descriptor {
+            Descriptor::ChainPartition(d) => Some(d),
+            _ => None,
+        }
+    }
 }
 
 // SAFETY: `VALIDATE_AND_BYTESWAP_FUNC` is the correct libavb validator for this descriptor type.

@@ -15,8 +15,8 @@
 //! Property descriptors.
 
 use super::{
-    util::{parse_descriptor, split_slice, ValidateAndByteswap, ValidationFunc},
-    DescriptorError, DescriptorResult,
+    util::{parse_descriptor, split_slice, MatchDescriptor, ValidateAndByteswap, ValidationFunc},
+    Descriptor, DescriptorError, DescriptorResult,
 };
 use avb_bindgen::{avb_property_descriptor_validate_and_byteswap, AvbPropertyDescriptor};
 use core::str::from_utf8;
@@ -39,6 +39,17 @@ pub struct PropertyDescriptor<'a> {
 
     /// Value can be arbitrary bytes.
     pub value: &'a [u8],
+}
+
+impl<'a> MatchDescriptor<'a> for PropertyDescriptor<'_> {
+    type Matched = PropertyDescriptor<'a>;
+
+    fn match_descriptor<'b>(descriptor: &'b Descriptor<'a>) -> Option<&'b Self::Matched> {
+        match descriptor {
+            Descriptor::Property(d) => Some(d),
+            _ => None,
+        }
+    }
 }
 
 // SAFETY: `VALIDATE_AND_BYTESWAP_FUNC` is the correct libavb validator for this descriptor type.

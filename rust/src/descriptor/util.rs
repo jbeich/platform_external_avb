@@ -14,8 +14,61 @@
 
 //! Descriptor utilities.
 
-use super::{DescriptorError, DescriptorResult};
+use super::{Descriptor, DescriptorError, DescriptorResult};
 use zerocopy::{FromBytes, FromZeroes, Ref};
+
+/// Descriptor matching trait to support `filter_descriptors()`.
+pub trait MatchDescriptor<'a> {
+    /// The resulting matched type with `'a` lifetime.
+    ///
+    /// This is distinct from `Self` because the generic parameter's lifetime is irrelevant,
+    /// but the actual extracted descriptor lifetime must be `'a` to match the given input.
+    /// e.g. for `filter_descriptors::<HashDescriptor>(descriptors)`, the output lifetime is
+    /// that of `descriptors`, not the `<HashDescriptor>` template arg lifetime.
+    type Matched;
+
+    /// If the given `Descriptor` enum holds this descriptor type, returns the contained descriptor.
+    /// Otherwise, returns `None`.
+    fn match_descriptor<'b>(descriptor: &'b Descriptor<'a>) -> Option<&'b Self::Matched>;
+}
+
+/// Returns an iterator over a specific descriptor type.
+///
+/// This helps reduce boilerplate around the common operation of wanting to work with only
+/// descriptors of a specific type in a vbmeta image. This does two things:
+///
+/// 1. Filters the descriptor list to only include the requested type
+/// 2. Unwraps the `Descriptor` enum to give direct access to the descriptor type `T`
+///
+/// Using a hash descriptor as an example, this is equivalent to:
+///
+/// ```
+/// descriptors
+///     .iter()
+///     .filter_map(|d| match d {
+///         Descriptor::Hash(h) => Some(h),
+///         _ => None,
+///     })
+/// ```
+///
+/// # Arguments
+/// `descriptors`: all descriptors to search.
+///
+/// # Returns
+/// An iterator that will produce all the descriptors of the requested type `T`.
+//
+// The lifetimes are slightly complicated here, we have:
+// * 'a: lifetime of the underlying &[u8] data; must outlive 'b
+// * 'b: lifetime of the &[Descriptor] slice wrapping the data
+//
+// In some cases it would work to just use 'a for both here, but splitting them up allows usage
+// where the raw &[u8] data is longer-lived, and the `Descriptor` slice is a shorter-lived
+// wrapper around this data.
+pub fn filter_descriptors<'a: 'b, 'b, T: MatchDescriptor<'a>>(
+    descriptors: &'b [Descriptor<'a>],
+) -> impl Iterator<Item = &'b T::Matched> {
+    descriptors.iter().filter_map(|d| T::match_descriptor(d))
+}
 
 /// Splits `size` bytes off the front of `data`.
 ///
@@ -107,8 +160,127 @@ where
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    use crate::{
+        ChainPartitionDescriptor, HashDescriptor, HashtreeDescriptor, KernelCommandlineDescriptor,
+        PropertyDescriptor,
+    };
     use avb_bindgen::{avb_descriptor_validate_and_byteswap, AvbDescriptor, AvbHashDescriptor};
-    use std::mem::size_of;
+    use std::{fs, mem::size_of};
+
+    /// Loads descriptors from disk.
+    struct Loader {
+        chain_partition_data: Vec<u8>,
+        hash_data: Vec<u8>,
+        hashtree_data: Vec<u8>,
+        kernel_commandline_data: Vec<u8>,
+        property_data: Vec<u8>,
+    }
+
+    impl Loader {
+        fn new() -> Self {
+            let chain_partition_data = fs::read("testdata/chain_partition_descriptor.bin").unwrap();
+            let hash_data = fs::read("testdata/hash_descriptor.bin").unwrap();
+            let hashtree_data = fs::read("testdata/hashtree_descriptor.bin").unwrap();
+            let kernel_commandline_data =
+                fs::read("testdata/kernel_commandline_descriptor.bin").unwrap();
+            let property_data = fs::read("testdata/property_descriptor.bin").unwrap();
+
+            Self {
+                chain_partition_data,
+                hash_data,
+                hashtree_data,
+                kernel_commandline_data,
+                property_data,
+            }
+        }
+
+        fn chain_partition(&self) -> Descriptor {
+            Descriptor::ChainPartition(
+                ChainPartitionDescriptor::new(&self.chain_partition_data).unwrap(),
+            )
+        }
+
+        fn hash(&self) -> Descriptor {
+            Descriptor::Hash(HashDescriptor::new(&self.hash_data).unwrap())
+        }
+
+        fn hashtree(&self) -> Descriptor {
+            Descriptor::Hashtree(HashtreeDescriptor::new(&self.hashtree_data).unwrap())
+        }
+
+        fn kernel_commandline(&self) -> Descriptor {
+            Descriptor::KernelCommandline(
+                KernelCommandlineDescriptor::new(&self.kernel_commandline_data).unwrap(),
+            )
+        }
+
+        fn property(&self) -> Descriptor {
+            Descriptor::Property(PropertyDescriptor::new(&self.property_data).unwrap())
+        }
+    }
+
+    /// Tests that we can properly find a single instance of descriptor `T` inside a collection of
+    /// one of each descriptor type.
+    fn test_filter_descriptor<T>()
+    where
+        for<'a> T: MatchDescriptor<'a>,
+    {
+        let loader = Loader::new();
+        let descriptors = vec![
+            loader.chain_partition(),
+            loader.hash(),
+            loader.hashtree(),
+            loader.kernel_commandline(),
+            loader.property(),
+        ];
+        assert_eq!(filter_descriptors::<T>(&descriptors).count(), 1);
+    }
+
+    #[test]
+    fn filter_descriptors_finds_chain_partition() {
+        test_filter_descriptor::<ChainPartitionDescriptor>();
+    }
+
+    #[test]
+    fn filter_descriptors_finds_hash() {
+        test_filter_descriptor::<HashDescriptor>();
+    }
+
+    #[test]
+    fn filter_descriptors_finds_hashtree() {
+        test_filter_descriptor::<HashtreeDescriptor>();
+    }
+
+    #[test]
+    fn filter_descriptors_finds_kernel_commandline() {
+        test_filter_descriptor::<KernelCommandlineDescriptor>();
+    }
+
+    #[test]
+    fn filter_descriptors_finds_property() {
+        test_filter_descriptor::<PropertyDescriptor>();
+    }
+
+    #[test]
+    fn filter_descriptors_finds_multiple() {
+        let loader = Loader::new();
+        let descriptors = vec![loader.hash(), loader.property(), loader.hash()];
+        assert_eq!(
+            filter_descriptors::<HashDescriptor>(&descriptors).count(),
+            2
+        );
+    }
+
+    #[test]
+    fn filter_descriptors_finds_none() {
+        let loader = Loader::new();
+        let descriptors = vec![loader.hash(), loader.property(), loader.hash()];
+        assert_eq!(
+            filter_descriptors::<ChainPartitionDescriptor>(&descriptors).count(),
+            0
+        );
+    }
 
     #[test]
     fn split_slice_with_various_size_types_succeeds() {

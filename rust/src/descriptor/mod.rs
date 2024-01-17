@@ -43,6 +43,7 @@ pub use commandline::{KernelCommandlineDescriptor, KernelCommandlineDescriptorFl
 pub use hash::{HashDescriptor, HashDescriptorFlags};
 pub use hashtree::{HashtreeDescriptor, HashtreeDescriptorFlags};
 pub use property::PropertyDescriptor;
+pub use util::filter_descriptors;
 
 /// A single descriptor.
 #[derive(Debug, PartialEq, Eq)]

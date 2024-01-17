@@ -15,8 +15,8 @@
 //! Hashtree descriptors.
 
 use super::{
-    util::{parse_descriptor, split_slice, ValidateAndByteswap, ValidationFunc},
-    DescriptorResult,
+    util::{parse_descriptor, split_slice, MatchDescriptor, ValidateAndByteswap, ValidationFunc},
+    Descriptor, DescriptorResult,
 };
 use avb_bindgen::{avb_hashtree_descriptor_validate_and_byteswap, AvbHashtreeDescriptor};
 use core::{ffi::CStr, str::from_utf8};
@@ -68,6 +68,17 @@ pub struct HashtreeDescriptor<'a> {
 
     /// Image root hash digest.
     pub root_digest: &'a [u8],
+}
+
+impl<'a> MatchDescriptor<'a> for HashtreeDescriptor<'_> {
+    type Matched = HashtreeDescriptor<'a>;
+
+    fn match_descriptor<'b>(descriptor: &'b Descriptor<'a>) -> Option<&'b Self::Matched> {
+        match descriptor {
+            Descriptor::Hashtree(d) => Some(d),
+            _ => None,
+        }
+    }
 }
 
 // SAFETY: `VALIDATE_AND_BYTESWAP_FUNC` is the correct libavb validator for this descriptor type.

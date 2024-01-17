@@ -32,8 +32,8 @@ mod ops;
 mod verify;
 
 pub use descriptor::{
-    ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor, DescriptorError,
-    DescriptorResult, HashDescriptor, HashDescriptorFlags, HashtreeDescriptor,
+    filter_descriptors, ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor,
+    DescriptorError, DescriptorResult, HashDescriptor, HashDescriptorFlags, HashtreeDescriptor,
     HashtreeDescriptorFlags, KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags,
     PropertyDescriptor,
 };

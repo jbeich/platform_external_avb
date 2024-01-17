@@ -15,8 +15,8 @@
 //! Hash descriptors.
 
 use super::{
-    util::{parse_descriptor, split_slice, ValidateAndByteswap, ValidationFunc},
-    DescriptorResult,
+    util::{parse_descriptor, split_slice, MatchDescriptor, ValidateAndByteswap, ValidationFunc},
+    Descriptor, DescriptorResult,
 };
 use avb_bindgen::{avb_hash_descriptor_validate_and_byteswap, AvbHashDescriptor};
 use core::{ffi::CStr, str::from_utf8};
@@ -50,6 +50,17 @@ pub struct HashDescriptor<'a> {
 
     /// Image hash digest.
     pub digest: &'a [u8],
+}
+
+impl<'a> MatchDescriptor<'a> for HashDescriptor<'_> {
+    type Matched = HashDescriptor<'a>;
+
+    fn match_descriptor<'b>(descriptor: &'b Descriptor<'a>) -> Option<&'b Self::Matched> {
+        match descriptor {
+            Descriptor::Hash(d) => Some(d),
+            _ => None,
+        }
+    }
 }
 
 // SAFETY: `VALIDATE_AND_BYTESWAP_FUNC` is the correct libavb validator for this descriptor type.
