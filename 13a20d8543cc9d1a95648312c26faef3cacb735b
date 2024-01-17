@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd7544c7_917e29da",
+        "filename": "rust/src/descriptor/commandline.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 62,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-17T18:56:00Z",
+      "side": 1,
+      "message": "Much cleaner thanks, done.",
+      "parentUuid": "25eb8fe8_739a6ed0",
+      "range": {
+        "startLine": 62,
+        "startChar": 48,
+        "endLine": 62,
+        "endChar": 59
+      },
+      "revId": "13a20d8543cc9d1a95648312c26faef3cacb735b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "134d908d_03cc5f34",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-01-17T11:02:49Z",
       "side": 1,
       "message": "Can we extract a helper function for these tests by parameterizing the partition path and the expected descriptor?",
+      "range": {
+        "startLine": 742,
+        "startChar": 4,
+        "endLine": 768,
+        "endChar": 5
+      },
+      "revId": "13a20d8543cc9d1a95648312c26faef3cacb735b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a5f542b_02f9f5b5",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 768,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-17T18:56:00Z",
+      "side": 1,
+      "message": "Good idea that reduces duplication quite a bit, done.",
+      "parentUuid": "134d908d_03cc5f34",
       "range": {
         "startLine": 742,
         "startChar": 4,
