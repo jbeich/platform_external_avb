@@ -34,6 +34,29 @@
       "parentUuid": "b09daafb_a12d53c9",
       "revId": "2480660403f72e440d0c4d458abba72228ee573a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7894fe4f_8d24b960",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 734,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-01-17T11:02:00Z",
+      "side": 1,
+      "message": "Can we just do something like this?\n\n\n```suggestion\n    let expected_descriptor \u003d Descriptor::HashTree(\n        HashtreeDescriptorr {\n            ...\n    });\n    assert!(descriptors.contains(\u0026expected_descriptor));\n```",
+      "range": {
+        "startLine": 707,
+        "startChar": 3,
+        "endLine": 734,
+        "endChar": 5
+      },
+      "revId": "2480660403f72e440d0c4d458abba72228ee573a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
