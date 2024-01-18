@@ -31,15 +31,12 @@ rust_defaults {
     source_stem: "bindings",
     bindgen_flags: [
         "--constified-enum-module=AvbDescriptorTag",
-        "--bitfield-enum=AvbHashDescriptorFlags",
-        "--bitfield-enum=AvbHashtreeDescriptorFlags",
-        "--bitfield-enum=AvbSlotVerifyFlags",
+        "--bitfield-enum=Avb.*Flags",
         "--default-enum-style rust",
         "--with-derive-default",
         "--with-derive-custom=Avb.*Descriptor=FromZeroes,FromBytes",
         "--allowlist-type=AvbDescriptorTag",
-        "--allowlist-type=AvbHashDescriptorFlags",
-        "--allowlist-type=AvbHashtreeDescriptorFlags",
+        "--allowlist-type=Avb.*Flags",
         "--allowlist-function=.*",
         "--allowlist-var=AVB.*",
         "--use-core",
@@ -266,6 +263,7 @@ rust_defaults {
         ":avbrs_test_vbmeta",
         ":avbrs_test_vbmeta_2_parts",
         ":avbrs_test_vbmeta_persistent_digest",
+        ":avbrs_test_vbmeta_with_commandline",
         ":avbrs_test_vbmeta_with_hashtree",
         ":avbrs_test_vbmeta_with_property",
     ],
@@ -402,6 +400,18 @@ genrule {
     ],
     out: ["test_vbmeta_with_hashtree.img"],
     cmd: "$(location avbtool) make_vbmeta_image --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor_hashtree) --output $(out)",
+}
+
+// Standalone vbmeta image with kernel commandline "test_cmdline_key=test_cmdline_value".
+genrule {
+    name: "avbrs_test_vbmeta_with_commandline",
+    tools: ["avbtool"],
+    srcs: [
+        ":avbrs_test_image_descriptor",
+        ":avb_testkey_rsa4096",
+    ],
+    out: ["test_vbmeta_with_commandline.img"],
+    cmd: "$(location avbtool) make_vbmeta_image --kernel_cmdline test_cmdline_key=test_cmdline_value --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor) --output $(out)",
 }
 
 // Combined test image + signed vbmeta footer for "test_part".
