@@ -20,6 +20,7 @@
 extern crate alloc;
 
 mod hash;
+mod hashtree;
 mod property;
 mod util;
 
@@ -31,16 +32,17 @@ use avb_bindgen::{
 use core::{ffi::c_void, mem::size_of, slice};
 
 pub use hash::{HashDescriptor, HashDescriptorFlags};
+pub use hashtree::{HashtreeDescriptor, HashtreeDescriptorFlags};
 pub use property::PropertyDescriptor;
 
 /// A single descriptor.
 // TODO(b/290110273): add support for full descriptor contents.
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Descriptor<'a> {
     /// Wraps `AvbPropertyDescriptor`.
     Property(PropertyDescriptor<'a>),
     /// Wraps `AvbHashtreeDescriptor`.
-    Hashtree(&'a [u8]),
+    Hashtree(HashtreeDescriptor<'a>),
     /// Wraps `AvbHashDescriptor`.
     Hash(HashDescriptor<'a>),
     /// Wraps `AvbKernelCmdlineDescriptor`.
@@ -110,7 +112,9 @@ impl<'a> Descriptor<'a> {
             Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_PROPERTY) => {
                 Ok(Descriptor::Property(PropertyDescriptor::new(contents)?))
             }
-            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASHTREE) => Ok(Descriptor::Hashtree(contents)),
+            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASHTREE) => {
+                Ok(Descriptor::Hashtree(HashtreeDescriptor::new(contents)?))
+            }
             Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH) => {
                 Ok(Descriptor::Hash(HashDescriptor::new(contents)?))
             }
