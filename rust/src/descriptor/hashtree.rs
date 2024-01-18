@@ -16,7 +16,7 @@
 
 use super::{
     util::{parse_descriptor, split_slice, ValidateAndByteswap, ValidationFunc},
-    DescriptorError, DescriptorResult,
+    DescriptorResult,
 };
 use avb_bindgen::{avb_hashtree_descriptor_validate_and_byteswap, AvbHashtreeDescriptor};
 use core::{ffi::CStr, str::from_utf8};
@@ -97,10 +97,8 @@ impl<'a> HashtreeDescriptor<'a> {
         // byte-swapped header doesn't live past this function.
         // The hash algorithm is a nul-terminated UTF-8 string which is identical in the raw
         // and byteswapped headers.
-        let hash_algorithm = CStr::from_bytes_until_nul(&descriptor.raw_header.hash_algorithm)
-            .map_err(|_| DescriptorError::InvalidValue)?
-            .to_str()
-            .map_err(|_| DescriptorError::InvalidUtf8)?;
+        let hash_algorithm =
+            CStr::from_bytes_until_nul(&descriptor.raw_header.hash_algorithm)?.to_str()?;
 
         Ok(Self {
             dm_verity_version: descriptor.header.dm_verity_version,
@@ -113,7 +111,7 @@ impl<'a> HashtreeDescriptor<'a> {
             fec_offset: descriptor.header.fec_offset,
             fec_size: descriptor.header.fec_size,
             hash_algorithm,
-            partition_name: from_utf8(partition_name).map_err(|_| DescriptorError::InvalidUtf8)?,
+            partition_name: from_utf8(partition_name)?,
             salt,
             root_digest,
             flags: HashtreeDescriptorFlags(descriptor.header.flags),
@@ -124,6 +122,8 @@ impl<'a> HashtreeDescriptor<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    use crate::DescriptorError;
     use std::mem::size_of;
 
     /// A valid hashtree descriptor in raw big-endian format.
