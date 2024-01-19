@@ -16,7 +16,7 @@
 
 use super::{
     util::{parse_descriptor, split_slice, ValidateAndByteswap, ValidationFunc},
-    DescriptorError, DescriptorResult,
+    DescriptorResult,
 };
 use avb_bindgen::{avb_hash_descriptor_validate_and_byteswap, AvbHashDescriptor};
 use core::{ffi::CStr, str::from_utf8};
@@ -79,16 +79,14 @@ impl<'a> HashDescriptor<'a> {
         // byte-swapped header doesn't live past this function.
         // The hash algorithm is a nul-terminated UTF-8 string which is identical in the raw
         // and byteswapped headers.
-        let hash_algorithm = CStr::from_bytes_until_nul(&descriptor.raw_header.hash_algorithm)
-            .map_err(|_| DescriptorError::InvalidValue)?
-            .to_str()
-            .map_err(|_| DescriptorError::InvalidUtf8)?;
+        let hash_algorithm =
+            CStr::from_bytes_until_nul(&descriptor.raw_header.hash_algorithm)?.to_str()?;
 
         Ok(Self {
             image_size: descriptor.header.image_size,
             hash_algorithm,
             flags: HashDescriptorFlags(descriptor.header.flags),
-            partition_name: from_utf8(partition_name).map_err(|_| DescriptorError::InvalidUtf8)?,
+            partition_name: from_utf8(partition_name)?,
             salt,
             digest,
         })
@@ -98,6 +96,8 @@ impl<'a> HashDescriptor<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    use crate::DescriptorError;
     use std::mem::size_of;
 
     /// A valid hash descriptor in raw big-endian format.

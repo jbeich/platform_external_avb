@@ -65,7 +65,7 @@ impl<'a> PropertyDescriptor<'a> {
         extract_nul(remainder)?;
 
         Ok(Self {
-            key: from_utf8(key).map_err(|_| DescriptorError::InvalidUtf8)?,
+            key: from_utf8(key)?,
             value,
         })
     }

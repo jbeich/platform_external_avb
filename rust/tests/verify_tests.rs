@@ -17,8 +17,9 @@
 use crate::test_ops::TestOps;
 use avb::{
     slot_verify, Descriptor, HashDescriptor, HashDescriptorFlags, HashtreeDescriptor,
-    HashtreeDescriptorFlags, HashtreeErrorMode, IoError, PropertyDescriptor, SlotVerifyData,
-    SlotVerifyError, SlotVerifyFlags, SlotVerifyResult,
+    HashtreeDescriptorFlags, HashtreeErrorMode, IoError, KernelCommandlineDescriptor,
+    KernelCommandlineDescriptorFlags, PropertyDescriptor, SlotVerifyData, SlotVerifyError,
+    SlotVerifyFlags, SlotVerifyResult,
 };
 use hex::decode;
 use std::{ffi::CString, fs};
@@ -35,6 +36,7 @@ const TEST_VBMETA_2_PARTITIONS_PATH: &str = "test_vbmeta_2_parts.img";
 const TEST_VBMETA_PERSISTENT_DIGEST_PATH: &str = "test_vbmeta_persistent_digest.img";
 const TEST_VBMETA_WITH_PROPERTY_PATH: &str = "test_vbmeta_with_property.img";
 const TEST_VBMETA_WITH_HASHTREE_PATH: &str = "test_vbmeta_with_hashtree.img";
+const TEST_VBMETA_WITH_COMMANDLINE_PATH: &str = "test_vbmeta_with_commandline.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_PATH: &str = "avbrs_test_image_with_vbmeta_footer.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH: &str =
     "avbrs_test_image_with_vbmeta_footer_for_boot.img";
@@ -47,6 +49,7 @@ const TEST_PARTITION_HASH_TREE_NAME: &str = "test_part_hashtree";
 const TEST_VBMETA_ROLLBACK_LOCATION: usize = 0; // Default value, we don't explicitly set this.
 const TEST_PROPERTY_KEY: &str = "test_prop_key";
 const TEST_PROPERTY_VALUE: &[u8] = b"test_prop_value";
+const TEST_KERNEL_COMMANDLINE: &str = "test_cmdline_key=test_cmdline_value";
 
 // Expected values determined by examining the vbmeta image with `avbtool info_image`.
 // Images can be found in <out>/soong/.intermediates/external/avb/rust/.
@@ -640,70 +643,84 @@ fn two_images_gives_two_descriptors() {
     assert_eq!(data.vbmeta_data()[0].descriptors().unwrap().len(), 2);
 }
 
-#[test]
-fn verify_hash_descriptor() {
+/// Runs verification on the given contents and checks for a resulting descriptor.
+///
+/// This test helper performs the following steps:
+///
+/// 1. set up a `TestOps` for the default test image/vbmeta
+/// 2. replace the vbmeta image with the contents at `vbmeta_path`
+/// 3. run verification
+/// 4. check that the given `descriptor` exists in the verification data
+fn verify_and_find_descriptor(vbmeta_path: &str, expected_descriptor: &Descriptor) {
     let mut ops = test_ops_one_image_one_vbmeta();
+
+    // Replace the vbmeta image with the requested variation.
+    ops.add_partition("vbmeta", fs::read(vbmeta_path).unwrap());
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
     let data = result.unwrap();
     let descriptors = &data.vbmeta_data()[0].descriptors().unwrap();
+    assert!(descriptors.contains(expected_descriptor));
+}
 
-    let expected = HashDescriptor {
-        image_size: TEST_IMAGE_SIZE as u64,
-        hash_algorithm: TEST_IMAGE_HASH_ALGO,
-        flags: HashDescriptorFlags(0),
-        partition_name: TEST_PARTITION_NAME,
-        salt: &decode(TEST_IMAGE_SALT_HEX).unwrap(),
-        digest: &decode(TEST_IMAGE_DIGEST_HEX).unwrap(),
-    };
-    assert!(descriptors.contains(&Descriptor::Hash(expected)));
+#[test]
+fn verify_hash_descriptor() {
+    verify_and_find_descriptor(
+        // The standard vbmeta image should contain the hash descriptor.
+        TEST_VBMETA_PATH,
+        &Descriptor::Hash(HashDescriptor {
+            image_size: TEST_IMAGE_SIZE as u64,
+            hash_algorithm: TEST_IMAGE_HASH_ALGO,
+            flags: HashDescriptorFlags(0),
+            partition_name: TEST_PARTITION_NAME,
+            salt: &decode(TEST_IMAGE_SALT_HEX).unwrap(),
+            digest: &decode(TEST_IMAGE_DIGEST_HEX).unwrap(),
+        }),
+    );
 }
 
 #[test]
 fn verify_property_descriptor() {
-    let mut ops = test_ops_one_image_one_vbmeta();
-    // Replace vbmeta with the version containing a property descriptor.
-    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
-
-    let result = verify_one_image_one_vbmeta(&mut ops);
-
-    let data = result.unwrap();
-    let descriptors = &data.vbmeta_data()[0].descriptors().unwrap();
-
-    let expected = PropertyDescriptor {
-        key: TEST_PROPERTY_KEY,
-        value: TEST_PROPERTY_VALUE,
-    };
-    assert!(descriptors.contains(&Descriptor::Property(expected)));
+    verify_and_find_descriptor(
+        TEST_VBMETA_WITH_PROPERTY_PATH,
+        &Descriptor::Property(PropertyDescriptor {
+            key: TEST_PROPERTY_KEY,
+            value: TEST_PROPERTY_VALUE,
+        }),
+    );
 }
 
 #[test]
 fn verify_hashtree_descriptor() {
-    let mut ops = test_ops_one_image_one_vbmeta();
-    // Replace vbmeta with the version containing a hashtree descriptor.
-    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_HASHTREE_PATH).unwrap());
+    verify_and_find_descriptor(
+        TEST_VBMETA_WITH_HASHTREE_PATH,
+        &Descriptor::Hashtree(HashtreeDescriptor {
+            dm_verity_version: 1,
+            image_size: TEST_IMAGE_SIZE as u64,
+            tree_offset: TEST_IMAGE_SIZE as u64,
+            tree_size: 4096,
+            data_block_size: 4096,
+            hash_block_size: 4096,
+            fec_num_roots: 0,
+            fec_offset: 0,
+            fec_size: 0,
+            hash_algorithm: TEST_HASHTREE_ALGORITHM,
+            flags: HashtreeDescriptorFlags(0),
+            partition_name: TEST_PARTITION_HASH_TREE_NAME,
+            salt: &decode(TEST_HASHTREE_SALT_HEX).unwrap(),
+            root_digest: &decode(TEST_HASHTREE_DIGEST_HEX).unwrap(),
+        }),
+    );
+}
 
-    let result = verify_one_image_one_vbmeta(&mut ops);
-
-    let data = result.unwrap();
-    let descriptors = &data.vbmeta_data()[0].descriptors().unwrap();
-
-    let expected = HashtreeDescriptor {
-        dm_verity_version: 1,
-        image_size: TEST_IMAGE_SIZE as u64,
-        tree_offset: TEST_IMAGE_SIZE as u64,
-        tree_size: 4096,
-        data_block_size: 4096,
-        hash_block_size: 4096,
-        fec_num_roots: 0,
-        fec_offset: 0,
-        fec_size: 0,
-        hash_algorithm: TEST_HASHTREE_ALGORITHM,
-        flags: HashtreeDescriptorFlags(0),
-        partition_name: TEST_PARTITION_HASH_TREE_NAME,
-        salt: &decode(TEST_HASHTREE_SALT_HEX).unwrap(),
-        root_digest: &decode(TEST_HASHTREE_DIGEST_HEX).unwrap(),
-    };
-    assert!(descriptors.contains(&Descriptor::Hashtree(expected)));
+#[test]
+fn verify_kernel_commandline_descriptor() {
+    verify_and_find_descriptor(
+        TEST_VBMETA_WITH_COMMANDLINE_PATH,
+        &Descriptor::KernelCommandline(KernelCommandlineDescriptor {
+            flags: KernelCommandlineDescriptorFlags(0),
+            commandline: TEST_KERNEL_COMMANDLINE,
+        }),
+    );
 }
