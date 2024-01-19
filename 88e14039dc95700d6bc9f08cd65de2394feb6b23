@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "db4f771e_c9542af6",
+        "filename": "rust/src/descriptor/chain.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 90,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-19T22:10:34Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a44f2ad_0ed5fd00",
+      "range": {
+        "startLine": 90,
+        "startChar": 10,
+        "endLine": 90,
+        "endChar": 41
+      },
+      "revId": "88e14039dc95700d6bc9f08cd65de2394feb6b23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "2dc48b2b_223f0eb9",
         "filename": "rust/tests/verify_tests.rs",
         "patchSetId": 4
@@ -60,6 +84,30 @@
       "writtenOn": "2024-01-19T08:39:54Z",
       "side": 1,
       "message": "nit: Can we take a value other than the default value 0?",
+      "range": {
+        "startLine": 757,
+        "startChar": 58,
+        "endLine": 757,
+        "endChar": 59
+      },
+      "revId": "88e14039dc95700d6bc9f08cd65de2394feb6b23",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2a59c445_9a795603",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 757,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-19T22:10:34Z",
+      "side": 1,
+      "message": "Good idea, done.",
+      "parentUuid": "0172baf8_5232bd58",
       "range": {
         "startLine": 757,
         "startChar": 58,
