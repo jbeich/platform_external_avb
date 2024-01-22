@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4d004302_1e997dc8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-01-22T18:12:47Z",
+      "side": 1,
+      "message": "Oops looks like the last revision was large enough that it removed the +2 vote, PTAL one more time when you get a minute. Thanks!",
+      "revId": "0f877b908e456067bdb937582f98503bfc61033f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
