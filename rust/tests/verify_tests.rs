@@ -16,10 +16,10 @@
 
 use crate::test_ops::TestOps;
 use avb::{
-    slot_verify, Descriptor, HashDescriptor, HashDescriptorFlags, HashtreeDescriptor,
-    HashtreeDescriptorFlags, HashtreeErrorMode, IoError, KernelCommandlineDescriptor,
-    KernelCommandlineDescriptorFlags, PropertyDescriptor, SlotVerifyData, SlotVerifyError,
-    SlotVerifyFlags, SlotVerifyResult,
+    slot_verify, ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor,
+    HashDescriptor, HashDescriptorFlags, HashtreeDescriptor, HashtreeDescriptorFlags,
+    HashtreeErrorMode, IoError, KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags,
+    PropertyDescriptor, SlotVerifyData, SlotVerifyError, SlotVerifyFlags, SlotVerifyResult,
 };
 use hex::decode;
 use std::{ffi::CString, fs};
@@ -37,10 +37,14 @@ const TEST_VBMETA_PERSISTENT_DIGEST_PATH: &str = "test_vbmeta_persistent_digest.
 const TEST_VBMETA_WITH_PROPERTY_PATH: &str = "test_vbmeta_with_property.img";
 const TEST_VBMETA_WITH_HASHTREE_PATH: &str = "test_vbmeta_with_hashtree.img";
 const TEST_VBMETA_WITH_COMMANDLINE_PATH: &str = "test_vbmeta_with_commandline.img";
+const TEST_VBMETA_WITH_CHAINED_PARTITION_PATH: &str = "test_vbmeta_with_chained_partition.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_PATH: &str = "avbrs_test_image_with_vbmeta_footer.img";
 const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH: &str =
     "avbrs_test_image_with_vbmeta_footer_for_boot.img";
+const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_TEST_PART_2: &str =
+    "avbrs_test_image_with_vbmeta_footer_for_test_part_2.img";
 const TEST_PUBLIC_KEY_PATH: &str = "data/testkey_rsa4096_pub.bin";
+const TEST_PUBLIC_KEY_RSA8192_PATH: &str = "data/testkey_rsa8192_pub.bin";
 const TEST_PARTITION_NAME: &str = "test_part";
 const TEST_PARTITION_SLOT_C_NAME: &str = "test_part_c";
 const TEST_PARTITION_2_NAME: &str = "test_part_2";
@@ -50,6 +54,8 @@ const TEST_VBMETA_ROLLBACK_LOCATION: usize = 0; // Default value, we don't expli
 const TEST_PROPERTY_KEY: &str = "test_prop_key";
 const TEST_PROPERTY_VALUE: &[u8] = b"test_prop_value";
 const TEST_KERNEL_COMMANDLINE: &str = "test_cmdline_key=test_cmdline_value";
+const TEST_CHAINED_PARTITION_ROLLBACK_LOCATION: usize = 4;
+const TEST_CHAINED_PARTITION_ROLLBACK_INDEX: u64 = 7;
 
 // Expected values determined by examining the vbmeta image with `avbtool info_image`.
 // Images can be found in <out>/soong/.intermediates/external/avb/rust/.
@@ -92,8 +98,8 @@ fn test_ops_two_images_one_vbmeta() -> TestOps {
     ops
 }
 
-/// Calls `slot_verify()` using standard args for `test_ops_two_images_one_vbmeta()` setup.
-fn verify_two_images_one_vbmeta(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
+/// Calls `slot_verify()` for both test partitions.
+fn verify_two_images(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
     slot_verify(
         ops,
         &[
@@ -254,7 +260,7 @@ fn slotted_partition_passes_verification() {
 fn two_images_one_vbmeta_passes_verification() {
     let mut ops = test_ops_two_images_one_vbmeta();
 
-    let result = verify_two_images_one_vbmeta(&mut ops);
+    let result = verify_two_images(&mut ops);
 
     // We should still only have 1 `VbmetaData` since we only used 1 vbmeta image, but it
     // signed 2 partitions so we should have 2 `PartitionData` objects.
@@ -590,7 +596,7 @@ fn preloaded_image_verification_data_display() {
 fn two_images_one_vbmeta_verification_data_display() {
     let mut ops = test_ops_two_images_one_vbmeta();
 
-    let result = verify_two_images_one_vbmeta(&mut ops);
+    let result = verify_two_images(&mut ops);
 
     let data = result.unwrap();
     assert_eq!(
@@ -637,7 +643,7 @@ fn one_image_gives_single_descriptor() {
 fn two_images_gives_two_descriptors() {
     let mut ops = test_ops_two_images_one_vbmeta();
 
-    let result = verify_two_images_one_vbmeta(&mut ops);
+    let result = verify_two_images(&mut ops);
 
     let data = result.unwrap();
     assert_eq!(data.vbmeta_data()[0].descriptors().unwrap().len(), 2);
@@ -723,4 +729,58 @@ fn verify_kernel_commandline_descriptor() {
             commandline: TEST_KERNEL_COMMANDLINE,
         }),
     );
+}
+
+#[test]
+fn verify_chain_partition_descriptor() {
+    let mut ops = test_ops_two_images_one_vbmeta();
+
+    // Set up the fake ops to contain:
+    // * the default test image in TEST_PARTITION_NAME
+    // * a signed test image with vbmeta footer in TEST_PARTITION_2_NAME
+    // * a vbmeta image in "vbmeta" which:
+    //   * signs the default TEST_PARTITION_NAME image
+    //   * chains to TEST_PARTITION_2_NAME
+    //
+    // Since this is an unusual configuration, it's simpler to just set it up manually here
+    // rather than try to adapt `verify_and_find_descriptor()` for this one case.
+    ops.add_partition(
+        "vbmeta",
+        fs::read(TEST_VBMETA_WITH_CHAINED_PARTITION_PATH).unwrap(),
+    );
+    // Replace the chained partition with the combined image + vbmeta footer.
+    ops.add_partition(
+        TEST_PARTITION_2_NAME,
+        fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_TEST_PART_2).unwrap(),
+    );
+    // Add the rollback index for the chained partition's location.
+    ops.rollbacks.insert(
+        TEST_CHAINED_PARTITION_ROLLBACK_LOCATION,
+        TEST_CHAINED_PARTITION_ROLLBACK_INDEX,
+    );
+
+    let result = verify_two_images(&mut ops);
+
+    let data = result.unwrap();
+    // We should have two vbmeta images - one from the "vbmeta" partition, the other embedded
+    // in the footer of TEST_PARTITION_2_NAME.
+    let vbmetas = data.vbmeta_data();
+    assert_eq!(vbmetas.len(), 2);
+    // Search for the main vbmeta so we don't assume any particular order.
+    let main_vbmeta = vbmetas
+        .iter()
+        .find(|v| v.partition_name().to_str().unwrap() == "vbmeta")
+        .unwrap();
+
+    // The main vbmeta should contain the chain descriptor.
+    let expected = ChainPartitionDescriptor {
+        rollback_index_location: TEST_CHAINED_PARTITION_ROLLBACK_LOCATION as u32,
+        partition_name: TEST_PARTITION_2_NAME,
+        public_key: &fs::read(TEST_PUBLIC_KEY_RSA8192_PATH).unwrap(),
+        flags: ChainPartitionDescriptorFlags(0),
+    };
+    assert!(main_vbmeta
+        .descriptors()
+        .unwrap()
+        .contains(&Descriptor::ChainPartition(expected)));
 }
