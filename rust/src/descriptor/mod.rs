@@ -19,6 +19,8 @@
 
 extern crate alloc;
 
+mod chain;
+mod commandline;
 mod hash;
 mod hashtree;
 mod property;
@@ -29,14 +31,20 @@ use alloc::vec::Vec;
 use avb_bindgen::{
     avb_descriptor_foreach, avb_descriptor_validate_and_byteswap, AvbDescriptor, AvbDescriptorTag,
 };
-use core::{ffi::c_void, mem::size_of, slice};
+use core::{
+    ffi::{c_void, FromBytesUntilNulError},
+    mem::size_of,
+    slice,
+    str::Utf8Error,
+};
 
+pub use chain::{ChainPartitionDescriptor, ChainPartitionDescriptorFlags};
+pub use commandline::{KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags};
 pub use hash::{HashDescriptor, HashDescriptorFlags};
 pub use hashtree::{HashtreeDescriptor, HashtreeDescriptorFlags};
 pub use property::PropertyDescriptor;
 
 /// A single descriptor.
-// TODO(b/290110273): add support for full descriptor contents.
 #[derive(Debug, PartialEq, Eq)]
 pub enum Descriptor<'a> {
     /// Wraps `AvbPropertyDescriptor`.
@@ -46,9 +54,9 @@ pub enum Descriptor<'a> {
     /// Wraps `AvbHashDescriptor`.
     Hash(HashDescriptor<'a>),
     /// Wraps `AvbKernelCmdlineDescriptor`.
-    KernelCommandline(&'a [u8]),
+    KernelCommandline(KernelCommandlineDescriptor<'a>),
     /// Wraps `AvbChainPartitionDescriptor`.
-    ChainPartition(&'a [u8]),
+    ChainPartition(ChainPartitionDescriptor<'a>),
     /// Unknown descriptor type.
     Unknown(&'a [u8]),
 }
@@ -66,6 +74,18 @@ pub enum DescriptorError {
     InvalidUtf8,
     /// Descriptor contents don't match what we expect.
     InvalidContents,
+}
+
+impl From<Utf8Error> for DescriptorError {
+    fn from(_: Utf8Error) -> Self {
+        Self::InvalidUtf8
+    }
+}
+
+impl From<FromBytesUntilNulError> for DescriptorError {
+    fn from(_: FromBytesUntilNulError) -> Self {
+        Self::InvalidContents
+    }
 }
 
 /// `Result` type for `DescriptorError` errors.
@@ -118,12 +138,12 @@ impl<'a> Descriptor<'a> {
             Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_HASH) => {
                 Ok(Descriptor::Hash(HashDescriptor::new(contents)?))
             }
-            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE) => {
-                Ok(Descriptor::KernelCommandline(contents))
-            }
-            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_CHAIN_PARTITION) => {
-                Ok(Descriptor::ChainPartition(contents))
-            }
+            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_KERNEL_CMDLINE) => Ok(
+                Descriptor::KernelCommandline(KernelCommandlineDescriptor::new(contents)?),
+            ),
+            Ok(AvbDescriptorTag::AVB_DESCRIPTOR_TAG_CHAIN_PARTITION) => Ok(
+                Descriptor::ChainPartition(ChainPartitionDescriptor::new(contents)?),
+            ),
             _ => Ok(Descriptor::Unknown(contents)),
         }
     }

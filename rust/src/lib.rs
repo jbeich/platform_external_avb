@@ -32,8 +32,10 @@ mod ops;
 mod verify;
 
 pub use descriptor::{
-    Descriptor, DescriptorError, DescriptorResult, HashDescriptor, HashDescriptorFlags,
-    HashtreeDescriptor, HashtreeDescriptorFlags, PropertyDescriptor,
+    ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor, DescriptorError,
+    DescriptorResult, HashDescriptor, HashDescriptorFlags, HashtreeDescriptor,
+    HashtreeDescriptorFlags, KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags,
+    PropertyDescriptor,
 };
 pub use error::{
     IoError, IoResult, SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult,

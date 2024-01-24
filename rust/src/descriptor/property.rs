@@ -65,7 +65,7 @@ impl<'a> PropertyDescriptor<'a> {
         extract_nul(remainder)?;
 
         Ok(Self {
-            key: from_utf8(key).map_err(|_| DescriptorError::InvalidUtf8)?,
+            key: from_utf8(key)?,
             value,
         })
     }
@@ -74,28 +74,24 @@ impl<'a> PropertyDescriptor<'a> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::mem::size_of;
 
-    /// A valid property descriptor in raw big-endian format.
-    const TEST_PROPERTY_DESCRIPTOR: &[u8] = &[
-        0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x30, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x0D, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-        0x00, 0x0F, 0x74, 0x65, 0x73, 0x74, 0x5F, 0x70, 0x72, 0x6F, 0x70, 0x5F, 0x6B, 0x65, 0x79,
-        0x00, 0x74, 0x65, 0x73, 0x74, 0x5F, 0x70, 0x72, 0x6F, 0x70, 0x5F, 0x76, 0x61, 0x6C, 0x75,
-        0x65, 0x00, 0x00, 0x00,
-    ];
+    use std::{fs, mem::size_of};
+
+    /// A valid descriptor that we've pre-generated as test data.
+    fn test_contents() -> Vec<u8> {
+        fs::read("testdata/property_descriptor.bin").unwrap()
+    }
 
     #[test]
     fn new_property_descriptor_success() {
-        let descriptor = PropertyDescriptor::new(TEST_PROPERTY_DESCRIPTOR);
-        assert!(descriptor.is_ok());
+        assert!(PropertyDescriptor::new(&test_contents()).is_ok());
     }
 
     #[test]
     fn new_property_descriptor_too_short_header_fails() {
         let bad_header_size = size_of::<AvbPropertyDescriptor>() - 1;
         assert_eq!(
-            PropertyDescriptor::new(&TEST_PROPERTY_DESCRIPTOR[..bad_header_size]).unwrap_err(),
+            PropertyDescriptor::new(&test_contents()[..bad_header_size]).unwrap_err(),
             DescriptorError::InvalidHeader
         );
     }
@@ -103,9 +99,9 @@ mod tests {
     #[test]
     fn new_property_descriptor_too_short_contents_fails() {
         // The last 2 bytes are padding, so we need to drop 3 bytes to trigger an error.
-        let bad_contents_size = TEST_PROPERTY_DESCRIPTOR.len() - 3;
+        let bad_contents_size = test_contents().len() - 3;
         assert_eq!(
-            PropertyDescriptor::new(&TEST_PROPERTY_DESCRIPTOR[..bad_contents_size]).unwrap_err(),
+            PropertyDescriptor::new(&test_contents()[..bad_contents_size]).unwrap_err(),
             DescriptorError::InvalidSize
         );
     }
