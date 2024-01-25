@@ -66,7 +66,7 @@ const TEST_HASHTREE_DIGEST_HEX: &str = "5373fc4ee3dd898325eeeffb5a1dbb041900c5f1
 const TEST_HASHTREE_ALGORITHM: &str = "sha1";
 
 /// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME`.
-fn test_ops_one_image_one_vbmeta() -> TestOps {
+pub fn test_ops_one_image_one_vbmeta() -> TestOps {
     let mut ops = TestOps::default();
     ops.add_partition(TEST_PARTITION_NAME, fs::read(TEST_IMAGE_PATH).unwrap());
     ops.add_partition("vbmeta", fs::read(TEST_VBMETA_PATH).unwrap());
@@ -117,10 +117,7 @@ fn verify_two_images(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
 fn test_ops_boot_partition() -> TestOps {
     let mut ops = test_ops_one_image_one_vbmeta();
     ops.partitions.clear();
-    ops.add_partition(
-        "boot",
-        fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH).unwrap(),
-    );
+    ops.add_partition("boot", fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH).unwrap());
     ops
 }
 
@@ -144,10 +141,7 @@ fn test_ops_persistent_digest(image: Vec<u8>) -> TestOps {
     let mut ops = test_ops_one_image_one_vbmeta();
     ops.partitions.clear();
     // Use the vbmeta image with the persistent digest descriptor.
-    ops.add_partition(
-        "vbmeta",
-        fs::read(TEST_VBMETA_PERSISTENT_DIGEST_PATH).unwrap(),
-    );
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_PERSISTENT_DIGEST_PATH).unwrap());
     // Register the image contents to be stored via persistent digest.
     ops.add_partition(TEST_PARTITION_PERSISTENT_DIGEST_NAME, image);
     ops
@@ -187,16 +181,9 @@ fn one_image_one_vbmeta_passes_verification_with_correct_data() {
     assert_eq!(data.ab_suffix().to_bytes(), b"");
     // We don't care about the exact commandline, just search for a substring we know will
     // exist to make sure the commandline is being provided to the caller correctly.
-    assert!(data
-        .cmdline()
-        .to_str()
-        .unwrap()
-        .contains("androidboot.vbmeta.device_state=locked"));
+    assert!(data.cmdline().to_str().unwrap().contains("androidboot.vbmeta.device_state=locked"));
     assert_eq!(data.rollback_indexes(), &[0; 32]);
-    assert_eq!(
-        data.resolved_hashtree_error_mode(),
-        HashtreeErrorMode::AVB_HASHTREE_ERROR_MODE_EIO
-    );
+    assert_eq!(data.resolved_hashtree_error_mode(), HashtreeErrorMode::AVB_HASHTREE_ERROR_MODE_EIO);
 
     // Check the `VbmetaData` struct looks correct.
     assert_eq!(data.vbmeta_data().len(), 1);
@@ -208,10 +195,7 @@ fn one_image_one_vbmeta_passes_verification_with_correct_data() {
     // Check the `PartitionData` struct looks correct.
     assert_eq!(data.partition_data().len(), 1);
     let partition_data = &data.partition_data()[0];
-    assert_eq!(
-        partition_data.partition_name().to_str().unwrap(),
-        TEST_PARTITION_NAME
-    );
+    assert_eq!(partition_data.partition_name().to_str().unwrap(), TEST_PARTITION_NAME);
     assert_eq!(partition_data.data(), fs::read(TEST_IMAGE_PATH).unwrap());
     assert!(!partition_data.preloaded());
     assert!(partition_data.verify_result().is_ok());
@@ -221,10 +205,7 @@ fn one_image_one_vbmeta_passes_verification_with_correct_data() {
 fn preloaded_image_passes_verification() {
     let mut ops = test_ops_one_image_one_vbmeta();
     // Mark the image partition to be preloaded.
-    ops.partitions
-        .get_mut(TEST_PARTITION_NAME)
-        .unwrap()
-        .preloaded = true;
+    ops.partitions.get_mut(TEST_PARTITION_NAME).unwrap().preloaded = true;
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -238,10 +219,7 @@ fn slotted_partition_passes_verification() {
     let mut ops = test_ops_one_image_one_vbmeta();
     // Move the partitions to a "_c" slot.
     ops.partitions.clear();
-    ops.add_partition(
-        TEST_PARTITION_SLOT_C_NAME,
-        fs::read(TEST_IMAGE_PATH).unwrap(),
-    );
+    ops.add_partition(TEST_PARTITION_SLOT_C_NAME, fs::read(TEST_IMAGE_PATH).unwrap());
     ops.add_partition("vbmeta_c", fs::read(TEST_VBMETA_PATH).unwrap());
 
     let result = slot_verify(
@@ -267,14 +245,8 @@ fn two_images_one_vbmeta_passes_verification() {
     let data = result.unwrap();
     assert_eq!(data.vbmeta_data().len(), 1);
     assert_eq!(data.partition_data().len(), 2);
-    assert_eq!(
-        data.partition_data()[0].partition_name().to_str().unwrap(),
-        TEST_PARTITION_NAME
-    );
-    assert_eq!(
-        data.partition_data()[1].partition_name().to_str().unwrap(),
-        TEST_PARTITION_2_NAME
-    );
+    assert_eq!(data.partition_data()[0].partition_name().to_str().unwrap(), TEST_PARTITION_NAME);
+    assert_eq!(data.partition_data()[1].partition_name().to_str().unwrap(), TEST_PARTITION_2_NAME);
 }
 
 #[test]
@@ -282,10 +254,7 @@ fn combined_image_vbmeta_partition_passes_verification() {
     let mut ops = test_ops_one_image_one_vbmeta();
     ops.partitions.clear();
     // Register the single combined image + vbmeta in `TEST_PARTITION_NAME`.
-    ops.add_partition(
-        TEST_PARTITION_NAME,
-        fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_PATH).unwrap(),
-    );
+    ops.add_partition(TEST_PARTITION_NAME, fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_PATH).unwrap());
     // For a combined image we need to register the public key specifically for this partition.
     ops.add_vbmeta_key_for_partition(
         fs::read(TEST_PUBLIC_KEY_PATH).unwrap(),
@@ -309,19 +278,13 @@ fn combined_image_vbmeta_partition_passes_verification() {
     // Vbmeta should indicate that it came from `TEST_PARTITION_NAME`.
     assert_eq!(data.vbmeta_data().len(), 1);
     let vbmeta_data = &data.vbmeta_data()[0];
-    assert_eq!(
-        vbmeta_data.partition_name().to_str().unwrap(),
-        TEST_PARTITION_NAME
-    );
+    assert_eq!(vbmeta_data.partition_name().to_str().unwrap(), TEST_PARTITION_NAME);
 
     // Partition should indicate that it came from `TEST_PARTITION_NAME`, but only contain the
     // image contents.
     assert_eq!(data.partition_data().len(), 1);
     let partition_data = &data.partition_data()[0];
-    assert_eq!(
-        partition_data.partition_name().to_str().unwrap(),
-        TEST_PARTITION_NAME
-    );
+    assert_eq!(partition_data.partition_name().to_str().unwrap(), TEST_PARTITION_NAME);
     assert_eq!(partition_data.data(), fs::read(TEST_IMAGE_PATH).unwrap());
 }
 
@@ -360,9 +323,7 @@ fn persistent_digest_verification_updates_persistent_value() {
         assert_eq!(data.partition_data()[0].data(), image_contents);
     } // Drop `result` here so it releases `ops` and we can use it again.
 
-    assert!(ops
-        .persistent_values
-        .contains_key(&persistent_digest_value_name()));
+    assert!(ops.persistent_values.contains_key(&persistent_digest_value_name()));
 }
 
 #[cfg(feature = "uuid")]
@@ -423,11 +384,7 @@ fn read_partition_callback_error_fails_verification() {
 #[test]
 fn undersized_partition_fails_verification() {
     let mut ops = test_ops_one_image_one_vbmeta();
-    ops.partitions
-        .get_mut(TEST_PARTITION_NAME)
-        .unwrap()
-        .contents
-        .pop();
+    ops.partitions.get_mut(TEST_PARTITION_NAME).unwrap().contents.pop();
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -578,10 +535,7 @@ fn one_image_one_vbmeta_verification_data_display() {
 #[test]
 fn preloaded_image_verification_data_display() {
     let mut ops = test_ops_one_image_one_vbmeta();
-    ops.partitions
-        .get_mut(TEST_PARTITION_NAME)
-        .unwrap()
-        .preloaded = true;
+    ops.partitions.get_mut(TEST_PARTITION_NAME).unwrap().preloaded = true;
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -744,20 +698,15 @@ fn verify_chain_partition_descriptor() {
     //
     // Since this is an unusual configuration, it's simpler to just set it up manually here
     // rather than try to adapt `verify_and_find_descriptor()` for this one case.
-    ops.add_partition(
-        "vbmeta",
-        fs::read(TEST_VBMETA_WITH_CHAINED_PARTITION_PATH).unwrap(),
-    );
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_CHAINED_PARTITION_PATH).unwrap());
     // Replace the chained partition with the combined image + vbmeta footer.
     ops.add_partition(
         TEST_PARTITION_2_NAME,
         fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_TEST_PART_2).unwrap(),
     );
     // Add the rollback index for the chained partition's location.
-    ops.rollbacks.insert(
-        TEST_CHAINED_PARTITION_ROLLBACK_LOCATION,
-        TEST_CHAINED_PARTITION_ROLLBACK_INDEX,
-    );
+    ops.rollbacks
+        .insert(TEST_CHAINED_PARTITION_ROLLBACK_LOCATION, TEST_CHAINED_PARTITION_ROLLBACK_INDEX);
 
     let result = verify_two_images(&mut ops);
 
@@ -767,10 +716,8 @@ fn verify_chain_partition_descriptor() {
     let vbmetas = data.vbmeta_data();
     assert_eq!(vbmetas.len(), 2);
     // Search for the main vbmeta so we don't assume any particular order.
-    let main_vbmeta = vbmetas
-        .iter()
-        .find(|v| v.partition_name().to_str().unwrap() == "vbmeta")
-        .unwrap();
+    let main_vbmeta =
+        vbmetas.iter().find(|v| v.partition_name().to_str().unwrap() == "vbmeta").unwrap();
 
     // The main vbmeta should contain the chain descriptor.
     let expected = ChainPartitionDescriptor {
@@ -779,8 +726,5 @@ fn verify_chain_partition_descriptor() {
         public_key: &fs::read(TEST_PUBLIC_KEY_RSA8192_PATH).unwrap(),
         flags: ChainPartitionDescriptorFlags(0),
     };
-    assert!(main_vbmeta
-        .descriptors()
-        .unwrap()
-        .contains(&Descriptor::ChainPartition(expected)));
+    assert!(main_vbmeta.descriptors().unwrap().contains(&Descriptor::ChainPartition(expected)));
 }

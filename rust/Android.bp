@@ -234,6 +234,24 @@ rust_library {
     ],
 }
 
+// TestOps lib: std
+rust_library {
+    crate_name: "avb_test",
+    name: "libavb_test_rs_testops",
+    srcs: ["tests/test_ops.rs"],
+    clippy_lints: "android",
+    lints: "android",
+    host_supported: true,
+    rustlibs: [
+        "libavb_bindgen",
+        "libzerocopy",
+        "libavb_rs",
+    ],
+    whole_static_libs: [
+        "libavb",
+    ],
+}
+
 // "libavb_rs.defaults" plus additional unit test defaults.
 rust_defaults {
     name: "libavb_rs_unittest.defaults",
