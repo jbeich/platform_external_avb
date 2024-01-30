@@ -41,7 +41,7 @@ pub use error::{
     IoError, IoResult, SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult,
     VbmetaVerifyError, VbmetaVerifyResult,
 };
-pub use ops::{Ops, PublicKeyForPartitionInfo};
+pub use ops::{Ops, Preloaded, PublicKeyForPartitionInfo};
 pub use verify::{
     slot_verify, HashtreeErrorMode, PartitionData, SlotVerifyData, SlotVerifyFlags, VbmetaData,
 };

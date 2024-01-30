@@ -14,23 +14,56 @@
 
 //! Provides `avb::Ops` test fixtures.
 
-use avb::{IoError, IoResult, Ops, PublicKeyForPartitionInfo};
+use avb::{IoError, IoResult, Ops, Preloaded, PublicKeyForPartitionInfo};
 use std::{cmp::min, collections::HashMap, ffi::CStr};
 #[cfg(feature = "uuid")]
 use uuid::Uuid;
 
-/// Represents a single fake partition.
-#[derive(Default)]
-pub struct FakePartition {
-    /// Partition contents.
-    pub contents: Vec<u8>,
+/// Where the fake partition contents come from.
+pub enum PartitionContents<'a> {
+    /// Read on-demand from disk.
+    FromDisk(Vec<u8>),
+    /// Preloaded and passed in.
+    Preloaded(&'a [u8]),
+}
 
-    /// Whether the partition should report as preloaded or not.
-    pub preloaded: bool,
+impl<'a> PartitionContents<'a> {
+    /// Returns the partition data.
+    pub fn as_slice(&self) -> &[u8] {
+        match self {
+            Self::FromDisk(v) => v,
+            Self::Preloaded(c) => c,
+        }
+    }
+
+    /// Returns a mutable reference to the `FromDisk` data for test modification. Panicks if the
+    /// data is actually `Preloaded` instead.
+    pub fn as_mut_vec(&mut self) -> &mut Vec<u8> {
+        match self {
+            Self::FromDisk(v) => v,
+            Self::Preloaded(_) => panic!("Cannot mutate preloaded partition data"),
+        }
+    }
+}
+
+/// Represents a single fake partition.
+pub struct FakePartition<'a> {
+    /// Partition contents, either preloaded or read on-demand.
+    pub contents: PartitionContents<'a>,
 
     /// Partition UUID.
     #[cfg(feature = "uuid")]
     pub uuid: Uuid,
+}
+
+impl<'a> FakePartition<'a> {
+    fn new(contents: PartitionContents<'a>) -> Self {
+        Self {
+            contents,
+            #[cfg(feature = "uuid")]
+            uuid: Default::default(),
+        }
+    }
 }
 
 /// Fake vbmeta key state.
@@ -47,9 +80,9 @@ pub struct FakeVbmetaKeyState {
 ///
 /// The user is expected to set up the internal values to the desired device state - disk contents,
 /// rollback indices, etc. This class then uses this state to implement the avb callback operations.
-pub struct TestOps {
+pub struct TestOps<'a> {
     /// Partitions to provide to libavb callbacks.
-    pub partitions: HashMap<&'static str, FakePartition>,
+    pub partitions: HashMap<&'static str, FakePartition<'a>>,
 
     /// Vbmeta public keys as a map of {(key, metadata): state}. Querying unknown keys will
     /// return `IoError::Io`.
@@ -69,27 +102,40 @@ pub struct TestOps {
     pub persistent_values: HashMap<String, IoResult<Vec<u8>>>,
 }
 
-impl TestOps {
-    /// Adds a partition with the given contents.
+impl<'a> TestOps<'a> {
+    /// Adds a fake on-disk partition with the given contents.
     ///
     /// Reduces boilerplate a bit by taking in a raw array and returning a &mut so tests can
     /// do something like this:
     ///
     /// ```
     /// test_ops.add_partition("foo", [1, 2, 3, 4]);
-    /// test_ops.add_partition("bar", [0, 0]).preloaded = true;
+    /// test_ops.add_partition("bar", [0, 0]).uuid = uuid!(...);
     /// ```
     pub fn add_partition<T: Into<Vec<u8>>>(
         &mut self,
         name: &'static str,
         contents: T,
-    ) -> &mut FakePartition {
+    ) -> &mut FakePartition<'a> {
         self.partitions.insert(
             name,
-            FakePartition {
-                contents: contents.into(),
-                ..Default::default()
-            },
+            FakePartition::new(PartitionContents::FromDisk(contents.into())),
+        );
+        self.partitions.get_mut(name).unwrap()
+    }
+
+    /// Adds a preloaded partition with the given contents.
+    ///
+    /// Same a `add_partition()` except that the preloaded data is not owned by
+    /// the `TestOps` but passed in, which means it can outlive `TestOps`.
+    pub fn add_preloaded_partition(
+        &mut self,
+        name: &'static str,
+        contents: &'a [u8],
+    ) -> &mut FakePartition<'a> {
+        self.partitions.insert(
+            name,
+            FakePartition::new(PartitionContents::Preloaded(contents)),
         );
         self.partitions.get_mut(name).unwrap()
     }
@@ -145,7 +191,7 @@ impl TestOps {
     }
 }
 
-impl Default for TestOps {
+impl Default for TestOps<'_> {
     fn default() -> Self {
         Self {
             partitions: HashMap::new(),
@@ -157,23 +203,19 @@ impl Default for TestOps {
     }
 }
 
-impl Ops for TestOps {
+impl<'a> Ops<'a> for TestOps<'a> {
     fn read_from_partition(
         &mut self,
         partition: &CStr,
         offset: i64,
         buffer: &mut [u8],
     ) -> IoResult<usize> {
-        let partition = self
+        let contents = self
             .partitions
             .get(partition.to_str()?)
-            .ok_or(IoError::NoSuchPartition)?;
-
-        // We should never be trying to read a preloaded partition from disk since we already
-        // have it available in memory.
-        assert!(!partition.preloaded);
-
-        let contents = &partition.contents;
+            .ok_or(IoError::NoSuchPartition)?
+            .contents
+            .as_slice();
 
         // Negative offset means count backwards from the end.
         let offset = {
@@ -202,13 +244,12 @@ impl Ops for TestOps {
         Ok(bytes_read)
     }
 
-    fn get_preloaded_partition(&mut self, partition: &CStr) -> IoResult<&[u8]> {
+    fn get_preloaded_partition(&mut self, partition: &CStr) -> IoResult<Preloaded<'a>> {
         match self.partitions.get(partition.to_str()?) {
             Some(FakePartition {
-                contents,
-                preloaded: true,
+                contents: PartitionContents::Preloaded(preloaded),
                 ..
-            }) => Ok(&contents[..]),
+            }) => Ok(&preloaded[..]),
             _ => Err(IoError::NotImplemented),
         }
     }
@@ -251,7 +292,7 @@ impl Ops for TestOps {
     fn get_size_of_partition(&mut self, partition: &CStr) -> IoResult<u64> {
         self.partitions
             .get(partition.to_str()?)
-            .map(|p| u64::try_from(p.contents.len()).unwrap())
+            .map(|p| u64::try_from(p.contents.as_slice().len()).unwrap())
             .ok_or(IoError::NoSuchPartition)
     }
 
