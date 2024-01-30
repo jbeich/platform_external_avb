@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "07544060_ab207300",
+        "filename": "rust/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 246,
+      "author": {
+        "id": 2029650
+      },
+      "writtenOn": "2024-01-30T01:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "01d5aa35_3418fd91",
+      "range": {
+        "startLine": 246,
+        "startChar": 9,
+        "endLine": 246,
+        "endChar": 23
+      },
+      "revId": "df12411a82e2fa49941349d96c09ff9685383668",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "acd26fc2_7ba00a0c",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-01-29T21:15:31Z",
       "side": 1,
       "message": "Same, since this is an internal dependency I would hope it would automatically get brought in transitively from `libavb_rs`",
+      "range": {
+        "startLine": 247,
+        "startChar": 9,
+        "endLine": 247,
+        "endChar": 20
+      },
+      "revId": "df12411a82e2fa49941349d96c09ff9685383668",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "620e4ae9_1d982035",
+        "filename": "rust/Android.bp",
+        "patchSetId": 2
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 2029650
+      },
+      "writtenOn": "2024-01-30T01:49:55Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "acd26fc2_7ba00a0c",
       "range": {
         "startLine": 247,
         "startChar": 9,
