@@ -33,7 +33,24 @@ use uuid::Uuid;
 /// Base implementation-provided callbacks for verification.
 ///
 /// See libavb `AvbOps` for more complete documentation.
-pub trait Ops {
+///
+/// # Lifetimes
+/// Lifetimes here are a little tricky due to preloaded partitions. Preloaded partitions have
+/// already been loaded into memory, so that libavb can just borrow the existing data rather
+/// than re-loading it from disk.
+///
+/// This matters because partition data is also returned in the final verification result object,
+/// so the lifetimes are set up to ensure that preloaded data can potentially outlive the `Ops`
+/// object, but not the verification data.
+///
+/// These lifetimes only matter for the `get_preloaded_partition()` function. If an `Ops`
+/// implementation doesn't use preloaded data at all, then the verification data owns all of the
+/// partition data and there is no borrowing.
+///
+/// The lifetimes used here have specific names to better indicate their purpose:
+/// * `'o`: the lifetime of the `Ops` object
+/// * `'p`: the lifetime of any preloaded partition data
+pub trait Ops<'o, 'p> {
     /// Reads data from the requested partition on disk.
     ///
     /// # Arguments
@@ -68,7 +85,7 @@ pub trait Ops {
     /// * `Err<IoError::NotImplemented>` if the requested partition has not been preloaded;
     ///   verification will next attempt to load the partition via `read_from_partition()`.
     /// * Any other `Err<IoError>` if an error occurred; verification will exit immediately.
-    fn get_preloaded_partition(&mut self, _partition: &CStr) -> IoResult<&[u8]> {
+    fn get_preloaded_partition(&'o mut self, _partition: &CStr) -> IoResult<&'p [u8]> {
         Err(IoError::NotImplemented)
     }
 
@@ -276,25 +293,25 @@ pub struct PublicKeyForPartitionInfo {
 /// perform `Ops` (Rust)
 /// callback
 /// ```
-pub(crate) struct UserData<'a>(&'a mut dyn Ops);
+pub(crate) struct UserData<'o, 'p>(&'o mut dyn Ops<'o, 'p>);
 
-impl<'a> UserData<'a> {
-    pub(crate) fn new(ops: &'a mut dyn Ops) -> Self {
+impl<'o, 'p> UserData<'o, 'p> {
+    pub(crate) fn new(ops: &'o mut dyn Ops<'o, 'p>) -> Self {
         Self(ops)
     }
 }
 
 /// Wraps the C `AvbOps` struct with lifetime information for the compiler.
-pub(crate) struct ScopedAvbOps<'a> {
+pub(crate) struct ScopedAvbOps<'o, 'p> {
     /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
     avb_ops: AvbOps,
     /// This provides the necessary lifetime information so the compiler can make sure that
     /// the `UserData` stays alive at least as long as we do.
-    _user_data: PhantomData<UserData<'a>>,
+    _user_data: PhantomData<UserData<'o, 'p>>,
 }
 
-impl<'a> ScopedAvbOps<'a> {
-    pub(crate) fn new(user_data: &'a mut UserData<'a>) -> Self {
+impl<'o, 'p> ScopedAvbOps<'o, 'p> {
+    pub(crate) fn new(user_data: &mut UserData<'o, 'p>) -> Self {
         Self {
             avb_ops: AvbOps {
                 // Rust won't transitively cast so we need to cast twice manually, but the compiler
@@ -320,7 +337,7 @@ impl<'a> ScopedAvbOps<'a> {
     }
 }
 
-impl<'a> AsMut<AvbOps> for ScopedAvbOps<'a> {
+impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
     fn as_mut(&mut self) -> &mut AvbOps {
         &mut self.avb_ops
     }
@@ -345,7 +362,7 @@ impl<'a> AsMut<AvbOps> for ScopedAvbOps<'a> {
 ///
 /// In practice, these conditions are met since we call this exactly once in each callback
 /// to extract the `Ops`, and drop it at callback completion.
-unsafe fn as_ops<'a>(avb_ops: *mut AvbOps) -> IoResult<&'a mut dyn Ops> {
+unsafe fn as_ops<'o, 'p>(avb_ops: *mut AvbOps) -> IoResult<&'o mut dyn Ops<'o, 'p>> {
     // SAFETY: we created this AvbOps object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     let avb_ops = unsafe { avb_ops.as_mut() }.ok_or(IoError::Io)?;

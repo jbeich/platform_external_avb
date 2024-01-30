@@ -34,6 +34,7 @@ use avb_bindgen::{
 use core::{
     ffi::{c_char, CStr},
     fmt,
+    marker::PhantomData,
     ptr::{self, null, null_mut, NonNull},
     slice,
 };
@@ -200,26 +201,34 @@ impl fmt::Debug for PartitionData {
 /// Wraps a raw C `AvbSlotVerifyData` struct.
 ///
 /// This provides a Rust safe view over the raw data; no copies are made.
-pub struct SlotVerifyData<'a> {
+///
+/// # Lifetimes
+/// * `'p`: the lifetime of any preloaded partition data borrowed from an `Ops` object.
+pub struct SlotVerifyData<'p> {
     /// Internally owns the underlying data and deletes it on drop.
     raw_data: NonNull<AvbSlotVerifyData>,
 
-    /// This provides the necessary lifetime borrow so the compiler can make sure that the `Ops`
-    /// stays alive at least as long as we do, since it owns any preloaded partition data.
-    _ops: &'a dyn Ops,
+    /// This provides the necessary lifetimes so the compiler can make sure that the preloaded
+    /// partition data stays alive at least as long as we do, since the underlying
+    /// `AvbSlotVerifyData` may wrap this data rather than making a copy.
+    //
+    // We do not want to actually borrow an `Ops` here, since in some cases `Ops` is just a
+    // temporary object and may go out of scope before us. The only shared data is the preloaded
+    // partition contents, not the entire `Ops` object.
+    _preloaded: PhantomData<&'p [u8]>,
 }
 
 // Useful so that `SlotVerifyError`, which may hold a `SlotVerifyData`, can derive `PartialEq`.
-impl<'a> PartialEq for SlotVerifyData<'a> {
+impl<'p> PartialEq for SlotVerifyData<'p> {
     fn eq(&self, other: &Self) -> bool {
         // A `SlotVerifyData` uniquely owns the underlying data so is only equal to itself.
         ptr::eq(self, other)
     }
 }
 
-impl<'a> Eq for SlotVerifyData<'a> {}
+impl<'p> Eq for SlotVerifyData<'p> {}
 
-impl<'a> SlotVerifyData<'a> {
+impl<'p> SlotVerifyData<'p> {
     /// Creates a `SlotVerifyData` wrapping the given raw `AvbSlotVerifyData`.
     ///
     /// The returned `SlotVerifyData` will take ownership of the given `AvbSlotVerifyData` and
@@ -227,8 +236,6 @@ impl<'a> SlotVerifyData<'a> {
     ///
     /// # Arguments
     /// * `data`: a `AvbSlotVerifyData` object created by libavb.
-    /// * `ops`: the user-provided callback ops; borrowing this here ensures that any preloaded
-    ///          partition data stays unmodified while `data` is wrapping it.
     ///
     /// # Returns
     /// The new object, or `Err(SlotVerifyError::Internal)` if the data looks invalid.
@@ -236,13 +243,11 @@ impl<'a> SlotVerifyData<'a> {
     /// # Safety
     /// * `data` must be a valid `AvbSlotVerifyData` object created by libavb
     /// * after calling this function, do not access `data` except through the returned object
-    unsafe fn new(
-        data: *mut AvbSlotVerifyData,
-        ops: &'a mut dyn Ops,
-    ) -> SlotVerifyNoDataResult<Self> {
+    /// * `'p` must be the lifetime of any preloaded partition data that could exist in `data`
+    unsafe fn new(data: *mut AvbSlotVerifyData) -> SlotVerifyNoDataResult<Self> {
         let ret = Self {
             raw_data: NonNull::new(data).ok_or(SlotVerifyError::Internal)?,
-            _ops: ops,
+            _preloaded: PhantomData,
         };
 
         // Validate all the contained data here so accessors will never fail.
@@ -319,7 +324,7 @@ impl<'a> SlotVerifyData<'a> {
     }
 }
 
-impl<'a> Drop for SlotVerifyData<'a> {
+impl<'p> Drop for SlotVerifyData<'p> {
     fn drop(&mut self) {
         // SAFETY:
         // * `raw_data` points to a valid `AvbSlotVerifyData` object owned by us.
@@ -332,7 +337,7 @@ impl<'a> Drop for SlotVerifyData<'a> {
 ///
 /// This implementation will print the slot, partition name, and verification status for all
 /// vbmetadata and images.
-impl<'a> fmt::Display for SlotVerifyData<'a> {
+impl<'p> fmt::Display for SlotVerifyData<'p> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
@@ -346,7 +351,7 @@ impl<'a> fmt::Display for SlotVerifyData<'a> {
 
 /// Forwards to `Display` formatting; the default `Debug` formatting implementation isn't very
 /// useful as it's mostly raw pointer addresses.
-impl<'a> fmt::Debug for SlotVerifyData<'a> {
+impl<'p> fmt::Debug for SlotVerifyData<'p> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
@@ -363,6 +368,17 @@ impl<'a> fmt::Debug for SlotVerifyData<'a> {
 /// * `flags`: flags to configure verification.
 /// * `hashtree_error_mode`: desired error handling behavior.
 ///
+/// # Lifetimes
+/// * `'o`: `Ops` object lifetime
+/// * `'p`: preloaded data lifetime
+///
+/// Depending on the `Ops` implementation, `'p` may exceed `'o` so that long-lived preload
+/// data can pass from the `ops` object into the returned `SlotVerifyData`. If `ops` doesn't use
+/// preloaded partitions, `'p` can be `'static`.
+///
+/// The compiler can usually determine lifetimes for this function automatically from the `ops`
+/// object so most of the time it should work without too much manual effort.
+///
 /// # Returns
 /// `Ok` if verification completed successfully, the verification error otherwise. `SlotVerifyData`
 /// will be returned in two cases:
@@ -370,17 +386,13 @@ impl<'a> fmt::Debug for SlotVerifyData<'a> {
 /// 1. always returned on verification success
 /// 2. if `AllowVerificationError` is given in `flags`, it will also be returned on verification
 ///    failure
-///
-/// If a `SlotVerifyData` is returned, it will borrow the provided `ops`. This is to ensure that
-/// any data shared by `SlotVerifyData` and `ops` - in particular preloaded partition contents -
-/// is not modified until `SlotVerifyData` is dropped.
-pub fn slot_verify<'a>(
-    ops: &'a mut dyn Ops,
+pub fn slot_verify<'o, 'p>(
+    ops: &'o mut dyn Ops<'o, 'p>,
     requested_partitions: &[&CStr],
     ab_suffix: Option<&CStr>,
     flags: SlotVerifyFlags,
     hashtree_error_mode: HashtreeErrorMode,
-) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
+) -> SlotVerifyResult<'p, SlotVerifyData<'p>> {
     let mut user_data = ops::UserData::new(ops);
     let mut scoped_ops = ops::ScopedAvbOps::new(&mut user_data);
     let avb_ops = scoped_ops.as_mut();
@@ -427,8 +439,10 @@ pub fn slot_verify<'a>(
     // If `out_data` is non-null, take ownership so memory gets released on drop.
     let data = match out_data.is_null() {
         true => None,
-        // SAFETY: `out_data` was properly allocated by libavb and ownership has passed to us.
-        false => Some(unsafe { SlotVerifyData::new(out_data, ops)? }),
+        // SAFETY:
+        // * `out_data` was properly allocated by libavb and ownership has passed to us
+        // * `'p` is the lifetime of the `Ops` preloaded partition data
+        false => Some(unsafe { SlotVerifyData::<'p>::new(out_data)? }),
     };
 
     // Fold the verify data into the result.

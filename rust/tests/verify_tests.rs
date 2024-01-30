@@ -66,7 +66,7 @@ const TEST_HASHTREE_DIGEST_HEX: &str = "5373fc4ee3dd898325eeeffb5a1dbb041900c5f1
 const TEST_HASHTREE_ALGORITHM: &str = "sha1";
 
 /// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME`.
-fn test_ops_one_image_one_vbmeta() -> TestOps {
+fn test_ops_one_image_one_vbmeta<'a>() -> TestOps<'a> {
     let mut ops = TestOps::default();
     ops.add_partition(TEST_PARTITION_NAME, fs::read(TEST_IMAGE_PATH).unwrap());
     ops.add_partition("vbmeta", fs::read(TEST_VBMETA_PATH).unwrap());
@@ -77,7 +77,9 @@ fn test_ops_one_image_one_vbmeta() -> TestOps {
 }
 
 /// Calls `slot_verify()` using standard args for `test_ops_one_image_one_vbmeta()` setup.
-fn verify_one_image_one_vbmeta(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
+fn verify_one_image_one_vbmeta<'a>(
+    ops: &mut TestOps<'a>,
+) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     slot_verify(
         ops,
         &[&CString::new(TEST_PARTITION_NAME).unwrap()],
@@ -89,7 +91,7 @@ fn verify_one_image_one_vbmeta(ops: &mut TestOps) -> SlotVerifyResult<SlotVerify
 
 /// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME` and
 /// `TEST_PARTITION_2_NAME`.
-fn test_ops_two_images_one_vbmeta() -> TestOps {
+fn test_ops_two_images_one_vbmeta<'a>() -> TestOps<'a> {
     let mut ops = test_ops_one_image_one_vbmeta();
     // Add in the contents of the second partition and overwrite the vbmeta partition to
     // include both partition descriptors.
@@ -99,7 +101,7 @@ fn test_ops_two_images_one_vbmeta() -> TestOps {
 }
 
 /// Calls `slot_verify()` for both test partitions.
-fn verify_two_images(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
+fn verify_two_images<'a>(ops: &mut TestOps<'a>) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     slot_verify(
         ops,
         &[
@@ -114,7 +116,7 @@ fn verify_two_images(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
 
 /// Initializes a `TestOps` object such that verification will succeed on the `boot` partition with
 /// a combined image + vbmeta.
-fn test_ops_boot_partition() -> TestOps {
+fn test_ops_boot_partition<'a>() -> TestOps<'a> {
     let mut ops = test_ops_one_image_one_vbmeta();
     ops.partitions.clear();
     ops.add_partition(
@@ -125,7 +127,7 @@ fn test_ops_boot_partition() -> TestOps {
 }
 
 /// Calls `slot_verify()` using standard args for `test_ops_boot_partition()` setup.
-fn verify_boot_partition(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
+fn verify_boot_partition<'a>(ops: &mut TestOps<'a>) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     slot_verify(
         ops,
         &[&CString::new("boot").unwrap()],
@@ -140,7 +142,7 @@ fn verify_boot_partition(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> 
 
 /// Initializes a `TestOps` object such that verification will succeed on
 /// `TEST_PARTITION_PERSISTENT_DIGEST_NAME`.
-fn test_ops_persistent_digest(image: Vec<u8>) -> TestOps {
+fn test_ops_persistent_digest<'a>(image: Vec<u8>) -> TestOps<'a> {
     let mut ops = test_ops_one_image_one_vbmeta();
     ops.partitions.clear();
     // Use the vbmeta image with the persistent digest descriptor.
@@ -154,7 +156,7 @@ fn test_ops_persistent_digest(image: Vec<u8>) -> TestOps {
 }
 
 /// Calls `slot_verify()` using standard args for `test_ops_persistent_digest()` setup.
-fn verify_persistent_digest(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
+fn verify_persistent_digest<'a>(ops: &mut TestOps<'a>) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     slot_verify(
         ops,
         &[&CString::new(TEST_PARTITION_PERSISTENT_DIGEST_NAME).unwrap()],
@@ -166,7 +168,7 @@ fn verify_persistent_digest(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyDat
 
 /// Modifies the partition contents by flipping a bit.
 fn modify_partition_contents(ops: &mut TestOps, partition: &str) {
-    ops.partitions.get_mut(partition).unwrap().contents[0] ^= 0x01;
+    ops.partitions.get_mut(partition).unwrap().contents.as_mut()[0] ^= 0x01;
 }
 
 /// Returns the persistent value name for `TEST_PARTITION_PERSISTENT_DIGEST_NAME`.
@@ -220,17 +222,72 @@ fn one_image_one_vbmeta_passes_verification_with_correct_data() {
 #[test]
 fn preloaded_image_passes_verification() {
     let mut ops = test_ops_one_image_one_vbmeta();
-    // Mark the image partition to be preloaded.
-    ops.partitions
-        .get_mut(TEST_PARTITION_NAME)
-        .unwrap()
-        .preloaded = true;
+    // Use preloaded data instead for the test partition.
+    let preloaded = fs::read(TEST_IMAGE_PATH).unwrap();
+    ops.add_preloaded_partition(TEST_PARTITION_NAME, &preloaded);
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
     let data = result.unwrap();
     let partition_data = &data.partition_data()[0];
     assert!(partition_data.preloaded());
+}
+
+// When all images are loaded from disk (rather than preloaded), libavb allocates memory itself for
+// the data, so there is no shared ownership; the returned verification data owns the image data
+// and can hold onto it even after the `ops` goes away.
+#[test]
+fn verification_data_from_disk_can_outlive_ops() {
+    let result = {
+        let mut ops = test_ops_one_image_one_vbmeta();
+        verify_one_image_one_vbmeta(&mut ops)
+    };
+
+    let data = result.unwrap();
+
+    // The verification data owns the images and we can still access them.
+    assert_eq!(
+        data.partition_data()[0].data(),
+        fs::read(TEST_IMAGE_PATH).unwrap()
+    );
+}
+
+// When preloaded data is passed into ops but outlives it, we can also continue to access it from
+// the verification data after the ops goes away. The ops was only borrowing it, and now the
+// verification data continues to borrow it.
+#[test]
+fn verification_data_preloaded_can_outlive_ops() {
+    let preloaded = fs::read(TEST_IMAGE_PATH).unwrap();
+
+    let result = {
+        let mut ops = test_ops_one_image_one_vbmeta();
+        ops.add_preloaded_partition(TEST_PARTITION_NAME, &preloaded);
+        verify_one_image_one_vbmeta(&mut ops)
+    };
+
+    let data = result.unwrap();
+
+    // The verification data is borrowing the preloaded images and we can still access them.
+    assert_eq!(data.partition_data()[0].data(), preloaded);
+}
+
+// When preloaded data is passed into ops but also goes out of scope, the verification data loses
+// access to it, violating lifetime rules.
+//
+// Our lifetimes *must* be configured such that this does not compile, since `result` is borrowing
+// `preloaded` which has gone out of scope.
+//
+// TODO: figure out how to make a compile-fail test; for now we just have to manually test by
+// un-commenting the logic.
+#[test]
+fn verification_data_preloaded_cannot_outlive_result() {
+    // let result = {
+    //     let preloaded = fs::read(TEST_IMAGE_PATH).unwrap();
+    //     let mut ops = test_ops_one_image_one_vbmeta();
+    //     ops.add_preloaded_partition(TEST_PARTITION_NAME, &preloaded);
+    //     verify_one_image_one_vbmeta(&mut ops)
+    // };
+    // result.unwrap();
 }
 
 #[test]
@@ -427,6 +484,7 @@ fn undersized_partition_fails_verification() {
         .get_mut(TEST_PARTITION_NAME)
         .unwrap()
         .contents
+        .as_mut()
         .pop();
 
     let result = verify_one_image_one_vbmeta(&mut ops);
@@ -578,10 +636,8 @@ fn one_image_one_vbmeta_verification_data_display() {
 #[test]
 fn preloaded_image_verification_data_display() {
     let mut ops = test_ops_one_image_one_vbmeta();
-    ops.partitions
-        .get_mut(TEST_PARTITION_NAME)
-        .unwrap()
-        .preloaded = true;
+    let preloaded = fs::read(TEST_IMAGE_PATH).unwrap();
+    ops.add_preloaded_partition(TEST_PARTITION_NAME, &preloaded);
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
