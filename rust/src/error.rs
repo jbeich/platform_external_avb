@@ -60,6 +60,15 @@ pub enum SlotVerifyError<'a> {
     Internal,
 }
 
+/// `Result` type for `SlotVerifyError` errors.
+pub type SlotVerifyResult<'a, T> = Result<T, SlotVerifyError<'a>>;
+
+/// `Result` type for `SlotVerifyError` errors without any `SlotVerifyData`.
+///
+/// If the contained error will never hold a `SlotVerifyData`, this is easier to work with compared
+/// to `SlotVerifyResult` due to the static lifetime bound.
+pub type SlotVerifyNoDataResult<T> = SlotVerifyResult<'static, T>;
+
 impl<'a> SlotVerifyError<'a> {
     /// Returns a copy of this error without any contained `SlotVerifyData`.
     ///
@@ -96,7 +105,7 @@ impl<'a> fmt::Display for SlotVerifyError<'a> {
     }
 }
 
-/// Converts a bindgen `AvbSlotVerifyResult` enum to a `Result<>`, mapping
+/// Converts a bindgen `AvbSlotVerifyResult` enum to a `SlotVerifyNoDataResult<>`, mapping
 /// `AVB_SLOT_VERIFY_RESULT_OK` to the Rust equivalent `Ok(())` and errors to the corresponding
 /// `Err(SlotVerifyError)`.
 ///
@@ -106,12 +115,9 @@ impl<'a> fmt::Display for SlotVerifyError<'a> {
 /// This function is also important to serve as a compile-time check that we're handling all the
 /// libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
 /// until it is updated to match.
-///
-/// TODO(b/290110273): this can be limited to pub(crate) once we've moved the full libavb wrapper
-/// here.
-pub fn slot_verify_enum_to_result(
+pub(crate) fn slot_verify_enum_to_result(
     result: AvbSlotVerifyResult,
-) -> Result<(), SlotVerifyError<'static>> {
+) -> SlotVerifyNoDataResult<()> {
     match result {
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_OK => Ok(()),
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_ARGUMENT => {
@@ -159,6 +165,9 @@ pub enum IoError {
     NotImplemented,
 }
 
+/// `Result` type for `IoError` errors.
+pub type IoResult<T> = Result<T, IoError>;
+
 impl fmt::Display for IoError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -177,28 +186,6 @@ impl fmt::Display for IoError {
 impl From<Utf8Error> for IoError {
     fn from(_: Utf8Error) -> Self {
         Self::Io
-    }
-}
-
-// Converts a bindgen `AvbIOResult` enum to a `Result<>`, mapping `AVB_IO_RESULT_OK` to the Rust
-// equivalent `Ok(())` and errors to the corresponding `Err(IoError)`.
-//
-// This function is also important to serve as a compile-time check that we're handling all the
-// libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
-// until it is updated to match.
-#[allow(dead_code)]
-pub(crate) fn io_enum_to_result(result: AvbIOResult) -> Result<(), IoError> {
-    match result {
-        AvbIOResult::AVB_IO_RESULT_OK => Ok(()),
-        AvbIOResult::AVB_IO_RESULT_ERROR_OOM => Err(IoError::Oom),
-        AvbIOResult::AVB_IO_RESULT_ERROR_IO => Err(IoError::Io),
-        AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION => Err(IoError::NoSuchPartition),
-        AvbIOResult::AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION => {
-            Err(IoError::RangeOutsidePartition)
-        }
-        AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE => Err(IoError::NoSuchValue),
-        AvbIOResult::AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE => Err(IoError::InvalidValueSize),
-        AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE => Err(IoError::InsufficientSpace(0)),
     }
 }
 
@@ -226,11 +213,8 @@ impl From<IoError> for AvbIOResult {
     }
 }
 
-// Converts a `Result<>` to the bindgen `AvbIOResult` enum.
-//
-// TODO(b/290110273): this can be limited to pub(crate) once we've moved the full libavb wrapper
-// here.
-pub fn result_to_io_enum(result: Result<(), IoError>) -> AvbIOResult {
+/// Converts an `IoResult<>` to the bindgen `AvbIOResult` enum.
+pub(crate) fn result_to_io_enum(result: IoResult<()>) -> AvbIOResult {
     result.map_or_else(|e| e.into(), |_| AvbIOResult::AVB_IO_RESULT_OK)
 }
 
@@ -249,6 +233,9 @@ pub enum VbmetaVerifyError {
     SignatureMismatch,
 }
 
+/// `Result` type for `VbmetaVerifyError` errors.
+pub type VbmetaVerifyResult<T> = Result<T, VbmetaVerifyError>;
+
 impl fmt::Display for VbmetaVerifyError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -261,16 +248,14 @@ impl fmt::Display for VbmetaVerifyError {
     }
 }
 
-// Converts a bindgen `AvbVBMetaVerifyResult` enum to a `Result<>`, mapping
+// Converts a bindgen `AvbVBMetaVerifyResult` enum to a `VbmetaVerifyResult<>`, mapping
 // `AVB_VBMETA_VERIFY_RESULT_OK` to the Rust equivalent `Ok(())` and errors to the corresponding
 // `Err(SlotVerifyError)`.
 //
 // This function is also important to serve as a compile-time check that we're handling all the
 // libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
 // until it is updated to match.
-pub fn vbmeta_verify_enum_to_result(
-    result: AvbVBMetaVerifyResult,
-) -> Result<(), VbmetaVerifyError> {
+pub fn vbmeta_verify_enum_to_result(result: AvbVBMetaVerifyResult) -> VbmetaVerifyResult<()> {
     match result {
         AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK => Ok(()),
         AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK_NOT_SIGNED => {
@@ -296,7 +281,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn test_SlotVerifyError_display() {
+    fn display_slot_verify_error() {
         // The actual error message can change as needed, the point of the test is just to make sure
         // the fmt::Display trait is properly implemented.
         assert_eq!(
@@ -306,7 +291,7 @@ mod tests {
     }
 
     #[test]
-    fn test_SlotVerifyError_from_raw() {
+    fn convert_slot_verify_enum_to_result() {
         assert!(matches!(
             slot_verify_enum_to_result(AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_OK),
             Ok(())
@@ -318,7 +303,7 @@ mod tests {
     }
 
     #[test]
-    fn test_IoError_display() {
+    fn display_io_error() {
         // The actual error message can change as needed, the point of the test is just to make sure
         // the fmt::Display trait is properly implemented.
         assert_eq!(
@@ -328,16 +313,29 @@ mod tests {
     }
 
     #[test]
-    fn test_IoError_from_raw() {
-        assert_eq!(io_enum_to_result(AvbIOResult::AVB_IO_RESULT_OK), Ok(()));
-        assert_eq!(
-            io_enum_to_result(AvbIOResult::AVB_IO_RESULT_ERROR_IO),
-            Err(IoError::Io)
-        );
+    fn convert_io_enum_to_result() {
+        // This is a compile-time check that we handle all the `AvbIOResult` enum values. If any
+        // enums are added or removed this will break, indicating we need to update `IoError` to
+        // match.
+        assert!(match AvbIOResult::AVB_IO_RESULT_OK {
+            AvbIOResult::AVB_IO_RESULT_OK => Ok(()),
+            AvbIOResult::AVB_IO_RESULT_ERROR_OOM => Err(IoError::Oom),
+            AvbIOResult::AVB_IO_RESULT_ERROR_IO => Err(IoError::Io),
+            AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION => Err(IoError::NoSuchPartition),
+            AvbIOResult::AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION => {
+                Err(IoError::RangeOutsidePartition)
+            }
+            AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE => Err(IoError::NoSuchValue),
+            AvbIOResult::AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE => Err(IoError::InvalidValueSize),
+            AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE => {
+                Err(IoError::InsufficientSpace(0))
+            }
+        }
+        .is_ok());
     }
 
     #[test]
-    fn test_IoError_to_raw() {
+    fn convert_io_result_to_enum() {
         assert_eq!(result_to_io_enum(Ok(())), AvbIOResult::AVB_IO_RESULT_OK);
         assert_eq!(
             result_to_io_enum(Err(IoError::Io)),
@@ -346,7 +344,7 @@ mod tests {
     }
 
     #[test]
-    fn test_VbmetaVerifyError_display() {
+    fn display_vmbeta_verify_error() {
         // The actual error message can change as needed, the point of the test is just to make sure
         // the fmt::Display trait is properly implemented.
         assert_eq!(
@@ -356,7 +354,7 @@ mod tests {
     }
 
     #[test]
-    fn test_VbmetaVerifyError_from_raw() {
+    fn convert_vbmeta_verify_enum_to_result() {
         assert_eq!(
             vbmeta_verify_enum_to_result(AvbVBMetaVerifyResult::AVB_VBMETA_VERIFY_RESULT_OK),
             Ok(())
