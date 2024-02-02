@@ -17,21 +17,24 @@
 //! This module is responsible for all the conversions required to pass information between
 //! libavb and Rust for verifying images.
 
+extern crate alloc;
+
 use crate::{
+    descriptor::{get_descriptors, Descriptor, DescriptorResult},
     error::{
         slot_verify_enum_to_result, vbmeta_verify_enum_to_result, SlotVerifyError,
-        VbmetaVerifyError,
+        SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
     },
-    ops, IoError, Ops,
+    ops, Ops,
 };
+use alloc::vec::Vec;
 use avb_bindgen::{
     avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
 };
 use core::{
     ffi::{c_char, CStr},
     fmt,
-    marker::PhantomData,
-    ptr::{null, null_mut, NonNull},
+    ptr::{self, null, null_mut, NonNull},
     slice,
 };
 
@@ -41,7 +44,7 @@ pub use avb_bindgen::AvbHashtreeErrorMode as HashtreeErrorMode;
 pub use avb_bindgen::AvbSlotVerifyFlags as SlotVerifyFlags;
 
 /// Returns `Err(SlotVerifyError::Internal)` if the given pointer is `NULL`.
-fn check_nonnull<T>(ptr: *const T) -> Result<(), SlotVerifyError<'static>> {
+fn check_nonnull<T>(ptr: *const T) -> SlotVerifyNoDataResult<()> {
     match ptr.is_null() {
         true => Err(SlotVerifyError::Internal),
         false => Ok(()),
@@ -66,7 +69,7 @@ impl VbmetaData {
     /// objects ourselves, we just cast them from the C structs provided by libavb.
     ///
     /// Returns `Err(SlotVerifyError::Internal)` on failure.
-    fn validate(&self) -> Result<(), SlotVerifyError<'static>> {
+    fn validate(&self) -> SlotVerifyNoDataResult<()> {
         check_nonnull(self.0.partition_name)?;
         check_nonnull(self.0.vbmeta_data)?;
         Ok(())
@@ -89,8 +92,20 @@ impl VbmetaData {
     }
 
     /// Returns the vbmeta verification result.
-    pub fn verify_result(&self) -> Result<(), VbmetaVerifyError> {
+    pub fn verify_result(&self) -> VbmetaVerifyResult<()> {
         vbmeta_verify_enum_to_result(self.0.verify_result)
+    }
+
+    /// Extracts the descriptors from the vbmeta image.
+    ///
+    /// Note that this function allocates memory to hold the `Descriptor` objects.
+    ///
+    /// # Returns
+    /// A vector of descriptors, or `DescriptorError` on failure.
+    pub fn descriptors(&self) -> DescriptorResult<Vec<Descriptor>> {
+        // SAFETY: the only way to get a `VbmetaData` object is via the return value of
+        // `slot_verify()`, so we know we have been properly validated.
+        unsafe { get_descriptors(self) }
     }
 }
 
@@ -102,7 +117,7 @@ impl fmt::Display for VbmetaData {
 
 /// Forwards to `Display` formatting; the default `Debug` formatting implementation isn't very
 /// useful as it's mostly raw pointer addresses.
-impl<'a> fmt::Debug for VbmetaData {
+impl fmt::Debug for VbmetaData {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
@@ -122,7 +137,7 @@ impl PartitionData {
     /// objects ourselves, we just cast them from the C structs provided by libavb.
     ///
     /// Returns `Err(SlotVerifyError::Internal)` on failure.
-    fn validate(&self) -> Result<(), SlotVerifyError<'static>> {
+    fn validate(&self) -> SlotVerifyNoDataResult<()> {
         check_nonnull(self.0.partition_name)?;
         check_nonnull(self.0.data)?;
         Ok(())
@@ -153,7 +168,7 @@ impl PartitionData {
     ///
     /// Only top-level `Verification` errors will contain valid `SlotVerifyData` objects, if this
     /// individual partition returns a `Verification` error the error will always contain `None`.
-    pub fn verify_result(&self) -> Result<(), SlotVerifyError<'static>> {
+    pub fn verify_result(&self) -> SlotVerifyNoDataResult<()> {
         slot_verify_enum_to_result(self.0.verify_result)
     }
 }
@@ -176,7 +191,7 @@ impl fmt::Display for PartitionData {
 
 /// Forwards to `Display` formatting; the default `Debug` formatting implementation isn't very
 /// useful as it's mostly raw pointer addresses.
-impl<'a> fmt::Debug for PartitionData {
+impl fmt::Debug for PartitionData {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
@@ -185,15 +200,24 @@ impl<'a> fmt::Debug for PartitionData {
 /// Wraps a raw C `AvbSlotVerifyData` struct.
 ///
 /// This provides a Rust safe view over the raw data; no copies are made.
-#[derive(PartialEq, Eq)]
 pub struct SlotVerifyData<'a> {
     /// Internally owns the underlying data and deletes it on drop.
     raw_data: NonNull<AvbSlotVerifyData>,
 
-    /// This provides the necessary lifetime information so the compiler can make sure that
-    /// the `Ops` stays alive at least as long as we do.
-    _ops: PhantomData<&'a dyn Ops>,
+    /// This provides the necessary lifetime borrow so the compiler can make sure that the `Ops`
+    /// stays alive at least as long as we do, since it owns any preloaded partition data.
+    _ops: &'a dyn Ops,
 }
+
+// Useful so that `SlotVerifyError`, which may hold a `SlotVerifyData`, can derive `PartialEq`.
+impl<'a> PartialEq for SlotVerifyData<'a> {
+    fn eq(&self, other: &Self) -> bool {
+        // A `SlotVerifyData` uniquely owns the underlying data so is only equal to itself.
+        ptr::eq(self, other)
+    }
+}
+
+impl<'a> Eq for SlotVerifyData<'a> {}
 
 impl<'a> SlotVerifyData<'a> {
     /// Creates a `SlotVerifyData` wrapping the given raw `AvbSlotVerifyData`.
@@ -215,10 +239,10 @@ impl<'a> SlotVerifyData<'a> {
     unsafe fn new(
         data: *mut AvbSlotVerifyData,
         ops: &'a mut dyn Ops,
-    ) -> Result<Self, SlotVerifyError<'static>> {
+    ) -> SlotVerifyNoDataResult<Self> {
         let ret = Self {
             raw_data: NonNull::new(data).ok_or(SlotVerifyError::Internal)?,
-            _ops: PhantomData,
+            _ops: ops,
         };
 
         // Validate all the contained data here so accessors will never fail.
@@ -356,7 +380,7 @@ pub fn slot_verify<'a>(
     ab_suffix: Option<&CStr>,
     flags: SlotVerifyFlags,
     hashtree_error_mode: HashtreeErrorMode,
-) -> Result<SlotVerifyData<'a>, SlotVerifyError<'a>> {
+) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     let mut user_data = ops::UserData::new(ops);
     let mut scoped_ops = ops::ScopedAvbOps::new(&mut user_data);
     let avb_ops = scoped_ops.as_mut();
