@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89954815_b7873695",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4386,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-02-13T19:48:23Z",
+      "side": 0,
+      "message": "Is there any advantage to removing this entirely instead of just removing the \u0027+\u0027?",
+      "range": {
+        "startLine": 4386,
+        "startChar": 52,
+        "endLine": 4386,
+        "endChar": 54
+      },
+      "revId": "b798e6083f6468128d51e38b015829eb63943e35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
