@@ -22,6 +22,30 @@
       },
       "revId": "b798e6083f6468128d51e38b015829eb63943e35",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0cfa17db_e004a1ba",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4386,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-02-13T19:53:30Z",
+      "side": 0,
+      "message": "AFAICT opening the file here with `FileType` has no purpose and just creates a dangling file object that we never close, since we always re-open the file by name in the `ImageHandler` object anyway.\n\nBut it also doesn\u0027t seem harmful to open it read-only here, if you prefer to just remove the `+` I\u0027m happy to switch to that.",
+      "parentUuid": "89954815_b7873695",
+      "range": {
+        "startLine": 4386,
+        "startChar": 52,
+        "endLine": 4386,
+        "endChar": 54
+      },
+      "revId": "b798e6083f6468128d51e38b015829eb63943e35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
