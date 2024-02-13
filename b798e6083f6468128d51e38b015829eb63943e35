@@ -46,6 +46,30 @@
       },
       "revId": "b798e6083f6468128d51e38b015829eb63943e35",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9ce74885_fc0be7ea",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 4386,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-02-13T20:23:02Z",
+      "side": 0,
+      "message": "Makes sense, thanks",
+      "parentUuid": "0cfa17db_e004a1ba",
+      "range": {
+        "startLine": 4386,
+        "startChar": 52,
+        "endLine": 4386,
+        "endChar": 54
+      },
+      "revId": "b798e6083f6468128d51e38b015829eb63943e35",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

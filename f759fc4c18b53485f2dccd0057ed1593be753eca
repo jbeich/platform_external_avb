@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4ce7619b_e5e3c452",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-02-13T20:23:02Z",
+      "side": 1,
+      "message": "lgtm - zeuthen FYI",
+      "revId": "f759fc4c18b53485f2dccd0057ed1593be753eca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
