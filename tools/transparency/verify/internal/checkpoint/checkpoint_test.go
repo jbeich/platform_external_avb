@@ -17,33 +17,33 @@ func TestInvalidCheckpointFormat(t *testing.T) {
 		wantErr bool
 	}{
 		{
-			desc:    "unknown ecosystem",
+			desc:    "unknown origin",
 			m:       "UNKNOWN\n1\nbananas\n",
 			wantErr: true,
 		},
 		{
 			desc:    "bad size",
-			m:       "DEFAULT\n-1\nbananas\n",
+			m:       "developers.google.com/android/binary_transparency/0\n-1\nbananas\n",
 			wantErr: true,
 		},
 		{
 			desc:    "not enough newlines",
-			m:       "DEFAULT\n1\n",
+			m:       "developers.google.com/android/binary_transparency/0\n1\n",
 			wantErr: true,
 		},
 		{
 			desc:    "non-numeric size",
-			m:       "DEFAULT\nbananas\ndGhlIHZpZXcgZnJvbSB0aGUgdHJlZSB0b3BzIGlzIGdyZWF0IQ==\n",
+			m:       "developers.google.com/android/binary_transparency/0\nbananas\ndGhlIHZpZXcgZnJvbSB0aGUgdHJlZSB0b3BzIGlzIGdyZWF0IQ==\n",
 			wantErr: true,
 		},
 		{
 			desc:    "too many newlines",
-			m:       "DEFAULT\n1\n\n\n\n",
+			m:       "developers.google.com/android/binary_transparency/0\n1\n\n\n\n",
 			wantErr: true,
 		},
 		{
 			desc:    "does not end with newline",
-			m:       "DEFAULT\n1\ngarbage",
+			m:       "developers.google.com/android/binary_transparency/0\n1\ngarbage",
 			wantErr: true,
 		},
 		{

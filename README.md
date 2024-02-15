@@ -6,33 +6,32 @@ Verified Boot 2.0. Usually AVB is used to refer to this codebase.
 
 # Table of Contents
 
-* [What is it?](#What-is-it)
-    + [The VBMeta struct](#The-VBMeta-struct)
-    + [Rollback Protection](#Rollback-Protection)
-    + [A/B Support](#A_B-Support)
-    + [The VBMeta Digest](#The-VBMeta-Digest)
-* [Tools and Libraries](#Tools-and-Libraries)
+* [What is it?](#what-is-it)
+    + [The VBMeta struct](#the-vbmeta-struct)
+    + [Rollback Protection](#rollback-Protection)
+    + [A/B Support](#a_b-Support)
+    + [The VBMeta Digest](#the-vbmeta-digest)
+* [Tools and Libraries](#tools-and-libraries)
     + [avbtool and libavb](#avbtool-and-libavb)
-    + [Files and Directories](#Files-and-Directories)
-    + [Portability](#Portability)
-    + [Versioning and Compatibility](#Versioning-and-Compatibility)
-    + [Adding New Features](#Adding-New-Features)
-    + [Using avbtool](#Using-avbtool)
-    + [Build System Integration](#Build-System-Integration)
-* [Device Integration](#Device-Integration)
-    + [System Dependencies](#System-Dependencies)
-    + [Locked and Unlocked mode](#Locked-and-Unlocked-mode)
-    + [Tamper-evident Storage](#Tamper_evident-Storage)
-    + [Named Persistent Values](#Named-Persistent-Values)
-    + [Persistent Digests](#Persistent-Digests)
-    + [Updating Stored Rollback Indexes](#Updating-Stored-Rollback-Indexes)
-    + [Recommended Bootflow](#Recommended-Bootflow)
-      + [Booting Into Recovery](#Booting-Into-Recovery)
-    + [Handling dm-verity Errors](#Handling-dm_verity-Errors)
-    + [Android Specific Integration](#Android-Specific-Integration)
-    + [GKI 2.0 Integration](#GKI-2_0-Integration)
-    + [Device Specific Notes](#Device-Specific-Notes)
-* [Version History](#Version-History)
+    + [Files and Directories](#files-and-directories)
+    + [Portability](#portability)
+    + [Versioning and Compatibility](#versioning-and-compatibility)
+    + [Adding New Features](#adding-new-features)
+    + [Using avbtool](#using-avbtool)
+    + [Build System Integration](#build-system-integration)
+* [Device Integration](#device-integration)
+    + [System Dependencies](#system-dependencies)
+    + [Locked and Unlocked mode](#locked-and-unlocked-mode)
+    + [Tamper-evident Storage](#tamper_evident-storage)
+    + [Named Persistent Values](#named-persistent-values)
+    + [Persistent Digests](#persistent-digests)
+    + [Updating Stored Rollback Indexes](#updating-stored-rollback-indexes)
+    + [Recommended Bootflow](#recommended-bootflow)
+      + [Booting Into Recovery](#booting-into-recovery)
+    + [Handling dm-verity Errors](#handling-dm_verity-errors)
+    + [Android Specific Integration](#android-specific-integration)
+    + [Device Specific Notes](#device-specific-notes)
+* [Version History](#version-history)
 
 # What is it?
 
@@ -125,7 +124,7 @@ Rollback protection is having the device reject an image unless
 having the device increase `stored_rollback_index[n]` over
 time. Exactly how this is done is discussed in
 the
-[Updating Stored Rollback Indexes](#Updating-Stored-Rollback-Indexes)
+[Updating Stored Rollback Indexes](#updating-stored-rollback-indexes)
 section.
 
 ## A/B Support
@@ -144,6 +143,11 @@ In version 1.1 or later, avbtool supports `--do_not_use_ab` for
 possible to work with a partition that does not use A/B and should
 never have the prefix. This corresponds to the
 `AVB_HASH[TREE]_DESCRIPTOR_FLAGS_DO_NOT_USE_AB` flags.
+
+In version 1.3, avbtool supports `chain_partition_do_not_use_ab` for
+`make_vbmeta_image` operations. This makes it possible to work with
+a chain partition that does not use A/B and should not have the suffix.
+This corresponds to the `AVB_CHAIN_PARTITION_DESCRIPTOR_FLAGS_DO_NOT_USE_AB` flag.
 
 ## The VBMeta Digest
 
@@ -371,17 +375,18 @@ there is obviously no need to bump it again.
 
 The content for the vbmeta partition can be generated as follows:
 
-    $ avbtool make_vbmeta_image                                                    \
-        [--output OUTPUT]                                                          \
-        [--algorithm ALGORITHM] [--key /path/to/key_used_for_signing_or_pub_key]   \
-        [--public_key_metadata /path/to/pkmd.bin]                                  \
-        [--rollback_index NUMBER] [--rollback_index_location NUMBER]               \
-        [--include_descriptors_from_image /path/to/image.bin]                      \
-        [--setup_rootfs_from_kernel /path/to/image.bin]                            \
-        [--chain_partition part_name:rollback_index_location:/path/to/key1.bin]    \
-        [--signing_helper /path/to/external/signer]                                \
-        [--signing_helper_with_files /path/to/external/signer_with_files]          \
-        [--print_required_libavb_version]                                          \
+    $ avbtool make_vbmeta_image                                                                  \
+        [--output OUTPUT]                                                                        \
+        [--algorithm ALGORITHM] [--key /path/to/key_used_for_signing_or_pub_key]                 \
+        [--public_key_metadata /path/to/pkmd.bin]                                                \
+        [--rollback_index NUMBER] [--rollback_index_location NUMBER]                             \
+        [--include_descriptors_from_image /path/to/image.bin]                                    \
+        [--setup_rootfs_from_kernel /path/to/image.bin]                                          \
+        [--chain_partition part_name:rollback_index_location:/path/to/key1.bin]                  \
+        [--chain_partition_do_not_use_ab part_name:rollback_index_location:/path/to/key.bin]     \
+        [--signing_helper /path/to/external/signer]                                              \
+        [--signing_helper_with_files /path/to/external/signer_with_files]                        \
+        [--print_required_libavb_version]                                                        \
         [--append_to_release_string STR]
 
 An integrity footer containing the hash for an entire partition can be
@@ -663,10 +668,10 @@ e.g. derive `AVB_pk`. Both `AVB_pk` and `AVB_pkmd` are passed to the
 `validate_vbmeta_public_key()` operation when verifying a slot.
 
 Some devices may support the end-user configuring the root of trust to use, see
-the [Device Specific Notes](#Device-Specific-Notes) section for details.
+the [Device Specific Notes](#device-specific-notes) section for details.
 
 Devices can be configured to create additional `vbmeta` partitions as
-[chained partitions](#The-VBMeta-struct) in order to update a subset of
+[chained partitions](#the-vbmeta-struct) in order to update a subset of
 partitions without changing the top-level `vbmeta` partition. For example,
 the following variables create `vbmeta_system.img` as a chained `vbmeta`
 image that contains the hash-tree descriptors for `system.img`, `system_ext.img`
@@ -1148,6 +1153,11 @@ part of the boot process to remind the user that the custom key is in use.
 
 # Version History
 
+### Version 1.3
+Version 1.3 adds support for the following:
+* A 32-bit `flags` element is added to a chain descriptor.
+* Support for chain partitions which don't use [A/B](#a_b-support).
+
 ### Version 1.2
 
 Version 1.2 adds support for the following:
@@ -1159,9 +1169,9 @@ Version 1.2 adds support for the following:
 Version 1.1 adds support for the following:
 
 * A 32-bit `flags` element is added to hash and hashtree descriptors.
-* Support for partitions which don't use [A/B](#A_B-Support).
-* Tamper-evident [named persistent values](#Named-Persistent-Values).
-* [Persistent digests](#Persistent-Digests) for hash or hashtree descriptors.
+* Support for partitions which don't use [A/B](#a_b-support).
+* Tamper-evident [named persistent values](#named-persistent-values).
+* [Persistent digests](#persistent-digests) for hash or hashtree descriptors.
 
 ### Version 1.0
 

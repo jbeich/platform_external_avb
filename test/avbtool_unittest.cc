@@ -656,6 +656,8 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
   EXPECT_EQ(static_cast<size_t>(erased_footer_file_size), rootfs_size);
 
   // Check that --do_not_append_vbmeta_image works as intended.
+  // In this case we don't modify the input image so it should work read-only.
+  EXPECT_COMMAND(0, "chmod a-w %s", rootfs_path.value().c_str());
   EXPECT_COMMAND(0,
                  "./avbtool.py add_hash_footer --salt d00df00d "
                  "--hash_algorithm sha256 --image %s "
@@ -2311,6 +2313,7 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
       "      Rollback Index Location: 1\n"
       "      Public key (sha1):       "
       "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "      Flags:                   0\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'foo bar baz'\n"
@@ -2478,7 +2481,91 @@ TEST_F(AvbToolTest, ChainedPartition) {
       "      Partition Name:          system\n"
       "      Rollback Index Location: 1\n"
       "      Public key (sha1):       "
-      "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n",
+      "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "      Flags:                   0\n",
+      InfoImage(vbmeta_path));
+
+  // Now check the VBMeta image.
+  std::string image_data;
+  ASSERT_TRUE(base::ReadFileToString(vbmeta_path, &image_data));
+
+  const uint8_t* vbmeta_data =
+      reinterpret_cast<const uint8_t*>(image_data.data());
+  const size_t vbmeta_size = image_data.length();
+  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
+            avb_vbmeta_image_verify(vbmeta_data, vbmeta_size, NULL, NULL));
+
+  // Collect all descriptors.
+  std::vector<const AvbDescriptor*> descriptors;
+  avb_descriptor_foreach(
+      vbmeta_data, vbmeta_size, collect_descriptors, &descriptors);
+
+  // We should have one descriptor - check it.
+  EXPECT_EQ(1UL, descriptors.size());
+
+  std::string pk_data;
+  ASSERT_TRUE(base::ReadFileToString(pk_path, &pk_data));
+
+  AvbChainPartitionDescriptor d;
+  EXPECT_EQ(AVB_DESCRIPTOR_TAG_CHAIN_PARTITION,
+            avb_be64toh(descriptors[0]->tag));
+  EXPECT_NE(
+      0,
+      avb_chain_partition_descriptor_validate_and_byteswap(
+          reinterpret_cast<const AvbChainPartitionDescriptor*>(descriptors[0]),
+          &d));
+  const uint8_t* desc_end = reinterpret_cast<const uint8_t*>(descriptors[0]) +
+                            sizeof(AvbChainPartitionDescriptor);
+  uint64_t o = 0;
+  EXPECT_EQ("system",
+            std::string(reinterpret_cast<const char*>(desc_end + o),
+                        d.partition_name_len));
+  o += d.partition_name_len;
+  EXPECT_EQ(pk_data,
+            std::string(reinterpret_cast<const char*>(descriptors[0]) +
+                            sizeof(AvbChainPartitionDescriptor) + o,
+                        d.public_key_len));
+}
+
+TEST_F(AvbToolTest, ChainedPartitionNoAB) {
+  base::FilePath vbmeta_path = testdir_.Append("vbmeta_cp.bin");
+
+  base::FilePath pk_path = testdir_.Append("testkey_rsa2048.avbpubkey");
+
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py extract_public_key --key test/data/testkey_rsa2048.pem"
+      " --output %s",
+      pk_path.value().c_str());
+
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py make_vbmeta_image "
+      "--output %s "
+      "--chain_partition_do_not_use_ab system:1:%s "
+      "--algorithm SHA256_RSA2048 --key test/data/testkey_rsa2048.pem "
+      "--internal_release_string \"\"",
+      vbmeta_path.value().c_str(),
+      pk_path.value().c_str());
+
+  ASSERT_EQ(
+      "Minimum libavb version:   1.3\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          1152 bytes\n"
+      "Public key (sha1):        cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Rollback Index Location:  0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Chain Partition descriptor:\n"
+      "      Partition Name:          system\n"
+      "      Rollback Index Location: 1\n"
+      "      Public key (sha1):       "
+      "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "      Flags:                   1\n",
       InfoImage(vbmeta_path));
 
   // Now check the VBMeta image.
@@ -2587,7 +2674,7 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
       "Rollback Index:           0\n"
       "Flags:                    0\n"
       "Rollback Index Location:  0\n"
-      "Release String:           'avbtool 1.2.0 '\n"
+      "Release String:           'avbtool 1.3.0 '\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
