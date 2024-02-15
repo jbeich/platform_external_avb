@@ -3441,7 +3441,10 @@ class Avb(object):
       print('{}'.format(partition_size - max_metadata_size))
       return
 
-    image = ImageHandler(image_filename)
+    # If we aren't appending the vbmeta footer to the input image we can
+    # open it in read-only mode.
+    image = ImageHandler(image_filename,
+                         read_only=do_not_append_vbmeta_image)
 
     # If there's already a footer, truncate the image to its original
     # size. This way 'avbtool add_hash_footer' is idempotent (modulo
@@ -4382,8 +4385,7 @@ class AvbTool(object):
     sub_parser = subparsers.add_parser('add_hash_footer',
                                        help='Add hashes and footer to image.')
     sub_parser.add_argument('--image',
-                            help='Image to add hashes to',
-                            type=argparse.FileType('rb+'))
+                            help='Image to add hashes to')
     sub_parser.add_argument('--partition_size',
                             help='Partition size',
                             type=parse_number)
@@ -4818,7 +4820,7 @@ class AvbTool(object):
   def add_hash_footer(self, args):
     """Implements the 'add_hash_footer' sub-command."""
     args = self._fixup_common_args(args)
-    self.avb.add_hash_footer(args.image.name if args.image else None,
+    self.avb.add_hash_footer(args.image,
                              args.partition_size, args.dynamic_partition_size,
                              args.partition_name, args.hash_algorithm,
                              args.salt, args.chain_partition,
