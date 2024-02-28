@@ -656,6 +656,8 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
   EXPECT_EQ(static_cast<size_t>(erased_footer_file_size), rootfs_size);
 
   // Check that --do_not_append_vbmeta_image works as intended.
+  // In this case we don't modify the input image so it should work read-only.
+  EXPECT_COMMAND(0, "chmod a-w %s", rootfs_path.value().c_str());
   EXPECT_COMMAND(0,
                  "./avbtool.py add_hash_footer --salt d00df00d "
                  "--hash_algorithm sha256 --image %s "
