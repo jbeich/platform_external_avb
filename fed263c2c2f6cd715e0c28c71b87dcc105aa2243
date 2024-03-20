@@ -110,6 +110,30 @@
       },
       "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "67e96ded_716cead6",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-20T21:23:38Z",
+      "side": 1,
+      "message": "I\u0027ve posted a follow-up patch on this one (https://r.android.com/c/3008397) that demonstrates one possible solution of explicitly passing the `\u0027o` and `\u0027p` lifetimes throughout the callback chain.\n\nIt\u0027s not a perfect solution - it still requires properly specifying `\u0027o` and `\u0027p` in the right places and the compiler won\u0027t remind you if you forget. But it does allow the compiler to enforce these lifetimes when used correctly.\n\nMy initial thought is that it\u0027s not worth it - it seems to just exchange one SAFETY requirement for another, and the original requirement (don\u0027t hold onto the `Ops` object past the callback) is fairly hard to violate whereas the new requirement (plumb lifetimes through the entire call chain) is fairly easy to forget.\n\nBut I think both have merits so don\u0027t have a strong preference, or if there\u0027s another option I haven\u0027t thought of I\u0027m happy to try it out.",
+      "parentUuid": "1105dd26_9a255965",
+      "range": {
+        "startLine": 364,
+        "startChar": 17,
+        "endLine": 364,
+        "endChar": 23
+      },
+      "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
