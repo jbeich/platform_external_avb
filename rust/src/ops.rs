@@ -318,18 +318,20 @@ impl<'o, 'p> ScopedAvbOps<'o, 'p> {
                 user_data: user_data as *mut _ as *mut _,
                 ab_ops: ptr::null_mut(),  // Deprecated, no need to support.
                 atx_ops: ptr::null_mut(), // TODO: support optional ATX.
-                read_from_partition: Some(read_from_partition),
-                get_preloaded_partition: Some(get_preloaded_partition),
+                read_from_partition: Some(read_from_partition::<'o, 'p>),
+                get_preloaded_partition: Some(get_preloaded_partition::<'o, 'p>),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
-                validate_vbmeta_public_key: Some(validate_vbmeta_public_key),
-                read_rollback_index: Some(read_rollback_index),
-                write_rollback_index: Some(write_rollback_index),
-                read_is_device_unlocked: Some(read_is_device_unlocked),
-                get_unique_guid_for_partition: Some(get_unique_guid_for_partition),
-                get_size_of_partition: Some(get_size_of_partition),
-                read_persistent_value: Some(read_persistent_value),
-                write_persistent_value: Some(write_persistent_value),
-                validate_public_key_for_partition: Some(validate_public_key_for_partition),
+                validate_vbmeta_public_key: Some(validate_vbmeta_public_key::<'o, 'p>),
+                read_rollback_index: Some(read_rollback_index::<'o, 'p>),
+                write_rollback_index: Some(write_rollback_index::<'o, 'p>),
+                read_is_device_unlocked: Some(read_is_device_unlocked::<'o, 'p>),
+                get_unique_guid_for_partition: Some(get_unique_guid_for_partition::<'o, 'p>),
+                get_size_of_partition: Some(get_size_of_partition::<'o, 'p>),
+                read_persistent_value: Some(read_persistent_value::<'o, 'p>),
+                write_persistent_value: Some(write_persistent_value::<'o, 'p>),
+                validate_public_key_for_partition: Some(
+                    validate_public_key_for_partition::<'o, 'p>,
+                ),
             },
             _user_data: PhantomData,
         }
@@ -351,13 +353,9 @@ impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
 /// The Rust `Ops` extracted from `avb_ops.user_data`.
 ///
 /// # Safety
-/// Only call this function on an `AvbOps` created via `ScopedAvbOps`.
-///
-/// Additionally, this should be considered a mutable borrow of the contained `Ops`:
-/// * do not return back to libavb while still holding the returned reference, or it will result
-///   in a dangling reference
-/// * do not call this again until the previous `Ops` goes out of scope, or it will violate Rust's
-///   mutable borrowing rules
+/// * only call this function on an `AvbOps` created via `ScopedAvbOps`.
+/// * you must explicitly provide the proper 'o/'p from the user-provided `Ops`.
+/// * do not call this again until the previous `Ops` goes out of scope.
 ///
 /// In practice, these conditions are met since we call this exactly once in each callback
 /// to extract the `Ops`, and drop it at callback completion.
@@ -383,7 +381,7 @@ fn check_nonnull<T>(ptr: *const T) -> IoResult<()> {
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn read_from_partition(
+unsafe extern "C" fn read_from_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     offset: i64,
@@ -393,7 +391,7 @@ unsafe extern "C" fn read_from_partition(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_read_from_partition(
+        result_to_io_enum(try_read_from_partition::<'o, 'p>(
             ops,
             partition,
             offset,
@@ -411,7 +409,7 @@ unsafe extern "C" fn read_from_partition(
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 /// * `out_num_read` must adhere to the requirements of `ptr::write()`.
-unsafe fn try_read_from_partition(
+unsafe fn try_read_from_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     offset: i64,
@@ -432,7 +430,7 @@ unsafe fn try_read_from_partition(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `partition`.
@@ -457,7 +455,7 @@ unsafe fn try_read_from_partition(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn get_preloaded_partition(
+unsafe extern "C" fn get_preloaded_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     num_bytes: usize,
@@ -466,7 +464,7 @@ unsafe extern "C" fn get_preloaded_partition(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_get_preloaded_partition(
+        result_to_io_enum(try_get_preloaded_partition::<'o, 'p>(
             ops,
             partition,
             num_bytes,
@@ -474,6 +472,17 @@ unsafe extern "C" fn get_preloaded_partition(
             out_num_bytes_preloaded,
         ))
     }
+}
+
+// Test case - it's actually fairly difficult to violate lifetime rules given our API, but
+// we can do it by trying to save a local slice to a static global.
+extern crate std;
+use std::{cell::RefCell, thread_local};
+
+const DEFAULT_GLOBAL_DATA: &[u8] = b"foo";
+
+thread_local! {
+    static GLOBAL_DATA: RefCell<&'static [u8]> = RefCell::new(DEFAULT_GLOBAL_DATA);
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -484,7 +493,7 @@ unsafe extern "C" fn get_preloaded_partition(
 /// * `out_pointer` and `out_num_bytes_preloaded` must adhere to the requirements of `ptr::write()`.
 /// * `out_pointer` will become an alias to the `ops` preloaded partition data, so the preloaded
 ///   data must remain valid and unmodified while `out_pointer` exists.
-unsafe fn try_get_preloaded_partition(
+unsafe fn try_get_preloaded_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     num_bytes: usize,
@@ -507,7 +516,7 @@ unsafe fn try_get_preloaded_partition(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `partition`.
@@ -532,6 +541,13 @@ unsafe fn try_get_preloaded_partition(
                 // Truncate here if necessary, we may have more preloaded data than libavb needs.
                 min(contents.len(), num_bytes),
             );
+
+            // This correctly triggers the failure - we're trying to assign a slice with lifetime 'p
+            // into a global with lifetime 'static.
+            //
+            // When we aren't explicit with lifetimes 'o and 'p, the compiler does allow this,
+            // as it just arbitrarily assigns 'static as our lifetimes.
+            GLOBAL_DATA.with(|g| *g.borrow_mut() = contents);
         },
         // No-op if this partition is not preloaded, we've already reset the out variables to
         // indicate preloaded data is not available.
@@ -544,7 +560,7 @@ unsafe fn try_get_preloaded_partition(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn validate_vbmeta_public_key(
+unsafe extern "C" fn validate_vbmeta_public_key<'o, 'p: 'o>(
     ops: *mut AvbOps,
     public_key_data: *const u8,
     public_key_length: usize,
@@ -554,7 +570,7 @@ unsafe extern "C" fn validate_vbmeta_public_key(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_validate_vbmeta_public_key(
+        result_to_io_enum(try_validate_vbmeta_public_key::<'o, 'p>(
             ops,
             public_key_data,
             public_key_length,
@@ -571,7 +587,7 @@ unsafe extern "C" fn validate_vbmeta_public_key(
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
 /// * `out_is_trusted` must adhere to the requirements of `ptr::write()`.
-unsafe fn try_validate_vbmeta_public_key(
+unsafe fn try_validate_vbmeta_public_key<'o, 'p: 'o>(
     ops: *mut AvbOps,
     public_key_data: *const u8,
     public_key_length: usize,
@@ -591,7 +607,7 @@ unsafe fn try_validate_vbmeta_public_key(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated `public_key_data` with size `public_key_length`.
@@ -620,14 +636,14 @@ unsafe fn try_validate_vbmeta_public_key(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn read_rollback_index(
+unsafe extern "C" fn read_rollback_index<'o, 'p: 'o>(
     ops: *mut AvbOps,
     rollback_index_location: usize,
     out_rollback_index: *mut u64,
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_read_rollback_index(
+        result_to_io_enum(try_read_rollback_index::<'o, 'p>(
             ops,
             rollback_index_location,
             out_rollback_index,
@@ -640,7 +656,7 @@ unsafe extern "C" fn read_rollback_index(
 /// # Safety
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `out_rollback_index` must adhere to the requirements of `ptr::write()`.
-unsafe fn try_read_rollback_index(
+unsafe fn try_read_rollback_index<'o, 'p: 'o>(
     ops: *mut AvbOps,
     rollback_index_location: usize,
     out_rollback_index: *mut u64,
@@ -656,7 +672,7 @@ unsafe fn try_read_rollback_index(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     let index = ops.read_rollback_index(rollback_index_location)?;
 
     // SAFETY:
@@ -669,14 +685,14 @@ unsafe fn try_read_rollback_index(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn write_rollback_index(
+unsafe extern "C" fn write_rollback_index<'o, 'p: 'o>(
     ops: *mut AvbOps,
     rollback_index_location: usize,
     rollback_index: u64,
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_write_rollback_index(
+        result_to_io_enum(try_write_rollback_index::<'o, 'p>(
             ops,
             rollback_index_location,
             rollback_index,
@@ -688,7 +704,7 @@ unsafe extern "C" fn write_rollback_index(
 ///
 /// # Safety
 /// * `ops` must have been created via `ScopedAvbOps`.
-unsafe fn try_write_rollback_index(
+unsafe fn try_write_rollback_index<'o, 'p: 'o>(
     ops: *mut AvbOps,
     rollback_index_location: usize,
     rollback_index: u64,
@@ -696,19 +712,19 @@ unsafe fn try_write_rollback_index(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     ops.write_rollback_index(rollback_index_location, rollback_index)
 }
 
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn read_is_device_unlocked(
+unsafe extern "C" fn read_is_device_unlocked<'o, 'p: 'o>(
     ops: *mut AvbOps,
     out_is_unlocked: *mut bool,
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
-    unsafe { result_to_io_enum(try_read_is_device_unlocked(ops, out_is_unlocked)) }
+    unsafe { result_to_io_enum(try_read_is_device_unlocked::<'o, 'p>(ops, out_is_unlocked)) }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -716,7 +732,7 @@ unsafe extern "C" fn read_is_device_unlocked(
 /// # Safety
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `out_is_unlocked` must adhere to the requirements of `ptr::write()`.
-unsafe fn try_read_is_device_unlocked(
+unsafe fn try_read_is_device_unlocked<'o, 'p: 'o>(
     ops: *mut AvbOps,
     out_is_unlocked: *mut bool,
 ) -> IoResult<()> {
@@ -731,7 +747,7 @@ unsafe fn try_read_is_device_unlocked(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     let unlocked = ops.read_is_device_unlocked()?;
 
     // SAFETY:
@@ -744,7 +760,7 @@ unsafe fn try_read_is_device_unlocked(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn get_unique_guid_for_partition(
+unsafe extern "C" fn get_unique_guid_for_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     guid_buf: *mut c_char,
@@ -752,7 +768,7 @@ unsafe extern "C" fn get_unique_guid_for_partition(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_get_unique_guid_for_partition(
+        result_to_io_enum(try_get_unique_guid_for_partition::<'o, 'p>(
             ops,
             partition,
             guid_buf,
@@ -770,7 +786,7 @@ unsafe extern "C" fn get_unique_guid_for_partition(
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `guid_buf` must adhere to the requirements of `slice::from_raw_parts_mut()`.
-unsafe fn try_get_unique_guid_for_partition(
+unsafe fn try_get_unique_guid_for_partition<'o, 'p: 'o>(
     #[allow(unused_variables)] ops: *mut AvbOps,
     #[allow(unused_variables)] partition: *const c_char,
     guid_buf: *mut c_char,
@@ -816,7 +832,7 @@ unsafe fn try_get_unique_guid_for_partition(
         // SAFETY:
         // * we only use `ops` objects created via `ScopedAvbOps` as required.
         // * `ops` is only extracted once and is dropped at the end of the callback.
-        let ops = unsafe { as_ops(ops) }?;
+        let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
         let guid = ops.get_unique_guid_for_partition(partition)?;
 
         // Write the UUID string to a uuid buffer which is guaranteed to be large enough, then use
@@ -842,14 +858,14 @@ unsafe fn try_get_unique_guid_for_partition(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn get_size_of_partition(
+unsafe extern "C" fn get_size_of_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     out_size_num_bytes: *mut u64,
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_get_size_of_partition(
+        result_to_io_enum(try_get_size_of_partition::<'o, 'p>(
             ops,
             partition,
             out_size_num_bytes,
@@ -863,7 +879,7 @@ unsafe extern "C" fn get_size_of_partition(
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_size_num_bytes` must adhere to the requirements of `ptr::write()`.
-unsafe fn try_get_size_of_partition(
+unsafe fn try_get_size_of_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     out_size_num_bytes: *mut u64,
@@ -880,7 +896,7 @@ unsafe fn try_get_size_of_partition(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `partition`.
@@ -899,7 +915,7 @@ unsafe fn try_get_size_of_partition(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn read_persistent_value(
+unsafe extern "C" fn read_persistent_value<'o, 'p: 'o>(
     ops: *mut AvbOps,
     name: *const c_char,
     buffer_size: usize,
@@ -908,7 +924,7 @@ unsafe extern "C" fn read_persistent_value(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_read_persistent_value(
+        result_to_io_enum(try_read_persistent_value::<'o, 'p>(
             ops,
             name,
             buffer_size,
@@ -925,7 +941,7 @@ unsafe extern "C" fn read_persistent_value(
 /// * `name` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 /// * `out_num_bytes_read` must adhere to the requirements of `ptr::write()`.
-unsafe fn try_read_persistent_value(
+unsafe fn try_read_persistent_value<'o, 'p: 'o>(
     ops: *mut AvbOps,
     name: *const c_char,
     buffer_size: usize,
@@ -944,7 +960,7 @@ unsafe fn try_read_persistent_value(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `name`.
@@ -980,14 +996,18 @@ unsafe fn try_read_persistent_value(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn write_persistent_value(
+unsafe extern "C" fn write_persistent_value<'o, 'p: 'o>(
     ops: *mut AvbOps,
     name: *const c_char,
     value_size: usize,
     value: *const u8,
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
-    unsafe { result_to_io_enum(try_write_persistent_value(ops, name, value_size, value)) }
+    unsafe {
+        result_to_io_enum(try_write_persistent_value::<'o, 'p>(
+            ops, name, value_size, value,
+        ))
+    }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -996,7 +1016,7 @@ unsafe extern "C" fn write_persistent_value(
 /// * `ops` must have been created via `ScopedAvbOps`.
 /// * `name` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts()`.
-unsafe fn try_write_persistent_value(
+unsafe fn try_write_persistent_value<'o, 'p: 'o>(
     ops: *mut AvbOps,
     name: *const c_char,
     value_size: usize,
@@ -1007,7 +1027,7 @@ unsafe fn try_write_persistent_value(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `name`.
@@ -1032,7 +1052,7 @@ unsafe fn try_write_persistent_value(
 /// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
 ///
 /// See corresponding `try_*` function docs.
-unsafe extern "C" fn validate_public_key_for_partition(
+unsafe extern "C" fn validate_public_key_for_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     public_key_data: *const u8,
@@ -1044,7 +1064,7 @@ unsafe extern "C" fn validate_public_key_for_partition(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_validate_public_key_for_partition(
+        result_to_io_enum(try_validate_public_key_for_partition::<'o, 'p>(
             ops,
             partition,
             public_key_data,
@@ -1065,7 +1085,7 @@ unsafe extern "C" fn validate_public_key_for_partition(
 /// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
 /// * `out_*` must adhere to the requirements of `ptr::write()`.
 #[allow(clippy::too_many_arguments)] // Mirroring libavb C API.
-unsafe fn try_validate_public_key_for_partition(
+unsafe fn try_validate_public_key_for_partition<'o, 'p: 'o>(
     ops: *mut AvbOps,
     partition: *const c_char,
     public_key_data: *const u8,
@@ -1092,7 +1112,7 @@ unsafe fn try_validate_public_key_for_partition(
     // SAFETY:
     // * we only use `ops` objects created via `ScopedAvbOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
-    let ops = unsafe { as_ops(ops) }?;
+    let ops = unsafe { as_ops::<'o, 'p>(ops) }?;
     // SAFETY:
     // * we've checked that the pointer is non-NULL.
     // * libavb gives us a properly-allocated and nul-terminated `partition`.
