@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "50f56ec9_6d65d924",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-20T15:44:01Z",
+      "side": 1,
+      "message": "I\u0027ve tried a few variations on this and the compiler doesn\u0027t seem to like aliasing lifetimes, the closest thing I could find that compiled was\n\n```\ntrait Preloaded\u003c\u0027a\u003e: \u0027a {}\n```\n\nbut it\u0027s not clear to me how to use this effectively in the `Ops` trait.\n\nWe could rename this lifetime if you think it would be useful, e.g. `Ops\u003c\u0027p\u003e` or `Ops\u003c\u0027preloaded\u003e`. I couldn\u0027t find any solid guidance about naming lifetimes so currently when there\u0027s only one lifetime I use `\u0027a` and when there\u0027s more than one I try to give them meaningful abbreviations (`\u0027o` for \"ops\", `\u0027p` for \"preloaded\"). But I\u0027m happy to adjust to another naming scheme.",
+      "parentUuid": "6c1a4015_2880b3e5",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 83
+      },
+      "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f7c8d903_6799253c",
         "filename": "rust/src/ops.rs",
         "patchSetId": 6
@@ -54,6 +78,30 @@
       "writtenOn": "2024-03-20T12:33:08Z",
       "side": 1,
       "message": "It feels a bit weird to associate two lifetime parameters with the returned trait object when the input is simply a raw pointer. It is unclear how we can infer two distinct lifetimes from a raw pointer input.",
+      "range": {
+        "startLine": 364,
+        "startChar": 17,
+        "endLine": 364,
+        "endChar": 23
+      },
+      "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1105dd26_9a255965",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-20T15:44:01Z",
+      "side": 1,
+      "message": "Yeah good point, this is a bit hand-wavy and doesn\u0027t really mean anything (the compiler also lets me use `\u0027static` here for both lifetimes since it just fills in whatever it needs to compile).\n\nReally here we\u0027re relying on the fact that all this ops work happens within a single call, i.e.:\n\n* user calls `slot_verify(ops, ...)`\n  * we set up the raw C structs from `ops`\n  * we call into libavb and convert callbacks using any arbitrary lifetimes here\n* return the verify result back to use\n\nSince the top level Rust `slot_verify()` function is borrowing `ops` for this entire process and enforces lifetimes, these internal short-lived conversions can use any lifetimes as their lifetimes never escape the single callback.\n\nBut you\u0027re right that it\u0027s really not clear here in the code. I\u0027ll play around and see if I can figure out anything more explicit.",
+      "parentUuid": "f7c8d903_6799253c",
       "range": {
         "startLine": 364,
         "startChar": 17,
