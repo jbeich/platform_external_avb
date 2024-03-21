@@ -91,6 +91,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "00383f29_bf030834",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-21T21:46:59Z",
+      "side": 1,
+      "message": "Ah gotcha thanks for the snippet!\n\nI think in this case it\u0027s an \"associated type\" so `Preloaded: \u0027a` is just a default; someone implementing `Ops` here could just re-define `Preloaded` as some other totally unrelated type (example: https://play.rust-lang.org/?version\u003dstable\u0026mode\u003ddebug\u0026edition\u003d2021\u0026gist\u003d142550e70e85bdf92144b3ab48da0704).\n\nSo it\u0027s usable but slightly confusing as it gives more freedom than we really want, since we only work if `Preloaded` is a `\u0026[u8]`.\n\nBut we can define a `Preloaded` type that aliases to `\u0026[u8]`, this way it has a name, but can\u0027t be overridden - it\u0027s always a byte slice. Added this approach in the new patch set, LMK if that\u0027s along the lines of what you were looking for.",
+      "parentUuid": "83e10ca4_d47aa4e4",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 83
+      },
+      "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "f7c8d903_6799253c",
         "filename": "rust/src/ops.rs",
         "patchSetId": 6
