@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5719a69_480bb3dd",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 7
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-03-22T09:22:47Z",
+      "side": 1,
+      "message": "The code looks good to me overall :) However, I think it would be beneficial to have a member from the Rust team review the definition of the double lifetime, in order to explore if there is a more effective approach to handle it in Rust.",
+      "revId": "6dfd4e8143027ea6e030bc8aeb70e917b61a3e3c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

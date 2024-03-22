@@ -113,6 +113,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7afe69e7_b655d373",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-03-22T09:22:47Z",
+      "side": 1,
+      "message": "Thank you for trying this out! In that sense, I think the first version is also okay for me.",
+      "parentUuid": "00383f29_bf030834",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 83
+      },
+      "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f7c8d903_6799253c",
