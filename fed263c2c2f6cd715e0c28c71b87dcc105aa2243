@@ -230,6 +230,30 @@
       },
       "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "df5946cd_9c610bee",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2024-03-22T13:47:45Z",
+      "side": 1,
+      "message": "I don\u0027t think I understand this well enough to suggest a better approach, but please do document in the safety comment what lifetimes the caller should use here and how they relate to the pointer passed in.",
+      "parentUuid": "4bbca099_3efefd7a",
+      "range": {
+        "startLine": 364,
+        "startChar": 17,
+        "endLine": 364,
+        "endChar": 23
+      },
+      "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
