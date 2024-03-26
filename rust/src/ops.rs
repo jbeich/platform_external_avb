@@ -20,7 +20,10 @@
 extern crate alloc;
 
 use crate::{error::result_to_io_enum, IoError, IoResult};
-use avb_bindgen::{AvbIOResult, AvbOps};
+use avb_bindgen::{
+    avb_slot_verify, AvbAtxOps, AvbHashtreeErrorMode, AvbIOResult, AvbOps, AvbSlotVerifyData,
+    AvbSlotVerifyFlags, AvbSlotVerifyResult,
+};
 use core::{
     cmp::min,
     ffi::{c_char, c_void, CStr},
@@ -270,7 +273,7 @@ pub struct PublicKeyForPartitionInfo {
 ///                                  `UserData` (Rust/thin)
 ///
 ///                                  `ScopedAvbOps` makes
-///                                  `AvbOps` (C) containing:
+///                                  `Avb[Atx]Ops` (C) containing:
 ///                                  1. `UserData*` (C)
 ///                                  2. our callbacks (C)
 ///                                                            ---->
@@ -300,10 +303,16 @@ impl<'o, 'p> UserData<'o, 'p> {
     }
 }
 
-/// Wraps the C `AvbOps` struct with lifetime information for the compiler.
+/// Manages the required libavb C ops structs.
+///
+/// This struct is responsible for properly configuring the libavb C structs, as well as tying them
+/// to the Rust `UserData` lifetime to ensure the callback data remains valid at all times it could
+/// be used by libavb.
 pub(crate) struct ScopedAvbOps<'o, 'p> {
     /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
     avb_ops: AvbOps,
+    /// When using ATX, `AvbOps` and `AvbAtxOps` hold circular references to each other.
+    _atx_ops: AvbAtxOps,
     /// This provides the necessary lifetime information so the compiler can make sure that
     /// the `UserData` stays alive at least as long as we do.
     _user_data: PhantomData<UserData<'o, 'p>>,
@@ -317,7 +326,7 @@ impl<'o, 'p> ScopedAvbOps<'o, 'p> {
                 // is smart enough to deduce the types we need.
                 user_data: user_data as *mut _ as *mut _,
                 ab_ops: ptr::null_mut(),  // Deprecated, no need to support.
-                atx_ops: ptr::null_mut(), // TODO: support optional ATX.
+                atx_ops: ptr::null_mut(), // Set at the time of use.
                 read_from_partition: Some(read_from_partition),
                 get_preloaded_partition: Some(get_preloaded_partition),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
@@ -331,14 +340,51 @@ impl<'o, 'p> ScopedAvbOps<'o, 'p> {
                 write_persistent_value: Some(write_persistent_value),
                 validate_public_key_for_partition: Some(validate_public_key_for_partition),
             },
+            _atx_ops: AvbAtxOps {
+                ops: ptr::null_mut(), // Set at the time of use.
+                // TODO(b/320543206): implement these callbacks.
+                read_permanent_attributes: None,
+                read_permanent_attributes_hash: None,
+                set_key_version: None,
+                get_random: None,
+            },
             _user_data: PhantomData,
         }
     }
-}
 
-impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
-    fn as_mut(&mut self) -> &mut AvbOps {
-        &mut self.avb_ops
+    /// Calls `avb_slot_verify()` with the given parameters.
+    ///
+    /// The purpose of wrapping `avb_slot_verify()` here is to keep the C structs encapsulated
+    /// inside this object, so that it's impossible to misuse them. This allows this struct to
+    /// make sure the raw pointers are valid rather than requiring the caller to think about it.
+    ///
+    /// # Safety
+    /// All parameters must be properly initialized as required by libavb `avb_slot_verify()`.
+    pub(crate) unsafe fn avb_slot_verify(
+        &mut self,
+        requested_partitions: *const *const c_char,
+        ab_suffix: *const c_char,
+        flags: AvbSlotVerifyFlags,
+        hashtree_error_mode: AvbHashtreeErrorMode,
+        out_data: *mut *mut AvbSlotVerifyData,
+    ) -> AvbSlotVerifyResult {
+        // Set the self-referential pointers; the addresses are stable during this function as long
+        // as we don't move out of `self`.
+        // TODO(b/320543206): set `avb_ops` and `atx_ops` circular references as needed for ATX.
+
+        // SAFETY:
+        // * we own `self.avb_ops` and know it's valid
+        // * caller is required to ensure that the other parameters are valid
+        unsafe {
+            avb_slot_verify(
+                &mut self.avb_ops,
+                requested_partitions,
+                ab_suffix,
+                flags,
+                hashtree_error_mode,
+                out_data,
+            )
+        }
     }
 }
 
@@ -381,12 +427,14 @@ impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
 /// }                         // Actual 'o/'p end
 /// ```
 unsafe fn as_ops<'o, 'p>(avb_ops: *mut AvbOps) -> IoResult<&'o mut dyn Ops<'p>> {
-    // SAFETY: we created this AvbOps object and passed it to libavb so we know it meets all
+    // SAFETY: we created this `AvbOps` object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     let avb_ops = unsafe { avb_ops.as_mut() }.ok_or(IoError::Io)?;
-    // Cast the void* `user_data` back to a UserData*.
+
+    // Cast the `void* user_data` back to a `UserData*`.
     let user_data = avb_ops.user_data as *mut UserData;
-    // SAFETY: we created this UserData object and passed it to libavb so we know it meets all
+
+    // SAFETY: we created this `UserData` object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.0)
 }
