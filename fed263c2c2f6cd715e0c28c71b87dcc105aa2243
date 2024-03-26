@@ -137,6 +137,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "862f2d96_6a9b3ede",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-26T18:49:41Z",
+      "side": 1,
+      "message": "Ack thanks, I\u0027ll switch back to raw `[u8]` for now and we can re-assess aliasing later if we think it would be helpful.",
+      "parentUuid": "7afe69e7_b655d373",
+      "range": {
+        "startLine": 38,
+        "startChar": 0,
+        "endLine": 38,
+        "endChar": 83
+      },
+      "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f7c8d903_6799253c",
@@ -246,6 +270,30 @@
       "side": 1,
       "message": "I don\u0027t think I understand this well enough to suggest a better approach, but please do document in the safety comment what lifetimes the caller should use here and how they relate to the pointer passed in.",
       "parentUuid": "4bbca099_3efefd7a",
+      "range": {
+        "startLine": 364,
+        "startChar": 17,
+        "endLine": 364,
+        "endChar": 23
+      },
+      "revId": "fed263c2c2f6cd715e0c28c71b87dcc105aa2243",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "71326201_d15fa2a1",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-26T18:49:41Z",
+      "side": 1,
+      "message": "Done, thanks",
+      "parentUuid": "df5946cd_9c610bee",
       "range": {
         "startLine": 364,
         "startChar": 17,
