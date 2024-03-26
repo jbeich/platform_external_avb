@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "aee11d27_a12358a0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-26T20:28:02Z",
+      "side": 1,
+      "message": "Yeah exactly, in the no-preload case all data is owned internally and cleaned up on drop. Added some more comments to this effect, thanks!",
+      "parentUuid": "1489b17e_2431f7d8",
+      "revId": "34ac02f36f39229f1392a64b9373df4b6d8cefef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "402796dd_79d27192",
@@ -31,6 +49,24 @@
       "writtenOn": "2024-03-26T19:26:12Z",
       "side": 1,
       "message": "This seems wrong in the case where `AvbSlotVerifyData` did not come from preloading? If it\u0027s required that the pointer came from preloaded data, that needs to be added to the safetydoc. If it\u0027s not required, this seems likely to expand the lifetime more than intended in the non-preload case.",
+      "revId": "34ac02f36f39229f1392a64b9373df4b6d8cefef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ed341f7d_348d7a16",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-26T20:28:02Z",
+      "side": 1,
+      "message": "Good point thank you for catching that, `data` must have been created from `ops` as well to get the lifetimes right. Updated the docs accordingly.",
+      "parentUuid": "402796dd_79d27192",
       "revId": "34ac02f36f39229f1392a64b9373df4b6d8cefef",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
