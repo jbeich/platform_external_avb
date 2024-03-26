@@ -20,11 +20,13 @@
 extern crate alloc;
 
 use crate::{error::result_to_io_enum, IoError, IoResult};
-use avb_bindgen::{AvbIOResult, AvbOps};
+use avb_bindgen::{
+    avb_slot_verify, AvbAtxOps, AvbHashtreeErrorMode, AvbIOResult, AvbOps, AvbSlotVerifyData,
+    AvbSlotVerifyFlags, AvbSlotVerifyResult,
+};
 use core::{
     cmp::min,
     ffi::{c_char, c_void, CStr},
-    marker::PhantomData,
     ptr, slice,
 };
 #[cfg(feature = "uuid")]
@@ -265,22 +267,20 @@ pub struct PublicKeyForPartitionInfo {
 /// create `Ops` (Rust) with
 /// callback implementations
 ///                           ---->
-///                                  `UserData::new()` wraps:
-///                                  `Ops` (Rust/fat) ->
-///                                  `UserData` (Rust/thin)
+///                                  `UserData` (Rust/thin) wraps:
+///                                    * `&dyn Ops` (Rust/fat)
+///                                    * `AvbOps` (C)
+///                                    * `AvbAtxOps` (c)
 ///
-///                                  `ScopedAvbOps` makes
-///                                  `AvbOps` (C) containing:
-///                                  1. `UserData*` (C)
-///                                  2. our callbacks (C)
-///                                                            ---->
-///                                                                   execute `AvbOps` (C)
-///                                                                   callbacks as needed
-///                                                            <----
+///                                  `ScopedOps` initializes
+///                                  `UserData` ops pointers     ---->
+///                                                                     execute C callbacks on
+///                                                                     `AvbOps`/`AvbAtxOps` (C)
+///                                                              <----
 ///                                  `as_ops()` unwraps:
-///                                  `AvbOps` (C) ->
-///                                  `UserData` (Rust/thin) ->
-///                                  `Ops` (Rust/fat)
+///                                    * `Avb[Atx]Ops` (C)
+///                                    * `UserData` (Rust/thin)
+///                                    * `Ops` (Rust/fat)
 ///
 ///                                  Convert callback data to
 ///                                  safe Rust
@@ -292,32 +292,25 @@ pub struct PublicKeyForPartitionInfo {
 /// # Lifetimes
 /// * `'o`: lifetime of the `Ops` object
 /// * `'p`: lifetime of any preloaded data provided by `Ops`
-pub(crate) struct UserData<'o, 'p>(&'o mut dyn Ops<'p>);
+pub(crate) struct UserData<'o, 'p> {
+    /// Rust callbacks.
+    ops: &'o mut dyn Ops<'p>,
+    /// C callbacks. Not valid or accessible until wrapped in `ScopedOps`.
+    avb_ops: AvbOps,
+    /// ATX C callbacks. Not valid or accessible until wrapped in `ScopedOps`.
+    _atx_ops: AvbAtxOps,
+}
 
 impl<'o, 'p> UserData<'o, 'p> {
     pub(crate) fn new(ops: &'o mut dyn Ops<'p>) -> Self {
-        Self(ops)
-    }
-}
-
-/// Wraps the C `AvbOps` struct with lifetime information for the compiler.
-pub(crate) struct ScopedAvbOps<'o, 'p> {
-    /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
-    avb_ops: AvbOps,
-    /// This provides the necessary lifetime information so the compiler can make sure that
-    /// the `UserData` stays alive at least as long as we do.
-    _user_data: PhantomData<UserData<'o, 'p>>,
-}
-
-impl<'o, 'p> ScopedAvbOps<'o, 'p> {
-    pub(crate) fn new(user_data: &mut UserData<'o, 'p>) -> Self {
+        // We cannot assign any raw pointers yet because `Self` may be moved when returned from
+        // this function, invalidating the pointers. Instead they will be set later by `ScopedOps`.
         Self {
+            ops,
             avb_ops: AvbOps {
-                // Rust won't transitively cast so we need to cast twice manually, but the compiler
-                // is smart enough to deduce the types we need.
-                user_data: user_data as *mut _ as *mut _,
-                ab_ops: ptr::null_mut(),  // Deprecated, no need to support.
-                atx_ops: ptr::null_mut(), // TODO: support optional ATX.
+                user_data: ptr::null_mut(), // Set later by `ScopedOps`.
+                ab_ops: ptr::null_mut(),    // Deprecated, no need to support.
+                atx_ops: ptr::null_mut(),   // Set later by `ScopedOps`.
                 read_from_partition: Some(read_from_partition),
                 get_preloaded_partition: Some(get_preloaded_partition),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
@@ -331,14 +324,73 @@ impl<'o, 'p> ScopedAvbOps<'o, 'p> {
                 write_persistent_value: Some(write_persistent_value),
                 validate_public_key_for_partition: Some(validate_public_key_for_partition),
             },
-            _user_data: PhantomData,
+            _atx_ops: AvbAtxOps {
+                ops: ptr::null_mut(), // Set later by `ScopedOps`.
+                // TODO(b/320543206): implement these callbacks.
+                read_permanent_attributes: None,
+                read_permanent_attributes_hash: None,
+                set_key_version: None,
+                get_random: None,
+            },
         }
     }
 }
 
-impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
-    fn as_mut(&mut self) -> &mut AvbOps {
-        &mut self.avb_ops
+/// Provides a scope where all the necessary ops structs are correctly configured.
+///
+/// The C ops structs have some circular pointers which are easy to accidentally invalidate in
+/// Rust if you aren't careful; this struct enforces pointer validity by:
+///   1. initializing the C pointers as required by libavb
+///   2. borrowing `UserData` to ensure none of the the pointers can be invalidated
+///
+/// The `UserData` fields are not exposed directly but can only be used through `ScopedOps`,
+/// which protects against accidential misuse.
+pub(crate) struct ScopedOps<'o, 'p> {
+    user_data: &'o mut UserData<'o, 'p>,
+}
+
+impl<'o, 'p> ScopedOps<'o, 'p> {
+    pub(crate) fn new(user_data: &'o mut UserData<'o, 'p>) -> Self {
+        // Assign the pointers required by libavb.
+        user_data.avb_ops.user_data = user_data as *mut _ as *mut _;
+        // TODO(b/320543206): if using ATX, also set `avb_ops` and `atx_ops` circular references.
+
+        // Holding onto `user_data` ensures it won't move, so the pointers are guaranteed to stay
+        // valid while we exist.
+        Self { user_data }
+    }
+
+    /// Calls `avb_slot_verify()` with the given parameters.
+    ///
+    /// The purpose of wrapping `avb_slot_verify()` here is to keep the `UserData` pointers
+    /// encapsulated inside this object, so that it's impossible to misuse them.
+    ///
+    /// If we instead exposed the raw C pointers, it would be possible to hold onto the pointer
+    /// after dropping the `ScopedOps`, which would remove our pointer validity guarantees.
+    ///
+    /// # Safety
+    /// All parameters must be properly initialized as required by libavb `avb_slot_verify()`.
+    pub(crate) unsafe fn avb_slot_verify(
+        &mut self,
+        requested_partitions: *const *const c_char,
+        ab_suffix: *const c_char,
+        flags: AvbSlotVerifyFlags,
+        hashtree_error_mode: AvbHashtreeErrorMode,
+        out_data: *mut *mut AvbSlotVerifyData,
+    ) -> AvbSlotVerifyResult {
+        // SAFETY:
+        // * we have guaranteed that `&self.user_data` is valid
+        // * caller is required to ensure that the other parameters are valid
+        unsafe {
+            avb_slot_verify(
+                &mut self.user_data.avb_ops,
+                requested_partitions,
+                ab_suffix,
+                flags,
+                hashtree_error_mode,
+                out_data,
+            )
+        }
     }
 }
 
@@ -354,7 +406,7 @@ impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
 /// The Rust `Ops` extracted from `avb_ops.user_data`.
 ///
 /// # Safety
-/// * only call this function on an `AvbOps` created via `ScopedAvbOps`
+/// * only call this function on an `AvbOps` created via `ScopedOps`
 /// * drop all references to the returned `Ops` and preloaded data before returning control to
 ///   libavb or calling this function again
 ///
@@ -381,14 +433,16 @@ impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
 /// }                         // Actual 'o/'p end
 /// ```
 unsafe fn as_ops<'o, 'p>(avb_ops: *mut AvbOps) -> IoResult<&'o mut dyn Ops<'p>> {
-    // SAFETY: we created this AvbOps object and passed it to libavb so we know it meets all
+    // SAFETY: we created this `AvbOps` object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     let avb_ops = unsafe { avb_ops.as_mut() }.ok_or(IoError::Io)?;
-    // Cast the void* `user_data` back to a UserData*.
+
+    // Cast the `void* user_data` back to a `UserData*`.
     let user_data = avb_ops.user_data as *mut UserData;
-    // SAFETY: we created this UserData object and passed it to libavb so we know it meets all
+
+    // SAFETY: we created this `UserData` object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
-    Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.0)
+    Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.ops)
 }
 
 /// Converts a non-NULL `ptr` to `()`, NULL to `Err(IoError::Io)`.
@@ -426,7 +480,7 @@ unsafe extern "C" fn read_from_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 /// * `out_num_read` must adhere to the requirements of `ptr::write()`.
@@ -449,7 +503,7 @@ unsafe fn try_read_from_partition(
     unsafe { ptr::write(out_num_read, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -498,7 +552,7 @@ unsafe extern "C" fn get_preloaded_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_pointer` and `out_num_bytes_preloaded` must adhere to the requirements of `ptr::write()`.
 /// * `out_pointer` will become an alias to the `ops` preloaded partition data, so the preloaded
@@ -524,7 +578,7 @@ unsafe fn try_get_preloaded_partition(
     }
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -587,7 +641,7 @@ unsafe extern "C" fn validate_vbmeta_public_key(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
 /// * `out_is_trusted` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_validate_vbmeta_public_key(
@@ -608,7 +662,7 @@ unsafe fn try_validate_vbmeta_public_key(
     unsafe { ptr::write(out_is_trusted, false) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -657,7 +711,7 @@ unsafe extern "C" fn read_rollback_index(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `out_rollback_index` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_read_rollback_index(
     ops: *mut AvbOps,
@@ -673,7 +727,7 @@ unsafe fn try_read_rollback_index(
     unsafe { ptr::write(out_rollback_index, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     let index = ops.read_rollback_index(rollback_index_location)?;
@@ -706,14 +760,14 @@ unsafe extern "C" fn write_rollback_index(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 unsafe fn try_write_rollback_index(
     ops: *mut AvbOps,
     rollback_index_location: usize,
     rollback_index: u64,
 ) -> IoResult<()> {
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     ops.write_rollback_index(rollback_index_location, rollback_index)
@@ -733,7 +787,7 @@ unsafe extern "C" fn read_is_device_unlocked(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `out_is_unlocked` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_read_is_device_unlocked(
     ops: *mut AvbOps,
@@ -748,7 +802,7 @@ unsafe fn try_read_is_device_unlocked(
     unsafe { ptr::write(out_is_unlocked, false) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     let unlocked = ops.read_is_device_unlocked()?;
@@ -786,7 +840,7 @@ unsafe extern "C" fn get_unique_guid_for_partition(
 /// gives the empty string for all partitions.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `guid_buf` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 unsafe fn try_get_unique_guid_for_partition(
@@ -833,7 +887,7 @@ unsafe fn try_get_unique_guid_for_partition(
         let partition = unsafe { CStr::from_ptr(partition) };
 
         // SAFETY:
-        // * we only use `ops` objects created via `ScopedAvbOps` as required.
+        // * we only use `ops` objects created via `ScopedOps` as required.
         // * `ops` is only extracted once and is dropped at the end of the callback.
         let ops = unsafe { as_ops(ops) }?;
         let guid = ops.get_unique_guid_for_partition(partition)?;
@@ -879,7 +933,7 @@ unsafe extern "C" fn get_size_of_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_size_num_bytes` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_get_size_of_partition(
@@ -897,7 +951,7 @@ unsafe fn try_get_size_of_partition(
     unsafe { ptr::write(out_size_num_bytes, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -940,7 +994,7 @@ unsafe extern "C" fn read_persistent_value(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `name` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 /// * `out_num_bytes_read` must adhere to the requirements of `ptr::write()`.
@@ -961,7 +1015,7 @@ unsafe fn try_read_persistent_value(
     unsafe { ptr::write(out_num_bytes_read, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -1012,7 +1066,7 @@ unsafe extern "C" fn write_persistent_value(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `name` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts()`.
 unsafe fn try_write_persistent_value(
@@ -1024,7 +1078,7 @@ unsafe fn try_write_persistent_value(
     check_nonnull(name)?;
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -1079,7 +1133,7 @@ unsafe extern "C" fn validate_public_key_for_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `ScopedOps`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
 /// * `out_*` must adhere to the requirements of `ptr::write()`.
@@ -1109,7 +1163,7 @@ unsafe fn try_validate_public_key_for_partition(
     }
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `ScopedOps` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
