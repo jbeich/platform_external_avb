@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1489b17e_2431f7d8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1416371
+      },
+      "writtenOn": "2024-03-26T19:26:12Z",
+      "side": 1,
+      "message": "Seems like a reasonable approach, my only concern is that it\u0027s not obvious to me why the `AvbSlotData` is assumed to have the lifetime of the preload, when you describe the possibility that no preload is being used. Is it all dynamically handled by avb\u0027s creation and then by the drop impl in that case? If so, some more comments to that effect would be helpful.",
+      "revId": "34ac02f36f39229f1392a64b9373df4b6d8cefef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "402796dd_79d27192",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 8
+      },
+      "lineNbr": 247,
+      "author": {
+        "id": 1416371
+      },
+      "writtenOn": "2024-03-26T19:26:12Z",
+      "side": 1,
+      "message": "This seems wrong in the case where `AvbSlotVerifyData` did not come from preloading? If it\u0027s required that the pointer came from preloaded data, that needs to be added to the safetydoc. If it\u0027s not required, this seems likely to expand the lifetime more than intended in the non-preload case.",
+      "revId": "34ac02f36f39229f1392a64b9373df4b6d8cefef",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
