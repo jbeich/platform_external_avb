@@ -33,7 +33,19 @@ use uuid::Uuid;
 /// Base implementation-provided callbacks for verification.
 ///
 /// See libavb `AvbOps` for more complete documentation.
-pub trait Ops {
+///
+/// # Lifetimes
+/// The trait lifetime `'a` indicates the lifetime of any preloaded partition data.
+///
+/// Preloading partitions is an optional feature which allows libavb to use data already loaded to
+/// RAM rather than allocating memory itself and loading data from disk. Preloading changes the
+/// data ownership model so that the verification result borrows this existing data rather than
+/// allocating and owning the data itself. Because of this borrow, we need the lifetime here to
+/// ensure that the underlying data outlives the verification result object.
+///
+/// If `get_preloaded_partition()` is left unimplemented, all data is loaded and owned by the
+/// verification result rather than borrowed, and this trait lifetime can be `'static`.
+pub trait Ops<'a> {
     /// Reads data from the requested partition on disk.
     ///
     /// # Arguments
@@ -68,7 +80,7 @@ pub trait Ops {
     /// * `Err<IoError::NotImplemented>` if the requested partition has not been preloaded;
     ///   verification will next attempt to load the partition via `read_from_partition()`.
     /// * Any other `Err<IoError>` if an error occurred; verification will exit immediately.
-    fn get_preloaded_partition(&mut self, _partition: &CStr) -> IoResult<&[u8]> {
+    fn get_preloaded_partition(&mut self, _partition: &CStr) -> IoResult<&'a [u8]> {
         Err(IoError::NotImplemented)
     }
 
@@ -276,25 +288,29 @@ pub struct PublicKeyForPartitionInfo {
 /// perform `Ops` (Rust)
 /// callback
 /// ```
-pub(crate) struct UserData<'a>(&'a mut dyn Ops);
+///
+/// # Lifetimes
+/// * `'o`: lifetime of the `Ops` object
+/// * `'p`: lifetime of any preloaded data provided by `Ops`
+pub(crate) struct UserData<'o, 'p>(&'o mut dyn Ops<'p>);
 
-impl<'a> UserData<'a> {
-    pub(crate) fn new(ops: &'a mut dyn Ops) -> Self {
+impl<'o, 'p> UserData<'o, 'p> {
+    pub(crate) fn new(ops: &'o mut dyn Ops<'p>) -> Self {
         Self(ops)
     }
 }
 
 /// Wraps the C `AvbOps` struct with lifetime information for the compiler.
-pub(crate) struct ScopedAvbOps<'a> {
+pub(crate) struct ScopedAvbOps<'o, 'p> {
     /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
     avb_ops: AvbOps,
     /// This provides the necessary lifetime information so the compiler can make sure that
     /// the `UserData` stays alive at least as long as we do.
-    _user_data: PhantomData<UserData<'a>>,
+    _user_data: PhantomData<UserData<'o, 'p>>,
 }
 
-impl<'a> ScopedAvbOps<'a> {
-    pub(crate) fn new(user_data: &'a mut UserData<'a>) -> Self {
+impl<'o, 'p> ScopedAvbOps<'o, 'p> {
+    pub(crate) fn new(user_data: &mut UserData<'o, 'p>) -> Self {
         Self {
             avb_ops: AvbOps {
                 // Rust won't transitively cast so we need to cast twice manually, but the compiler
@@ -320,13 +336,16 @@ impl<'a> ScopedAvbOps<'a> {
     }
 }
 
-impl<'a> AsMut<AvbOps> for ScopedAvbOps<'a> {
+impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
     fn as_mut(&mut self) -> &mut AvbOps {
         &mut self.avb_ops
     }
 }
 
 /// Extracts the user-provided `Ops` from a raw `AvbOps`.
+///
+/// This function is used in libavb callbacks to bridge libavb's raw C `AvbOps` struct to our Rust
+/// implementation.
 ///
 /// # Arguments
 /// * `avb_ops`: The raw `AvbOps` pointer used by libavb.
@@ -335,17 +354,33 @@ impl<'a> AsMut<AvbOps> for ScopedAvbOps<'a> {
 /// The Rust `Ops` extracted from `avb_ops.user_data`.
 ///
 /// # Safety
-/// Only call this function on an `AvbOps` created via `ScopedAvbOps`.
+/// * only call this function on an `AvbOps` created via `ScopedAvbOps`
+/// * drop all references to the returned `Ops` and preloaded data before returning control to
+///   libavb or calling this function again
 ///
-/// Additionally, this should be considered a mutable borrow of the contained `Ops`:
-/// * do not return back to libavb while still holding the returned reference, or it will result
-///   in a dangling reference
-/// * do not call this again until the previous `Ops` goes out of scope, or it will violate Rust's
-///   mutable borrowing rules
+/// In practice, these conditions are met since we call this at most once in each callback
+/// to extract the `Ops`, and drop the references at callback completion.
 ///
-/// In practice, these conditions are met since we call this exactly once in each callback
-/// to extract the `Ops`, and drop it at callback completion.
-unsafe fn as_ops<'a>(avb_ops: *mut AvbOps) -> IoResult<&'a mut dyn Ops> {
+/// # Lifetimes
+/// * `'o`: lifetime of the `Ops` object
+/// * `'p`: lifetime of any preloaded data provided by `Ops`
+///
+/// It's difficult to accurately provide the lifetimes when calling this function, since we are in
+/// a C callback which provides no lifetime information in the args. We solve this in the safety
+/// requirements by requiring the caller to drop both references before returning, which is always
+/// a subset of the actual object lifetimes as the objects must remain valid while libavb is
+/// actively using them:
+///
+/// ```ignore
+/// ops/preloaded lifetime {  // Actual 'o/'p start
+///   call into libavb {
+///     libavb callbacks {
+///       as_ops()            // as_ops() 'o/'p start
+///     }                     // as_ops() 'o/'p end
+///   }
+/// }                         // Actual 'o/'p end
+/// ```
+unsafe fn as_ops<'o, 'p>(avb_ops: *mut AvbOps) -> IoResult<&'o mut dyn Ops<'p>> {
     // SAFETY: we created this AvbOps object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     let avb_ops = unsafe { avb_ops.as_mut() }.ok_or(IoError::Io)?;
