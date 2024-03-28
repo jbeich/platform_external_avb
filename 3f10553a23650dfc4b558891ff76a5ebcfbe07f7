@@ -1,0 +1,50 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "457b0a0f_c6361996",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 273,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-03-28T11:00:02Z",
+      "side": 1,
+      "message": "Capital C?",
+      "range": {
+        "startLine": 273,
+        "startChar": 54,
+        "endLine": 273,
+        "endChar": 55
+      },
+      "revId": "3f10553a23650dfc4b558891ff76a5ebcfbe07f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86cdbe5d_0bfd2980",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-03-28T11:00:02Z",
+      "side": 1,
+      "message": "The presence of these two fields in `UserData` can be confusing and complicates the overall structure IMO.\n\nBefore this cl, a `UserData` instance wraps an object implementing `Ops`, provided by a user. The user data would then get cast into the `user_data` field in `AvbOps (C)`. This created a clear dependency chain and boundary between the C and Rust code, as follows:\n\n- 1) ScopedAvbOps (rust) -wraps-\u003e 2) AvbOps (C) -contains-\u003e 3) UserData (rust) -wraps-\u003e 4) Ops (rust)\n\nBoth 3) and 4) are pure rust implementations. However, with the current cl, we will have:\n\n- 1) ScopedOps (rust) -wraps-\u003e 3) UserData (rust + C) -wraps-\u003e [4) Ops (rust),  2) AvbOps (C), 5) AvbAtxOps (C)]\nand\n- 2) AvbOps (C) -contains-\u003e 3) UserData (rust)\n\nAs a result, the dependency chain becomes circular, as 3) UserData now relies on 2) AvbOps, while 2) AvbOps also contains 3).\n\nHow about modifying the structure of `ScopedAvbOps` by having `ScopedOps` wrap both `AvbOps` and `AvbAtxOps`, without making any changes to `UserData`?",
+      "range": {
+        "startLine": 299,
+        "startChar": 1,
+        "endLine": 301,
+        "endChar": 24
+      },
+      "revId": "3f10553a23650dfc4b558891ff76a5ebcfbe07f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
