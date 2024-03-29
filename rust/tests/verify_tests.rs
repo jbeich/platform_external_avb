@@ -14,7 +14,11 @@
 
 //! libavb_rs verification tests.
 
-use crate::test_ops::TestOps;
+use crate::{
+    test_data::*,
+    test_ops::{FakeVbmetaKey, TestOps},
+    test_ops_one_image_one_vbmeta, verify_one_image_one_vbmeta,
+};
 use avb::{
     slot_verify, ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor,
     HashDescriptor, HashDescriptorFlags, HashtreeDescriptor, HashtreeDescriptorFlags,
@@ -25,69 +29,6 @@ use hex::decode;
 use std::{ffi::CString, fs};
 #[cfg(feature = "uuid")]
 use uuid::uuid;
-
-// These constants must match the values used to create the images in Android.bp.
-const TEST_IMAGE_PATH: &str = "test_image.img";
-const TEST_IMAGE_SIZE: usize = 16 * 1024;
-const TEST_IMAGE_SALT_HEX: &str = "1000";
-const TEST_HASHTREE_SALT_HEX: &str = "B000";
-const TEST_VBMETA_PATH: &str = "test_vbmeta.img";
-const TEST_VBMETA_2_PARTITIONS_PATH: &str = "test_vbmeta_2_parts.img";
-const TEST_VBMETA_PERSISTENT_DIGEST_PATH: &str = "test_vbmeta_persistent_digest.img";
-const TEST_VBMETA_WITH_PROPERTY_PATH: &str = "test_vbmeta_with_property.img";
-const TEST_VBMETA_WITH_HASHTREE_PATH: &str = "test_vbmeta_with_hashtree.img";
-const TEST_VBMETA_WITH_COMMANDLINE_PATH: &str = "test_vbmeta_with_commandline.img";
-const TEST_VBMETA_WITH_CHAINED_PARTITION_PATH: &str = "test_vbmeta_with_chained_partition.img";
-const TEST_IMAGE_WITH_VBMETA_FOOTER_PATH: &str = "avbrs_test_image_with_vbmeta_footer.img";
-const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH: &str =
-    "avbrs_test_image_with_vbmeta_footer_for_boot.img";
-const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_TEST_PART_2: &str =
-    "avbrs_test_image_with_vbmeta_footer_for_test_part_2.img";
-const TEST_PUBLIC_KEY_PATH: &str = "data/testkey_rsa4096_pub.bin";
-const TEST_PUBLIC_KEY_RSA8192_PATH: &str = "data/testkey_rsa8192_pub.bin";
-const TEST_PARTITION_NAME: &str = "test_part";
-const TEST_PARTITION_SLOT_C_NAME: &str = "test_part_c";
-const TEST_PARTITION_2_NAME: &str = "test_part_2";
-const TEST_PARTITION_PERSISTENT_DIGEST_NAME: &str = "test_part_persistent_digest";
-const TEST_PARTITION_HASH_TREE_NAME: &str = "test_part_hashtree";
-const TEST_VBMETA_ROLLBACK_LOCATION: usize = 0; // Default value, we don't explicitly set this.
-const TEST_PROPERTY_KEY: &str = "test_prop_key";
-const TEST_PROPERTY_VALUE: &[u8] = b"test_prop_value";
-const TEST_KERNEL_COMMANDLINE: &str = "test_cmdline_key=test_cmdline_value";
-const TEST_CHAINED_PARTITION_ROLLBACK_LOCATION: usize = 4;
-const TEST_CHAINED_PARTITION_ROLLBACK_INDEX: u64 = 7;
-
-// Expected values determined by examining the vbmeta image with `avbtool info_image`.
-// Images can be found in <out>/soong/.intermediates/external/avb/rust/.
-const TEST_IMAGE_DIGEST_HEX: &str =
-    "89e6fd3142917b8c34ac7d30897a907a71bd3bf5d9b39d00bf938b41dcf3b84f";
-const TEST_IMAGE_HASH_ALGO: &str = "sha256";
-const TEST_HASHTREE_DIGEST_HEX: &str = "5373fc4ee3dd898325eeeffb5a1dbb041900c5f1";
-const TEST_HASHTREE_ALGORITHM: &str = "sha1";
-
-/// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME`.
-fn test_ops_one_image_one_vbmeta<'a>() -> TestOps<'a> {
-    let mut ops = TestOps::default();
-    ops.add_partition(TEST_PARTITION_NAME, fs::read(TEST_IMAGE_PATH).unwrap());
-    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_PATH).unwrap());
-    ops.add_vbmeta_key(fs::read(TEST_PUBLIC_KEY_PATH).unwrap(), None, true);
-    ops.rollbacks.insert(TEST_VBMETA_ROLLBACK_LOCATION, 0);
-    ops.unlock_state = Ok(false);
-    ops
-}
-
-/// Calls `slot_verify()` using standard args for `test_ops_one_image_one_vbmeta()` setup.
-fn verify_one_image_one_vbmeta<'a>(
-    ops: &mut TestOps<'a>,
-) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
-    slot_verify(
-        ops,
-        &[&CString::new(TEST_PARTITION_NAME).unwrap()],
-        None,
-        SlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_NONE,
-        HashtreeErrorMode::AVB_HASHTREE_ERROR_MODE_EIO,
-    )
-}
 
 /// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME` and
 /// `TEST_PARTITION_2_NAME`.
@@ -347,13 +288,15 @@ fn combined_image_vbmeta_partition_passes_verification() {
         TEST_PARTITION_NAME,
         fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_PATH).unwrap(),
     );
-    // For a combined image we need to register the public key specifically for this partition.
-    ops.add_vbmeta_key_for_partition(
-        fs::read(TEST_PUBLIC_KEY_PATH).unwrap(),
-        None,
-        true,
+    // For a combined image it should not attempt to use the default "vbmeta" key, instead we
+    // register the public key specifically for this partition.
+    ops.vbmeta_key = FakeVbmetaKey::IoError;
+    ops.vbmeta_keys_for_partition.insert(
         TEST_PARTITION_NAME,
-        TEST_VBMETA_ROLLBACK_LOCATION as u32,
+        (
+            FakeVbmetaKey::Avb(fs::read(TEST_PUBLIC_KEY_PATH).unwrap(), None),
+            TEST_VBMETA_ROLLBACK_LOCATION as u32,
+        ),
     );
 
     let result = slot_verify(
@@ -534,7 +477,7 @@ fn rollback_callback_error_fails_verification() {
 #[test]
 fn untrusted_vbmeta_keys_fails_verification() {
     let mut ops = test_ops_one_image_one_vbmeta();
-    ops.add_vbmeta_key(fs::read(TEST_PUBLIC_KEY_PATH).unwrap(), None, false);
+    ops.vbmeta_key = FakeVbmetaKey::Avb(b"not_the_key".into(), None);
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -545,7 +488,7 @@ fn untrusted_vbmeta_keys_fails_verification() {
 #[test]
 fn vbmeta_keys_callback_error_fails_verification() {
     let mut ops = test_ops_one_image_one_vbmeta();
-    ops.vbmeta_keys.clear();
+    ops.vbmeta_key = FakeVbmetaKey::IoError;
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 

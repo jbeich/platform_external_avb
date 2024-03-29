@@ -19,8 +19,8 @@
 
 extern crate alloc;
 
-use crate::{error::result_to_io_enum, CertOps, IoError, IoResult};
-use avb_bindgen::{AvbCertOps, AvbIOResult, AvbOps};
+use crate::{error::result_to_io_enum, CertOps, IoError, IoResult, SHA256_DIGEST_SIZE};
+use avb_bindgen::{AvbCertOps, AvbCertPermanentAttributes, AvbIOResult, AvbOps};
 use core::{
     cmp::min,
     ffi::{c_char, c_void, CStr},
@@ -250,6 +250,10 @@ pub trait Ops<'a> {
     /// Commonly when using certs the same struct will implement both `Ops` and `CertOps`, in which
     /// case this can just return `Some(self)`.
     ///
+    /// Note: changing this return value in the middle of a libavb operation (e.g. from another
+    /// callback) is not recommended; it may cause runtime errors or a panic later on in the
+    /// operation. It's fine to change this return value outside of libavb operations.
+    ///
     /// # Returns
     /// The `CertOps` object, or `None` if not supported.
     fn cert_ops(&mut self) -> Option<&mut dyn CertOps> {
@@ -323,11 +327,10 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
             },
             cert_ops: AvbCertOps {
                 ops: ptr::null_mut(), // Set at the time of use.
-                // TODO(b/320543206): implement the callbacks.
-                read_permanent_attributes: None,
-                read_permanent_attributes_hash: None,
-                set_key_version: None,
-                get_random: None,
+                read_permanent_attributes: Some(read_permanent_attributes),
+                read_permanent_attributes_hash: Some(read_permanent_attributes_hash),
+                set_key_version: Some(set_key_version),
+                get_random: None, // TODO(b/320543206): implement.
             },
             rust_ops: ops,
             _pin: PhantomPinned,
@@ -408,6 +411,23 @@ unsafe fn as_ops<'o, 'p>(avb_ops: *mut AvbOps) -> IoResult<&'o mut dyn Ops<'p>> 
     // SAFETY: we created this OpsBridge object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     Ok(unsafe { bridge.as_mut() }.ok_or(IoError::Io)?.rust_ops)
+}
+
+/// Similar to `as_ops()`, but for `CertOps`.
+///
+/// # Safety
+/// Same as `as_ops()`.
+unsafe fn as_cert_ops<'o>(cert_ops: *mut AvbCertOps) -> IoResult<&'o mut dyn CertOps> {
+    // SAFETY: we created this `CertOps` object and passed it to libavb so we know it meets all
+    // the criteria for `as_mut()`.
+    let cert_ops = unsafe { cert_ops.as_mut() }.ok_or(IoError::Io)?;
+
+    // SAFETY: caller must adhere to `as_ops()` safety requirements.
+    let ops = unsafe { as_ops(cert_ops.ops) }?;
+
+    // Return the `CertOps` implementation. If it doesn't exist here, it indicates an internal error
+    // in this library; somewhere we accepted a non-cert `Ops` into a function that requires cert.
+    ops.cert_ops().ok_or(IoError::NotImplemented)
 }
 
 /// Converts a non-NULL `ptr` to `()`, NULL to `Err(IoError::Io)`.
@@ -1165,5 +1185,121 @@ unsafe fn try_validate_public_key_for_partition(
             key_info.rollback_index_location,
         );
     }
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_permanent_attributes(
+    cert_ops: *mut AvbCertOps,
+    attributes: *mut AvbCertPermanentAttributes,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_read_permanent_attributes(cert_ops, attributes) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `cert_ops` must have been created via `ScopedAvbOps`.
+/// * `attributes` must be a valid `AvbCertPermanentAttributes` that we have exclusive access to.
+unsafe fn try_read_permanent_attributes(
+    cert_ops: *mut AvbCertOps,
+    attributes: *mut AvbCertPermanentAttributes,
+) -> IoResult<()> {
+    // SAFETY: `attributes` is a valid object provided by libavb that we have exclusive access to.
+    let attributes = unsafe { attributes.as_mut() }.ok_or(IoError::Io)?;
+
+    // SAFETY:
+    // * we only use `cert_ops` objects created via `ScopedAvbOps` as required.
+    // * `cert_ops` is only extracted once and is dropped at the end of the callback.
+    let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
+    cert_ops.read_permanent_attributes(attributes)
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_permanent_attributes_hash(
+    cert_ops: *mut AvbCertOps,
+    hash: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_read_permanent_attributes_hash(cert_ops, hash) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `cert_ops` must have been created via `ScopedAvbOps`.
+/// * `hash` must point to a valid buffer of size `SHA256_DIGEST_SIZE` that we have exclusive
+///   access to.
+unsafe fn try_read_permanent_attributes_hash(
+    cert_ops: *mut AvbCertOps,
+    hash: *mut u8,
+) -> IoResult<()> {
+    check_nonnull(hash)?;
+
+    // SAFETY:
+    // * we only use `cert_ops` objects created via `ScopedAvbOps` as required.
+    // * `cert_ops` is only extracted once and is dropped at the end of the callback.
+    let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
+    let provided_hash = cert_ops.read_permanent_attributes_hash()?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `hash` with size `SHA256_DIGEST_SIZE`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let hash = unsafe { slice::from_raw_parts_mut(hash, SHA256_DIGEST_SIZE) };
+    hash.copy_from_slice(&provided_hash[..]);
+
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to `None` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn set_key_version(
+    cert_ops: *mut AvbCertOps,
+    rollback_index_location: usize,
+    key_version: u64,
+) {
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    let result = unsafe { try_set_key_version(cert_ops, rollback_index_location, key_version) };
+
+    // `set_key_version()` is unique in that it has no return value, and therefore cannot fail.
+    // However, our internal C -> Rust logic does have some potential failure points when we unwrap
+    // the C pointers to extract our Rust objects.
+    //
+    // Ignoring the error could be a security risk, as it would silently prevent the device from
+    // updating key rollback versions, so instead we panic here.
+    if result.is_err() {
+        panic!(
+            "Fatal error in set_key_version(): {:?}",
+            result.unwrap_err()
+        );
+    }
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// `cert_ops` must have been created via `ScopedAvbOps`.
+unsafe fn try_set_key_version(
+    cert_ops: *mut AvbCertOps,
+    rollback_index_location: usize,
+    key_version: u64,
+) -> IoResult<()> {
+    // SAFETY:
+    // * we only use `cert_ops` objects created via `ScopedAvbOps` as required.
+    // * `cert_ops` is only extracted once and is dropped at the end of the callback.
+    let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
+    cert_ops.set_key_version(rollback_index_location, key_version);
     Ok(())
 }
