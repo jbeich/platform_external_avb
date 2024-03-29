@@ -93,6 +93,30 @@
       },
       "revId": "3f10553a23650dfc4b558891ff76a5ebcfbe07f7",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8e7d2bd_e7e194ef",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 301,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-03-29T13:42:54Z",
+      "side": 1,
+      "message": "Thanks! I think the current version is more clear than before :)",
+      "parentUuid": "3ee45485_7303e098",
+      "range": {
+        "startLine": 299,
+        "startChar": 1,
+        "endLine": 301,
+        "endChar": 24
+      },
+      "revId": "3f10553a23650dfc4b558891ff76a5ebcfbe07f7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

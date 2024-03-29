@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e167542e_48ef1b35",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-03-29T13:42:54Z",
+      "side": 1,
+      "message": "Mmm, I don\u0027t fully grasp the rationale behind inserting this extra unsafe layer in the current cl. Particularly considering that it appears to contain almost nothing. Can we to introduce this layer later when it becomes truly necessary?",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 357,
+        "endChar": 94
+      },
+      "revId": "52cd73c2724e3b82a7750a5d66450736297e355a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
