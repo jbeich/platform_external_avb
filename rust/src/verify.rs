@@ -401,7 +401,6 @@ pub fn slot_verify<'a>(
 ) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     let mut user_data = ops::UserData::new(ops);
     let mut scoped_ops = ops::ScopedAvbOps::new(&mut user_data);
-    let avb_ops = scoped_ops.as_mut();
 
     // libavb detects the size of the `requested_partitions` array by NULL termination. Expecting
     // the Rust caller to do this would make the API much more awkward, so we populate a
@@ -433,7 +432,7 @@ pub fn slot_verify<'a>(
     // * if `out_data` is non-null on return, we take ownership via `SlotVerifyData`.
     let result = slot_verify_enum_to_result(unsafe {
         avb_slot_verify(
-            avb_ops,
+            scoped_ops.as_mut(),
             partitions_array.as_ptr(),
             ab_suffix.as_ptr(),
             flags,

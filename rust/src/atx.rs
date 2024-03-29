@@ -83,7 +83,8 @@
 //! # Internally, the device calls `atx_validate_unlock_credential()` to verify the credential.
 //! ```
 
-use crate::{IoError, IoResult, Ops};
+use crate::{error::io_enum_to_result, ops, IoError, IoResult, Ops};
+use avb_bindgen::avb_atx_validate_vbmeta_public_key;
 
 /// ATX permanent attributes.
 pub use avb_bindgen::AvbAtxPermanentAttributes as AtxPermanentAttributes;
@@ -202,14 +203,43 @@ pub trait AtxOps {
 /// * `public_key_metadata`: public key metadata.
 ///
 /// # Returns
-/// True if the given key is valid, false if it is not, `IoError` on error.
+/// * `Ok(true)` if the given key is valid according to the permanent attributes.
+/// * `Ok(false)` if the given key is invalid.
+/// * `Err(IoError::NotImplemented)` if `ops` does not provide the required `atx_ops()`.
+/// * `Err(IoError)` on `ops` callback error.
 pub fn atx_validate_vbmeta_public_key(
-    _ops: &mut dyn Ops,
-    _public_key: &[u8],
-    _public_key_metadata: Option<&[u8]>,
+    ops: &mut dyn Ops,
+    public_key: &[u8],
+    public_key_metadata: Option<&[u8]>,
 ) -> IoResult<bool> {
-    // TODO(b/320543206): implement
-    Err(IoError::NotImplemented)
+    // This API requires both AVB and ATX ops.
+    if ops.atx_ops().is_none() {
+        return Err(IoError::NotImplemented);
+    }
+
+    let mut user_data = ops::UserData::new(ops);
+    let mut scoped_ops = ops::ScopedAvbOps::new(&mut user_data);
+
+    let public_key_metadata = public_key_metadata.unwrap_or(&[]);
+    let mut trusted: bool = false;
+    io_enum_to_result(
+        // SAFETY:
+        // * `scoped_ops.as_mut()` gives us a valid C `AvbOps` with ATX support.
+        // * `public_key` args are C-compatible pointer + size byte buffers.
+        // * `trusted` is a C-compatible bool.
+        // * this function does not retain references to any of these arguments.
+        unsafe {
+            avb_atx_validate_vbmeta_public_key(
+                scoped_ops.as_mut(),
+                public_key.as_ptr(),
+                public_key.len(),
+                public_key_metadata.as_ptr(),
+                public_key_metadata.len(),
+                &mut trusted,
+            )
+        },
+    )?;
+    Ok(trusted)
 }
 
 /// Generates a challenge for authenticated unlock.
