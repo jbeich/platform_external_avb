@@ -19,12 +19,11 @@
 
 extern crate alloc;
 
-use crate::{error::result_to_io_enum, AtxOps, IoError, IoResult};
-use avb_bindgen::{AvbIOResult, AvbOps};
+use crate::{error::result_to_io_enum, AtxOps, IoError, IoResult, SHA256_DIGEST_SIZE};
+use avb_bindgen::{AvbAtxOps, AvbAtxPermanentAttributes, AvbIOResult, AvbOps};
 use core::{
     cmp::min,
     ffi::{c_char, c_void, CStr},
-    marker::PhantomData,
     ptr, slice,
 };
 #[cfg(feature = "uuid")]
@@ -248,6 +247,10 @@ pub trait Ops<'a> {
     /// Commonly when using ATX the same struct will implement both `Ops` and `AtxOps`, in which
     /// case this can just return `Some(self)`.
     ///
+    /// Note: changing this return value in the middle of a libavb operation (e.g. from another
+    /// callback) is not recommended; it may cause runtime errors or a panic later on in the
+    /// operation. It's fine to change this return value outside of libavb operations.
+    ///
     /// # Returns
     /// The `AtxOps` object, or `None` if not supported.
     fn atx_ops(&mut self) -> Option<&mut dyn AtxOps> {
@@ -320,24 +323,29 @@ impl<'o, 'p> UserData<'o, 'p> {
     }
 }
 
-/// Wraps the C `AvbOps` struct with lifetime information for the compiler.
+/// Manages the required libavb C ops structs.
+///
+/// This struct is responsible for properly configuring the libavb C structs, as well as tying them
+/// to the Rust `UserData` lifetime to ensure the callback data remains valid at all times it could
+/// be used by libavb.
 pub(crate) struct ScopedAvbOps<'o, 'p> {
-    /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
+    /// C `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
     avb_ops: AvbOps,
-    /// This provides the necessary lifetime information so the compiler can make sure that
-    /// the `UserData` stays alive at least as long as we do.
-    _user_data: PhantomData<UserData<'o, 'p>>,
+    /// When using ATX, C `AvbOps` and C `AvbAtxOps` hold circular pointers to each other.
+    atx_ops: AvbAtxOps,
+    /// Rust `UserData` containing the ops implementation.
+    user_data: &'o mut UserData<'o, 'p>,
 }
 
 impl<'o, 'p> ScopedAvbOps<'o, 'p> {
-    pub(crate) fn new(user_data: &mut UserData<'o, 'p>) -> Self {
+    pub(crate) fn new(user_data: &'o mut UserData<'o, 'p>) -> Self {
         Self {
             avb_ops: AvbOps {
                 // Rust won't transitively cast so we need to cast twice manually, but the compiler
                 // is smart enough to deduce the types we need.
                 user_data: user_data as *mut _ as *mut _,
                 ab_ops: ptr::null_mut(),  // Deprecated, no need to support.
-                atx_ops: ptr::null_mut(), // TODO: support optional ATX.
+                atx_ops: ptr::null_mut(), // Set at the time of use.
                 read_from_partition: Some(read_from_partition),
                 get_preloaded_partition: Some(get_preloaded_partition),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
@@ -351,13 +359,35 @@ impl<'o, 'p> ScopedAvbOps<'o, 'p> {
                 write_persistent_value: Some(write_persistent_value),
                 validate_public_key_for_partition: Some(validate_public_key_for_partition),
             },
-            _user_data: PhantomData,
+            atx_ops: AvbAtxOps {
+                ops: ptr::null_mut(), // Set at the time of use.
+                read_permanent_attributes: Some(read_permanent_attributes),
+                read_permanent_attributes_hash: Some(read_permanent_attributes_hash),
+                set_key_version: Some(set_key_version),
+                get_random: Some(get_random),
+            },
+            user_data,
         }
     }
 }
 
 impl<'o, 'p> AsMut<AvbOps> for ScopedAvbOps<'o, 'p> {
+    /// Returns the C `AvbOps` structure.
+    ///
+    /// If the contained `Ops` supports `AtxOps`, the returned `AvbOps` will also be configured
+    /// properly for ATX.
+    ///
+    /// Be careful about converting the returned `AvbOps` to a raw pointer; this is necessary to
+    /// call into libavb APIs but you will lose the compiler's lifetime protection, so it should be
+    /// done as late as possible. In particular, do not move or drop this `ScopedAvbOps` object
+    /// while still olding onto the `AvbOps` pointer, or the internal data may become invalid.
     fn as_mut(&mut self) -> &mut AvbOps {
+        // If the `Ops` supports ATX, set up the necessary pointer tracking.
+        if self.user_data.0.atx_ops().is_some() {
+            self.avb_ops.atx_ops = &mut self.atx_ops;
+            self.atx_ops.ops = &mut self.avb_ops;
+        }
+
         &mut self.avb_ops
     }
 }
@@ -409,6 +439,23 @@ unsafe fn as_ops<'o, 'p>(avb_ops: *mut AvbOps) -> IoResult<&'o mut dyn Ops<'p>> 
     // SAFETY: we created this UserData object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.0)
+}
+
+/// Similar to `as_ops()`, but for `AtxOps`.
+///
+/// # Safety
+/// Same as `as_ops()`.
+unsafe fn as_atx_ops<'o>(atx_ops: *mut AvbAtxOps) -> IoResult<&'o mut dyn AtxOps> {
+    // SAFETY: we created this `AtxOps` object and passed it to libavb so we know it meets all
+    // the criteria for `as_mut()`.
+    let atx_ops = unsafe { atx_ops.as_mut() }.ok_or(IoError::Io)?;
+
+    // SAFETY: caller must adhere to `as_ops()` safety requirements.
+    let ops = unsafe { as_ops(atx_ops.ops) }?;
+
+    // Return the `AtxOps` implementation. If it doesn't exist here, it indicates an internal error
+    // in this library; somewhere we accepted a non-ATX `Ops` into a function that requires ATX.
+    ops.atx_ops().ok_or(IoError::NotImplemented)
 }
 
 /// Converts a non-NULL `ptr` to `()`, NULL to `Err(IoError::Io)`.
@@ -1167,4 +1214,160 @@ unsafe fn try_validate_public_key_for_partition(
         );
     }
     Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_permanent_attributes(
+    atx_ops: *mut AvbAtxOps,
+    attributes: *mut AvbAtxPermanentAttributes,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_read_permanent_attributes(atx_ops, attributes) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `atx_ops` must have been created via `ScopedAvbOps`.
+/// * `attributes` must be a valid `AvbAtxPermanentAttributes` that we have exclusive access to.
+unsafe fn try_read_permanent_attributes(
+    atx_ops: *mut AvbAtxOps,
+    attributes: *mut AvbAtxPermanentAttributes,
+) -> IoResult<()> {
+    // SAFETY: `attributes` is a valid object provided by libavb that we have exclusive access to.
+    let attributes = unsafe { attributes.as_mut() }.ok_or(IoError::Io)?;
+
+    // SAFETY:
+    // * we only use `atx_ops` objects created via `ScopedAvbOps` as required.
+    // * `atx_ops` is only extracted once and is dropped at the end of the callback.
+    let atx_ops = unsafe { as_atx_ops(atx_ops) }?;
+    atx_ops.read_permanent_attributes(attributes)
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_permanent_attributes_hash(
+    atx_ops: *mut AvbAtxOps,
+    hash: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_read_permanent_attributes_hash(atx_ops, hash) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `atx_ops` must have been created via `ScopedAvbOps`.
+/// * `hash` must point to a valid buffer of size `SHA256_DIGEST_SIZE` that we have exclusive
+///   access to.
+unsafe fn try_read_permanent_attributes_hash(
+    atx_ops: *mut AvbAtxOps,
+    hash: *mut u8,
+) -> IoResult<()> {
+    check_nonnull(hash)?;
+
+    // SAFETY:
+    // * we only use `atx_ops` objects created via `ScopedAvbOps` as required.
+    // * `atx_ops` is only extracted once and is dropped at the end of the callback.
+    let atx_ops = unsafe { as_atx_ops(atx_ops) }?;
+    let provided_hash = atx_ops.read_permanent_attributes_hash()?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `hash` with size `SHA256_DIGEST_SIZE`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let hash = unsafe { slice::from_raw_parts_mut(hash, SHA256_DIGEST_SIZE) };
+    hash.copy_from_slice(&provided_hash[..]);
+
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to `None` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn set_key_version(
+    atx_ops: *mut AvbAtxOps,
+    rollback_index_location: usize,
+    key_version: u64,
+) {
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    let result = unsafe { try_set_key_version(atx_ops, rollback_index_location, key_version) };
+
+    // `set_key_version()` is unique in that it has no return value, and therefore cannot fail.
+    // However, our internal C -> Rust logic does have some potential failure points when we unwrap
+    // the C pointers to extract our Rust objects.
+    //
+    // Ignoring the error could be a security risk, as it would silently prevent the device from
+    // updating key rollback versions, so instead we panic here.
+    if result.is_err() {
+        panic!(
+            "Fatal error in set_key_version(): {:?}",
+            result.unwrap_err()
+        );
+    }
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// `atx_ops` must have been created via `ScopedAvbOps`.
+unsafe fn try_set_key_version(
+    atx_ops: *mut AvbAtxOps,
+    rollback_index_location: usize,
+    key_version: u64,
+) -> IoResult<()> {
+    // SAFETY:
+    // * we only use `atx_ops` objects created via `ScopedAvbOps` as required.
+    // * `atx_ops` is only extracted once and is dropped at the end of the callback.
+    let atx_ops = unsafe { as_atx_ops(atx_ops) }?;
+    atx_ops.set_key_version(rollback_index_location, key_version);
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to `None` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn get_random(
+    atx_ops: *mut AvbAtxOps,
+    num_bytes: usize,
+    output: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_get_random(atx_ops, num_bytes, output) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `atx_ops` must have been created via `ScopedAvbOps`.
+/// * `output` must point to a valid buffer of size `num_bytes` that we have exclusive access to.
+unsafe fn try_get_random(
+    atx_ops: *mut AvbAtxOps,
+    num_bytes: usize,
+    output: *mut u8,
+) -> IoResult<()> {
+    check_nonnull(output)?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `output` with size `num_bytes`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let output = unsafe { slice::from_raw_parts_mut(output, num_bytes) };
+
+    // SAFETY:
+    // * we only use `atx_ops` objects created via `ScopedAvbOps` as required.
+    // * `atx_ops` is only extracted once and is dropped at the end of the callback.
+    let atx_ops = unsafe { as_atx_ops(atx_ops) }?;
+    atx_ops.get_random(output)
 }

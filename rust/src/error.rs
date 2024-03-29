@@ -218,6 +218,27 @@ pub(crate) fn result_to_io_enum(result: IoResult<()>) -> AvbIOResult {
     result.map_or_else(|e| e.into(), |_| AvbIOResult::AVB_IO_RESULT_OK)
 }
 
+/// Converts a bindgen `AvbIOResult` enum to an `IoResult<>`, mapping `AVB_IO_RESULT_OK` to the Rust
+/// equivalent `Ok(())` and errors to the corresponding `Err(IoError)`.
+///
+/// This function is also important to serve as a compile-time check that we're handling all the
+/// libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
+/// until it is updated to match.
+pub(crate) fn io_enum_to_result(result: AvbIOResult) -> IoResult<()> {
+    match result {
+        AvbIOResult::AVB_IO_RESULT_OK => Ok(()),
+        AvbIOResult::AVB_IO_RESULT_ERROR_OOM => Err(IoError::Oom),
+        AvbIOResult::AVB_IO_RESULT_ERROR_IO => Err(IoError::Io),
+        AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION => Err(IoError::NoSuchPartition),
+        AvbIOResult::AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION => {
+            Err(IoError::RangeOutsidePartition)
+        }
+        AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE => Err(IoError::NoSuchValue),
+        AvbIOResult::AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE => Err(IoError::InvalidValueSize),
+        AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE => Err(IoError::InsufficientSpace(0)),
+    }
+}
+
 /// `AvbVBMetaVerifyResult` error wrapper.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub enum VbmetaVerifyError {
@@ -317,21 +338,11 @@ mod tests {
         // This is a compile-time check that we handle all the `AvbIOResult` enum values. If any
         // enums are added or removed this will break, indicating we need to update `IoError` to
         // match.
-        assert!(match AvbIOResult::AVB_IO_RESULT_OK {
-            AvbIOResult::AVB_IO_RESULT_OK => Ok(()),
-            AvbIOResult::AVB_IO_RESULT_ERROR_OOM => Err(IoError::Oom),
-            AvbIOResult::AVB_IO_RESULT_ERROR_IO => Err(IoError::Io),
-            AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION => Err(IoError::NoSuchPartition),
-            AvbIOResult::AVB_IO_RESULT_ERROR_RANGE_OUTSIDE_PARTITION => {
-                Err(IoError::RangeOutsidePartition)
-            }
-            AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_VALUE => Err(IoError::NoSuchValue),
-            AvbIOResult::AVB_IO_RESULT_ERROR_INVALID_VALUE_SIZE => Err(IoError::InvalidValueSize),
-            AvbIOResult::AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE => {
-                Err(IoError::InsufficientSpace(0))
-            }
-        }
-        .is_ok());
+        assert_eq!(io_enum_to_result(AvbIOResult::AVB_IO_RESULT_OK), Ok(()));
+        assert_eq!(
+            io_enum_to_result(AvbIOResult::AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION),
+            Err(IoError::NoSuchPartition)
+        );
     }
 
     #[test]

@@ -14,7 +14,10 @@
 
 //! Provides `avb::Ops` test fixtures.
 
-use avb::{IoError, IoResult, Ops, PublicKeyForPartitionInfo};
+use avb::{
+    AtxOps, AtxPermanentAttributes, IoError, IoResult, Ops, PublicKeyForPartitionInfo,
+    SHA256_DIGEST_SIZE,
+};
 use std::{cmp::min, collections::HashMap, ffi::CStr};
 #[cfg(feature = "uuid")]
 use uuid::Uuid;
@@ -100,6 +103,21 @@ pub struct TestOps<'a> {
     /// a non-existent persistent value will create it; to simulate `NoSuchValue` instead,
     /// create an entry with `Err(IoError::NoSuchValue)` as the value.
     pub persistent_values: HashMap<String, IoResult<Vec<u8>>>,
+
+    /// Set to true to enable ATX; defaults to false.
+    pub use_atx: bool,
+
+    /// ATX permanent attributes, or `None` to trigger `IoError` on access.
+    pub atx_permanent_attributes: Option<AtxPermanentAttributes>,
+
+    /// ATX permament attributes hash, or `None` to trigger `IoError` on access.
+    pub atx_permanent_attributes_hash: Option<[u8; SHA256_DIGEST_SIZE]>,
+
+    /// ATX key versions; will be updated by the `set_key_version()` ATX callback.
+    pub atx_key_versions: HashMap<usize, u64>,
+
+    /// Fake RNG values to provide, or `IoError` if there aren't enough.
+    pub atx_fake_rng: Vec<u8>,
 }
 
 impl<'a> TestOps<'a> {
@@ -199,6 +217,11 @@ impl Default for TestOps<'_> {
             rollbacks: HashMap::new(),
             unlock_state: Err(IoError::Io),
             persistent_values: HashMap::new(),
+            use_atx: false,
+            atx_permanent_attributes: None,
+            atx_permanent_attributes_hash: None,
+            atx_key_versions: HashMap::new(),
+            atx_fake_rng: Vec::new(),
         }
     }
 }
@@ -359,5 +382,42 @@ impl<'a> Ops<'a> for TestOps<'a> {
 
         // No match.
         Err(IoError::Io)
+    }
+
+    fn atx_ops(&mut self) -> Option<&mut dyn AtxOps> {
+        match self.use_atx {
+            true => Some(self),
+            false => None,
+        }
+    }
+}
+
+impl<'a> AtxOps for TestOps<'a> {
+    fn read_permanent_attributes(
+        &mut self,
+        attributes: &mut AtxPermanentAttributes,
+    ) -> IoResult<()> {
+        *attributes = self.atx_permanent_attributes.ok_or(IoError::Io)?;
+        Ok(())
+    }
+
+    fn read_permanent_attributes_hash(&mut self) -> IoResult<[u8; SHA256_DIGEST_SIZE]> {
+        self.atx_permanent_attributes_hash.ok_or(IoError::Io)
+    }
+
+    fn set_key_version(&mut self, rollback_index_location: usize, key_version: u64) {
+        self.atx_key_versions
+            .insert(rollback_index_location, key_version);
+    }
+
+    fn get_random(&mut self, bytes: &mut [u8]) -> IoResult<()> {
+        if bytes.len() > self.atx_fake_rng.len() {
+            return Err(IoError::Io);
+        }
+
+        let leftover = self.atx_fake_rng.split_off(bytes.len());
+        bytes.copy_from_slice(&self.atx_fake_rng[..]);
+        self.atx_fake_rng = leftover;
+        Ok(())
     }
 }

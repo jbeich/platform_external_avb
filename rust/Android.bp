@@ -52,7 +52,7 @@ rust_defaults {
     name: "libavb_bindgen.std.defaults",
     defaults: ["libavb_bindgen.common.defaults"],
     host_supported: true,
-    static_libs: ["libavb"],
+    static_libs: ["libavb_atx"],
     shared_libs: ["libcrypto"],
     rustlibs: ["libzerocopy"],
     apex_available: ["com.android.virt"],
@@ -63,7 +63,7 @@ rust_defaults {
     name: "libavb_bindgen.nostd.defaults",
     defaults: ["libavb_bindgen.common.defaults"],
     static_libs: [
-        "libavb_baremetal",
+        "libavb_baremetal_atx",
         "libcrypto_baremetal",
     ],
     rustlibs: ["libzerocopy_nostd_noalloc"],
@@ -161,7 +161,7 @@ rust_defaults {
         "libzerocopy_nostd_noalloc",
     ],
     whole_static_libs: [
-        "libavb_baremetal",
+        "libavb_baremetal_atx",
     ],
     stdlibs: [
         "libcore.rust_sysroot",
@@ -178,7 +178,7 @@ rust_defaults {
         "libzerocopy",
     ],
     whole_static_libs: [
-        "libavb",
+        "libavb_atx",
     ],
 }
 
@@ -246,7 +246,7 @@ rust_library {
         "libavb_rs",
     ],
     whole_static_libs: [
-        "libavb",
+        "libavb_atx",
     ],
 }
 
