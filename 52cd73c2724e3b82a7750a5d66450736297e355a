@@ -22,6 +22,30 @@
       },
       "revId": "52cd73c2724e3b82a7750a5d66450736297e355a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2f6fb210_43ce1412",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 357,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-03-29T18:08:43Z",
+      "side": 1,
+      "message": "Yeah that makes sense, I was trying to break this all into smaller changes but I think I was getting a little ahead of myself here :)\n\nI think maybe I\u0027ll put this CL on hold for a minute given that it doesn\u0027t do much right now, and start with the high-level API instead (https://r.android.com/3017984), and then I can re-visit this when we know for sure what the actual usage will look like.",
+      "parentUuid": "e167542e_48ef1b35",
+      "range": {
+        "startLine": 357,
+        "startChar": 0,
+        "endLine": 357,
+        "endChar": 94
+      },
+      "revId": "52cd73c2724e3b82a7750a5d66450736297e355a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
