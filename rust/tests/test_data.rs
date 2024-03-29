@@ -53,3 +53,15 @@ pub const TEST_IMAGE_DIGEST_HEX: &str =
 pub const TEST_IMAGE_HASH_ALGO: &str = "sha256";
 pub const TEST_HASHTREE_DIGEST_HEX: &str = "5373fc4ee3dd898325eeeffb5a1dbb041900c5f1";
 pub const TEST_HASHTREE_ALGORITHM: &str = "sha1";
+
+// Certificate test data.
+pub const TEST_CERT_PERMANENT_ATTRIBUTES_PATH: &str = "data/cert_permanent_attributes.bin";
+pub const TEST_CERT_VBMETA_PATH: &str = "test_vbmeta_cert.img";
+
+// The cert test keys were both generated with rollback version 42.
+pub const TEST_CERT_PIK_VERSION: u64 = 42;
+pub const TEST_CERT_PSK_VERSION: u64 = 42;
+
+// $ sha256sum external/avb/test/data/cert_permanent_attributes.bin
+pub const TEST_CERT_PERMANENT_ATTRIBUTES_HASH_HEX: &str =
+    "55419e1affff153b58f65ce8a5313a71d2a83a00d0abae10a25b9a8e493d04f7";

@@ -35,6 +35,7 @@ rust_defaults {
         "--default-enum-style rust",
         "--with-derive-default",
         "--with-derive-custom=Avb.*Descriptor=FromZeroes,FromBytes",
+        "--with-derive-custom=AvbCertPermanentAttributes=FromZeroes,FromBytes",
         "--allowlist-type=AvbDescriptorTag",
         "--allowlist-type=Avb.*Flags",
         "--allowlist-function=.*",
@@ -52,7 +53,7 @@ rust_defaults {
     name: "libavb_bindgen.std.defaults",
     defaults: ["libavb_bindgen.common.defaults"],
     host_supported: true,
-    static_libs: ["libavb"],
+    static_libs: ["libavb_cert"],
     shared_libs: ["libcrypto"],
     rustlibs: ["libzerocopy"],
     apex_available: ["com.android.virt"],
@@ -63,7 +64,7 @@ rust_defaults {
     name: "libavb_bindgen.nostd.defaults",
     defaults: ["libavb_bindgen.common.defaults"],
     static_libs: [
-        "libavb_baremetal",
+        "libavb_cert_baremetal",
         "libcrypto_baremetal",
     ],
     rustlibs: ["libzerocopy_nostd_noalloc"],
@@ -161,7 +162,7 @@ rust_defaults {
         "libzerocopy_nostd_noalloc",
     ],
     whole_static_libs: [
-        "libavb_baremetal",
+        "libavb_cert_baremetal",
     ],
     stdlibs: [
         "libcore.rust_sysroot",
@@ -178,7 +179,7 @@ rust_defaults {
         "libzerocopy",
     ],
     whole_static_libs: [
-        "libavb",
+        "libavb_cert",
     ],
 }
 
@@ -246,7 +247,7 @@ rust_library {
         "libavb_rs",
     ],
     whole_static_libs: [
-        "libavb",
+        "libavb_cert",
     ],
 }
 
@@ -290,6 +291,7 @@ rust_defaults {
     name: "libavb_rs_test.defaults",
     srcs: ["tests/tests.rs"],
     data: [
+        ":avb_cert_test_permanent_attributes",
         ":avb_testkey_rsa4096_pub_bin",
         ":avb_testkey_rsa8192_pub_bin",
         ":avbrs_test_image",
@@ -298,13 +300,17 @@ rust_defaults {
         ":avbrs_test_image_with_vbmeta_footer_for_test_part_2",
         ":avbrs_test_vbmeta",
         ":avbrs_test_vbmeta_2_parts",
+        ":avbrs_test_vbmeta_cert",
         ":avbrs_test_vbmeta_persistent_digest",
         ":avbrs_test_vbmeta_with_chained_partition",
         ":avbrs_test_vbmeta_with_commandline",
         ":avbrs_test_vbmeta_with_hashtree",
         ":avbrs_test_vbmeta_with_property",
     ],
-    rustlibs: ["libhex"],
+    rustlibs: [
+        "libhex",
+        "libzerocopy",
+    ],
     test_suites: ["general-tests"],
     clippy_lints: "android",
     lints: "android",
@@ -388,6 +394,20 @@ genrule {
     ],
     out: ["test_vbmeta.img"],
     cmd: "$(location avbtool) make_vbmeta_image --key $(location :avb_testkey_rsa4096) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor) --output $(out)",
+}
+
+// Standalone vbmeta image signing the test image descriptor with
+// `avb_cert_testkey_psk` and `avb_cert_test_metadata`.
+genrule {
+    name: "avbrs_test_vbmeta_cert",
+    tools: ["avbtool"],
+    srcs: [
+        ":avbrs_test_image_descriptor",
+        ":avb_cert_test_metadata",
+        ":avb_cert_testkey_psk",
+    ],
+    out: ["test_vbmeta_cert.img"],
+    cmd: "$(location avbtool) make_vbmeta_image --key $(location :avb_cert_testkey_psk) --public_key_metadata $(location :avb_cert_test_metadata) --algorithm SHA512_RSA4096 --include_descriptors_from_image $(location :avbrs_test_image_descriptor) --output $(out)",
 }
 
 // Standalone vbmeta image signing the test image descriptors for "test_part" and "test_part_2".

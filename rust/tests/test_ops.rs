@@ -14,7 +14,10 @@
 
 //! Provides `avb::Ops` test fixtures.
 
-use avb::{IoError, IoResult, Ops, PublicKeyForPartitionInfo};
+use avb::{
+    cert_validate_vbmeta_public_key, CertOps, CertPermanentAttributes, IoError, IoResult, Ops,
+    PublicKeyForPartitionInfo, SHA256_DIGEST_SIZE,
+};
 use std::{cmp::min, collections::HashMap, ffi::CStr};
 #[cfg(feature = "uuid")]
 use uuid::Uuid;
@@ -76,6 +79,8 @@ pub enum FakeVbmetaKey {
         /// Expected public key metadata contents.
         public_key_metadata: Option<Vec<u8>>,
     },
+    /// libavb_cert validation using the permanent attributes.
+    Cert,
 }
 
 /// Fake `Ops` test fixture.
@@ -106,6 +111,21 @@ pub struct TestOps<'a> {
     /// a non-existent persistent value will create it; to simulate `NoSuchValue` instead,
     /// create an entry with `Err(IoError::NoSuchValue)` as the value.
     pub persistent_values: HashMap<String, IoResult<Vec<u8>>>,
+
+    /// Set to true to enable `CertOps`; defaults to false.
+    pub use_cert: bool,
+
+    /// Cert permanent attributes, or `None` to trigger `IoError` on access.
+    pub cert_permanent_attributes: Option<CertPermanentAttributes>,
+
+    /// Cert permament attributes hash, or `None` to trigger `IoError` on access.
+    pub cert_permanent_attributes_hash: Option<[u8; SHA256_DIGEST_SIZE]>,
+
+    /// Cert key versions; will be updated by the `set_key_version()` cert callback.
+    pub cert_key_versions: HashMap<usize, u64>,
+
+    /// Fake RNG values to provide, or `IoError` if there aren't enough.
+    pub cert_fake_rng: Vec<u8>,
 }
 
 impl<'a> TestOps<'a> {
@@ -181,6 +201,10 @@ impl<'a> TestOps<'a> {
                 Ok(expected_key == public_key
                     && expected_metadata.as_deref() == public_key_metadata)
             }
+            FakeVbmetaKey::Cert => {
+                // avb_cert: forward to the cert helper function.
+                cert_validate_vbmeta_public_key(self, public_key, public_key_metadata)
+            }
         }
     }
 }
@@ -194,6 +218,11 @@ impl Default for TestOps<'_> {
             rollbacks: HashMap::new(),
             unlock_state: Err(IoError::Io),
             persistent_values: HashMap::new(),
+            use_cert: false,
+            cert_permanent_attributes: None,
+            cert_permanent_attributes_hash: None,
+            cert_key_versions: HashMap::new(),
+            cert_fake_rng: Vec::new(),
         }
     }
 }
@@ -346,5 +375,42 @@ impl<'a> Ops<'a> for TestOps<'a> {
             trusted: self.validate_fake_key(Some(partition), public_key, public_key_metadata)?,
             rollback_index_location,
         })
+    }
+
+    fn cert_ops(&mut self) -> Option<&mut dyn CertOps> {
+        match self.use_cert {
+            true => Some(self),
+            false => None,
+        }
+    }
+}
+
+impl<'a> CertOps for TestOps<'a> {
+    fn read_permanent_attributes(
+        &mut self,
+        attributes: &mut CertPermanentAttributes,
+    ) -> IoResult<()> {
+        *attributes = self.cert_permanent_attributes.ok_or(IoError::Io)?;
+        Ok(())
+    }
+
+    fn read_permanent_attributes_hash(&mut self) -> IoResult<[u8; SHA256_DIGEST_SIZE]> {
+        self.cert_permanent_attributes_hash.ok_or(IoError::Io)
+    }
+
+    fn set_key_version(&mut self, rollback_index_location: usize, key_version: u64) {
+        self.cert_key_versions
+            .insert(rollback_index_location, key_version);
+    }
+
+    fn get_random(&mut self, bytes: &mut [u8]) -> IoResult<()> {
+        if bytes.len() > self.cert_fake_rng.len() {
+            return Err(IoError::Io);
+        }
+
+        let leftover = self.cert_fake_rng.split_off(bytes.len());
+        bytes.copy_from_slice(&self.cert_fake_rng[..]);
+        self.cert_fake_rng = leftover;
+        Ok(())
     }
 }
