@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+mod cert_tests;
 mod test_data;
 mod test_ops;
 mod verify_tests;
