@@ -81,3 +81,18 @@ genrule {
     out: ["data/testkey_rsa8192_pub.bin"],
     cmd: "$(location avbtool) extract_public_key --key $(in) --output $(out)",
 }
+
+filegroup {
+    name: "avb_atx_test_metadata",
+    srcs: ["data/atx_metadata.bin"],
+}
+
+filegroup {
+    name: "avb_atx_test_permanent_attributes",
+    srcs: ["data/atx_permanent_attributes.bin"],
+}
+
+filegroup {
+    name: "avb_atx_testkey_psk",
+    srcs: ["data/testkey_atx_psk.pem"],
+}
