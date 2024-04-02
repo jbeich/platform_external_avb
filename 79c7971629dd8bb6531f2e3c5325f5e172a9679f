@@ -22,6 +22,30 @@
       },
       "revId": "79c7971629dd8bb6531f2e3c5325f5e172a9679f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cef95f78_6a21488f",
+        "filename": "rust/src/atx.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-02T21:12:46Z",
+      "side": 1,
+      "message": "Good question, IMO this was a slight mistake in the original C API.\n\nThis function actually requires both `AvbOps` and `AvbAtxOps`; the implementation currently expresses this by taking an `AvbOps*` and then just [documenting](https://cs.android.com/android/platform/superproject/main/+/main:external/avb/libavb_atx/avb_atx_validate.h;l\u003d47;drc\u003dfccd64ecaf416932a3f668eaff0a6af1eb9cba75) the ATX requirement:\n\n\u003e The ATX ops must be implemented. That is, |ops-\u003eatx_ops| must be valid.\n\nThis could maybe have been more clearly expressed by using an `AvbAtxOps*` here instead, but in C it actually doesn\u0027t matter much - the function needs both and they maintain circular pointers to each other, so passing either one works equally well in practice.\n\nFor Rust however, the best way to express this that I\u0027ve found is to use supertraits so that `AtxOps` requires `Ops`, and then require `AtxOps` in all the ATX APIs here, to guarantee that we have both AVB+ATX available in these APIs.\n\n`atx_generate_unlock_challenge()` is the one API which technically could function with ATX only - it doesn\u0027t use any AVB APIs - but I couldn\u0027t think of any convincing use case that would justify the extra complication of supporting an ATX-only trait.",
+      "parentUuid": "cc223c72_6ed4bd6b",
+      "range": {
+        "startLine": 207,
+        "startChar": 19,
+        "endLine": 207,
+        "endChar": 25
+      },
+      "revId": "79c7971629dd8bb6531f2e3c5325f5e172a9679f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
