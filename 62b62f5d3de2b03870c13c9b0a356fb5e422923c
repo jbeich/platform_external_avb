@@ -16,6 +16,74 @@
       "message": "zeuthen@ OOO for a week, +dkrahn@ for owner review",
       "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0e1c63b_75d6e77c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-02T18:25:35Z",
+      "side": 1,
+      "message": "Just a few nits...",
+      "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "531e30b9_4d32b8d3",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-02T18:25:35Z",
+      "side": 1,
+      "message": "nit: Documenting that these base defaults are common to both the linux and baremetal versions of the library would be helpful.",
+      "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c3b6b3a_e50420c5",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-02T18:25:35Z",
+      "side": 1,
+      "message": "nit: It would be helpful to describe this in relation to the baremetal version. Maybe even renaming to \u0027libavb_linux_defaults\u0027 or similar?",
+      "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "05fc2190_1b0002d4",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-02T18:25:35Z",
+      "side": 1,
+      "message": "nit: Briefly document what ATX means, it\u0027s an unfortunate misnomer by now, would be nice to rename it. Just a mention that ATX provides support for minimal certificate-based signing would be helpful.",
+      "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
