@@ -52,6 +52,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "141a5f6b_83d08a27",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-02T19:35:21Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "531e30b9_4d32b8d3",
+      "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0c3b6b3a_e50420c5",
@@ -69,6 +87,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b8f18807_02d5a945",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 162,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-02T19:35:21Z",
+      "side": 1,
+      "message": "Done, went with `libavb_standard_defaults`, \"linux\" seemed confusing since it turns out the baremetal build also requires some Posix-like APIs",
+      "parentUuid": "0c3b6b3a_e50420c5",
+      "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "05fc2190_1b0002d4",
@@ -82,6 +118,24 @@
       "writtenOn": "2024-04-02T18:25:35Z",
       "side": 1,
       "message": "nit: Briefly document what ATX means, it\u0027s an unfortunate misnomer by now, would be nice to rename it. Just a mention that ATX provides support for minimal certificate-based signing would be helpful.",
+      "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "476cf3c6_ecb0e756",
+        "filename": "Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-02T19:35:21Z",
+      "side": 1,
+      "message": "Done.\n\nYeah I was wondering if it might be worth coming through sometime and just attempting to rename all the ATX stuff, since it does confuse people I talk to who assume these APIs are pointless now that AT is gone :(\n\nLMK if you think that would be valuable, I\u0027m happy to take a stab at it if so.",
+      "parentUuid": "05fc2190_1b0002d4",
       "revId": "62b62f5d3de2b03870c13c9b0a356fb5e422923c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
