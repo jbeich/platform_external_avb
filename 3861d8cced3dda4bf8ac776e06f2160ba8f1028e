@@ -16,6 +16,24 @@
       "message": "I realized it might be more helpful to start with the top-level API before implementation.\n\nIt\u0027s a pretty close mirror of the C APIs but LMK if you think it would be better to write this out in the doc and we can discuss there instead.",
       "revId": "3861d8cced3dda4bf8ac776e06f2160ba8f1028e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "095d499e_f7722f1f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-02T11:14:57Z",
+      "side": 1,
+      "message": "It works like this. Thanks you for the explanation :)",
+      "parentUuid": "adf0e241_6976c93e",
+      "revId": "3861d8cced3dda4bf8ac776e06f2160ba8f1028e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
