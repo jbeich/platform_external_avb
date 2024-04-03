@@ -107,8 +107,8 @@ pub const ATX_PIK_VERSION_LOCATION: usize = avb_bindgen::AVB_ATX_PIK_VERSION_LOC
 /// If using ATX APIs, make sure no vbmetas use this location, it must be reserved for the PSK.
 pub const ATX_PSK_VERSION_LOCATION: usize = avb_bindgen::AVB_ATX_PSK_VERSION_LOCATION as usize;
 
-/// ATX additional callbacks.
-pub trait AtxOps<'a>: Ops<'a> {
+/// ATX callbacks.
+pub trait AtxOps {
     /// Reads the device's permanent attributes.
     ///
     /// The full permanent attributes are not required to be securely stored; corruption of this
@@ -197,14 +197,14 @@ pub trait AtxOps<'a>: Ops<'a> {
 /// when to use ATX e.g. a device may want to use ATX only for specific partitions.
 ///
 /// # Arguments
-/// * `ops`: the `AtxOps` callback implementations.
+/// * `ops`: the `Ops` callback implementations, which must provide an `atx_ops()` implementation.
 /// * `public_key`: the public key.
 /// * `public_key_metadata`: public key metadata.
 ///
 /// # Returns
 /// True if the given key is valid, false if it is not, `IoError` on error.
 pub fn atx_validate_vbmeta_public_key(
-    _ops: &mut dyn AtxOps,
+    _ops: &mut dyn Ops,
     _public_key: &[u8],
     _public_key_metadata: Option<&[u8]>,
 ) -> IoResult<bool> {
@@ -234,15 +234,15 @@ pub fn atx_generate_unlock_challenge(_atx_ops: &mut dyn AtxOps) -> IoResult<AtxU
 /// device's permanent attributes.
 ///
 /// # Arguments
-/// * `atx_ops`: the `AtxOps` callback implementations.
+/// * `ops`: the `Ops` callback implementations, which must provide an `atx_ops()` implementation.
 /// * `credential`: the signed unlock credential to verify.
 ///
 /// # Returns
 /// * `Ok(true)` if the credential validated
 /// * `Ok(false)` if it failed validation
-/// * `Err(IoError)` on `atx_ops` failure
+/// * `Err(IoError)` on `ops` failure
 pub fn atx_validate_unlock_credential(
-    _atx_ops: &mut dyn AtxOps,
+    _ops: &mut dyn Ops,
     _credential: &AtxUnlockCredential,
 ) -> IoResult<bool> {
     // TODO(b/320543206): implement

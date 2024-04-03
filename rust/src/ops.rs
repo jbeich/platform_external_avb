@@ -19,7 +19,7 @@
 
 extern crate alloc;
 
-use crate::{error::result_to_io_enum, IoError, IoResult};
+use crate::{error::result_to_io_enum, AtxOps, IoError, IoResult};
 use avb_bindgen::{AvbIOResult, AvbOps};
 use core::{
     cmp::min,
@@ -237,6 +237,22 @@ pub trait Ops<'a> {
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
     ) -> IoResult<PublicKeyForPartitionInfo>;
+
+    /// Returns the ATX ops if supported.
+    ///
+    /// ATX provides some additional key management and authentication support APIs, see the ATX
+    /// module documentation for more info.
+    ///
+    /// The default implementation returns `None` to disable ATX APIs.
+    ///
+    /// Commonly when using ATX the same struct will implement both `Ops` and `AtxOps`, in which
+    /// case this can just return `Some(self)`.
+    ///
+    /// # Returns
+    /// The `AtxOps` object, or `None` if not supported.
+    fn atx_ops(&mut self) -> Option<&mut dyn AtxOps> {
+        None
+    }
 }
 
 /// Info returned from `validate_public_key_for_partition()`.
