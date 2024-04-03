@@ -70,6 +70,30 @@
       },
       "revId": "79c7971629dd8bb6531f2e3c5325f5e172a9679f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "04c64d7a_d1a217e9",
+        "filename": "rust/src/atx.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-03T16:47:57Z",
+      "side": 1,
+      "message": "Ack makes sense, I\u0027ll experiment a bit more and post a follow-on patch if I can figure out a clean approach without supertraits.",
+      "parentUuid": "1da34e9a_a760d472",
+      "range": {
+        "startLine": 207,
+        "startChar": 19,
+        "endLine": 207,
+        "endChar": 25
+      },
+      "revId": "79c7971629dd8bb6531f2e3c5325f5e172a9679f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
