@@ -145,8 +145,9 @@ python_binary_host {
     compile_multilib: "first",
 }
 
+// Default common to both standard and baremetal versions of libavb.
 cc_defaults {
-    name: "libavb_defaults",
+    name: "libavb_base_defaults",
     defaults: [
         "avb_defaults",
         "avb_sources",
@@ -158,11 +159,13 @@ cc_defaults {
     export_header_lib_headers: ["avb_headers"],
 }
 
-// Build libavb - this is a static library that depends
-// on only libc and libcrypto, but no other dependencies.
-cc_library_static {
-    name: "libavb",
-    defaults: ["libavb_defaults"],
+// Defaults for standard libavb; depends on only libc and libcrypto.
+//
+// The standard targets enable more logging and uses the standard versions of
+// the dependencies; see the baremetal variant for a slimmer alternative.
+cc_defaults {
+    name: "libavb_standard_defaults",
+    defaults: ["libavb_base_defaults"],
     host_supported: true,
     ramdisk_available: true,
     vendor_ramdisk_available: true,
@@ -188,17 +191,53 @@ cc_library_static {
     ],
 }
 
-// A variant of the library that can run in baremetal environments.
+// libavb
+cc_library_static {
+    name: "libavb",
+    defaults: ["libavb_standard_defaults"],
+}
+
+// libavb + ATX
+//
+// ATX provides some additional support for minimal certificate-based signing.
+cc_library_static {
+    name: "libavb_atx",
+    defaults: [
+        "avb_atx_sources",
+        "libavb_standard_defaults",
+    ],
+}
+
+// Defaults for a variant of libavb that can run in baremetal environments.
 //
 // The debug feature isn't enabled, removing verbose logging and assertions.
-cc_library_static {
-    name: "libavb_baremetal",
-    defaults: ["libavb_defaults"],
+// Also uses the baremetal variant of the dependencies.
+//
+// This does still require a handful of Posix APIs as used by the sysdeps
+// implementation.
+cc_defaults {
+    name: "libavb_baremetal_defaults",
+    defaults: ["libavb_base_defaults"],
     cflags: ["-UAVB_ENABLE_DEBUG"],
     static_libs: [
         "libcrypto_baremetal",
     ],
     srcs: ["libavb/avb_sysdeps_posix.c"],
+}
+
+// Baremetal libavb
+cc_library_static {
+    name: "libavb_baremetal",
+    defaults: ["libavb_baremetal_defaults"],
+}
+
+// Baremetal libavb + ATX
+cc_library_static {
+    name: "libavb_baremetal_atx",
+    defaults: [
+        "avb_atx_sources",
+        "libavb_baremetal_defaults",
+    ],
 }
 
 // Build libavb_user for the target - in addition to libavb, it
