@@ -46,6 +46,30 @@
       },
       "revId": "79c7971629dd8bb6531f2e3c5325f5e172a9679f",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1da34e9a_a760d472",
+        "filename": "rust/src/atx.rs",
+        "patchSetId": 3
+      },
+      "lineNbr": 207,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-03T13:29:11Z",
+      "side": 1,
+      "message": "Ack. I think the circular dependency between AvbOps and AvbAtxOps poses a challenge in finding a suitable approach to address this problem here. In the original API, it appears that AvbOps is required and then accesses AvbAtxOps within it. With the proposed API in this cl, I guess you want to pass AvbAtx and then pass AvbAtxOps -\u003e AvbOps within it? \n\n\u003e The ATX ops must be implemented. That is, |ops-\u003eatx_ops| must be valid.\n\nI slightly prefer to pass AvbOps here as it seems that the ops chain is shorter (with the current cl, the atx callbacks will be accessed from AvbAtxOps -\u003e AvbOps -\u003e AvbAtxOps) and we can do a clean `assert(ops-\u003eatx_ops is not null)` to enforce the requirement above, but this is not blocking.\n\nIntroducing a supertrait may be too much for the problem here.",
+      "parentUuid": "cef95f78_6a21488f",
+      "range": {
+        "startLine": 207,
+        "startChar": 19,
+        "endLine": 207,
+        "endChar": 25
+      },
+      "revId": "79c7971629dd8bb6531f2e3c5325f5e172a9679f",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
