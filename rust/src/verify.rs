@@ -35,6 +35,7 @@ use core::{
     ffi::{c_char, CStr},
     fmt,
     marker::PhantomData,
+    pin::pin,
     ptr::{self, null, null_mut, NonNull},
     slice,
 };
@@ -399,10 +400,6 @@ pub fn slot_verify<'a>(
     flags: SlotVerifyFlags,
     hashtree_error_mode: HashtreeErrorMode,
 ) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
-    let mut user_data = ops::UserData::new(ops);
-    let mut scoped_ops = ops::ScopedAvbOps::new(&mut user_data);
-    let avb_ops = scoped_ops.as_mut();
-
     // libavb detects the size of the `requested_partitions` array by NULL termination. Expecting
     // the Rust caller to do this would make the API much more awkward, so we populate a
     // NULL-terminated array of c-string pointers ourselves. For now we use a fixed-sized array
@@ -420,6 +417,8 @@ pub fn slot_verify<'a>(
     // pointer to an empty string in this case, not NULL.
     let ab_suffix = ab_suffix.unwrap_or(CStr::from_bytes_with_nul(b"\0").unwrap());
 
+    let mut ops_bridge = pin!(ops::OpsBridge::new(ops));
+    ops_bridge.as_mut().initialize();
     let mut out_data: *mut AvbSlotVerifyData = null_mut();
 
     // Call the libavb verification function.
@@ -429,11 +428,12 @@ pub fn slot_verify<'a>(
     // or else the memory will leak.
     //
     // SAFETY:
+    // * we've called `initialize()` on `ops_bridge`, so `get_c_ops()` gives us a valid `AvbOps`.
     // * we've properly initialized all objects passed into libavb.
     // * if `out_data` is non-null on return, we take ownership via `SlotVerifyData`.
     let result = slot_verify_enum_to_result(unsafe {
         avb_slot_verify(
-            avb_ops,
+            ops_bridge.get_c_ops(),
             partitions_array.as_ptr(),
             ab_suffix.as_ptr(),
             flags,
