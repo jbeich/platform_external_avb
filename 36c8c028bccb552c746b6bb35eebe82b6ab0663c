@@ -39,6 +39,30 @@
       },
       "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a7b822c2_f4b239ed",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-04T22:59:41Z",
+      "side": 1,
+      "message": "`ScopedAvbOps` will always need to have access to both C structs `AvbOps` and `AvbAtxOps`, but it\u0027s up to us whether it owns them or borrows them from some other struct (such as `UserData`).\n\nBut the C structs are largely unrelated to how we choose to structure the Rust `Ops` and `AtxOps` traits, e.g. even though C requires circular references, our Rust API does not have to. And we could equally well use supertraits or this CL\u0027s approach without affecting how the C structs are used under the hood.\n\nI\u0027ve fleshed out the follow-up CL to demonstrate this implementation including tests. Unfortunately it\u0027s a bit large, it was difficult to prove that it works end-to-end without implementing most of the functionality.\n\nI can also just merge them together if it would make it easier to review, but for now even though this CL is pretty minimal it seemed useful to separate the API (here) from the implementation (next CL).",
+      "parentUuid": "9e85569d_0e4c036d",
+      "range": {
+        "startLine": 253,
+        "startChar": 7,
+        "endLine": 253,
+        "endChar": 51
+      },
+      "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
