@@ -16,6 +16,29 @@
       "message": "An attempt to get rid of supertraits as recommended in the previous CL.\n\nThe posted follow-up CL (still WIP) demonstrates some usage of how it should work in practice",
       "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9e85569d_0e4c036d",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-04T07:29:11Z",
+      "side": 1,
+      "message": "This does des provide greater clarity for `atx_validate_vbmeta_public_key`, but it appears to conflict with the change in [1], where `Ops` and `AtxOps` are supposed to be passed to `ScopedOps` as two objects. If `AtxOps` is part of `Ops` here, do we need still two fields ops and atx_ops in `ScopedOps`, or is it possible to maintain the curent structure?\n\nScopedAvbOps (rust) -wraps-\u003e 2) AvbOps (C) -contains-\u003e 3) UserData (rust) -wraps-\u003e 4) Ops (rust)\n\nPerhaps add some test code here to illustrate the usage of AtxOps in Ops?\n\n[1] https://r.android.com/3016678",
+      "range": {
+        "startLine": 253,
+        "startChar": 7,
+        "endLine": 253,
+        "endChar": 51
+      },
+      "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
