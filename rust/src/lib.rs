@@ -26,11 +26,17 @@
 // panic_handler and eh_personality conditional on actually building a dylib.
 #![cfg_attr(not(any(test, android_dylib)), no_std)]
 
+mod atx;
 mod descriptor;
 mod error;
 mod ops;
 mod verify;
 
+pub use atx::{
+    atx_generate_unlock_challenge, atx_validate_unlock_credential, atx_validate_vbmeta_public_key,
+    AtxOps, AtxPermanentAttributes, ATX_PIK_VERSION_LOCATION, ATX_PSK_VERSION_LOCATION,
+    SHA256_DIGEST_SIZE,
+};
 pub use descriptor::{
     ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor, DescriptorError,
     DescriptorResult, HashDescriptor, HashDescriptorFlags, HashtreeDescriptor,
