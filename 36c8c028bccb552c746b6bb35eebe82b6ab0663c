@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "59c5cf89_82174869",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-04T00:13:32Z",
+      "side": 1,
+      "message": "An attempt to get rid of supertraits as recommended in the previous CL.\n\nThe posted follow-up CL (still WIP) demonstrates some usage of how it should work in practice",
+      "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
