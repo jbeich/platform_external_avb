@@ -86,6 +86,8 @@ pub trait Ops<'a> {
 
     /// Checks if the given public key is valid for vbmeta image signing.
     ///
+    /// If using ATX, this should forward to `atx_validate_vbmeta_public_key()`.
+    ///
     /// # Arguments
     /// * `public_key`: the public key.
     /// * `public_key_metadata`: public key metadata set by the `--public_key_metadata` arg in
@@ -216,6 +218,8 @@ pub trait Ops<'a> {
     /// partition. If this flag is not used, the `validate_vbmeta_public_key()` callback is used
     /// instead, and this function will never be called.
     ///
+    /// If using ATX for `partition`, this should forward to `atx_validate_vbmeta_public_key()`.
+    ///
     /// # Arguments
     /// * `partition`: partition name.
     /// * `public_key`: the public key.
@@ -235,7 +239,7 @@ pub trait Ops<'a> {
     ) -> IoResult<PublicKeyForPartitionInfo>;
 }
 
-/// Info returned from `validare_public_key_for_partition()`.
+/// Info returned from `validate_public_key_for_partition()`.
 #[derive(Clone, Copy, Debug)]
 pub struct PublicKeyForPartitionInfo {
     /// Whether the key is trusted for the given partition..
