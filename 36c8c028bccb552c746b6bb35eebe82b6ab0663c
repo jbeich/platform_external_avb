@@ -63,6 +63,30 @@
       },
       "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c897e67f_34322c8b",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-05T13:51:49Z",
+      "side": 1,
+      "message": "\u003e ... even though C requires circular references, our Rust API does not have to\n\nAgree. That\u0027s exactly my concern here. Without this new method, Ops and AtxOps appear as two separate entities, allowing client code to have two independent objects.\n\nHowever, with this method, it seems that the implementation of AtxOps needs to be a field within the implementation of Ops in the client code. This plus the circular relationship in the C code make the overall structure even more entangled.\n\nI drew two diagrams  illustrating the structure before and after the introduction of ATX with my understanding, do you think that corresponds to the structure you want here? I shared the doc with you.",
+      "parentUuid": "a7b822c2_f4b239ed",
+      "range": {
+        "startLine": 253,
+        "startChar": 7,
+        "endLine": 253,
+        "endChar": 51
+      },
+      "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
