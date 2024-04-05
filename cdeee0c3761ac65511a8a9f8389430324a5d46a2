@@ -39,6 +39,30 @@
       },
       "revId": "cdeee0c3761ac65511a8a9f8389430324a5d46a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "dca2bc7e_f5a54758",
+        "filename": "rust/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-05T13:05:39Z",
+      "side": 1,
+      "message": "+1. It\u0027s not allowed. Although `openssl-rust` is available, it may soon be deprecated due to its low quality[1]. If you only need to hash in tests, maybe the easiest way could be to invoke the bssl bindgen [2] directly in the test code?\n\n[1] http://b/177080016#comment29\n[2] https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/Virtualization/libs/bssl/src/sha.rs;l\u003d29;drc\u003d0322b8c36e1decd47c45e2b72e0ab8cea1a86f44",
+      "parentUuid": "61e15f67_579a328a",
+      "range": {
+        "startLine": 312,
+        "startChar": 9,
+        "endLine": 312,
+        "endChar": 16
+      },
+      "revId": "cdeee0c3761ac65511a8a9f8389430324a5d46a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
