@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d03641aa_f6892dc8",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-05T00:36:13Z",
+      "side": 1,
+      "message": "Looks ok in general, but you\u0027ll also want to find a reviewer more familiar with Rust FFI safety.",
+      "revId": "cdeee0c3761ac65511a8a9f8389430324a5d46a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "61e15f67_579a328a",
+        "filename": "rust/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-05T00:36:13Z",
+      "side": 1,
+      "message": "Is this ring as in the crypto crate? Boringssl is the only crypto library approved for Android afaik.",
+      "range": {
+        "startLine": 312,
+        "startChar": 9,
+        "endLine": 312,
+        "endChar": 16
+      },
+      "revId": "cdeee0c3761ac65511a8a9f8389430324a5d46a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
