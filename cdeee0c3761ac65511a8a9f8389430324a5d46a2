@@ -105,6 +105,30 @@
       },
       "revId": "cdeee0c3761ac65511a8a9f8389430324a5d46a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6d245b18_d5d7951d",
+        "filename": "rust/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-08T07:58:37Z",
+      "side": 1,
+      "message": "Mm, indeed nothing stops this code from compiling with `ring` while aosp also discourages the usage of any crypto libraries other than bssl. I guess perhaps it\u0027s there just to support vendors b/270690570?\n\n@mmaurer@google.com for more context",
+      "parentUuid": "4ff828c7_43038829",
+      "range": {
+        "startLine": 312,
+        "startChar": 9,
+        "endLine": 312,
+        "endChar": 16
+      },
+      "revId": "cdeee0c3761ac65511a8a9f8389430324a5d46a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
