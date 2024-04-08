@@ -58,6 +58,24 @@ filegroup {
     srcs: ["data/testkey_rsa2048.pem"],
 }
 
+// ATX test public key.
+filegroup {
+    name: "avb_atx_testkey_psk",
+    srcs: ["data/testkey_atx_psk.pem"],
+}
+
+// ATX test public key metadata. PSK and PIK versions are both set to 42.
+filegroup {
+    name: "avb_atx_test_metadata",
+    srcs: ["data/atx_metadata.bin"],
+}
+
+// ATX test permanent attributes for the above public key.
+filegroup {
+    name: "avb_atx_test_permanent_attributes",
+    srcs: ["data/atx_permanent_attributes.bin"],
+}
+
 genrule {
     name: "avb_testkey_rsa2048_pub_bin",
     tools: ["avbtool"],
