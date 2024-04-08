@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-#include "avb_atx_slot_verify.h"
+#include "avb_cert_slot_verify.h"
 
 #include <libavb/avb_sha.h>
 #include <libavb/libavb.h>
-#include <libavb_atx/libavb_atx.h>
+#include <libavb_cert/libavb_cert.h>
 
 /* Chosen to be generous but still require a huge number of increase operations
  * before exhausting the 64-bit space.
@@ -36,31 +36,31 @@ static const uint64_t kRollbackIndexIncreaseThreshold = 1000000000;
 /* By convention, when a rollback index is not used the value remains zero. */
 static const uint64_t kRollbackIndexNotUsed = 0;
 
-typedef struct _AvbAtxOpsContext {
+typedef struct _AvbCertOpsContext {
   size_t key_version_location[AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS];
   uint64_t key_version_value[AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS];
   size_t next_key_version_slot;
-} AvbAtxOpsContext;
+} AvbCertOpsContext;
 
-typedef struct _AvbAtxOpsWithContext {
-  AvbAtxOps atx_ops;
-  AvbAtxOpsContext context;
-} AvbAtxOpsWithContext;
+typedef struct _AvbCertOpsWithContext {
+  AvbCertOps cert_ops;
+  AvbCertOpsContext context;
+} AvbCertOpsWithContext;
 
-/* Returns context associated with |atx_ops| returned by
+/* Returns context associated with |cert_ops| returned by
  * setup_ops_with_context().
  */
-static AvbAtxOpsContext* get_ops_context(AvbAtxOps* atx_ops) {
-  return &((AvbAtxOpsWithContext*)atx_ops)->context;
+static AvbCertOpsContext* get_ops_context(AvbCertOps* cert_ops) {
+  return &((AvbCertOpsWithContext*)cert_ops)->context;
 }
 
-/* An implementation of AvbAtxOps::set_key_version that saves the key version
+/* An implementation of AvbCertOps::set_key_version that saves the key version
  * information to ops context data.
  */
-static void save_key_version_to_context(AvbAtxOps* atx_ops,
+static void save_key_version_to_context(AvbCertOps* cert_ops,
                                         size_t rollback_index_location,
                                         uint64_t key_version) {
-  AvbAtxOpsContext* context = get_ops_context(atx_ops);
+  AvbCertOpsContext* context = get_ops_context(cert_ops);
   size_t offset = context->next_key_version_slot++;
   if (offset < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS) {
     context->key_version_location[offset] = rollback_index_location;
@@ -73,14 +73,14 @@ static void save_key_version_to_context(AvbAtxOps* atx_ops,
  * The set_key_version function will be replaced in order to collect the key
  * version information in the context.
  */
-static AvbAtxOps* setup_ops_with_context(
-    const AvbAtxOps* existing_ops, AvbAtxOpsWithContext* ops_with_context) {
-  avb_memset(ops_with_context, 0, sizeof(AvbAtxOpsWithContext));
-  ops_with_context->atx_ops = *existing_ops;
+static AvbCertOps* setup_ops_with_context(
+    const AvbCertOps* existing_ops, AvbCertOpsWithContext* ops_with_context) {
+  avb_memset(ops_with_context, 0, sizeof(AvbCertOpsWithContext));
+  ops_with_context->cert_ops = *existing_ops;
   // Close the loop on the circular reference.
-  ops_with_context->atx_ops.ops->atx_ops = &ops_with_context->atx_ops;
-  ops_with_context->atx_ops.set_key_version = save_key_version_to_context;
-  return &ops_with_context->atx_ops;
+  ops_with_context->cert_ops.ops->cert_ops = &ops_with_context->cert_ops;
+  ops_with_context->cert_ops.set_key_version = save_key_version_to_context;
+  return &ops_with_context->cert_ops;
 }
 
 /* Updates the stored rollback index value for |location| to match |value|. */
@@ -122,54 +122,54 @@ static AvbSlotVerifyResult update_rollback_index(AvbOps* ops,
   return AVB_SLOT_VERIFY_RESULT_OK;
 }
 
-AvbSlotVerifyResult avb_atx_slot_verify(
-    AvbAtxOps* atx_ops,
+AvbSlotVerifyResult avb_cert_slot_verify(
+    AvbCertOps* cert_ops,
     const char* ab_suffix,
-    AvbAtxLockState lock_state,
-    AvbAtxSlotState slot_state,
-    AvbAtxOemDataState oem_data_state,
+    AvbCertLockState lock_state,
+    AvbCertSlotState slot_state,
+    AvbCertOemDataState oem_data_state,
     AvbSlotVerifyData** verify_data,
-    uint8_t vbh_extension[AVB_SHA256_DIGEST_SIZE]) {
+    uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE]) {
   const char* partitions_without_oem[] = {"boot", NULL};
   const char* partitions_with_oem[] = {"boot", "oem_bootloader", NULL};
   AvbSlotVerifyResult result = AVB_SLOT_VERIFY_RESULT_OK;
   size_t i = 0;
-  AvbAtxOpsWithContext ops_with_context;
+  AvbCertOpsWithContext ops_with_context;
 
-  atx_ops = setup_ops_with_context(atx_ops, &ops_with_context);
+  cert_ops = setup_ops_with_context(cert_ops, &ops_with_context);
 
-  result = avb_slot_verify(atx_ops->ops,
-                           (oem_data_state == AVB_ATX_OEM_DATA_NOT_USED)
+  result = avb_slot_verify(cert_ops->ops,
+                           (oem_data_state == AVB_CERT_OEM_DATA_NOT_USED)
                                ? partitions_without_oem
                                : partitions_with_oem,
                            ab_suffix,
-                           (lock_state == AVB_ATX_UNLOCKED)
+                           (lock_state == AVB_CERT_UNLOCKED)
                                ? AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR
                                : AVB_SLOT_VERIFY_FLAGS_NONE,
                            AVB_HASHTREE_ERROR_MODE_EIO,
                            verify_data);
 
-  if (result != AVB_SLOT_VERIFY_RESULT_OK || lock_state == AVB_ATX_UNLOCKED) {
+  if (result != AVB_SLOT_VERIFY_RESULT_OK || lock_state == AVB_CERT_UNLOCKED) {
     return result;
   }
 
-  /* Compute the Android Things Verified Boot Hash (VBH) extension. */
+  /* Compute the vbmeta digest. */
   avb_slot_verify_data_calculate_vbmeta_digest(
-      *verify_data, AVB_DIGEST_TYPE_SHA256, vbh_extension);
+      *verify_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
 
   /* Increase rollback index values to match the verified slot. */
-  if (slot_state == AVB_ATX_SLOT_MARKED_SUCCESSFUL) {
+  if (slot_state == AVB_CERT_SLOT_MARKED_SUCCESSFUL) {
     for (i = 0; i < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS; i++) {
       uint64_t rollback_index_value = (*verify_data)->rollback_indexes[i];
       if (rollback_index_value != kRollbackIndexNotUsed) {
-        result = update_rollback_index(atx_ops->ops, i, rollback_index_value);
+        result = update_rollback_index(cert_ops->ops, i, rollback_index_value);
         if (result != AVB_SLOT_VERIFY_RESULT_OK) {
           goto out;
         }
       }
     }
 
-    /* Also increase rollback index values for Android Things key version
+    /* Also increase rollback index values for the avb_cert key version
      * locations.
      */
     for (i = 0; i < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS; i++) {
@@ -179,7 +179,7 @@ AvbSlotVerifyResult avb_atx_slot_verify(
           ops_with_context.context.key_version_value[i];
       if (rollback_index_value != kRollbackIndexNotUsed) {
         result = update_rollback_index(
-            atx_ops->ops, rollback_index_location, rollback_index_value);
+            cert_ops->ops, rollback_index_location, rollback_index_value);
         if (result != AVB_SLOT_VERIFY_RESULT_OK) {
           goto out;
         }
