@@ -57,6 +57,8 @@ pub const TEST_HASHTREE_ALGORITHM: &str = "sha1";
 // Certificate test data.
 pub const TEST_CERT_PERMANENT_ATTRIBUTES_PATH: &str = "data/cert_permanent_attributes.bin";
 pub const TEST_CERT_VBMETA_PATH: &str = "test_vbmeta_cert.img";
+pub const TEST_CERT_UNLOCK_CHALLENGE_RNG_PATH: &str = "data/cert_unlock_challenge.bin";
+pub const TEST_CERT_UNLOCK_CREDENTIAL_PATH: &str = "data/cert_unlock_credential.bin";
 
 // The cert test keys were both generated with rollback version 42.
 pub const TEST_CERT_PIK_VERSION: u64 = 42;
