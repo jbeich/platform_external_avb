@@ -21,14 +21,19 @@ use crate::{
     verify_one_image_one_vbmeta,
 };
 use avb::{
-    cert_generate_unlock_challenge, CertPermanentAttributes, IoError, SlotVerifyError,
-    CERT_PIK_VERSION_LOCATION, CERT_PSK_VERSION_LOCATION,
+    cert_generate_unlock_challenge, cert_validate_unlock_credential, CertPermanentAttributes,
+    CertUnlockChallenge, CertUnlockCredential, IoError, SlotVerifyError, CERT_PIK_VERSION_LOCATION,
+    CERT_PSK_VERSION_LOCATION,
 };
 use hex::decode;
-use std::{collections::HashMap, fs};
-use zerocopy::FromBytes;
+use std::{collections::HashMap, fs, mem::size_of};
+use zerocopy::{AsBytes, FromBytes};
 
 /// Initializes a `TestOps` object such that cert verification will succeed on `TEST_PARTITION_NAME`.
+///
+/// The returned `TestOps` also contains RNG configured to return the contents of
+/// `TEST_CERT_UNLOCK_CHALLENGE_RNG_PATH`, so that the pre-signed contents of
+/// `TEST_CERT_UNLOCK_CREDENTIAL_PATH` will successfully validate by default.
 fn build_test_cert_ops_one_image_one_vbmeta<'a>() -> TestOps<'a> {
     let mut ops = build_test_ops_one_image_one_vbmeta();
 
@@ -56,7 +61,17 @@ fn build_test_cert_ops_one_image_one_vbmeta<'a>() -> TestOps<'a> {
     ops.rollbacks
         .insert(CERT_PSK_VERSION_LOCATION, TEST_CERT_PSK_VERSION);
 
+    // It's non-trivial to sign a challenge without `avbtool.py`, so instead we inject the exact RNG
+    // used by the pre-generated challenge so that we can use the pre-signed credential.
+    ops.cert_fake_rng = fs::read(TEST_CERT_UNLOCK_CHALLENGE_RNG_PATH).unwrap();
+
     ops
+}
+
+/// Returns the contents of `TEST_CERT_UNLOCK_CREDENTIAL_PATH` as a `CertUnlockCredential`.
+fn test_unlock_credential() -> CertUnlockCredential {
+    let credential_bytes = fs::read(TEST_CERT_UNLOCK_CREDENTIAL_PATH).unwrap();
+    CertUnlockCredential::read_from(&credential_bytes[..]).unwrap()
 }
 
 /// Enough fake RNG data to generate a single unlock challenge.
@@ -191,5 +206,83 @@ fn cert_generate_unlock_challenge_fails_insufficient_rng() {
     assert_eq!(
         cert_generate_unlock_challenge(&mut ops).unwrap_err(),
         IoError::Io
+    );
+}
+
+#[test]
+fn cert_validate_unlock_credential_success() {
+    let mut ops = build_test_cert_ops_one_image_one_vbmeta();
+
+    // We don't actually need the challenge here since we've pre-signed it, but we still need to
+    // call this function so the cert internal state expects the unlock cred.
+    let _ = cert_generate_unlock_challenge(&mut ops).unwrap();
+
+    assert_eq!(
+        cert_validate_unlock_credential(&mut ops, &test_unlock_credential()),
+        Ok(true)
+    );
+}
+
+#[test]
+fn cert_validate_unlock_credential_fails_wrong_rng() {
+    let mut ops = build_test_cert_ops_one_image_one_vbmeta();
+    // Modify the RNG slightly, the cerificate should now fail to validate.
+    ops.cert_fake_rng[0] ^= 0x01;
+
+    let _ = cert_generate_unlock_challenge(&mut ops).unwrap();
+
+    assert_eq!(
+        cert_validate_unlock_credential(&mut ops, &test_unlock_credential()),
+        Ok(false)
+    );
+}
+
+#[test]
+fn cert_validate_unlock_credential_fails_with_pik_rollback_violation() {
+    let mut ops = build_test_cert_ops_one_image_one_vbmeta();
+    // Rotating the PIK should invalidate all existing unlock keys, which includes our pre-signed
+    // certificate.
+    *ops.rollbacks.get_mut(&CERT_PIK_VERSION_LOCATION).unwrap() += 1;
+
+    let _ = cert_generate_unlock_challenge(&mut ops).unwrap();
+
+    assert_eq!(
+        cert_validate_unlock_credential(&mut ops, &test_unlock_credential()),
+        Ok(false)
+    );
+}
+
+#[test]
+fn cert_validate_unlock_credential_fails_no_challenge() {
+    let mut ops = build_test_cert_ops_one_image_one_vbmeta();
+
+    // We never called `cert_generate_unlock_challenge()`, so no credentials should validate.
+    assert_eq!(
+        cert_validate_unlock_credential(&mut ops, &test_unlock_credential()),
+        Ok(false)
+    );
+}
+
+// In practice, devices will usually be passing unlock challenges and credentials over fastboot as
+// byte slices. This test ensures that there are some reasonable APIs available to convert between
+// `CertUnlockChallenge`/`CertUnlockCredential` and byte slices.
+#[test]
+fn cert_validate_unlock_credential_bytes_api() {
+    let mut ops = build_test_cert_ops_one_image_one_vbmeta();
+
+    // Write an unlock challenge to a byte buffer for TX over fastboot.
+    let challenge = cert_generate_unlock_challenge(&mut ops).unwrap();
+    let mut buffer = vec![0u8; size_of::<CertUnlockChallenge>()];
+    assert_eq!(challenge.write_to(&mut buffer[..]), Some(())); // zerocopy::AsBytes.
+
+    // Read an unlock credential from a byte buffer for RX from fastboot.
+    let buffer = vec![0u8; size_of::<CertUnlockCredential>()];
+    let credential = CertUnlockCredential::ref_from(&buffer[..]).unwrap(); // zerocopy::FromBytes.
+
+    // It shouldn't actually validate since the credential is just zeroes, the important thing
+    // is that it compiles.
+    assert_eq!(
+        cert_validate_unlock_credential(&mut ops, credential),
+        Ok(false)
     );
 }
