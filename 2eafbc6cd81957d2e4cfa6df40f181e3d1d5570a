@@ -1,0 +1,38 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "edd8830e_abf3030d",
+        "filename": "libavb_atx/avb_atx_types.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 0,
+      "message": "Similarly here, this became `libavb_cert/avb_cert_types.h` but enough of the file changed that Gerrit doesn\u0027t treat it as a rename.",
+      "revId": "2eafbc6cd81957d2e4cfa6df40f181e3d1d5570a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d495bc73_e6e5d68c",
+        "filename": "test/avb_atx_generate_test_data",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 0,
+      "message": "Renamed to the following file.",
+      "revId": "2eafbc6cd81957d2e4cfa6df40f181e3d1d5570a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

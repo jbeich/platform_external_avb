@@ -1,0 +1,158 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "071c2979_112e13ab",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 1,
+      "message": "Sorry for the big CL but I think it all had to be renamed at once. I tried to add some comments on anything that wasn\u0027t just a trivial search-and-replace.",
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6a31e3dc_2b0cf98e",
+        "filename": "avbtool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 3869,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 1,
+      "message": "This is a slightly awkward command name but uses a common `make_cert_{command}` format to group similar commands. I could rename to e.g. just `make_cert` if that seems better.",
+      "range": {
+        "startLine": 3869,
+        "startChar": 23,
+        "endLine": 3869,
+        "endChar": 44
+      },
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "268f0d9d_4a7d414e",
+        "filename": "examples/cert/README.md",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 1,
+      "message": "This is an update of the following file, not recognized by Gerrit as the same.",
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91ebef81_9ead0c75",
+        "filename": "examples/cert/avb_cert_slot_verify.h",
+        "patchSetId": 2
+      },
+      "lineNbr": 65,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 1,
+      "message": "The \"Verified Boot Hash\" seemed to be an AT-specific concept so I generalized this comment a bit.",
+      "range": {
+        "startLine": 64,
+        "startChar": 71,
+        "endLine": 65,
+        "endChar": 48
+      },
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "77273189_c59e94a0",
+        "filename": "test/at_auth_unlock_unittest.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 1,
+      "message": "This file and the script it tests are specific to Android Things so I didn\u0027t rename them or remove references to AT. e.g. they use specific fastboot commands such as `oem at-get-vboot-unlock-challenge`, so aren\u0027t actually as general-purpose as the `libavb_cert` extension.\n\nI\u0027m not sure if anything actually uses them anymore though, this one isn\u0027t in any `TEST_MAPPING` file. And when I tried to run it I get an error due to the Python `Crypto` module not being available in the `atest` environment (even after I install it on my host):\n\n```\n$ atest at_auth_unlock_unittest\n...\nModuleNotFoundError: No module named \u0027Crypto\u0027\n```\n\nWe could leave them as-is, delete them, or file a follow-on bug to try to generalize them for any cert-capable device rather than just AT.",
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1a3f7eed_8a78abf0",
+        "filename": "test/avb_cert_slot_verify_unittest.cc",
+        "patchSetId": 2
+      },
+      "lineNbr": 25,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 1,
+      "message": "`repo upload` wouldn\u0027t let me upload without also fixing the include order.",
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1af09575_37302e39",
+        "filename": "test/data/testkey_cert_pik.pem",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 1,
+      "message": "Weirdly enough this file has the string `Atx` in it, but I\u0027m *pretty* sure it\u0027s just a coincidence in the Base64 encoding and not actually anything related to ATX",
+      "range": {
+        "startLine": 39,
+        "startChar": 35,
+        "endLine": 39,
+        "endChar": 38
+      },
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "8b4d4ca7_fd391011",
+        "filename": "tools/at_auth_unlock.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-09T20:57:07Z",
+      "side": 1,
+      "message": "Similar as before, this script expects an actual AT device with support for commands like `oem at-unlock-vboot`, so I left the references to Android Things.",
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
