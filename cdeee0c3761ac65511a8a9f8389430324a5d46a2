@@ -129,6 +129,30 @@
       },
       "revId": "cdeee0c3761ac65511a8a9f8389430324a5d46a2",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "25f75df8_822a5a70",
+        "filename": "rust/Android.bp",
+        "patchSetId": 3
+      },
+      "lineNbr": 312,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-10T20:33:54Z",
+      "side": 1,
+      "message": "It doesn\u0027t really matter in this case, it\u0027s just a testdata file so I\u0027ll go ahead and pre-compute the sha ahead of time here, thanks.",
+      "parentUuid": "6d245b18_d5d7951d",
+      "range": {
+        "startLine": 312,
+        "startChar": 9,
+        "endLine": 312,
+        "endChar": 16
+      },
+      "revId": "cdeee0c3761ac65511a8a9f8389430324a5d46a2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
