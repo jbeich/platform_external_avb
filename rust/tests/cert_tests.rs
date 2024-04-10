@@ -21,7 +21,8 @@ use crate::{
     verify_one_image_one_vbmeta,
 };
 use avb::{
-    CertPermanentAttributes, SlotVerifyError, CERT_PIK_VERSION_LOCATION, CERT_PSK_VERSION_LOCATION,
+    cert_generate_unlock_challenge, CertPermanentAttributes, IoError, SlotVerifyError,
+    CERT_PIK_VERSION_LOCATION, CERT_PSK_VERSION_LOCATION,
 };
 use hex::decode;
 use std::{collections::HashMap, fs};
@@ -54,6 +55,28 @@ fn build_test_cert_ops_one_image_one_vbmeta<'a>() -> TestOps<'a> {
         .insert(CERT_PIK_VERSION_LOCATION, TEST_CERT_PIK_VERSION);
     ops.rollbacks
         .insert(CERT_PSK_VERSION_LOCATION, TEST_CERT_PSK_VERSION);
+
+    ops
+}
+
+/// Enough fake RNG data to generate a single unlock challenge.
+const UNLOCK_CHALLENGE_FAKE_RNG: [u8; 16] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
+
+/// Returns a `TestOps` with only enough configuration to generate a single unlock challenge.
+///
+/// The generated unlock challenge will have:
+/// * permanent attributes sourced from the contents of `TEST_CERT_PERMANENT_ATTRIBUTES_PATH`.
+/// * RNG sourced from `UNLOCK_CHALLENGE_FAKE_RNG`.
+fn build_test_cert_ops_unlock_challenge_only<'a>() -> TestOps<'a> {
+    let mut ops = TestOps::default();
+
+    // Permanent attributes are needed for the embedded product ID.
+    let perm_attr_bytes = fs::read(TEST_CERT_PERMANENT_ATTRIBUTES_PATH).unwrap();
+    ops.cert_permanent_attributes =
+        Some(CertPermanentAttributes::read_from(&perm_attr_bytes[..]).unwrap());
+
+    // Fake RNG for unlock challenge generation.
+    ops.cert_fake_rng = UNLOCK_CHALLENGE_FAKE_RNG.into();
 
     ops
 }
@@ -129,4 +152,44 @@ fn cert_verify_fails_with_bad_permanent_attributes_hash() {
     let result = verify_one_image_one_vbmeta(&mut ops);
 
     assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected);
+}
+
+#[test]
+fn cert_generate_unlock_challenge_succeeds() {
+    let mut ops = build_test_cert_ops_unlock_challenge_only();
+
+    let challenge = cert_generate_unlock_challenge(&mut ops).unwrap();
+
+    // Make sure the challenge token used our cert callback data correctly.
+    assert_eq!(
+        challenge.product_id_hash,
+        &decode(TEST_CERT_PRODUCT_ID_HASH_HEX).unwrap()[..]
+    );
+    assert_eq!(challenge.challenge, UNLOCK_CHALLENGE_FAKE_RNG);
+}
+
+#[test]
+fn cert_generate_unlock_challenge_fails_without_permanent_attributes() {
+    let mut ops = build_test_cert_ops_unlock_challenge_only();
+
+    // Challenge generation should fail without the product ID provided by the permanent attributes.
+    ops.cert_permanent_attributes = None;
+
+    assert_eq!(
+        cert_generate_unlock_challenge(&mut ops).unwrap_err(),
+        IoError::Io
+    );
+}
+
+#[test]
+fn cert_generate_unlock_challenge_fails_insufficient_rng() {
+    let mut ops = build_test_cert_ops_unlock_challenge_only();
+
+    // Remove a byte of RNG so there isn't enough.
+    ops.cert_fake_rng.pop();
+
+    assert_eq!(
+        cert_generate_unlock_challenge(&mut ops).unwrap_err(),
+        IoError::Io
+    );
 }
