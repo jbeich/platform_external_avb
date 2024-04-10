@@ -76,6 +76,20 @@ filegroup {
     srcs: ["data/cert_permanent_attributes.bin"],
 }
 
+// libavb_cert test RNG for an unlock challenge.
+// Note: this is only the 16-byte randomization, not a full
+// `AvbCertUnlockChallenge`.
+filegroup {
+    name: "avb_cert_test_unlock_challenge",
+    srcs: ["data/cert_unlock_challenge.bin"],
+}
+
+// libavb_cert test unlock credential signing `avb_cert_test_unlock_challenge`.
+filegroup {
+    name: "avb_cert_test_unlock_credential",
+    srcs: ["data/cert_unlock_credential.bin"],
+}
+
 genrule {
     name: "avb_testkey_rsa2048_pub_bin",
     tools: ["avbtool"],
