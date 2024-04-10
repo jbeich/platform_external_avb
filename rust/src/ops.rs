@@ -330,7 +330,7 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
                 read_permanent_attributes: Some(read_permanent_attributes),
                 read_permanent_attributes_hash: Some(read_permanent_attributes_hash),
                 set_key_version: Some(set_key_version),
-                get_random: None, // TODO(b/320543206): implement.
+                get_random: Some(get_random),
             },
             rust_ops: ops,
             _pin: PhantomPinned,
@@ -1297,4 +1297,44 @@ unsafe fn try_set_key_version(
     let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
     cert_ops.set_key_version(rollback_index_location, key_version);
     Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to `None` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn get_random(
+    cert_ops: *mut AvbCertOps,
+    num_bytes: usize,
+    output: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_get_random(cert_ops, num_bytes, output) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `cert_ops` must have been created via `ScopedAvbOps`.
+/// * `output` must point to a valid buffer of size `num_bytes` that we have exclusive access to.
+unsafe fn try_get_random(
+    cert_ops: *mut AvbCertOps,
+    num_bytes: usize,
+    output: *mut u8,
+) -> IoResult<()> {
+    check_nonnull(output)?;
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `output` with size `num_bytes`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let output = unsafe { slice::from_raw_parts_mut(output, num_bytes) };
+
+    // SAFETY:
+    // * we only use `cert_ops` objects created via `ScopedAvbOps` as required.
+    // * `cert_ops` is only extracted once and is dropped at the end of the callback.
+    let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
+    cert_ops.get_random(output)
 }
