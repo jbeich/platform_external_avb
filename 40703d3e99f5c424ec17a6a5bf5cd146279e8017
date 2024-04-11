@@ -43,6 +43,29 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "f3731fc9_fbba25e5",
+        "filename": "avbtool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 4659,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-11T18:41:58Z",
+      "side": 1,
+      "message": "I realized I can use the `aliases` arg here to also retain the old ATX command name for now to make a smoother transition for users. Will add that in the next patchset.",
+      "range": {
+        "startLine": 4659,
+        "startChar": 9,
+        "endLine": 4659,
+        "endChar": 30
+      },
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "268f0d9d_4a7d414e",
         "filename": "examples/cert/README.md",
         "patchSetId": 2
