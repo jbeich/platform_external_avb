@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "febe0a46_e2acd619",
+        "filename": "rust/src/cert.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-12T23:23:41Z",
+      "side": 1,
+      "message": "The `ATX` -\u003e `Cert` [rename CL](https://r.android.com/3034058) landed so this CL has also been updated as needed.\n\nAt this point it\u0027s probably easier just to diff this patchset against the base rather than PS1 due to the renaming and combining the internal structs.",
+      "range": {
+        "startLine": 111,
+        "startChar": 10,
+        "endLine": 111,
+        "endChar": 17
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
