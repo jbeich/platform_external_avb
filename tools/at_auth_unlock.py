@@ -99,7 +99,7 @@ class UnlockCredentials(object):
                unlock_cert_file,
                unlock_key_file,
                source_file=None):
-    # The certificates are AvbAtxCertificate structs as defined in libavb_atx,
+    # The certificates are AvbCertCertificate structs as defined in libavb_cert,
     # not an X.509 certificate. Do a basic length sanity check when reading
     # them.
     EXPECTED_CERTIFICATE_SIZE = 1620
@@ -199,10 +199,10 @@ class UnlockCredentials(object):
 
 
 class UnlockChallenge(object):
-  """Helper class for parsing the AvbAtxUnlockChallenge struct returned from 'fastboot oem at-get-vboot-unlock-challenge'.
+  """Helper class for parsing the AvbCertUnlockChallenge struct returned from 'fastboot oem at-get-vboot-unlock-challenge'.
 
      The file provided to the constructor should be the full 52-byte
-     AvbAtxUnlockChallenge struct, not just the challenge itself.
+     AvbCertUnlockChallenge struct, not just the challenge itself.
   """
 
   def __init__(self, challenge_file):
@@ -230,8 +230,8 @@ class UnlockChallenge(object):
     return self._challenge_data
 
 
-def GetAtxCertificateSubject(cert):
-  """Parses and returns the subject field from the given AvbAtxCertificate struct."""
+def GetCertCertificateSubject(cert):
+  """Parses and returns the subject field from the given AvbCertCertificate struct."""
   CERT_SUBJECT_OFFSET = 4 + 1032  # Format version and public key come before subject
   CERT_SUBJECT_LENGTH = 32
   return cert[CERT_SUBJECT_OFFSET:CERT_SUBJECT_OFFSET + CERT_SUBJECT_LENGTH]
@@ -251,12 +251,12 @@ def SelectMatchingUnlockCredential(all_creds, challenge):
       'fastboot oem at-get-vboot-unlock-challenge'.
   """
   for creds in all_creds:
-    if GetAtxCertificateSubject(creds.unlock_cert) == challenge.product_id_hash:
+    if GetCertCertificateSubject(creds.unlock_cert) == challenge.product_id_hash:
       return creds
 
 
-def MakeAtxUnlockCredential(creds, challenge, out_file):
-  """Simple reimplementation of 'avbtool make_atx_unlock_credential'.
+def MakeCertUnlockCredential(creds, challenge, out_file):
+  """Simple reimplementation of 'avbtool make_cert_unlock_credential'.
 
   Generates an Android Things authenticated unlock credential to authorize
   unlocking AVB on a device.
@@ -271,7 +271,7 @@ def MakeAtxUnlockCredential(creds, challenge, out_file):
       certificate, and PUK private key.
     challenge: UnlockChallenge object created from challenge obtained via
       'fastboot oem at-get-vboot-unlock-challenge'.
-    out_file: Output filename to write the AvbAtxUnlockCredential struct to.
+    out_file: Output filename to write the AvbCertUnlockCredential struct to.
 
   Raises:
     ValueError: If challenge has wrong length.
@@ -333,7 +333,7 @@ def AuthenticatedUnlock(all_creds, serial=None, verbose=False):
       if selected_cred.source_file:
         print('Found matching unlock credentials: {}'.format(
             selected_cred.source_file))
-      MakeAtxUnlockCredential(selected_cred, challenge, credential_file)
+      MakeCertUnlockCredential(selected_cred, challenge, credential_file)
 
       fastboot_cmd(['stage', credential_file])
       fastboot_cmd(['oem', 'at-unlock-vboot'])
