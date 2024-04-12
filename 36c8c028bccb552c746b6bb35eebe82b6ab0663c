@@ -87,6 +87,30 @@
       },
       "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "264ddea4_b9c0a049",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 253,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-12T23:16:19Z",
+      "side": 1,
+      "message": "To close the loop here, we will simplify the structure somewhat by combining `UserData` and `ScopedAvbOps` into a single `OpsBridge` struct which will own/wrap all 3 relevant data structures (2 C ops + 1 Rust ops) and be responsible for bridging calls between Rust and C.\n\nThere will be some circular references (the C structs need to point to each other, and `user_data` needs to point back up to `OpsBridge`) but it should hopefully be clearer in the code and more manageable when it\u0027s encapsulated in a single struct.",
+      "parentUuid": "c897e67f_34322c8b",
+      "range": {
+        "startLine": 253,
+        "startChar": 7,
+        "endLine": 253,
+        "endChar": 51
+      },
+      "revId": "36c8c028bccb552c746b6bb35eebe82b6ab0663c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
