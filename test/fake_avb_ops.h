@@ -26,12 +26,12 @@
 #define FAKE_AVB_OPS_H_
 
 #include <base/files/file_util.h>
+#include <libavb_ab/libavb_ab.h>
+#include <libavb_cert/libavb_cert.h>
+
 #include <map>
 #include <set>
 #include <string>
-
-#include <libavb_ab/libavb_ab.h>
-#include <libavb_atx/libavb_atx.h>
 
 namespace avb {
 
@@ -106,7 +106,7 @@ class FakeAvbOpsDelegate {
       uint32_t* out_rollback_index_location) = 0;
 
   virtual AvbIOResult read_permanent_attributes(
-      AvbAtxPermanentAttributes* attributes) = 0;
+      AvbCertPermanentAttributes* attributes) = 0;
 
   virtual AvbIOResult read_permanent_attributes_hash(
       uint8_t hash[AVB_SHA256_DIGEST_SIZE]) = 0;
@@ -139,8 +139,8 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
     return &avb_ab_ops_;
   }
 
-  AvbAtxOps* avb_atx_ops() {
-    return &avb_atx_ops_;
+  AvbCertOps* avb_cert_ops() {
+    return &avb_cert_ops_;
   }
 
   FakeAvbOpsDelegate* delegate() {
@@ -192,7 +192,7 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
     stored_is_device_unlocked_ = stored_is_device_unlocked;
   }
 
-  void set_permanent_attributes(const AvbAtxPermanentAttributes& attributes) {
+  void set_permanent_attributes(const AvbCertPermanentAttributes& attributes) {
     permanent_attributes_ = attributes;
   }
 
@@ -283,7 +283,7 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
       uint32_t* out_rollback_index_location) override;
 
   AvbIOResult read_permanent_attributes(
-      AvbAtxPermanentAttributes* attributes) override;
+      AvbCertPermanentAttributes* attributes) override;
 
   AvbIOResult read_permanent_attributes_hash(
       uint8_t hash[AVB_SHA256_DIGEST_SIZE]) override;
@@ -296,7 +296,7 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
  private:
   AvbOps avb_ops_;
   AvbABOps avb_ab_ops_;
-  AvbAtxOps avb_atx_ops_;
+  AvbCertOps avb_cert_ops_;
 
   FakeAvbOpsDelegate* delegate_;
 
@@ -314,7 +314,7 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   bool stored_is_device_unlocked_;
 
-  AvbAtxPermanentAttributes permanent_attributes_;
+  AvbCertPermanentAttributes permanent_attributes_;
   std::string permanent_attributes_hash_;
 
   std::set<std::string> partition_names_read_from_;
@@ -434,7 +434,7 @@ class FakeAvbOpsDelegateWithDefaults : public FakeAvbOpsDelegate {
   }
 
   AvbIOResult read_permanent_attributes(
-      AvbAtxPermanentAttributes* attributes) override {
+      AvbCertPermanentAttributes* attributes) override {
     return ops_.read_permanent_attributes(attributes);
   }
 

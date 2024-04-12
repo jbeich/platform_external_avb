@@ -197,13 +197,14 @@ cc_library_static {
     defaults: ["libavb_standard_defaults"],
 }
 
-// libavb + ATX
+// libavb + cert
 //
-// ATX provides some additional support for minimal certificate-based signing.
+// The cert extensions provides some additional support for minimal
+// certificate-based signing.
 cc_library_static {
-    name: "libavb_atx",
+    name: "libavb_cert",
     defaults: [
-        "avb_atx_sources",
+        "avb_cert_sources",
         "libavb_standard_defaults",
     ],
 }
@@ -231,11 +232,11 @@ cc_library_static {
     defaults: ["libavb_baremetal_defaults"],
 }
 
-// Baremetal libavb + ATX
+// Baremetal libavb + cert
 cc_library_static {
-    name: "libavb_baremetal_atx",
+    name: "libavb_cert_baremetal",
     defaults: [
-        "avb_atx_sources",
+        "avb_cert_sources",
         "libavb_baremetal_defaults",
     ],
 }
@@ -301,8 +302,8 @@ cc_library_host_static {
 }
 
 cc_defaults {
-    name: "avb_atx_sources",
-    srcs: ["libavb_atx/avb_atx_validate.c"],
+    name: "avb_cert_sources",
+    srcs: ["libavb_cert/avb_cert_validate.c"],
 }
 
 cc_library_host_static {
@@ -316,8 +317,8 @@ cc_library_host_static {
 }
 
 cc_defaults {
-    name: "avb_things_example_sources",
-    srcs: ["examples/things/avb_atx_slot_verify.c"],
+    name: "avb_cert_example_sources",
+    srcs: ["examples/cert/avb_cert_slot_verify.c"],
 }
 
 cc_defaults {
@@ -325,8 +326,8 @@ cc_defaults {
     defaults: [
         "avb_defaults",
         "avb_sources",
-        "avb_atx_sources",
-        "avb_things_example_sources",
+        "avb_cert_sources",
+        "avb_cert_example_sources",
     ],
     required: [
         "simg2img",
@@ -361,8 +362,8 @@ cc_defaults {
     ],
     srcs: [
         "test/avb_ab_flow_unittest.cc",
-        "test/avb_atx_validate_unittest.cc",
-        "test/avb_atx_slot_verify_unittest.cc",
+        "test/avb_cert_validate_unittest.cc",
+        "test/avb_cert_slot_verify_unittest.cc",
         "test/avb_crypto_ops_unittest.cc",
         "test/avb_slot_verify_unittest.cc",
         "test/avb_unittest_util.cc",
