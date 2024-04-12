@@ -43,6 +43,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "07371568_e73fd629",
+        "filename": "avbtool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 3869,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-12T18:50:20Z",
+      "side": 1,
+      "message": "I don\u0027t feel strongly, but I\u0027d suggest make_certificate if anything.",
+      "parentUuid": "6a31e3dc_2b0cf98e",
+      "range": {
+        "startLine": 3869,
+        "startChar": 23,
+        "endLine": 3869,
+        "endChar": 44
+      },
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f3731fc9_fbba25e5",
         "filename": "avbtool.py",
         "patchSetId": 2
@@ -151,6 +175,30 @@
       "writtenOn": "2024-04-09T20:57:07Z",
       "side": 1,
       "message": "Weirdly enough this file has the string `Atx` in it, but I\u0027m *pretty* sure it\u0027s just a coincidence in the Base64 encoding and not actually anything related to ATX",
+      "range": {
+        "startLine": 39,
+        "startChar": 35,
+        "endLine": 39,
+        "endChar": 38
+      },
+      "revId": "40703d3e99f5c424ec17a6a5bf5cd146279e8017",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c1375bc9_6535392e",
+        "filename": "test/data/testkey_cert_pik.pem",
+        "patchSetId": 2
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-12T18:50:20Z",
+      "side": 1,
+      "message": "¯\\\\_(ツ)_/¯",
+      "parentUuid": "1af09575_37302e39",
       "range": {
         "startLine": 39,
         "startChar": 35,
