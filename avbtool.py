@@ -2412,13 +2412,13 @@ class Avb(object):
     misc_image.seek(self.AB_MISC_METADATA_OFFSET)
     misc_image.write(ab_data)
 
-  def info_image(self, image_filename, output, atx):
+  def info_image(self, image_filename, output, cert):
     """Implements the 'info_image' command.
 
     Arguments:
       image_filename: Image file to get information from (file object).
       output: Output file to write human-readable information to (file object).
-      atx: If True, show information about Android Things eXtension (ATX).
+      cert: If True, show information about the avb_cert certificates.
     """
     image = ImageHandler(image_filename, read_only=True)
     o = output
@@ -2471,8 +2471,8 @@ class Avb(object):
     if num_printed == 0:
       o.write('    (none)\n')
 
-    if atx and header.public_key_metadata_size:
-      o.write('Android Things eXtension (ATX):\n')
+    if cert and header.public_key_metadata_size:
+      o.write('avb_cert certificate:\n')
       key_metadata_offset = (header.SIZE +
                              header.authentication_data_block_size +
                              header.public_key_metadata_offset)
@@ -2481,7 +2481,7 @@ class Avb(object):
       version, pik, psk = struct.unpack('<I1620s1620s', key_metadata_blob)
       o.write('    Metadata version:        {}\n'.format(version))
 
-      def print_atx_certificate(cert):
+      def print_certificate(cert):
         version, public_key, subject, usage, key_version, _ = (
             struct.unpack('<I1032s32s32sQ512s', cert))
         o.write('      Version:               {}\n'.format(version))
@@ -2492,9 +2492,9 @@ class Avb(object):
         o.write('      Key version:           {}\n'.format(key_version))
 
       o.write('    Product Intermediate Key:\n')
-      print_atx_certificate(pik)
+      print_certificate(pik)
       o.write('    Product Signing Key:\n')
-      print_atx_certificate(psk)
+      print_certificate(psk)
 
   def verify_image(self, image_filename, key_path, expected_chain_partitions,
                    follow_chain_partitions, accept_zeroed_hashtree):
@@ -3862,16 +3862,16 @@ class Avb(object):
       image.truncate(original_image_size)
       raise AvbError('Adding hashtree_footer failed: {}.'.format(e)) from e
 
-  def make_atx_certificate(self, output, authority_key_path, subject_key_path,
-                           subject_key_version, subject,
-                           is_intermediate_authority, usage, signing_helper,
-                           signing_helper_with_files):
-    """Implements the 'make_atx_certificate' command.
+  def make_certificate(self, output, authority_key_path, subject_key_path,
+                            subject_key_version, subject,
+                            is_intermediate_authority, usage, signing_helper,
+                            signing_helper_with_files):
+    """Implements the 'make_certificate' command.
 
-    Android Things certificates are required for Android Things public key
-    metadata. They chain the vbmeta signing key for a particular product back to
-    a fused, permanent root key. These certificates are fixed-length and fixed-
-    format with the explicit goal of not parsing ASN.1 in bootloader code.
+    Certificates are required for avb_cert extension public key metadata. They
+    chain the vbmeta signing key for a particular product back to a fused,
+    permanent root key. These certificates are fixed-length and fixed-format
+    with the explicit goal of not parsing ASN.1 in bootloader code.
 
     Arguments:
       output: Certificate will be written to this file on success.
@@ -3918,11 +3918,11 @@ class Avb(object):
     output.write(signed_data)
     output.write(signature)
 
-  def make_atx_permanent_attributes(self, output, root_authority_key_path,
+  def make_cert_permanent_attributes(self, output, root_authority_key_path,
                                     product_id):
-    """Implements the 'make_atx_permanent_attributes' command.
+    """Implements the 'make_cert_permanent_attributes' command.
 
-    Android Things permanent attributes are designed to be permanent for a
+    avb_cert permanent attributes are designed to be permanent for a
     particular product and a hash of these attributes should be fused into
     hardware to enforce this.
 
@@ -3942,21 +3942,21 @@ class Avb(object):
     output.write(RSAPublicKey(root_authority_key_path).encode())
     output.write(product_id)
 
-  def make_atx_metadata(self, output, intermediate_key_certificate,
+  def make_cert_metadata(self, output, intermediate_key_certificate,
                         product_key_certificate):
-    """Implements the 'make_atx_metadata' command.
+    """Implements the 'make_cert_metadata' command.
 
-    Android Things metadata are included in vbmeta images to facilitate
+    avb_cert metadata are included in vbmeta images to facilitate
     verification. The output of this command can be used as the
     public_key_metadata argument to other commands.
 
     Arguments:
       output: Metadata will be written to this file on success.
       intermediate_key_certificate: A certificate file as output by
-                                    make_atx_certificate with
+                                    make_certificate with
                                     is_intermediate_authority set to true.
       product_key_certificate: A certificate file as output by
-                               make_atx_certificate with
+                               make_certificate with
                                is_intermediate_authority set to false.
 
     Raises:
@@ -3971,14 +3971,14 @@ class Avb(object):
     output.write(intermediate_key_certificate)
     output.write(product_key_certificate)
 
-  def make_atx_unlock_credential(self, output, intermediate_key_certificate,
+  def make_cert_unlock_credential(self, output, intermediate_key_certificate,
                                  unlock_key_certificate, challenge_path,
                                  unlock_key_path, signing_helper,
                                  signing_helper_with_files):
-    """Implements the 'make_atx_unlock_credential' command.
+    """Implements the 'make_cert_unlock_credential' command.
 
-    Android Things unlock credentials can be used to authorize the unlock of AVB
-    on a device. These credentials are presented to an Android Things bootloader
+    avb_cert unlock credentials can be used to authorize the unlock of AVB
+    on a device. These credentials are presented to an avb_cert bootloader
     via the fastboot interface in response to a 16-byte challenge. This method
     creates all fields of the credential except the challenge signature field
     (which is the last field) and can optionally create the challenge signature
@@ -3987,10 +3987,10 @@ class Avb(object):
     Arguments:
       output: The credential will be written to this file on success.
       intermediate_key_certificate: A certificate file as output by
-                                    make_atx_certificate with
+                                    make_certificate with
                                     is_intermediate_authority set to true.
       unlock_key_certificate: A certificate file as output by
-                              make_atx_certificate with
+                              make_certificate with
                               is_intermediate_authority set to false and the
                               usage set to
                               'com.google.android.things.vboot.unlock'.
@@ -4559,9 +4559,9 @@ class AvbTool(object):
                             help='Write info to file',
                             type=argparse.FileType('wt'),
                             default=sys.stdout)
-    sub_parser.add_argument('--atx',
-                            help=('Show information about Android Things '
-                                  'eXtension (ATX).'),
+    sub_parser.add_argument('--cert', '--atx',
+                            help=('Show information about the avb_cert '
+                                  'extension certificate.'),
                             action='store_true')
     sub_parser.set_defaults(func=self.info_image)
 
@@ -4656,8 +4656,9 @@ class AvbTool(object):
     sub_parser.set_defaults(func=self.set_ab_metadata)
 
     sub_parser = subparsers.add_parser(
-        'make_atx_certificate',
-        help='Create an Android Things eXtension (ATX) certificate.')
+        'make_certificate',
+        aliases=['make_atx_certificate'],
+        help='Create an avb_cert extension certificate.')
     sub_parser.add_argument('--output',
                             help='Write certificate to file',
                             type=argparse.FileType('wb'),
@@ -4695,11 +4696,12 @@ class AvbTool(object):
                             metavar='APP',
                             default=None,
                             required=False)
-    sub_parser.set_defaults(func=self.make_atx_certificate)
+    sub_parser.set_defaults(func=self.make_certificate)
 
     sub_parser = subparsers.add_parser(
-        'make_atx_permanent_attributes',
-        help='Create Android Things eXtension (ATX) permanent attributes.')
+        'make_cert_permanent_attributes',
+        aliases=['make_atx_permanent_attributes'],
+        help='Create avb_cert extension permanent attributes.')
     sub_parser.add_argument('--output',
                             help='Write attributes to file',
                             type=argparse.FileType('wb'),
@@ -4712,11 +4714,12 @@ class AvbTool(object):
                             help=('Path to Product ID file'),
                             type=argparse.FileType('rb'),
                             required=True)
-    sub_parser.set_defaults(func=self.make_atx_permanent_attributes)
+    sub_parser.set_defaults(func=self.make_cert_permanent_attributes)
 
     sub_parser = subparsers.add_parser(
-        'make_atx_metadata',
-        help='Create Android Things eXtension (ATX) metadata.')
+        'make_cert_metadata',
+        aliases=['make_atx_metadata'],
+        help='Create avb_cert extension metadata.')
     sub_parser.add_argument('--output',
                             help='Write metadata to file',
                             type=argparse.FileType('wb'),
@@ -4729,11 +4732,12 @@ class AvbTool(object):
                             help='Path to product key certificate file',
                             type=argparse.FileType('rb'),
                             required=True)
-    sub_parser.set_defaults(func=self.make_atx_metadata)
+    sub_parser.set_defaults(func=self.make_cert_metadata)
 
     sub_parser = subparsers.add_parser(
-        'make_atx_unlock_credential',
-        help='Create an Android Things eXtension (ATX) unlock credential.')
+        'make_cert_unlock_credential',
+        aliases=['make_atx_unlock_credential'],
+        help='Create an avb_cert extension unlock credential.')
     sub_parser.add_argument('--output',
                             help='Write credential to file',
                             type=argparse.FileType('wb'),
@@ -4766,7 +4770,7 @@ class AvbTool(object):
                             metavar='APP',
                             default=None,
                             required=False)
-    sub_parser.set_defaults(func=self.make_atx_unlock_credential)
+    sub_parser.set_defaults(func=self.make_cert_unlock_credential)
 
     args = parser.parse_args(argv[1:])
     try:
@@ -4905,7 +4909,7 @@ class AvbTool(object):
 
   def info_image(self, args):
     """Implements the 'info_image' sub-command."""
-    self.avb.info_image(args.image.name, args.output, args.atx)
+    self.avb.info_image(args.image.name, args.output, args.cert)
 
   def verify_image(self, args):
     """Implements the 'verify_image' sub-command."""
@@ -4928,32 +4932,32 @@ class AvbTool(object):
     self.avb.calculate_kernel_cmdline(args.image.name, args.hashtree_disabled,
                                       args.output)
 
-  def make_atx_certificate(self, args):
-    """Implements the 'make_atx_certificate' sub-command."""
-    self.avb.make_atx_certificate(args.output, args.authority_key,
-                                  args.subject_key.name,
-                                  args.subject_key_version,
-                                  args.subject.read(),
-                                  args.subject_is_intermediate_authority,
-                                  args.usage,
-                                  args.signing_helper,
-                                  args.signing_helper_with_files)
+  def make_certificate(self, args):
+    """Implements the 'make_certificate' sub-command."""
+    self.avb.make_certificate(args.output, args.authority_key,
+                              args.subject_key.name,
+                              args.subject_key_version,
+                              args.subject.read(),
+                              args.subject_is_intermediate_authority,
+                              args.usage,
+                              args.signing_helper,
+                              args.signing_helper_with_files)
 
-  def make_atx_permanent_attributes(self, args):
-    """Implements the 'make_atx_permanent_attributes' sub-command."""
-    self.avb.make_atx_permanent_attributes(args.output,
+  def make_cert_permanent_attributes(self, args):
+    """Implements the 'make_cert_permanent_attributes' sub-command."""
+    self.avb.make_cert_permanent_attributes(args.output,
                                            args.root_authority_key.name,
                                            args.product_id.read())
 
-  def make_atx_metadata(self, args):
-    """Implements the 'make_atx_metadata' sub-command."""
-    self.avb.make_atx_metadata(args.output,
+  def make_cert_metadata(self, args):
+    """Implements the 'make_cert_metadata' sub-command."""
+    self.avb.make_cert_metadata(args.output,
                                args.intermediate_key_certificate.read(),
                                args.product_key_certificate.read())
 
-  def make_atx_unlock_credential(self, args):
-    """Implements the 'make_atx_unlock_credential' sub-command."""
-    self.avb.make_atx_unlock_credential(
+  def make_cert_unlock_credential(self, args):
+    """Implements the 'make_cert_unlock_credential' sub-command."""
+    self.avb.make_cert_unlock_credential(
         args.output,
         args.intermediate_key_certificate.read(),
         args.unlock_key_certificate.read(),

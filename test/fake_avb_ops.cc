@@ -398,7 +398,7 @@ AvbIOResult FakeAvbOps::write_persistent_value(const char* name,
 }
 
 AvbIOResult FakeAvbOps::read_permanent_attributes(
-    AvbAtxPermanentAttributes* attributes) {
+    AvbCertPermanentAttributes* attributes) {
   *attributes = permanent_attributes_;
   return AVB_IO_RESULT_OK;
 }
@@ -407,7 +407,7 @@ AvbIOResult FakeAvbOps::read_permanent_attributes_hash(
     uint8_t hash[AVB_SHA256_DIGEST_SIZE]) {
   if (permanent_attributes_hash_.empty()) {
     SHA256(reinterpret_cast<const unsigned char*>(&permanent_attributes_),
-           sizeof(AvbAtxPermanentAttributes),
+           sizeof(AvbCertPermanentAttributes),
            hash);
     return AVB_IO_RESULT_OK;
   }
@@ -560,31 +560,31 @@ static AvbIOResult my_ops_write_persistent_value(AvbOps* ops,
 }
 
 static AvbIOResult my_ops_read_permanent_attributes(
-    AvbAtxOps* atx_ops, AvbAtxPermanentAttributes* attributes) {
-  return FakeAvbOps::GetInstanceFromAvbOps(atx_ops->ops)
+    AvbCertOps* cert_ops, AvbCertPermanentAttributes* attributes) {
+  return FakeAvbOps::GetInstanceFromAvbOps(cert_ops->ops)
       ->delegate()
       ->read_permanent_attributes(attributes);
 }
 
 static AvbIOResult my_ops_read_permanent_attributes_hash(
-    AvbAtxOps* atx_ops, uint8_t hash[AVB_SHA256_DIGEST_SIZE]) {
-  return FakeAvbOps::GetInstanceFromAvbOps(atx_ops->ops)
+    AvbCertOps* cert_ops, uint8_t hash[AVB_SHA256_DIGEST_SIZE]) {
+  return FakeAvbOps::GetInstanceFromAvbOps(cert_ops->ops)
       ->delegate()
       ->read_permanent_attributes_hash(hash);
 }
 
-static void my_ops_set_key_version(AvbAtxOps* atx_ops,
+static void my_ops_set_key_version(AvbCertOps* cert_ops,
                                    size_t rollback_index_location,
                                    uint64_t key_version) {
-  return FakeAvbOps::GetInstanceFromAvbOps(atx_ops->ops)
+  return FakeAvbOps::GetInstanceFromAvbOps(cert_ops->ops)
       ->delegate()
       ->set_key_version(rollback_index_location, key_version);
 }
 
-static AvbIOResult my_ops_get_random(AvbAtxOps* atx_ops,
+static AvbIOResult my_ops_get_random(AvbCertOps* cert_ops,
                                      size_t num_bytes,
                                      uint8_t* output) {
-  return FakeAvbOps::GetInstanceFromAvbOps(atx_ops->ops)
+  return FakeAvbOps::GetInstanceFromAvbOps(cert_ops->ops)
       ->delegate()
       ->get_random(num_bytes, output);
 }
@@ -592,7 +592,7 @@ static AvbIOResult my_ops_get_random(AvbAtxOps* atx_ops,
 FakeAvbOps::FakeAvbOps() {
   memset(&avb_ops_, 0, sizeof(avb_ops_));
   avb_ops_.ab_ops = &avb_ab_ops_;
-  avb_ops_.atx_ops = &avb_atx_ops_;
+  avb_ops_.cert_ops = &avb_cert_ops_;
   avb_ops_.user_data = this;
   avb_ops_.read_from_partition = my_ops_read_from_partition;
   avb_ops_.write_to_partition = my_ops_write_to_partition;
@@ -612,12 +612,12 @@ FakeAvbOps::FakeAvbOps() {
   avb_ab_ops_.read_ab_metadata = avb_ab_data_read;
   avb_ab_ops_.write_ab_metadata = avb_ab_data_write;
 
-  avb_atx_ops_.ops = &avb_ops_;
-  avb_atx_ops_.read_permanent_attributes = my_ops_read_permanent_attributes;
-  avb_atx_ops_.read_permanent_attributes_hash =
+  avb_cert_ops_.ops = &avb_ops_;
+  avb_cert_ops_.read_permanent_attributes = my_ops_read_permanent_attributes;
+  avb_cert_ops_.read_permanent_attributes_hash =
       my_ops_read_permanent_attributes_hash;
-  avb_atx_ops_.set_key_version = my_ops_set_key_version;
-  avb_atx_ops_.get_random = my_ops_get_random;
+  avb_cert_ops_.set_key_version = my_ops_set_key_version;
+  avb_cert_ops_.get_random = my_ops_get_random;
 
   delegate_ = this;
 }

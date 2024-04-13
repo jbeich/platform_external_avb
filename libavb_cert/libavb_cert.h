@@ -22,20 +22,20 @@
  * SOFTWARE.
  */
 
-#ifndef LIBAVB_ATX_H_
-#define LIBAVB_ATX_H_
+#ifndef LIBAVB_CERT_H_
+#define LIBAVB_CERT_H_
 
 #include <libavb/libavb.h>
 
-/* The AVB_INSIDE_LIBAVB_ATX_H preprocessor symbol is used to enforce
+/* The AVB_INSIDE_LIBAVB_CERT_H preprocessor symbol is used to enforce
  * library users to include only this file. All public interfaces, and
  * only public interfaces, must be included here.
  */
 
-#define AVB_INSIDE_LIBAVB_ATX_H
-#include "avb_atx_ops.h"
-#include "avb_atx_types.h"
-#include "avb_atx_validate.h"
-#undef AVB_INSIDE_LIBAVB_ATX_H
+#define AVB_INSIDE_LIBAVB_CERT_H
+#include "avb_cert_ops.h"
+#include "avb_cert_types.h"
+#include "avb_cert_validate.h"
+#undef AVB_INSIDE_LIBAVB_CERT_H
 
-#endif /* LIBAVB_ATX_H_ */
+#endif /* LIBAVB_CERT_H_ */

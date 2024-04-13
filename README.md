@@ -229,11 +229,17 @@ well as operations that the boot loader or OS is expected to implement
 (see `avb_ops.h`). The main entry point for verification is
 `avb_slot_verify()`.
 
-Android Things has specific requirements and validation logic for the
-vbmeta public key. An extension is provided in `libavb_atx` which
-performs this validation as an implementation of `libavb`'s public key
-validation operation (see `avb_validate_vbmeta_public_key()` in
-`avb_ops.h`).
+An optional extension `libavb_cert` additionally provides a scalable
+certificate-based authorization mechanism. The base `libavb` requires
+the device to implement public key validation manually (see
+`avb_validate_vbmeta_public_key()` in `avb_ops.h`), which can be
+complicated when working with anything other than a single hardcoded
+key. `libavb_cert` provides an implementation of this function which
+provides built-in support for features such as key rotation.
+
+`libavb_cert` was previously named `libavb_atx` (Android Things eXtension) but
+it has been renamed to better represent its usefulness as a general-purpose
+extension rather than anything specific to the Android Things project.
 
 ## Files and Directories
 
@@ -247,8 +253,8 @@ validation operation (see `avb_validate_vbmeta_public_key()` in
       expected to be provided by the platform is defined in
       `avb_sysdeps.h`. If the platform provides the standard C runtime
       `avb_sysdeps_posix.c` can be used.
-* `libavb_atx/`
-    + An Android Things Extension for validating public key metadata.
+* `libavb_cert/`
+    + A libavb extension for certificate-based authorization.
 * `libavb_user/`
     + Contains an `AvbOps` implementation suitable for use in Android
       userspace. This is used in `boot_control.avb` and `avbctl`.
@@ -271,16 +277,15 @@ validation operation (see `avb_validate_vbmeta_public_key()` in
       verified boot.
 * `test/`
     + Unit tests for `abvtool`, `libavb`, `libavb_ab`, and
-      `libavb_atx`.
+      `libavb_cert`.
 * `tools/avbctl/`
     + Contains the source-code for a tool that can be used to control
       AVB at runtime in Android.
 * `examples/uefi/`
     + Contains the source-code for a UEFI-based boot-loader utilizing
       `libavb/` and `libavb_ab/`.
-* `examples/things/`
-    + Contains the source-code for a slot verification suitable for Android
-      Things.
+* `examples/cert/`
+    + Contains example source-code for using the `avb_cert` extension
 * `README.md`
     + This file.
 * `docs/`

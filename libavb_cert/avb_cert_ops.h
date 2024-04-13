@@ -22,27 +22,27 @@
  * SOFTWARE.
  */
 
-#if !defined(AVB_INSIDE_LIBAVB_ATX_H) && !defined(AVB_COMPILATION)
+#if !defined(AVB_INSIDE_LIBAVB_CERT_H) && !defined(AVB_COMPILATION)
 #error \
-    "Never include this file directly, include libavb_atx/libavb_atx.h instead."
+    "Never include this file directly, include libavb_cert/libavb_cert.h instead."
 #endif
 
-#ifndef AVB_ATX_OPS_H_
-#define AVB_ATX_OPS_H_
+#ifndef AVB_CERT_OPS_H_
+#define AVB_CERT_OPS_H_
 
 #include <libavb/libavb.h>
 
-#include "avb_atx_types.h"
+#include "avb_cert_types.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-struct AvbAtxOps;
-typedef struct AvbAtxOps AvbAtxOps;
+struct AvbCertOps;
+typedef struct AvbCertOps AvbCertOps;
 
-/* An extension to AvbOps required by avb_atx_validate_vbmeta_public_key(). */
-struct AvbAtxOps {
+/* An extension to AvbOps required by avb_cert_validate_vbmeta_public_key(). */
+struct AvbCertOps {
   /* Operations from libavb. */
   AvbOps* ops;
 
@@ -51,19 +51,19 @@ struct AvbAtxOps {
    * |attributes|.
    */
   AvbIOResult (*read_permanent_attributes)(
-      AvbAtxOps* atx_ops, AvbAtxPermanentAttributes* attributes);
+      AvbCertOps* cert_ops, AvbCertPermanentAttributes* attributes);
 
   /* Reads a |hash| of permanent attributes. This hash MUST be retrieved from a
    * permanently read-only location (e.g. fuses) when a device is LOCKED. On
    * success, returned AVB_IO_RESULT_OK and populates |hash|.
    */
   AvbIOResult (*read_permanent_attributes_hash)(
-      AvbAtxOps* atx_ops, uint8_t hash[AVB_SHA256_DIGEST_SIZE]);
+      AvbCertOps* cert_ops, uint8_t hash[AVB_SHA256_DIGEST_SIZE]);
 
   /* Provides the key version of a key used during verification. This may be
    * useful for managing the minimum key version.
    */
-  void (*set_key_version)(AvbAtxOps* atx_ops,
+  void (*set_key_version)(AvbCertOps* cert_ops,
                           size_t rollback_index_location,
                           uint64_t key_version);
 
@@ -72,7 +72,7 @@ struct AvbAtxOps {
    *
    * Returns AVB_IO_RESULT_OK on success, otherwise an error code.
    */
-  AvbIOResult (*get_random)(AvbAtxOps* atx_ops,
+  AvbIOResult (*get_random)(AvbCertOps* cert_ops,
                             size_t num_bytes,
                             uint8_t* output);
 };
@@ -81,4 +81,4 @@ struct AvbAtxOps {
 }
 #endif
 
-#endif /* AVB_ATX_OPS_H_ */
+#endif /* AVB_CERT_OPS_H_ */

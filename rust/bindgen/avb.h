@@ -17,4 +17,4 @@
 #pragma once
 
 #include <libavb/libavb.h>
-#include <libavb_atx/libavb_atx.h>
+#include <libavb_cert/libavb_cert.h>
