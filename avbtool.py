@@ -51,6 +51,17 @@ AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED = 1
 # Configuration for enabling logging of calls to avbtool.
 AVB_INVOCATION_LOGFILE = os.environ.get('AVB_INVOCATION_LOGFILE')
 
+# Known values for certificate "usage" field. These values must match the
+# libavb_cert implementation.
+#
+# The "android.things" substring is only for historical reasons; these strings
+# are used for the general-purpose libavb_cert extension and are not specific
+# to the Android Things project. However, changing them would be a breaking
+# change so it's simpler to leave them as-is.
+CERT_USAGE_SIGNING = 'com.google.android.things.vboot'
+CERT_USAGE_INTERMEDIATE_AUTHORITY = 'com.google.android.things.vboot.ca'
+CERT_USAGE_UNLOCK = 'com.google.android.things.vboot.unlock'
+
 
 class AvbError(Exception):
   """Application-specific errors.
@@ -3863,9 +3874,8 @@ class Avb(object):
       raise AvbError('Adding hashtree_footer failed: {}.'.format(e)) from e
 
   def make_certificate(self, output, authority_key_path, subject_key_path,
-                            subject_key_version, subject,
-                            is_intermediate_authority, usage, signing_helper,
-                            signing_helper_with_files):
+                       subject_key_version, subject, usage,
+                       signing_helper, signing_helper_with_files):
     """Implements the 'make_certificate' command.
 
     Certificates are required for avb_cert extension public key metadata. They
@@ -3884,9 +3894,7 @@ class Avb(object):
                            of seconds since the epoch is used.
       subject: A subject identifier. For Product Signing Key certificates this
                should be the same Product ID found in the permanent attributes.
-      is_intermediate_authority: True if the certificate is for an intermediate
-                                 authority.
-      usage: If not empty, overrides the cert usage with a hash of this value.
+      usage: Usage string whose SHA256 hash will be embedded in the certificate.
       signing_helper: Program which signs a hash and returns the signature.
       signing_helper_with_files: Same as signing_helper but uses files instead.
 
@@ -3899,10 +3907,6 @@ class Avb(object):
     hasher = hashlib.sha256()
     hasher.update(subject)
     signed_data.extend(hasher.digest())
-    if not usage:
-      usage = 'com.google.android.things.vboot'
-      if is_intermediate_authority:
-        usage += '.ca'
     hasher = hashlib.sha256()
     hasher.update(usage.encode('ascii'))
     signed_data.extend(hasher.digest())
@@ -3919,7 +3923,7 @@ class Avb(object):
     output.write(signature)
 
   def make_cert_permanent_attributes(self, output, root_authority_key_path,
-                                    product_id):
+                                     product_id):
     """Implements the 'make_cert_permanent_attributes' command.
 
     avb_cert permanent attributes are designed to be permanent for a
@@ -3943,7 +3947,7 @@ class Avb(object):
     output.write(product_id)
 
   def make_cert_metadata(self, output, intermediate_key_certificate,
-                        product_key_certificate):
+                         product_key_certificate):
     """Implements the 'make_cert_metadata' command.
 
     avb_cert metadata are included in vbmeta images to facilitate
@@ -3953,11 +3957,11 @@ class Avb(object):
     Arguments:
       output: Metadata will be written to this file on success.
       intermediate_key_certificate: A certificate file as output by
-                                    make_certificate with
-                                    is_intermediate_authority set to true.
+                                    make_certificate with usage set to
+                                    CERT_USAGE_INTERMEDIATE_AUTHORITY.
       product_key_certificate: A certificate file as output by
-                               make_certificate with
-                               is_intermediate_authority set to false.
+                               make_certificate with usage set to
+                               CERT_USAGE_SIGNING.
 
     Raises:
       AvbError: If an argument is incorrect.
@@ -3972,9 +3976,9 @@ class Avb(object):
     output.write(product_key_certificate)
 
   def make_cert_unlock_credential(self, output, intermediate_key_certificate,
-                                 unlock_key_certificate, challenge_path,
-                                 unlock_key_path, signing_helper,
-                                 signing_helper_with_files):
+                                  unlock_key_certificate, challenge_path,
+                                  unlock_key_path, signing_helper,
+                                  signing_helper_with_files):
     """Implements the 'make_cert_unlock_credential' command.
 
     avb_cert unlock credentials can be used to authorize the unlock of AVB
@@ -3987,13 +3991,11 @@ class Avb(object):
     Arguments:
       output: The credential will be written to this file on success.
       intermediate_key_certificate: A certificate file as output by
-                                    make_certificate with
-                                    is_intermediate_authority set to true.
+                                    make_certificate with usage set to
+                                    CERT_USAGE_INTERMEDIATE_AUTHORITY.
       unlock_key_certificate: A certificate file as output by
-                              make_certificate with
-                              is_intermediate_authority set to false and the
-                              usage set to
-                              'com.google.android.things.vboot.unlock'.
+                              make_certificate with usage set to
+                              CERT_USAGE_UNLOCK.
       challenge_path: [optional] A path to the challenge to sign.
       unlock_key_path: [optional] A PEM file path with the unlock private key.
       signing_helper: Program which signs a hash and returns the signature.
@@ -4675,14 +4677,25 @@ class AvbTool(object):
                             help=('Version of the subject key'),
                             type=parse_number,
                             required=False)
-    sub_parser.add_argument('--subject_is_intermediate_authority',
-                            help=('Generate an intermediate authority '
-                                  'certificate'),
-                            action='store_true')
-    sub_parser.add_argument('--usage',
-                            help=('Override usage with a hash of the provided '
-                                  'string'),
-                            required=False)
+    # We have 3 different usage modifying args for convenience, at most one of
+    # which can be provided since they all set the same usage field.
+    usage_group = sub_parser.add_mutually_exclusive_group(required=False)
+    usage_group.add_argument('--subject_is_intermediate_authority',
+                             help=('Override usage with the value used for '
+                                   'an intermediate authority'),
+                             action='store_const',
+                             const=CERT_USAGE_INTERMEDIATE_AUTHORITY,
+                             required=False)
+    usage_group.add_argument('--usage',
+                             help=('Override usage with a hash of the provided '
+                                   'string'),
+                             required=False),
+    usage_group.add_argument('--usage_for_unlock',
+                             help=('Override usage with the value used for '
+                                   'authenticated unlock'),
+                             action='store_const',
+                             const=CERT_USAGE_UNLOCK,
+                             required=False),
     sub_parser.add_argument('--authority_key',
                             help='Path to authority RSA private key file',
                             required=False)
@@ -4934,12 +4947,15 @@ class AvbTool(object):
 
   def make_certificate(self, args):
     """Implements the 'make_certificate' sub-command."""
+    # argparse mutually exclusive group ensures that at most one of the usage
+    # args will exist. If none exist, default to signing usage.
+    usage = (args.subject_is_intermediate_authority or args.usage or
+             args.usage_for_unlock or CERT_USAGE_SIGNING)
     self.avb.make_certificate(args.output, args.authority_key,
                               args.subject_key.name,
                               args.subject_key_version,
                               args.subject.read(),
-                              args.subject_is_intermediate_authority,
-                              args.usage,
+                              usage,
                               args.signing_helper,
                               args.signing_helper_with_files)
 
