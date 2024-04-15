@@ -51,6 +51,17 @@ AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED = 1
 # Configuration for enabling logging of calls to avbtool.
 AVB_INVOCATION_LOGFILE = os.environ.get('AVB_INVOCATION_LOGFILE')
 
+# Known values for certificate "usage" field. These values must match the
+# libavb_cert implementation.
+#
+# The "android.things" substring is only for historical reasons; these strings
+# are used for the general-purpose libavb_cert extension and are not specific
+# to the Android Things project. However, changing them would be a breaking
+# change so it's simpler to leave them as-is.
+CERT_USAGE_SIGNING = 'com.google.android.things.vboot'
+CERT_USAGE_INTERMEDIATE_AUTHORITY = 'com.google.android.things.vboot.ca'
+CERT_USAGE_UNLOCK = 'com.google.android.things.vboot.unlock'
+
 
 class AvbError(Exception):
   """Application-specific errors.
@@ -3863,9 +3874,9 @@ class Avb(object):
       raise AvbError('Adding hashtree_footer failed: {}.'.format(e)) from e
 
   def make_certificate(self, output, authority_key_path, subject_key_path,
-                            subject_key_version, subject,
-                            is_intermediate_authority, usage, signing_helper,
-                            signing_helper_with_files):
+                       subject_key_version, subject,
+                       is_intermediate_authority, usage, usage_for_unlock,
+                       signing_helper, signing_helper_with_files):
     """Implements the 'make_certificate' command.
 
     Certificates are required for avb_cert extension public key metadata. They
@@ -3887,11 +3898,14 @@ class Avb(object):
       is_intermediate_authority: True if the certificate is for an intermediate
                                  authority.
       usage: If not empty, overrides the cert usage with a hash of this value.
+      usage_for_unlock: If True, sets the usage to the predefined value for
+                        an authenticated unlock certificate.
       signing_helper: Program which signs a hash and returns the signature.
       signing_helper_with_files: Same as signing_helper but uses files instead.
 
     Raises:
       AvbError: If there an error during signing.
+      ValueError: If both |usage| and |usage_for_unlock| are specified.
     """
     signed_data = bytearray()
     signed_data.extend(struct.pack('<I', 1))  # Format Version
@@ -3899,10 +3913,15 @@ class Avb(object):
     hasher = hashlib.sha256()
     hasher.update(subject)
     signed_data.extend(hasher.digest())
-    if not usage:
-      usage = 'com.google.android.things.vboot'
+    if usage_for_unlock:
+      if usage:
+        raise ValueError('|usage| cannot be given with |usage_for_unlock|')
+      usage = CERT_USAGE_UNLOCK
+    elif not usage:
       if is_intermediate_authority:
-        usage += '.ca'
+        usage = CERT_USAGE_INTERMEDIATE_AUTHORITY
+      else:
+        usage = CERT_USAGE_SIGNING
     hasher = hashlib.sha256()
     hasher.update(usage.encode('ascii'))
     signed_data.extend(hasher.digest())
@@ -3919,7 +3938,7 @@ class Avb(object):
     output.write(signature)
 
   def make_cert_permanent_attributes(self, output, root_authority_key_path,
-                                    product_id):
+                                     product_id):
     """Implements the 'make_cert_permanent_attributes' command.
 
     avb_cert permanent attributes are designed to be permanent for a
@@ -3943,7 +3962,7 @@ class Avb(object):
     output.write(product_id)
 
   def make_cert_metadata(self, output, intermediate_key_certificate,
-                        product_key_certificate):
+                         product_key_certificate):
     """Implements the 'make_cert_metadata' command.
 
     avb_cert metadata are included in vbmeta images to facilitate
@@ -3972,9 +3991,9 @@ class Avb(object):
     output.write(product_key_certificate)
 
   def make_cert_unlock_credential(self, output, intermediate_key_certificate,
-                                 unlock_key_certificate, challenge_path,
-                                 unlock_key_path, signing_helper,
-                                 signing_helper_with_files):
+                                  unlock_key_certificate, challenge_path,
+                                  unlock_key_path, signing_helper,
+                                  signing_helper_with_files):
     """Implements the 'make_cert_unlock_credential' command.
 
     avb_cert unlock credentials can be used to authorize the unlock of AVB
@@ -3992,8 +4011,7 @@ class Avb(object):
       unlock_key_certificate: A certificate file as output by
                               make_certificate with
                               is_intermediate_authority set to false and the
-                              usage set to
-                              'com.google.android.things.vboot.unlock'.
+                              usage set to CERT_USAGE_UNLOCK.
       challenge_path: [optional] A path to the challenge to sign.
       unlock_key_path: [optional] A PEM file path with the unlock private key.
       signing_helper: Program which signs a hash and returns the signature.
@@ -4681,8 +4699,15 @@ class AvbTool(object):
                             action='store_true')
     sub_parser.add_argument('--usage',
                             help=('Override usage with a hash of the provided '
-                                  'string'),
-                            required=False)
+                                  'string. Cannot be used with '
+                                  '--usage_for_unlock.'),
+                            required=False),
+    sub_parser.add_argument('--usage_for_unlock',
+                            help=('Set the usage hash to the value used for '
+                                  'authenticated unlock. Cannot be used with '
+                                  '--usage.'),
+                            action='store_true',
+                            required=False),
     sub_parser.add_argument('--authority_key',
                             help='Path to authority RSA private key file',
                             required=False)
@@ -4940,6 +4965,7 @@ class AvbTool(object):
                               args.subject.read(),
                               args.subject_is_intermediate_authority,
                               args.usage,
+                              args.usage_for_unlock,
                               args.signing_helper,
                               args.signing_helper_with_files)
 
