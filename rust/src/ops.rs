@@ -86,7 +86,7 @@ pub trait Ops<'a> {
 
     /// Checks if the given public key is valid for vbmeta image signing.
     ///
-    /// If using ATX, this should forward to `atx_validate_vbmeta_public_key()`.
+    /// If using libavb_cert, this should forward to `cert_validate_vbmeta_public_key()`.
     ///
     /// # Arguments
     /// * `public_key`: the public key.
@@ -218,7 +218,8 @@ pub trait Ops<'a> {
     /// partition. If this flag is not used, the `validate_vbmeta_public_key()` callback is used
     /// instead, and this function will never be called.
     ///
-    /// If using ATX for `partition`, this should forward to `atx_validate_vbmeta_public_key()`.
+    /// If using libavb_cert for `partition`, this should forward to
+    /// `cert_validate_vbmeta_public_key()`.
     ///
     /// # Arguments
     /// * `partition`: partition name.
@@ -320,8 +321,8 @@ impl<'o, 'p> ScopedAvbOps<'o, 'p> {
                 // Rust won't transitively cast so we need to cast twice manually, but the compiler
                 // is smart enough to deduce the types we need.
                 user_data: user_data as *mut _ as *mut _,
-                ab_ops: ptr::null_mut(),  // Deprecated, no need to support.
-                atx_ops: ptr::null_mut(), // TODO: support optional ATX.
+                ab_ops: ptr::null_mut(),   // Deprecated, no need to support.
+                cert_ops: ptr::null_mut(), // TODO: support optional libavb_cert.
                 read_from_partition: Some(read_from_partition),
                 get_preloaded_partition: Some(get_preloaded_partition),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
