@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1821a37e_8a72fc46",
+        "filename": "avbtool.py",
+        "patchSetId": 2
+      },
+      "lineNbr": 4683,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-16T19:04:37Z",
+      "side": 1,
+      "message": "Minor functional change: previously, `--subject_is_intermediate_authority` was silently ignored if `--usage` was also specified. Now argparse will fail with a message about exclusive args if both are specified.\n\nIMO this is better anyway because it was undocumented and potentially confusing that `--subject_is_intermediate_authority` interacted with `--usage` in this way. But if this seems like a valid or useful behavior then we can go back to the previous approach.",
+      "range": {
+        "startLine": 4683,
+        "startChar": 32,
+        "endLine": 4683,
+        "endChar": 65
+      },
+      "revId": "3a87e91e84eb6a1239dea14616d0082b3a0f2a1b",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

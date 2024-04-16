@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba8517f4_aaeec09d",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 3901,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-16T19:04:37Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "d223f656_daf65a6a",
+      "range": {
+        "startLine": 3901,
+        "startChar": 6,
+        "endLine": 3901,
+        "endChar": 22
+      },
+      "revId": "8d9567a5f7c6a14d07db12dc04fbaa310d1938fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e13c0b6c_0eb304ac",
@@ -37,6 +61,24 @@
       "writtenOn": "2024-04-16T00:36:49Z",
       "side": 1,
       "message": "What if usage_for_lock is provided, but False, and usage is provided. Should be ValueError?",
+      "revId": "8d9567a5f7c6a14d07db12dc04fbaa310d1938fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "79a61177_ebb3cf47",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 3921,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-16T19:04:37Z",
+      "side": 1,
+      "message": "In this code \"usage_for_lock\u003dFalse\" is the default state so we just do the normal `usage` behavior in that case (i.e. use the default `CERT_*` strings unless usage is explicitly specified as something else).\n\nThis is admittedly a bit awkward though, we now have 3 input variables (`is_intermediate_authority`, `usage`, `usage_for_unlock`) that combine into just one output variable (`usage`) and it\u0027s not super clear how.\n\nI found an approach I like better leveraging argparse a bit more, it\u0027s a slight functional change that I don\u0027t *think* should affect any users but I\u0027m not 100% sure. Will add details on the next patchset and if you don\u0027t like it we can go back to refining this approach.",
+      "parentUuid": "e13c0b6c_0eb304ac",
       "revId": "8d9567a5f7c6a14d07db12dc04fbaa310d1938fb",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
