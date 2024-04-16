@@ -24,23 +24,23 @@
 # SOFTWARE.
 #
 
-# This shell-script generates ATX test data in the working directory.
+# This shell-script generates libavb_cert test data in the working directory.
 # An avbtool executable is assumed to reside in the parent directory
 # of this script.
 #
-# The *atx* test data in the test/data/ directory was generated with
+# The *cert* test data in the test/data/ directory was generated with
 # this script. It is consistent with the expectations of avbtool unit
-# tests and ATX unit tests. This script exists as a record of how the
+# tests and avb_cert unit tests. This script exists as a record of how the
 # data was generated and as a convenience if it ever needs to be
 # generated again.
 #
 # Typical usage:
 #
-#  $ cd test/data; ../avb_atx_generate_test_data
+#  $ cd test/data; ../avb_cert_generate_test_data
 
 set -e
 
-TMP_FILE=$(mktemp /tmp/atx_generator.XXXXXXXXXX)
+TMP_FILE=$(mktemp /tmp/cert_generator.XXXXXXXXXX)
 trap "rm -f '${TMP_FILE}'" EXIT
 
 AVBTOOL=$(dirname "$0")/../avbtool.py
@@ -48,58 +48,58 @@ AVBTOOL=$(dirname "$0")/../avbtool.py
 echo AVBTOOL = ${AVBTOOL}
 
 # Get a zero product ID.
-echo 00000000000000000000000000000000 | xxd -r -p - atx_product_id.bin
+echo 00000000000000000000000000000000 | xxd -r -p - cert_product_id.bin
 
 # Generate key pairs.
-if [ ! -f testkey_atx_prk.pem ]; then
+if [ ! -f testkey_cert_prk.pem ]; then
   openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -outform PEM \
-    -out testkey_atx_prk.pem
+    -out testkey_cert_prk.pem
 fi
-if [ ! -f testkey_atx_pik.pem ]; then
+if [ ! -f testkey_cert_pik.pem ]; then
   openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -outform PEM \
-    -out testkey_atx_pik.pem
+    -out testkey_cert_pik.pem
 fi
-if [ ! -f testkey_atx_psk.pem ]; then
+if [ ! -f testkey_cert_psk.pem ]; then
   openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -outform PEM \
-    -out testkey_atx_psk.pem
+    -out testkey_cert_psk.pem
 fi
-if [ ! -f testkey_atx_puk.pem ]; then
+if [ ! -f testkey_cert_puk.pem ]; then
   openssl genpkey -algorithm RSA -pkeyopt rsa_keygen_bits:4096 -outform PEM \
-    -out testkey_atx_puk.pem
+    -out testkey_cert_puk.pem
 fi
 
 # Construct permanent attributes.
-${AVBTOOL} make_atx_permanent_attributes --output=atx_permanent_attributes.bin \
-  --product_id=atx_product_id.bin --root_authority_key=testkey_atx_prk.pem
+${AVBTOOL} make_cert_permanent_attributes --output=cert_permanent_attributes.bin \
+  --product_id=cert_product_id.bin --root_authority_key=testkey_cert_prk.pem
 
 # Construct a PIK certificate.
 echo -n "fake PIK subject" > ${TMP_FILE}
-${AVBTOOL} make_atx_certificate --output=atx_pik_certificate.bin \
-  --subject=${TMP_FILE} --subject_key=testkey_atx_pik.pem \
+${AVBTOOL} make_certificate --output=cert_pik_certificate.bin \
+  --subject=${TMP_FILE} --subject_key=testkey_cert_pik.pem \
   --subject_is_intermediate_authority --subject_key_version 42 \
-  --authority_key=testkey_atx_prk.pem
+  --authority_key=testkey_cert_prk.pem
 
 # Construct a PSK certificate.
-${AVBTOOL} make_atx_certificate --output=atx_psk_certificate.bin \
-  --subject=atx_product_id.bin --subject_key=testkey_atx_psk.pem \
-  --subject_key_version 42 --authority_key=testkey_atx_pik.pem
+${AVBTOOL} make_certificate --output=cert_psk_certificate.bin \
+  --subject=cert_product_id.bin --subject_key=testkey_cert_psk.pem \
+  --subject_key_version 42 --authority_key=testkey_cert_pik.pem
 
 # Construct metadata.
-${AVBTOOL} make_atx_metadata --output=atx_metadata.bin \
-  --intermediate_key_certificate=atx_pik_certificate.bin \
-  --product_key_certificate=atx_psk_certificate.bin
+${AVBTOOL} make_cert_metadata --output=cert_metadata.bin \
+  --intermediate_key_certificate=cert_pik_certificate.bin \
+  --product_key_certificate=cert_psk_certificate.bin
 
 # Generate a random unlock challenge.
-head -c 16 /dev/urandom > atx_unlock_challenge.bin
+head -c 16 /dev/urandom > cert_unlock_challenge.bin
 
 # Construct a PUK certificate.
-${AVBTOOL} make_atx_certificate --output=atx_puk_certificate.bin \
-  --subject=atx_product_id.bin --subject_key=testkey_atx_puk.pem \
-  --usage=com.google.android.things.vboot.unlock --subject_key_version 42 \
-  --authority_key=testkey_atx_pik.pem
+${AVBTOOL} make_certificate --output=cert_puk_certificate.bin \
+  --subject=cert_product_id.bin --subject_key=testkey_cert_puk.pem \
+  --usage_for_unlock --subject_key_version 42 \
+  --authority_key=testkey_cert_pik.pem
 
 # Construct an unlock credential.
-${AVBTOOL} make_atx_unlock_credential --output=atx_unlock_credential.bin \
-  --intermediate_key_certificate=atx_pik_certificate.bin \
-  --unlock_key_certificate=atx_puk_certificate.bin \
-  --challenge=atx_unlock_challenge.bin --unlock_key=testkey_atx_puk.pem
+${AVBTOOL} make_cert_unlock_credential --output=cert_unlock_credential.bin \
+  --intermediate_key_certificate=cert_pik_certificate.bin \
+  --unlock_key_certificate=cert_puk_certificate.bin \
+  --challenge=cert_unlock_challenge.bin --unlock_key=testkey_cert_puk.pem

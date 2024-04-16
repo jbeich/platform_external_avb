@@ -34,11 +34,11 @@ python_test_host {
         "at_auth_unlock",
     ],
     data: [
-        "data/atx_pik_certificate.bin",
-        "data/atx_puk_certificate.bin",
-        "data/atx_unlock_challenge.bin",
-        "data/atx_unlock_credential.bin",
-        "data/testkey_atx_puk.pem",
+        "data/cert_pik_certificate.bin",
+        "data/cert_puk_certificate.bin",
+        "data/cert_unlock_challenge.bin",
+        "data/cert_unlock_credential.bin",
+        "data/testkey_cert_puk.pem",
     ],
     test_config: "at_auth_unlock_unittest.xml",
 }
@@ -58,22 +58,36 @@ filegroup {
     srcs: ["data/testkey_rsa2048.pem"],
 }
 
-// ATX test public key.
+// libavb_cert test public key.
 filegroup {
-    name: "avb_atx_testkey_psk",
-    srcs: ["data/testkey_atx_psk.pem"],
+    name: "avb_cert_testkey_psk",
+    srcs: ["data/testkey_cert_psk.pem"],
 }
 
-// ATX test public key metadata. PSK and PIK versions are both set to 42.
+// libavb_cert test public key metadata. PSK and PIK versions are both set to 42.
 filegroup {
-    name: "avb_atx_test_metadata",
-    srcs: ["data/atx_metadata.bin"],
+    name: "avb_cert_test_metadata",
+    srcs: ["data/cert_metadata.bin"],
 }
 
-// ATX test permanent attributes for the above public key.
+// libavb_cert test permanent attributes for the above public key.
 filegroup {
-    name: "avb_atx_test_permanent_attributes",
-    srcs: ["data/atx_permanent_attributes.bin"],
+    name: "avb_cert_test_permanent_attributes",
+    srcs: ["data/cert_permanent_attributes.bin"],
+}
+
+// libavb_cert test RNG for an unlock challenge.
+// Note: this is only the 16-byte randomization, not a full
+// `AvbCertUnlockChallenge`.
+filegroup {
+    name: "avb_cert_test_unlock_challenge",
+    srcs: ["data/cert_unlock_challenge.bin"],
+}
+
+// libavb_cert test unlock credential signing `avb_cert_test_unlock_challenge`.
+filegroup {
+    name: "avb_cert_test_unlock_credential",
+    srcs: ["data/cert_unlock_credential.bin"],
 }
 
 genrule {
