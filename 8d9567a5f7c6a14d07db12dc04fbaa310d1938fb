@@ -1,0 +1,44 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d223f656_daf65a6a",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 3901,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-16T00:36:49Z",
+      "side": 1,
+      "message": "nit: Make it more clear what will happen when this is False?",
+      "range": {
+        "startLine": 3901,
+        "startChar": 6,
+        "endLine": 3901,
+        "endChar": 22
+      },
+      "revId": "8d9567a5f7c6a14d07db12dc04fbaa310d1938fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e13c0b6c_0eb304ac",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 3921,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2024-04-16T00:36:49Z",
+      "side": 1,
+      "message": "What if usage_for_lock is provided, but False, and usage is provided. Should be ValueError?",
+      "revId": "8d9567a5f7c6a14d07db12dc04fbaa310d1938fb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
