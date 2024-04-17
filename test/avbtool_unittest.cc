@@ -3511,20 +3511,27 @@ TEST_F(AvbToolTest, MakeCertPukCertificate) {
       pubkey_path.value().c_str());
 
   base::FilePath output_path = testdir_.Append("tmp_certificate.bin");
-  EXPECT_COMMAND(0,
-                 "./avbtool.py make_certificate"
-                 " --subject test/data/cert_product_id.bin"
-                 " --subject_key %s"
-                 " --subject_key_version 42"
-                 " --usage com.google.android.things.vboot.unlock"
-                 " --authority_key test/data/testkey_cert_pik.pem"
-                 " --output %s",
-                 pubkey_path.value().c_str(),
-                 output_path.value().c_str());
 
-  EXPECT_COMMAND(0,
-                 "diff test/data/cert_puk_certificate.bin %s",
-                 output_path.value().c_str());
+  // Test with both legacy manual unlock --usage as well as --usage_for_unlock.
+  std::string usage_args[] = {"--usage com.google.android.things.vboot.unlock",
+                              "--usage_for_unlock"};
+  for (const auto& usage : usage_args) {
+    EXPECT_COMMAND(0,
+                   "./avbtool.py make_certificate"
+                   " --subject test/data/cert_product_id.bin"
+                   " --subject_key %s"
+                   " --subject_key_version 42"
+                   " %s"
+                   " --authority_key test/data/testkey_cert_pik.pem"
+                   " --output %s",
+                   pubkey_path.value().c_str(),
+                   usage.c_str(),
+                   output_path.value().c_str());
+
+    EXPECT_COMMAND(0,
+                   "diff test/data/cert_puk_certificate.bin %s",
+                   output_path.value().c_str());
+  }
 }
 
 TEST_F(AvbToolTest, MakeCertPermanentAttributes) {

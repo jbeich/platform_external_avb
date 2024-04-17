@@ -95,7 +95,7 @@ head -c 16 /dev/urandom > cert_unlock_challenge.bin
 # Construct a PUK certificate.
 ${AVBTOOL} make_certificate --output=cert_puk_certificate.bin \
   --subject=cert_product_id.bin --subject_key=testkey_cert_puk.pem \
-  --usage=com.google.android.things.vboot.unlock --subject_key_version 42 \
+  --usage_for_unlock --subject_key_version 42 \
   --authority_key=testkey_cert_pik.pem
 
 # Construct an unlock credential.
