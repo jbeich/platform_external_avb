@@ -47,6 +47,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f016bafb_9441668f",
+        "filename": "rust/src/cert.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-17T20:17:32Z",
+      "side": 1,
+      "message": "Good catch, in this case it\u0027s a mistake in the C API. The C API defines these three functions:\n\n1. `validate_vbmeta_public_key()`: requires both Ops+CertOps; takes in *Ops*\n2. `generate_unlock_challenge()`: requires CertOps only; takes in CertOps\n3. `validate_unlock_credential()`: requires both Ops+CertOps; takes in *CertOps*\n\nSince 1 \u0026 3 have the same ops requirements, they should be taking in the same parameter. It doesn\u0027t matter too much in C because circular references are easy so you can trivially jump between `Ops` and `CertOps`, but in Rust if we took in `CertOps` here it would be very difficult to get back to the `Ops` class, likely requiring the user to do some unsafe internal circular references.\n\nI\u0027ll add a comment here to explain why we differ from the C API.",
+      "parentUuid": "683add66_6bd693c1",
+      "range": {
+        "startLine": 248,
+        "startChar": 19,
+        "endLine": 248,
+        "endChar": 22
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aae23c8d_1cde6fc3",
@@ -60,6 +84,30 @@
       "writtenOn": "2024-04-17T09:12:20Z",
       "side": 1,
       "message": "This is not a \"get\" function, it has several side effects such as setting up the circular references in the struct. A more descriptive name that highlights the side effects and setup performed would be better, perhaps `setup_avb_ops_and_cert_ops`?\n\nCan we keep the original `as_mut` impl and just add a function here to set up the ops?",
+      "range": {
+        "startLine": 347,
+        "startChar": 18,
+        "endLine": 347,
+        "endChar": 21
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a2579787_0e6cd4b1",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-17T20:17:32Z",
+      "side": 1,
+      "message": "`setup_avb_ops_and_cert_ops()` SGTM.\n\nI wanted to avoid a separate `setup_ops()` + `as_mut()` just because it\u0027s one more thing the call sites have to manually remember to get right. This single function makes it impossible to forget to call the setup function, and also makes the pinning logic a little simpler since there\u0027s only this single place where the struct needs to be pinned.",
+      "parentUuid": "aae23c8d_1cde6fc3",
       "range": {
         "startLine": 347,
         "startChar": 18,
