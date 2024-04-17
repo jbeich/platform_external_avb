@@ -22,6 +22,52 @@
       },
       "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "683add66_6bd693c1",
+        "filename": "rust/src/cert.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-17T09:12:20Z",
+      "side": 1,
+      "message": "Why changing this one to Ops? Shouldn\u0027t it be consistent with the C API [1]?\n\n[1] https://cs.android.com/android/platform/superproject/main/+/main:external/avb/libavb_cert/avb_cert_validate.h;l\u003d81;drc\u003d1bbcd661f0afe4ab56c7031f57d518a19015805e",
+      "range": {
+        "startLine": 248,
+        "startChar": 19,
+        "endLine": 248,
+        "endChar": 22
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aae23c8d_1cde6fc3",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-17T09:12:20Z",
+      "side": 1,
+      "message": "This is not a \"get\" function, it has several side effects such as setting up the circular references in the struct. A more descriptive name that highlights the side effects and setup performed would be better, perhaps `setup_avb_ops_and_cert_ops`?\n\nCan we keep the original `as_mut` impl and just add a function here to set up the ops?",
+      "range": {
+        "startLine": 347,
+        "startChar": 18,
+        "endLine": 347,
+        "endChar": 21
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
