@@ -71,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "68407fd4_4b55f30a",
+        "filename": "rust/src/cert.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 248,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T12:26:33Z",
+      "side": 1,
+      "message": "Ack. Thank you!",
+      "parentUuid": "f016bafb_9441668f",
+      "range": {
+        "startLine": 248,
+        "startChar": 19,
+        "endLine": 248,
+        "endChar": 22
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aae23c8d_1cde6fc3",
@@ -108,6 +132,30 @@
       "side": 1,
       "message": "`setup_avb_ops_and_cert_ops()` SGTM.\n\nI wanted to avoid a separate `setup_ops()` + `as_mut()` just because it\u0027s one more thing the call sites have to manually remember to get right. This single function makes it impossible to forget to call the setup function, and also makes the pinning logic a little simpler since there\u0027s only this single place where the struct needs to be pinned.",
       "parentUuid": "aae23c8d_1cde6fc3",
+      "range": {
+        "startLine": 347,
+        "startChar": 18,
+        "endLine": 347,
+        "endChar": 21
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8c717b93_f081b1a0",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T12:26:33Z",
+      "side": 1,
+      "message": "Frankly, I think it would be better to separate the setup function from the getter for the `AvbOps` reference. There are two problems with mixing an action function and a getter:\n\n1. It\u0027s difficult to find a correct, descriptive name for the function that encompasses both the setup and the getter.\n2. If you need to retrieve the AvbOps reference again, you\u0027d have to go through the setup process again, which is unnecessary.\n\nWhat about creating a separate, static function like `new_ops_bridge` that constructs a pinned `OpsBridge` instance and sets up all the necessary circular pointers? Then, we can use the original `AsMut` to retrieve `AvbOps` reference as needed, without repeating the setup logic.",
+      "parentUuid": "a2579787_0e6cd4b1",
       "range": {
         "startLine": 347,
         "startChar": 18,
