@@ -16,6 +16,162 @@
       "message": "I\u0027m OOO for a few days, wanted to upload the next CL even though the previous one is still pending, just in case you have a chance to take a look while I\u0027m out.\n\nSorry this one is a bit larger, I can try to break it down if it would help, but this seemed to be the minimal set of changes that would actually get something functional.\n\nThanks!",
       "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "bdcf4396_8505be18",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T13:03:07Z",
+      "side": 1,
+      "message": "No worries. I\u0027ll take a look :)",
+      "parentUuid": "c608ddc5_1d743549",
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f5fb3a68_8f677ba9",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T13:03:07Z",
+      "side": 1,
+      "message": "Will this pull additional bytes into clients such as `pvmfw` for example? That\u0027s the VM bootloader in AVF, it has limited capacity for size. Could you build `pvmfw_img` and check the size of `pvmfw.bin` before and after this change?",
+      "range": {
+        "startLine": 182,
+        "startChar": 8,
+        "endLine": 182,
+        "endChar": 21
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7224f9fa_bfc71652",
+        "filename": "rust/src/cert.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T13:03:07Z",
+      "side": 1,
+      "message": "nit: this can be removed.",
+      "range": {
+        "startLine": 224,
+        "startChar": 19,
+        "endLine": 224,
+        "endChar": 25
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "80274b05_7e39d168",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T13:03:07Z",
+      "side": 1,
+      "message": "nit: Like this to make it in one line?\n```suggestion\n    unsafe {\n    ptr::copy_nonoverlapping(provided_hash.as_ptr(), hash, SHA256_DIGEST_SIZE);\n}\n```",
+      "range": {
+        "startLine": 1259,
+        "startChar": 0,
+        "endLine": 1260,
+        "endChar": 44
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2679ba16_4ed885ae",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T13:03:07Z",
+      "side": 1,
+      "message": "Use `if let Err(e) \u003d result` to make it more rusty?",
+      "range": {
+        "startLine": 1285,
+        "startChar": 12,
+        "endLine": 1285,
+        "endChar": 31
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2f68a573_9f79cad5",
+        "filename": "rust/tests/cert_tests.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T13:03:07Z",
+      "side": 1,
+      "message": "What about `build_test_cert_ops..` to get it more clear? Otherwise `test_` sounds like a verb here. It took me some time to check around what it actually tests.",
+      "range": {
+        "startLine": 30,
+        "startChar": 3,
+        "endLine": 30,
+        "endChar": 37
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4c949a4e_faa8636f",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-18T13:03:07Z",
+      "side": 1,
+      "message": "What about splitting the constants moving and this key struct refactoring into a separate cl to decrease the size of the current change a bit?",
+      "range": {
+        "startLine": 73,
+        "startChar": 9,
+        "endLine": 73,
+        "endChar": 22
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
