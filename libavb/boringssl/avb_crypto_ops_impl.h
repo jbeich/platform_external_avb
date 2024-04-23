@@ -33,6 +33,7 @@
 #ifndef AVB_CRYPTO_OPS_IMPL_H_
 #define AVB_CRYPTO_OPS_IMPL_H_
 
+#include <openssl/curve25519.h>
 #include <openssl/is_boringssl.h>
 #include <openssl/sha.h>
 

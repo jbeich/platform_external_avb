@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
 #include <base/files/file_util.h>
 #include <base/strings/string_util.h>
 #include <base/strings/stringprintf.h>
+#include <openssl/curve25519.h>
+
+#include <iostream>
 
 #include "avb_unittest_util.h"
 #include "fake_avb_ops.h"
@@ -83,6 +84,79 @@ TEST_F(AvbSlotVerifyTest, Basic) {
       "androidboot.vbmeta.invalidate_on_error=yes "
       "androidboot.veritymode=enforcing",
       std::string(slot_data->cmdline));
+  uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
+  avb_slot_verify_data_calculate_vbmeta_digest(
+      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+  EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
+            mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
+  avb_slot_verify_data_free(slot_data);
+
+  EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
+            CalcVBMetaDigest("vbmeta_a.img", "sha256"));
+}
+
+TEST_F(AvbSlotVerifyTest, BasicWithRotSuccess) {
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "--internal_release_string \"\"");
+
+  ops_.set_expected_public_key(
+      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  FakeRotData rot_data;
+  rot_data.nonce = 0x0a0a0a0a0a0a0a0a;
+  rot_data.vb_state = self_signed;
+  rot_data.bootLoaderLocked = true;
+  rot_data.os_version = 0x0a0a0a0a;
+  rot_data.os_patch_lvl = 0x0a0a0a0a;
+  rot_data.boot_patch_lvl = 0x0a0a0a0a;
+  rot_data.vendor_patch_lvl = 0x0a0a0a0a;
+
+  uint8_t seed[32] = {0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A,
+                      0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A,
+                      0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A,
+                      0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A, 0x0A};
+
+  uint8_t priv_key[AVB_ROT_DICE_PRIVATE_KEY_LEN];
+  uint8_t pub_key[AVB_ROT_DICE_PUBLIC_KEY_LEN];
+  ED25519_keypair_from_seed(pub_key, priv_key, seed);
+  ops_.set_rot_data(seed, 32, &rot_data, priv_key, pub_key);
+  initAvbOpsForRot();
+
+  AvbSlotVerifyData* slot_data = NULL;
+  const char* requested_partitions[] = {"boot", NULL};
+  EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            AVB_SLOT_VERIFY_FLAGS_NONE,
+                            AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                            &slot_data));
+  EXPECT_NE(nullptr, slot_data);
+  EXPECT_EQ(
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
+      "androidboot.vbmeta.avb_version=1.3 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1152 "
+      "androidboot.vbmeta.digest="
+      "4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.rot.data=d28443a10127a0586da9011b0a0a0a0a0a0a0a0a025"
+      "82022de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c03f5"
+      "04010558204161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071"
+      "e4d061a0a0a0a0a071a0a0a0a0a081a0a0a0a0a091a0a0a0a0a584030bc73f49d2e8184"
+      "db4ae1529fb89f2f9d76e2403004cdb1aaa12950c62719af2902d1163098400a1b93c69"
+      "be75e0f7f4117c4f20905a05d6767005604225706 "
+      "androidboot.vbmeta.rot.signingcert=d28443a10127a05870a40178283031303637"
+      "65356166316162353763383936383566313961326164373335303835623535653665300"
+      "2674156425f524f543a00474457582da501010327048102200621582043a72e71440176"
+      "2df66b68c26dfbdf2682aaec9f2474eca4613e424a0fbafd3c3a0047445841015840697"
+      "11daee32a22c7b87bcf03d75de1340cdf1a042ee75771b2e21571e72246f804b8461910"
+      "3c89a16243f96dab5e52b8d69be8db5578cc2cf68ad55b008ed206",
+      std::string(slot_data->cmdline));
+
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
       slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
