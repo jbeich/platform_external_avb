@@ -83,7 +83,9 @@
 //! # Internally, the device calls `cert_validate_unlock_credential()` to verify the credential.
 //! ```
 
-use crate::{error::io_enum_to_result, ops, IoError, IoResult, Ops, PublicKeyForPartitionInfo};
+use crate::{
+    error::io_enum_to_result, ops, IoError, IoResult, Ops, PublicKeyForPartitionInfo, VbFlowData,
+};
 use avb_bindgen::{
     avb_cert_generate_unlock_challenge, avb_cert_validate_unlock_credential,
     avb_cert_validate_vbmeta_public_key,
@@ -390,6 +392,39 @@ impl<'a> Ops<'static> for CertOnlyOps<'a> {
         _public_key: &[u8],
         _public_key_metadata: Option<&[u8]>,
     ) -> IoResult<PublicKeyForPartitionInfo> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn read_boot_nonce(&mut self) -> IoResult<u64> {
+    	Err(IoError::NotImplemented)
+    }
+
+    fn read_vb_flow_data(&mut self) -> IoResult<VbFlowData> {
+    	Err(IoError::NotImplemented)
+    }
+
+    fn generate_true_random(&mut self, _bytes: &mut [u8]) -> IoResult<()> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn sign_key_with_cdi_attest(
+        &mut self,
+        _key_to_sign: &[u8],
+        _out_signed_data: &mut [u8],
+    ) -> IoResult<usize> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn read_dice_cert_chain(
+        &mut self,
+        _out_buffer: &mut [u8],
+    ) -> IoResult<()> {
+        Err(IoError::NotImplemented)
+    }
+    
+    fn read_dice_cert_chain_size(
+        &mut self,
+    ) -> IoResult<usize> {
         Err(IoError::NotImplemented)
     }
 

@@ -452,3 +452,31 @@ fail:
   }
   return AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
 }
+
+AvbSlotVerifyResult avb_rot_append_options(AvbSlotVerifyData* slot_data,
+                                           const uint8_t* rot_data,
+                                           size_t rot_data_len,
+                                           const uint8_t* rot_signing_cert,
+                                           size_t cert_len,
+                                           const uint8_t* rot_dice_cert_chain,
+                                           size_t dice_cert_chain_size) {
+  if (!cmdline_append_hex(
+          slot_data, "androidboot.vbmeta.rot.data", rot_data, rot_data_len)) {
+    return AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+  }
+
+  if (!cmdline_append_hex(slot_data,
+                          "androidboot.vbmeta.rot.signingcert",
+                          rot_signing_cert,
+                          cert_len)) {
+    return AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+  }
+  if (!cmdline_append_hex(slot_data,
+                          "androidboot.vbmeta.dice.certchain",
+                          rot_dice_cert_chain,
+                          dice_cert_chain_size)) {
+    return AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+  }
+
+  return AVB_SLOT_VERIFY_RESULT_OK;
+}

@@ -331,6 +331,37 @@ struct AvbOps {
       size_t public_key_metadata_length,
       bool* out_is_trusted,
       uint32_t* out_rollback_index_location);
+
+  // Operation to get boot nonce.
+  AvbIOResult (*read_boot_nonce)(AvbOps* ops, uint64_t* out_nonce);
+
+  // Operation to get data used to decide verified boot state.
+  AvbIOResult (*read_vb_flow_data)(AvbOps* ops,
+                                   bool* out_bootLoaderLocked,
+                                   bool* out_userEnabledRot,
+                                   bool* out_deviceEioMode);
+
+  // Operation to get random number.
+  AvbIOResult (*generate_true_random)(AvbOps* ops,
+                                      size_t num_bytes,
+                                      uint8_t* out_random);
+
+  // Operation to sign the rot signing public key certificate:
+  AvbIOResult (*sign_key_with_cdi_attest)(AvbOps* ops,
+                                          const uint8_t* key_to_sign,
+                                          size_t key_to_sign_length,
+                                          size_t buffer_size,
+                                          uint8_t* out_signed_data,
+                                          size_t* out_signed_data_length);
+
+  // Operation to get the dice cert chain size.
+  AvbIOResult (*read_dice_cert_chain_size)(AvbOps* ops,
+                                           size_t* out_dice_cert_chain_size);
+
+  // Operation to get the dice cert chain.
+  AvbIOResult (*read_dice_cert_chain)(AvbOps* ops,
+                                      size_t buffer_size,
+                                      uint8_t* out_buffer);
 };
 
 #ifdef __cplusplus

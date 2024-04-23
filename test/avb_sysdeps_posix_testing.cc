@@ -22,17 +22,16 @@
  * SOFTWARE.
  */
 
+#include <base/debug/stack_trace.h>
 #include <endian.h>
+#include <libavb/libavb.h>
+#include <limits.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <map>
-
-#include <base/debug/stack_trace.h>
-
-#include <libavb/libavb.h>
 
 int avb_memcmp(const void* src1, const void* src2, size_t n) {
   return memcmp(src1, src2, n);
@@ -56,6 +55,14 @@ int avb_strncmp(const char* s1, const char* s2, size_t n) {
 
 size_t avb_strlen(const char* str) {
   return strlen(str);
+}
+
+unsigned long avb_strtoul(const char* str) {
+  unsigned long ul = strtoul(str, NULL, 10);
+  if (ul == ULONG_MAX) {
+    ul = 0;
+  }
+  return ul;
 }
 
 void avb_abort(void) {

@@ -103,6 +103,8 @@ cc_defaults {
         "libavb/avb_util.c",
         "libavb/avb_vbmeta_image.c",
         "libavb/avb_version.c",
+        "libavb/avb_rot.c",
+        "libavb/avb_rot_cbor.c",
     ],
 }
 
@@ -110,6 +112,7 @@ cc_defaults {
     name: "avb_crypto_ops_impl_boringssl",
     srcs: [
         "libavb/boringssl/sha.c",
+        "libavb/boringssl/avb_curve25519.c",
     ],
     local_include_dirs: [
         "libavb/boringssl",
@@ -117,13 +120,14 @@ cc_defaults {
 }
 
 cc_defaults {
-    name: "avb_crypto_ops_impl_sha",
+    name: "avb_crypto_ops_impl_avb_crypto",
     srcs: [
-        "libavb/sha/sha256_impl.c",
-        "libavb/sha/sha512_impl.c",
+        "libavb/avb-crypto/sha/sha256_impl.c",
+        "libavb/avb-crypto/sha/sha512_impl.c",
+        "libavb/avb-crypto/curve25519/avb_curve25519.c",
     ],
     local_include_dirs: [
-        "libavb/sha",
+        "libavb/avb-crypto",
     ],
 }
 
@@ -355,6 +359,7 @@ cc_defaults {
         "libbase",
         "libchrome",
         "libcrypto",
+        "libopen_dice_cbor",
     ],
     cflags: [
         "-Wno-missing-prototypes",
@@ -389,9 +394,9 @@ cc_test_host {
 }
 
 cc_test_host {
-    name: "libavb_host_unittest_sha",
+    name: "libavb_host_unittest_avb_crypto",
     defaults: [
-        "avb_crypto_ops_impl_sha",
+        "avb_crypto_ops_impl_avb_crypto",
         "libavb_host_unittest_core",
     ],
     data: [
