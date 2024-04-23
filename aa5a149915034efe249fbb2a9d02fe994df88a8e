@@ -188,6 +188,30 @@
       },
       "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec0699ac_4a932c8b",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-23T14:25:10Z",
+      "side": 1,
+      "message": "\u003e We could probably create a macro to do this..\n\nmacro is not recommended in android. See go/android-rust-style#macros.\n\nThe current approach is okay.",
+      "parentUuid": "d3f09d70_ffe92869",
+      "range": {
+        "startLine": 347,
+        "startChar": 18,
+        "endLine": 347,
+        "endChar": 21
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
