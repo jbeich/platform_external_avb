@@ -89,4 +89,11 @@ AvbSlotVerifyResult avb_add_root_digest_substitution(
     size_t digest_size,
     AvbCmdlineSubstList* out_cmdline_subst);
 
+// Adds the RoT Options to cmdline
+AvbSlotVerifyResult avb_rot_append_options(AvbSlotVerifyData* slot_data,
+                                           const uint8_t* rot_data,
+                                           size_t rot_data_len,
+                                           const uint8_t* rot_signing_cert,
+                                           size_t cert_len);
+
 #endif

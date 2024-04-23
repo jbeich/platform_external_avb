@@ -15,8 +15,8 @@
 //! Provides `avb::Ops` test fixtures.
 
 use avb::{
-    cert_validate_vbmeta_public_key, CertOps, CertPermanentAttributes, IoError, IoResult, Ops,
-    PublicKeyForPartitionInfo, SHA256_DIGEST_SIZE,
+    cert_validate_vbmeta_public_key, dice_generate_certificate, CertOps, CertPermanentAttributes,
+    IoError, IoResult, Ops, PublicKeyForPartitionInfo, RotData, VbState, SHA256_DIGEST_SIZE,
 };
 use std::{cmp::min, collections::HashMap, ffi::CStr};
 #[cfg(feature = "uuid")]
@@ -143,10 +143,8 @@ impl<'a> TestOps<'a> {
         name: &'static str,
         contents: T,
     ) -> &mut FakePartition<'a> {
-        self.partitions.insert(
-            name,
-            FakePartition::new(PartitionContents::FromDisk(contents.into())),
-        );
+        self.partitions
+            .insert(name, FakePartition::new(PartitionContents::FromDisk(contents.into())));
         self.partitions.get_mut(name).unwrap()
     }
 
@@ -159,10 +157,7 @@ impl<'a> TestOps<'a> {
         name: &'static str,
         contents: &'a [u8],
     ) -> &mut FakePartition<'a> {
-        self.partitions.insert(
-            name,
-            FakePartition::new(PartitionContents::Preloaded(contents)),
-        );
+        self.partitions.insert(name, FakePartition::new(PartitionContents::Preloaded(contents)));
         self.partitions.get_mut(name).unwrap()
     }
 
@@ -175,8 +170,7 @@ impl<'a> TestOps<'a> {
     /// test_ops.add_persistent_value("bar", Err(IoError::NoSuchValue));
     /// ```
     pub fn add_persistent_value(&mut self, name: &str, contents: IoResult<&[u8]>) {
-        self.persistent_values
-            .insert(name.into(), contents.map(|b| b.into()));
+        self.persistent_values.insert(name.into(), contents.map(|b| b.into()));
     }
 
     /// Internal helper to validate a vbmeta key.
@@ -244,9 +238,7 @@ impl<'a> Ops<'a> for TestOps<'a> {
         // Negative offset means count backwards from the end.
         let offset = {
             if offset < 0 {
-                offset
-                    .checked_add(i64::try_from(contents.len()).unwrap())
-                    .unwrap()
+                offset.checked_add(i64::try_from(contents.len()).unwrap()).unwrap()
             } else {
                 offset
             }
@@ -270,10 +262,9 @@ impl<'a> Ops<'a> for TestOps<'a> {
 
     fn get_preloaded_partition(&mut self, partition: &CStr) -> IoResult<&'a [u8]> {
         match self.partitions.get(partition.to_str()?) {
-            Some(FakePartition {
-                contents: PartitionContents::Preloaded(preloaded),
-                ..
-            }) => Ok(&preloaded[..]),
+            Some(FakePartition { contents: PartitionContents::Preloaded(preloaded), .. }) => {
+                Ok(&preloaded[..])
+            }
             _ => Err(IoError::NotImplemented),
         }
     }
@@ -301,10 +292,7 @@ impl<'a> Ops<'a> for TestOps<'a> {
 
     #[cfg(feature = "uuid")]
     fn get_unique_guid_for_partition(&mut self, partition: &CStr) -> IoResult<Uuid> {
-        self.partitions
-            .get(partition.to_str()?)
-            .map(|p| p.uuid)
-            .ok_or(IoError::NoSuchPartition)
+        self.partitions.get(partition.to_str()?).map(|p| p.uuid).ok_or(IoError::NoSuchPartition)
     }
 
     fn get_size_of_partition(&mut self, partition: &CStr) -> IoResult<u64> {
@@ -315,11 +303,7 @@ impl<'a> Ops<'a> for TestOps<'a> {
     }
 
     fn read_persistent_value(&mut self, name: &CStr, value: &mut [u8]) -> IoResult<usize> {
-        match self
-            .persistent_values
-            .get(name.to_str()?)
-            .ok_or(IoError::NoSuchValue)?
-        {
+        match self.persistent_values.get(name.to_str()?).ok_or(IoError::NoSuchValue)? {
             // If we were given enough space, write the value contents.
             Ok(contents) if contents.len() <= value.len() => {
                 value[..contents.len()].clone_from_slice(contents);
@@ -340,8 +324,7 @@ impl<'a> Ops<'a> for TestOps<'a> {
             return Err(e.clone());
         }
 
-        self.persistent_values
-            .insert(name.to_string(), Ok(value.to_vec()));
+        self.persistent_values.insert(name.to_string(), Ok(value.to_vec()));
         Ok(())
     }
 
@@ -365,11 +348,8 @@ impl<'a> Ops<'a> for TestOps<'a> {
     ) -> IoResult<PublicKeyForPartitionInfo> {
         let partition = partition.to_str()?;
 
-        let rollback_index_location = self
-            .vbmeta_keys_for_partition
-            .get(partition)
-            .ok_or(IoError::Io)?
-            .1;
+        let rollback_index_location =
+            self.vbmeta_keys_for_partition.get(partition).ok_or(IoError::Io)?.1;
 
         Ok(PublicKeyForPartitionInfo {
             trusted: self.validate_fake_key(Some(partition), public_key, public_key_metadata)?,
@@ -377,6 +357,50 @@ impl<'a> Ops<'a> for TestOps<'a> {
         })
     }
 
+    /// Currently this always returns array filled with 0x0A.
+    fn generate_true_random(&mut self, bytes: &mut [u8]) -> IoResult<()> {
+        bytes.fill(0x0A);
+        Ok(())
+    }
+
+    /// returns rot data with dummy values.
+    fn read_rot_data(&mut self) -> IoResult<RotData> {
+        Ok(RotData {
+            nonce: 0x0a0a0a0a0a0a0a0a,
+            vb_state: VbState::self_signed,
+            boot_locked: false,
+            os_version: 0x0a0a0a0a,
+            os_patch_lvl: 0x0a0a0a0a,
+            vendor_patch_lvl: 0x0a0a0a0a,
+            boot_patch_lvl: 0x0a0a0a0a,
+        })
+    }
+    fn sign_key_with_cdi_attest(
+        &mut self,
+        key_to_sign: &[u8],
+        certificate_subject: &CStr,
+        out_signed_data: &mut [u8],
+    ) -> IoResult<usize> {
+        let test_priv_key: &[u8] = &[
+            0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a,
+            0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a, 0x0a,
+            0x0a, 0x0a, 0x0a, 0x0a, 0x43, 0xa7, 0x2e, 0x71, 0x44, 0x01, 0x76, 0x2d, 0xf6, 0x6b,
+            0x68, 0xc2, 0x6d, 0xfb, 0xdf, 0x26, 0x82, 0xaa, 0xec, 0x9f, 0x24, 0x74, 0xec, 0xa4,
+            0x61, 0x3e, 0x42, 0x4a, 0x0f, 0xba, 0xfd, 0x3c,
+        ];
+        let test_pub_key: &[u8] = &[
+            0x43, 0xa7, 0x2e, 0x71, 0x44, 0x01, 0x76, 0x2d, 0xf6, 0x6b, 0x68, 0xc2, 0x6d, 0xfb,
+            0xdf, 0x26, 0x82, 0xaa, 0xec, 0x9f, 0x24, 0x74, 0xec, 0xa4, 0x61, 0x3e, 0x42, 0x4a,
+            0x0f, 0xba, 0xfd, 0x3c,
+        ];
+        Ok(dice_generate_certificate(
+            key_to_sign,
+            test_pub_key,
+            test_priv_key,
+            certificate_subject,
+            out_signed_data,
+        ))
+    }
     fn cert_ops(&mut self) -> Option<&mut dyn CertOps> {
         match self.use_cert {
             true => Some(self),
@@ -399,8 +423,7 @@ impl<'a> CertOps for TestOps<'a> {
     }
 
     fn set_key_version(&mut self, rollback_index_location: usize, key_version: u64) {
-        self.cert_key_versions
-            .insert(rollback_index_location, key_version);
+        self.cert_key_versions.insert(rollback_index_location, key_version);
     }
 
     fn get_random(&mut self, bytes: &mut [u8]) -> IoResult<()> {
