@@ -305,10 +305,7 @@ mod tests {
     fn display_slot_verify_error() {
         // The actual error message can change as needed, the point of the test is just to make sure
         // the fmt::Display trait is properly implemented.
-        assert_eq!(
-            format!("{}", SlotVerifyError::Verification(None)),
-            "Verification failure"
-        );
+        assert_eq!(format!("{}", SlotVerifyError::Verification(None)), "Verification failure");
     }
 
     #[test]
@@ -327,10 +324,7 @@ mod tests {
     fn display_io_error() {
         // The actual error message can change as needed, the point of the test is just to make sure
         // the fmt::Display trait is properly implemented.
-        assert_eq!(
-            format!("{}", IoError::NoSuchPartition),
-            "No such partition exists"
-        );
+        assert_eq!(format!("{}", IoError::NoSuchPartition), "No such partition exists");
     }
 
     #[test]
@@ -348,20 +342,14 @@ mod tests {
     #[test]
     fn convert_io_result_to_enum() {
         assert_eq!(result_to_io_enum(Ok(())), AvbIOResult::AVB_IO_RESULT_OK);
-        assert_eq!(
-            result_to_io_enum(Err(IoError::Io)),
-            AvbIOResult::AVB_IO_RESULT_ERROR_IO
-        );
+        assert_eq!(result_to_io_enum(Err(IoError::Io)), AvbIOResult::AVB_IO_RESULT_ERROR_IO);
     }
 
     #[test]
     fn display_vmbeta_verify_error() {
         // The actual error message can change as needed, the point of the test is just to make sure
         // the fmt::Display trait is properly implemented.
-        assert_eq!(
-            format!("{}", VbmetaVerifyError::NotSigned),
-            "vbmeta is unsigned"
-        );
+        assert_eq!(format!("{}", VbmetaVerifyError::NotSigned), "vbmeta is unsigned");
     }
 
     #[test]

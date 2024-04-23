@@ -22,12 +22,14 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
 #include <base/files/file_util.h>
 #include <base/strings/string_util.h>
 #include <base/strings/stringprintf.h>
+#include <openssl/curve25519.h>
 
+#include <iostream>
+
+#include "../libavb/avb_rot.h"
 #include "avb_unittest_util.h"
 #include "fake_avb_ops.h"
 
@@ -92,6 +94,253 @@ TEST_F(AvbSlotVerifyTest, Basic) {
 
   EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
             CalcVBMetaDigest("vbmeta_a.img", "sha256"));
+}
+
+TEST_F(AvbSlotVerifyTest, BasicWithRotSuccess) {
+  const size_t partition_size = 16 * 1024 * 1024;
+  const size_t image_size = 5 * 1024 * 1024;
+  // Create images
+  base::FilePath boot_path = GenerateImage("boot.img", image_size);
+  base::FilePath system_path = GenerateImage("system.img", image_size);
+
+  // add properties to images
+  EXPECT_COMMAND(0,
+                 "./avbtool.py add_hash_footer"
+                 " --image %s"
+                 " --partition_name boot"
+                 " --partition_size %zd"
+                 " --rollback_index 12"
+                 " --algorithm SHA256_RSA4096"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --salt deadbeef"
+                 " --prop com.android.build.boot.security_patch:2024-04-01"
+                 " --internal_release_string \"\"",
+                 boot_path.value().c_str(),
+                 partition_size);
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py add_hash_footer"
+                 " --image %s"
+                 " --partition_name system"
+                 " --partition_size %zd"
+                 " --rollback_index 12"
+                 " --algorithm SHA256_RSA4096"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --salt deadbeef"
+                 " --prop com.android.build.system.os_version:14"
+                 " --prop com.android.build.system.security_patch:2024-04-01"
+                 " --internal_release_string \"\"",
+                 system_path.value().c_str(),
+                 partition_size);
+
+  // Now extract the vbmeta blob from system image
+  base::FilePath vbmeta_system_path = testdir_.Append("vbmeta_system.img");
+  EXPECT_COMMAND(0,
+                 "./avbtool.py extract_vbmeta_image"
+                 " --image %s"
+                 " --output %s",
+                 system_path.value().c_str(),
+                 vbmeta_system_path.value().c_str());
+  // extract the signing key
+  base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py extract_public_key --key test/data/testkey_rsa4096.pem"
+      " --output %s",
+      pk_path.value().c_str());
+
+  // Now create top level vbmeta image with chained boot and vbmeta_system
+  // partitions.
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      11,
+      base::FilePath("test/data/testkey_rsa2048.pem"),
+      base::StringPrintf(
+          "--prop com.android.build.vendor.security_patch:2024-04-01"
+          " --chain_partition boot:2:%s"
+          " --chain_partition vbmeta_system:1:%s"
+          " --internal_release_string \"\"",
+          pk_path.value().c_str(),
+          pk_path.value().c_str()));
+  ops_.set_expected_public_key(
+      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  FakeRotData rot_data;
+  rot_data.boot_nonce = 0x0a0a0a0a0a0a0a0a;
+  rot_data.bootLoaderLocked = true;
+  rot_data.userEnabledRot = false;
+  rot_data.deviceEioMode = false;
+
+  uint8_t seed[32];
+  memset(seed, 0x0a, 32);
+  uint8_t priv_key[AVB_ROT_DICE_PRIVATE_KEY_LEN];
+  uint8_t pub_key[AVB_ROT_DICE_PUBLIC_KEY_LEN];
+  ED25519_keypair_from_seed(pub_key, priv_key, seed);
+
+  ops_.set_rot_data(seed, 32, &rot_data, priv_key, pub_key);
+  initAvbOpsForRot();
+  AvbSlotVerifyData* slot_data = NULL;
+  const char* requested_partitions[] = {"boot", "system", NULL};
+  EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "",
+                            AVB_SLOT_VERIFY_FLAGS_NONE,
+                            AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                            &slot_data));
+  EXPECT_NE(nullptr, slot_data);
+  EXPECT_EQ(
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
+      "androidboot.vbmeta.avb_version=1.3 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha256 "
+      "androidboot.vbmeta.size=7872 "
+      "androidboot.vbmeta.digest="
+      "94eafd4081fed364e1690e87283d7060f538dc40a20684e0eb5841a349e01b4b "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.rot.data="
+      "d28443a10127a0585da9011b0a0a0a0a0a0a0a0a02582022de3994532196f"
+      "61c039e90260d78a93a4c57362c7e789be928036e80b77c8c03f5040005582094eafd408"
+      "1fed364e1690e87283d70"
+      "60f538dc40a20684e0eb5841a349e01b4b060e0700080009005840165e23cf913f5a6041"
+      "433e8c5f9f2d3456eee35"
+      "252c370c8eff444485b68ab88d5b82cba87f6faf9e1dd36d450b366adc19a68cd5441074"
+      "ff3b1706d4c5f9b03 "
+      "androidboot.vbmeta.rot.signingcert="
+      "d28443a10127a05870a40178283563383734356263626435633534"
+      "333130356462663137363636303863313561623336303064353802674156425f524f543a"
+      "00474457582da50101"
+      "0327048102200621582043a72e714401762df66b68c26dfbdf2682aaec9f2474eca4613e"
+      "424a0fbafd3c3a0047"
+      "44584101584012012f719b3e62a7257a20fbc7970bf27d9de75bc9688c3e0145a39537d5"
+      "8bc6b0fab49dd238fa"
+      "80d6a69125b83446fd3fe4f8b1d28c0cf5f62a9c8f59687302",
+      std::string(slot_data->cmdline));
+
+  uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
+  avb_slot_verify_data_calculate_vbmeta_digest(
+      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+  EXPECT_EQ("94eafd4081fed364e1690e87283d7060f538dc40a20684e0eb5841a349e01b4b",
+            mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
+  EXPECT_EQ("94eafd4081fed364e1690e87283d7060f538dc40a20684e0eb5841a349e01b4b",
+            CalcVBMetaDigest("vbmeta.img", "sha256"));
+  avb_slot_verify_data_free(slot_data);
+}
+
+TEST_F(AvbSlotVerifyTest, GenerateDiceCertIdForRot) {
+  // Uses test vector 2 from RFC4231
+  uint8_t id[20];
+  uint8_t seed[32];
+  memset(seed, 0x0a, 32);
+  uint8_t priv_key[AVB_ROT_DICE_PRIVATE_KEY_LEN];
+  uint8_t pub_key[AVB_ROT_DICE_PUBLIC_KEY_LEN];
+  ED25519_keypair_from_seed(pub_key, priv_key, seed);
+  avb_rot_dice_derive_cert_id(pub_key, AVB_ROT_DICE_PUBLIC_KEY_LEN, id, 20);
+  EXPECT_EQ("5c8745bcbd5c543105dbf1766608c15ab3600d58",
+            mem_to_hexstring(id, 20));
+}
+
+TEST_F(AvbSlotVerifyTest, BasicWithRotNotImplemented) {
+  const size_t partition_size = 16 * 1024 * 1024;
+  const size_t image_size = 5 * 1024 * 1024;
+  // Create images
+  base::FilePath boot_path = GenerateImage("boot.img", image_size);
+  base::FilePath system_path = GenerateImage("system.img", image_size);
+
+  // add properties to images
+  EXPECT_COMMAND(0,
+                 "./avbtool.py add_hash_footer"
+                 " --image %s"
+                 " --partition_name boot"
+                 " --partition_size %zd"
+                 " --rollback_index 12"
+                 " --algorithm SHA256_RSA4096"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --salt deadbeef"
+                 " --prop com.android.build.boot.security_patch:2024-04-01"
+                 " --internal_release_string \"\"",
+                 boot_path.value().c_str(),
+                 partition_size);
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py add_hash_footer"
+                 " --image %s"
+                 " --partition_name system"
+                 " --partition_size %zd"
+                 " --rollback_index 12"
+                 " --algorithm SHA256_RSA4096"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --salt deadbeef"
+                 " --prop com.android.build.system.os_version:14"
+                 " --prop com.android.build.system.security_patch:2024-04-01"
+                 " --internal_release_string \"\"",
+                 system_path.value().c_str(),
+                 partition_size);
+
+  // Now extract the vbmeta blob from system image
+  base::FilePath vbmeta_system_path = testdir_.Append("vbmeta_system.img");
+  EXPECT_COMMAND(0,
+                 "./avbtool.py extract_vbmeta_image"
+                 " --image %s"
+                 " --output %s",
+                 system_path.value().c_str(),
+                 vbmeta_system_path.value().c_str());
+  // extract the signing key
+  base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py extract_public_key --key test/data/testkey_rsa4096.pem"
+      " --output %s",
+      pk_path.value().c_str());
+
+  // Now create top level vbmeta image with chained boot and vbmeta_system
+  // partitions.
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      11,
+      base::FilePath("test/data/testkey_rsa2048.pem"),
+      base::StringPrintf(
+          "--prop com.android.build.vendor.security_patch:2024-04-01"
+          " --chain_partition boot:2:%s"
+          " --chain_partition vbmeta_system:1:%s"
+          " --internal_release_string \"\"",
+          pk_path.value().c_str(),
+          pk_path.value().c_str()));
+  ops_.set_expected_public_key(
+      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  initAvbOpsForRotNotImplemented();
+  AvbSlotVerifyData* slot_data = NULL;
+  const char* requested_partitions[] = {"boot", "system", NULL};
+  EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
+            avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "",
+                            AVB_SLOT_VERIFY_FLAGS_NONE,
+                            AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                            &slot_data));
+  EXPECT_NE(nullptr, slot_data);
+  EXPECT_EQ(
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
+      "androidboot.vbmeta.avb_version=1.3 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha256 "
+      "androidboot.vbmeta.size=7872 "
+      "androidboot.vbmeta.digest="
+      "94eafd4081fed364e1690e87283d7060f538dc40a20684e0eb5841a349e01b4b "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing",
+      std::string(slot_data->cmdline));
+
+  uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
+  avb_slot_verify_data_calculate_vbmeta_digest(
+      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+  EXPECT_EQ("94eafd4081fed364e1690e87283d7060f538dc40a20684e0eb5841a349e01b4b",
+            mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
+  EXPECT_EQ("94eafd4081fed364e1690e87283d7060f538dc40a20684e0eb5841a349e01b4b",
+            CalcVBMetaDigest("vbmeta.img", "sha256"));
+  avb_slot_verify_data_free(slot_data);
 }
 
 TEST_F(AvbSlotVerifyTest, BasicSha512) {
