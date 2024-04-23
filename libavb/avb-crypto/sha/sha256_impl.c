@@ -35,8 +35,8 @@
  * SUCH DAMAGE.
  */
 
-#include "../avb_sha.h"
-#include "avb_crypto_ops_impl.h"
+#include "../../avb_sha.h"
+#include "../avb_crypto_ops_impl.h"
 
 #define SHFR(x, n) (x >> n)
 #define ROTR(x, n) ((x >> n) | (x << ((sizeof(x) << 3) - n)))
@@ -69,11 +69,10 @@
     *((str) + 0) = (uint8_t)((uint64_t)x >> 56); \
   }
 
-#define PACK32(str, x)                                                    \
-  {                                                                       \
-    *(x) = ((uint32_t) * ((str) + 3)) | ((uint32_t) * ((str) + 2) << 8) | \
-           ((uint32_t) * ((str) + 1) << 16) |                             \
-           ((uint32_t) * ((str) + 0) << 24);                              \
+#define PACK32(str, x)                                                      \
+  {                                                                         \
+    *(x) = ((uint32_t)*((str) + 3)) | ((uint32_t)*((str) + 2) << 8) |       \
+           ((uint32_t)*((str) + 1) << 16) | ((uint32_t)*((str) + 0) << 24); \
   }
 
 /* Macros used for loops unrolling */

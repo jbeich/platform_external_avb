@@ -28,8 +28,10 @@ use crate::{
     ops, Ops,
 };
 use alloc::vec::Vec;
+
 use avb_bindgen::{
-    avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
+    avb_slot_verify, avb_slot_verify_data_free,
+    AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
 };
 use core::{
     ffi::{c_char, CStr},
@@ -471,3 +473,4 @@ pub fn slot_verify<'a>(
         Err(e) => Err(e),
     }
 }
+
