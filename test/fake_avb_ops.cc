@@ -22,25 +22,25 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
-#include <endian.h>
-#include <errno.h>
-#include <inttypes.h>
-#include <string.h>
-
-#include <fcntl.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <unistd.h>
+#include "fake_avb_ops.h"
 
 #include <base/files/file_util.h>
 #include <base/strings/string_util.h>
 #include <base/strings/stringprintf.h>
+#include <dice/dice.h>
+#include <dice/ops.h>
+#include <endian.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <inttypes.h>
 #include <openssl/rand.h>
 #include <openssl/sha.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
-#include "fake_avb_ops.h"
+#include <iostream>
 
 namespace avb {
 
@@ -429,6 +429,71 @@ AvbIOResult FakeAvbOps::get_random(size_t num_bytes, uint8_t* output) {
   return AVB_IO_RESULT_OK;
 }
 
+AvbIOResult FakeAvbOps::read_boot_nonce(AvbOps* ops, uint64_t* out_nonce) {
+  if (rot_data_ == NULL) {
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+  *out_nonce = rot_data_->boot_nonce;
+  return AVB_IO_RESULT_OK;
+}
+
+AvbIOResult FakeAvbOps::read_vb_flow_data(AvbOps* ops,
+                                          bool* out_bootLoaderLocked,
+                                          bool* out_userEnabledRot,
+                                          bool* out_deviceEioMode) {
+  if (rot_data_ == NULL) {
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+
+  *out_bootLoaderLocked = rot_data_->bootLoaderLocked;
+  *out_userEnabledRot = rot_data_->userEnabledRot;
+  *out_deviceEioMode = rot_data_->deviceEioMode;
+  return AVB_IO_RESULT_OK;
+}
+
+AvbIOResult FakeAvbOps::generate_true_random(AvbOps* ops,
+                                             size_t num_bytes,
+                                             uint8_t* out_random) {
+  if (num_bytes > rot_true_random_num_len_) {
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+  memcpy(out_random, rot_true_random_, num_bytes);
+  return AVB_IO_RESULT_OK;
+}
+
+AvbIOResult FakeAvbOps::sign_key_with_cdi_attest(
+    AvbOps* ops,
+    const uint8_t* key_to_sign,
+    size_t key_to_sign_length,
+    const char* certificate_subject,
+    size_t buffer_size,
+    uint8_t* out_signed_data,
+    size_t* out_signed_data_length) {
+  if (key_to_sign_length != DICE_PUBLIC_KEY_SIZE ||
+      rotSigningKeyCert_ == NULL || buffer_size < rotSigningKeyCertSize_) {
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+  memcpy(out_signed_data, rotSigningKeyCert_, rotSigningKeyCertSize_);
+  *out_signed_data_length = rotSigningKeyCertSize_;
+  return AVB_IO_RESULT_OK;
+}
+
+AvbIOResult FakeAvbOps::read_dice_cert_chain_size(
+    AvbOps* ops, size_t* out_dice_cert_chain_size) {
+  *out_dice_cert_chain_size = diceCertChainSize_;
+  return AVB_IO_RESULT_OK;
+}
+
+AvbIOResult FakeAvbOps::read_dice_cert_chain(AvbOps* ops,
+                                             size_t buffer_size,
+                                             uint8_t* out_buffer) {
+  if (diceCertChainSize_ != buffer_size) {
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+  memcpy(out_buffer, diceCertChain_, diceCertChainSize_);
+  return AVB_IO_RESULT_OK;
+}
+
 static AvbIOResult my_ops_read_from_partition(AvbOps* ops,
                                               const char* partition,
                                               int64_t offset,
@@ -589,6 +654,98 @@ static AvbIOResult my_ops_get_random(AvbCertOps* cert_ops,
       ->get_random(num_bytes, output);
 }
 
+static AvbIOResult my_ops_generate_true_random(AvbOps* ops,
+                                               size_t num_bytes,
+                                               uint8_t* output) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)
+      ->delegate()
+      ->generate_true_random(ops, num_bytes, output);
+}
+
+static AvbIOResult my_ops_read_boot_nonce(AvbOps* ops, uint64_t* out_nonce) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)->delegate()->read_boot_nonce(
+      ops, out_nonce);
+}
+
+static AvbIOResult my_ops_read_vb_flow_data(AvbOps* ops,
+                                            bool* out_bootLoaderLocked,
+                                            bool* out_userEnabledRot,
+                                            bool* out_deviceEioMode) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)->delegate()->read_vb_flow_data(
+      ops, out_bootLoaderLocked, out_userEnabledRot, out_deviceEioMode);
+}
+
+static AvbIOResult my_ops_sign_key_with_cdi_attest(
+    AvbOps* ops,
+    const uint8_t* key_to_sign,
+    size_t key_to_sign_length,
+    const char* certificate_subject,
+    size_t buffer_size,
+    uint8_t* out_signed_data,
+    size_t* out_signed_data_length) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)
+      ->delegate()
+      ->sign_key_with_cdi_attest(ops,
+                                 key_to_sign,
+                                 key_to_sign_length,
+                                 certificate_subject,
+                                 buffer_size,
+                                 out_signed_data,
+                                 out_signed_data_length);
+}
+static AvbIOResult my_ops_read_dice_cert_chain_size(
+    AvbOps* ops, size_t* out_dice_cert_chain_size) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)
+      ->delegate()
+      ->read_dice_cert_chain_size(ops, out_dice_cert_chain_size);
+}
+
+static AvbIOResult my_ops_read_dice_cert_chain(AvbOps* ops,
+                                               size_t buffer_size,
+                                               uint8_t* out_buffer) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)
+      ->delegate()
+      ->read_dice_cert_chain(ops, buffer_size, out_buffer);
+}
+
+static AvbIOResult my_ops_generate_true_random_error(AvbOps* ops,
+                                                     size_t num_bytes,
+                                                     uint8_t* output) {
+  return AVB_IO_RESULT_ERROR_IO;
+}
+
+static AvbIOResult my_ops_read_boot_nonce_error(AvbOps* ops,
+                                                uint64_t* out_nonce) {
+  return AVB_IO_RESULT_ERROR_IO;
+}
+
+static AvbIOResult my_ops_read_vb_flow_data_error(AvbOps* ops,
+                                                  bool* out_bootLoaderLocked,
+                                                  bool* out_userEnabledRot,
+                                                  bool* out_deviceEioMode) {
+  return AVB_IO_RESULT_ERROR_IO;
+}
+
+static AvbIOResult my_ops_sign_key_with_cdi_attest_error(
+    AvbOps* ops,
+    const uint8_t* key_to_sign,
+    size_t key_to_sign_length,
+    const char* certificate_subject,
+    size_t buffer_size,
+    uint8_t* out_signed_data,
+    size_t* out_signed_data_length) {
+  return AVB_IO_RESULT_ERROR_IO;
+}
+static AvbIOResult my_ops_read_dice_cert_chain_size_error(
+    AvbOps* ops, size_t* out_dice_cert_chain_size) {
+  return AVB_IO_RESULT_ERROR_IO;
+}
+static AvbIOResult my_ops_read_dice_cert_chain_error(AvbOps* ops,
+                                                     size_t buffer_size,
+                                                     uint8_t* out_buffer) {
+  return AVB_IO_RESULT_ERROR_IO;
+}
+
 FakeAvbOps::FakeAvbOps() {
   memset(&avb_ops_, 0, sizeof(avb_ops_));
   avb_ops_.ab_ops = &avb_ab_ops_;
@@ -632,6 +789,25 @@ FakeAvbOps::~FakeAvbOps() {
 
 void FakeAvbOps::enable_get_preloaded_partition() {
   avb_ops_.get_preloaded_partition = my_ops_get_preloaded_partition;
+}
+void FakeAvbOpsDelegateWithDefaults ::initAvbOpsForRot() {
+  ops_.avb_ops()->generate_true_random = my_ops_generate_true_random;
+  ops_.avb_ops()->read_boot_nonce = my_ops_read_boot_nonce;
+  ops_.avb_ops()->read_vb_flow_data = my_ops_read_vb_flow_data;
+  ops_.avb_ops()->sign_key_with_cdi_attest = my_ops_sign_key_with_cdi_attest;
+  ops_.avb_ops()->read_dice_cert_chain_size = my_ops_read_dice_cert_chain_size;
+  ops_.avb_ops()->read_dice_cert_chain = my_ops_read_dice_cert_chain;
+}
+
+void FakeAvbOpsDelegateWithDefaults ::initAvbOpsForRotNotImplemented() {
+  ops_.avb_ops()->generate_true_random = my_ops_generate_true_random_error;
+  ops_.avb_ops()->read_boot_nonce = my_ops_read_boot_nonce_error;
+  ops_.avb_ops()->read_vb_flow_data = my_ops_read_vb_flow_data_error;
+  ops_.avb_ops()->sign_key_with_cdi_attest =
+      my_ops_sign_key_with_cdi_attest_error;
+  ops_.avb_ops()->read_dice_cert_chain_size =
+      my_ops_read_dice_cert_chain_size_error;
+  ops_.avb_ops()->read_dice_cert_chain = my_ops_read_dice_cert_chain_error;
 }
 
 }  // namespace avb

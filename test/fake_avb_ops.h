@@ -35,6 +35,13 @@
 
 namespace avb {
 
+typedef struct {
+  uint64_t boot_nonce;
+  bool bootLoaderLocked;
+  bool userEnabledRot;
+  bool deviceEioMode;
+} FakeRotData;
+
 // A delegate interface for ops callbacks. This allows tests to override default
 // fake implementations. For convenience, test fixtures can inherit
 // FakeAvbOpsDelegateWithDefaults and only override as needed.
@@ -115,6 +122,33 @@ class FakeAvbOpsDelegate {
                                uint64_t key_version) = 0;
 
   virtual AvbIOResult get_random(size_t num_bytes, uint8_t* output) = 0;
+
+  virtual AvbIOResult read_boot_nonce(AvbOps* ops, uint64_t* out_nonce) = 0;
+
+  virtual AvbIOResult read_vb_flow_data(AvbOps* ops,
+                                        bool* out_bootLoaderLocked,
+                                        bool* out_userEnabledRot,
+                                        bool* out_deviceEioMode) = 0;
+
+  virtual AvbIOResult generate_true_random(AvbOps* ops,
+                                           size_t num_bytes,
+                                           uint8_t* out_random) = 0;
+
+  virtual AvbIOResult sign_key_with_cdi_attest(
+      AvbOps* ops,
+      const uint8_t* key_to_sign,
+      size_t key_to_sign_length,
+      const char* certificate_subject,
+      size_t buffer_size,
+      uint8_t* out_signed_data,
+      size_t* out_signed_data_length) = 0;
+
+  virtual AvbIOResult read_dice_cert_chain_size(
+      AvbOps* ops, size_t* out_dice_cert_chain_size) = 0;
+
+  virtual AvbIOResult read_dice_cert_chain(AvbOps* ops,
+                                           size_t buffer_size,
+                                           uint8_t* out_buffer) = 0;
 };
 
 // Provides fake implementations of AVB ops. All instances of this class must be
@@ -206,6 +240,22 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
     hidden_partitions_ = partitions;
   }
 
+  void set_rot_data(const uint8_t* true_random,
+                    size_t rand_num_bytes,
+                    const FakeRotData* rot,
+                    const uint8_t* rotSignKeyCert,
+                    size_t rotSignKeyCertSize,
+                    const uint8_t* diceCertChain,
+                    size_t diceCertChainSize) {
+    rot_true_random_ = true_random;
+    rot_true_random_num_len_ = rand_num_bytes;
+    rot_data_ = rot;
+    rotSigningKeyCert_ = rotSignKeyCert;
+    rotSigningKeyCertSize_ = rotSignKeyCertSize;
+    diceCertChain_ = diceCertChain;
+    diceCertChainSize_ = diceCertChainSize;
+  }
+
   void enable_get_preloaded_partition();
 
   bool preload_partition(const std::string& partition,
@@ -293,6 +343,32 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   AvbIOResult get_random(size_t num_bytes, uint8_t* output) override;
 
+  AvbIOResult read_boot_nonce(AvbOps* ops, uint64_t* out_nonce) override;
+
+  AvbIOResult read_vb_flow_data(AvbOps* ops,
+                                bool* out_bootLoaderLocked,
+                                bool* out_userEnabledRot,
+                                bool* out_deviceEioMode) override;
+
+  AvbIOResult generate_true_random(AvbOps* ops,
+                                   size_t num_bytes,
+                                   uint8_t* out_random) override;
+
+  AvbIOResult sign_key_with_cdi_attest(AvbOps* ops,
+                                       const uint8_t* key_to_sign,
+                                       size_t key_to_sign_length,
+                                       const char* certificate_subject,
+                                       size_t buffer_size,
+                                       uint8_t* out_signed_data,
+                                       size_t* out_signed_data_length) override;
+
+  AvbIOResult read_dice_cert_chain_size(
+      AvbOps* ops, size_t* out_dice_cert_chain_size) override;
+
+  AvbIOResult read_dice_cert_chain(AvbOps* ops,
+                                   size_t buffer_size,
+                                   uint8_t* out_buffer) override;
+
  private:
   AvbOps avb_ops_;
   AvbABOps avb_ab_ops_;
@@ -324,6 +400,14 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
   std::set<std::string> hidden_partitions_;
 
   std::map<std::string, std::string> stored_values_;
+
+  const FakeRotData* rot_data_;
+  const uint8_t* rot_true_random_;
+  size_t rot_true_random_num_len_;
+  const uint8_t* rotSigningKeyCert_;
+  size_t rotSigningKeyCertSize_;
+  const uint8_t* diceCertChain_;
+  uint8_t diceCertChainSize_;
 };
 
 // A delegate implementation that calls FakeAvbOps by default.
@@ -451,6 +535,55 @@ class FakeAvbOpsDelegateWithDefaults : public FakeAvbOpsDelegate {
   AvbIOResult get_random(size_t num_bytes, uint8_t* output) override {
     return ops_.get_random(num_bytes, output);
   }
+
+  AvbIOResult read_boot_nonce(AvbOps* ops, uint64_t* out_nonce) override {
+    return ops_.read_boot_nonce(ops, out_nonce);
+  }
+
+  AvbIOResult read_vb_flow_data(AvbOps* ops,
+                                bool* out_bootLoaderLocked,
+                                bool* out_userEnabledRot,
+                                bool* out_deviceEioMode) override {
+    return ops_.read_vb_flow_data(
+        ops, out_bootLoaderLocked, out_userEnabledRot, out_deviceEioMode);
+  }
+
+  AvbIOResult generate_true_random(AvbOps* ops,
+                                   size_t num_bytes,
+                                   uint8_t* out_random) override {
+    return ops_.generate_true_random(ops, num_bytes, out_random);
+  }
+
+  AvbIOResult sign_key_with_cdi_attest(
+      AvbOps* ops,
+      const uint8_t* key_to_sign,
+      size_t key_to_sign_length,
+      const char* certificate_subject,
+      size_t buffer_size,
+      uint8_t* out_signed_data,
+      size_t* out_signed_data_length) override {
+    return ops_.sign_key_with_cdi_attest(ops,
+                                         key_to_sign,
+                                         key_to_sign_length,
+                                         certificate_subject,
+                                         buffer_size,
+                                         out_signed_data,
+                                         out_signed_data_length);
+  }
+
+  AvbIOResult read_dice_cert_chain_size(
+      AvbOps* ops, size_t* out_dice_cert_chain_size) override {
+    return ops_.read_dice_cert_chain_size(ops, out_dice_cert_chain_size);
+  }
+
+  AvbIOResult read_dice_cert_chain(AvbOps* ops,
+                                   size_t buffer_size,
+                                   uint8_t* out_buffer) override {
+    return ops_.read_dice_cert_chain(ops, buffer_size, out_buffer);
+  }
+
+  void initAvbOpsForRot();
+  void initAvbOpsForRotNotImplemented();
 
  protected:
   FakeAvbOps ops_;

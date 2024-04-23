@@ -35,8 +35,8 @@
  * SUCH DAMAGE.
  */
 
-#include "../avb_sha.h"
-#include "avb_crypto_ops_impl.h"
+#include "../../avb_sha.h"
+#include "../avb_crypto_ops_impl.h"
 
 #define SHFR(x, n) (x >> n)
 #define ROTR(x, n) ((x >> n) | (x << ((sizeof(x) << 3) - n)))
@@ -69,13 +69,12 @@
     *((str) + 0) = (uint8_t)((uint64_t)x >> 56); \
   }
 
-#define PACK64(str, x)                                                        \
-  {                                                                           \
-    *(x) =                                                                    \
-        ((uint64_t) * ((str) + 7)) | ((uint64_t) * ((str) + 6) << 8) |        \
-        ((uint64_t) * ((str) + 5) << 16) | ((uint64_t) * ((str) + 4) << 24) | \
-        ((uint64_t) * ((str) + 3) << 32) | ((uint64_t) * ((str) + 2) << 40) | \
-        ((uint64_t) * ((str) + 1) << 48) | ((uint64_t) * ((str) + 0) << 56);  \
+#define PACK64(str, x)                                                       \
+  {                                                                          \
+    *(x) = ((uint64_t)*((str) + 7)) | ((uint64_t)*((str) + 6) << 8) |        \
+           ((uint64_t)*((str) + 5) << 16) | ((uint64_t)*((str) + 4) << 24) | \
+           ((uint64_t)*((str) + 3) << 32) | ((uint64_t)*((str) + 2) << 40) | \
+           ((uint64_t)*((str) + 1) << 48) | ((uint64_t)*((str) + 0) << 56);  \
   }
 
 /* Macros used for loops unrolling */
