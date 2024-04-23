@@ -35,8 +35,8 @@
  * SUCH DAMAGE.
  */
 
-#include "../avb_sha.h"
-#include "avb_crypto_ops_impl.h"
+#include "../../avb_sha.h"
+#include "../avb_crypto_ops_impl.h"
 
 #define SHFR(x, n) (x >> n)
 #define ROTR(x, n) ((x >> n) | (x << ((sizeof(x) << 3) - n)))

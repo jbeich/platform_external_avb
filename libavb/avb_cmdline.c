@@ -214,7 +214,11 @@ AvbSlotVerifyResult avb_append_options(
     AvbVBMetaImageHeader* toplevel_vbmeta,
     AvbAlgorithmType algorithm_type,
     AvbHashtreeErrorMode hashtree_error_mode,
-    AvbHashtreeErrorMode resolved_hashtree_error_mode) {
+    AvbHashtreeErrorMode resolved_hashtree_error_mode,
+    const uint8_t* rot_data,
+    size_t rot_data_len,
+    const uint8_t* rot_signing_cert,
+    size_t cert_len) {
   AvbSlotVerifyResult ret;
   const char* verity_mode;
   bool is_device_unlocked;
@@ -378,6 +382,18 @@ AvbSlotVerifyResult avb_append_options(
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
       goto out;
     }
+  }
+  if (!cmdline_append_hex(
+          slot_data, "androidboot.vbmeta.rot.data", rot_data, rot_data_len)) {
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    goto out;
+  }
+  if (!cmdline_append_hex(slot_data,
+                          "androidboot.vbmeta.rot.signingcert",
+                          rot_signing_cert,
+                          cert_len)) {
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    goto out;
   }
 
   ret = AVB_SLOT_VERIFY_RESULT_OK;

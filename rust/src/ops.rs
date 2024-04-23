@@ -335,6 +335,9 @@ impl<'o, 'p> ScopedAvbOps<'o, 'p> {
                 read_persistent_value: Some(read_persistent_value),
                 write_persistent_value: Some(write_persistent_value),
                 validate_public_key_for_partition: Some(validate_public_key_for_partition),
+                generate_true_random: Some(generate_true_random),
+                read_rot_data: Some(read_rot_data),
+                sign_key_with_cdi_attest: Some(sign_key_with_cdi_attest),
             },
             _user_data: PhantomData,
         }
@@ -651,11 +654,7 @@ unsafe extern "C" fn read_rollback_index(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_read_rollback_index(
-            ops,
-            rollback_index_location,
-            out_rollback_index,
-        ))
+        result_to_io_enum(try_read_rollback_index(ops, rollback_index_location, out_rollback_index))
     }
 }
 
@@ -700,11 +699,7 @@ unsafe extern "C" fn write_rollback_index(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_write_rollback_index(
-            ops,
-            rollback_index_location,
-            rollback_index,
-        ))
+        result_to_io_enum(try_write_rollback_index(ops, rollback_index_location, rollback_index))
     }
 }
 
@@ -872,13 +867,7 @@ unsafe extern "C" fn get_size_of_partition(
     out_size_num_bytes: *mut u64,
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
-    unsafe {
-        result_to_io_enum(try_get_size_of_partition(
-            ops,
-            partition,
-            out_size_num_bytes,
-        ))
-    }
+    unsafe { result_to_io_enum(try_get_size_of_partition(ops, partition, out_size_num_bytes)) }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -1146,10 +1135,42 @@ unsafe fn try_validate_public_key_for_partition(
     // * libavb gives us a properly-allocated `out_*`.
     unsafe {
         ptr::write(out_is_trusted, key_info.trusted);
-        ptr::write(
-            out_rollback_index_location,
-            key_info.rollback_index_location,
-        );
+        ptr::write(out_rollback_index_location, key_info.rollback_index_location);
     }
     Ok(())
+}
+
+/// Dummy extern C calls
+/// TODO: Implement the following methods using try_* methods and also declare
+///  corresponding RUST method is Ops trait.
+unsafe extern "C" fn generate_true_random(
+    _ops: *mut AvbOps,
+    _out_random_number: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(Ok(()))
+}
+
+unsafe extern "C" fn read_rot_data(
+    _ops: *mut AvbOps,
+    _out_nonce: *mut u64,
+    _out_vb_state: *mut avb_bindgen::vb_state_t,
+    _out_boot_locked: *mut bool,
+    _out_os_version: *mut u32,
+    _out_os_patch_lvl: *mut u32,
+    _out_boot_patch_lvl: *mut u32,
+    _out_vendor_patch_lvl: *mut u32,
+) -> AvbIOResult {
+    result_to_io_enum(Ok(()))
+}
+
+unsafe extern "C" fn sign_key_with_cdi_attest(
+    _ops: *mut AvbOps,
+    _key_to_sign: *const u8,
+    _key_to_sign_length: usize,
+    _certificate_subject: *const c_char,
+    _buffer_size: usize,
+    _out_signed_data: *mut u8,
+    _out_signed_data_length: *mut usize,
+) -> AvbIOResult {
+    result_to_io_enum(Ok(()))
 }

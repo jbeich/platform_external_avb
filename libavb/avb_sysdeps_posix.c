@@ -37,6 +37,10 @@ void* avb_memcpy(void* dest, const void* src, size_t n) {
   return memcpy(dest, src, n);
 }
 
+void* avb_memmove(void* dest, const void* src, size_t n) {
+  return memmove(dest, src, n);
+}
+
 void* avb_memset(void* dest, const int c, size_t n) {
   return memset(dest, c, n);
 }

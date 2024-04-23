@@ -67,7 +67,11 @@ AvbSlotVerifyResult avb_append_options(
     AvbVBMetaImageHeader* toplevel_vbmeta,
     AvbAlgorithmType algorithm_type,
     AvbHashtreeErrorMode hashtree_error_mode,
-    AvbHashtreeErrorMode resolved_hashtree_error_mode);
+    AvbHashtreeErrorMode resolved_hashtree_error_mode,
+    const uint8_t* rot_data,
+    size_t rot_data_len,
+    const uint8_t* rot_signing_cert,
+    size_t cert_len);
 
 /* Allocates and initializes a new command line substitution list. Free with
  * |avb_free_cmdline_subst_list|.

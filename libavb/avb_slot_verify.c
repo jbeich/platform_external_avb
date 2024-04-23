@@ -23,12 +23,14 @@
  */
 
 #include "avb_slot_verify.h"
+
 #include "avb_chain_partition_descriptor.h"
 #include "avb_cmdline.h"
 #include "avb_footer.h"
 #include "avb_hash_descriptor.h"
 #include "avb_hashtree_descriptor.h"
 #include "avb_kernel_cmdline_descriptor.h"
+#include "avb_rot.h"
 #include "avb_sha.h"
 #include "avb_util.h"
 #include "avb_vbmeta_image.h"
@@ -1404,6 +1406,21 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
   avb_assert(ops->read_rollback_index != NULL);
   avb_assert(ops->get_unique_guid_for_partition != NULL);
 
+  // TODO: Should we fail here if the rot data related ops method are not
+  // defined?
+  uint8_t* signedRotData = avb_calloc(AVB_ROT_MAX_DATA_SIZE);
+  uint8_t* rotSigningKeyCert = avb_calloc(ROT_SIGNING_KEY_CERT_SIZE);
+  size_t signedRotDataLen = 0;
+  size_t rotSigningKeyCertLen = 0;
+  if (signedRotData == NULL) {
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    goto fail;
+  }
+  if (rotSigningKeyCert == NULL) {
+    ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+    goto fail;
+  }
+
   if (out_data != NULL) {
     *out_data = NULL;
   }
@@ -1592,6 +1609,17 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
     }
     slot_data->resolved_hashtree_error_mode = resolved_hashtree_error_mode;
 
+    /* generate rot data*/
+    if (!avb_rot_generate_rot_data(ops,
+                                   slot_data,
+                                   signedRotData,
+                                   &signedRotDataLen,
+                                   rotSigningKeyCert,
+                                   &rotSigningKeyCertLen)) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION;
+      goto fail;
+    }
+
     /* Add options... */
     AvbSlotVerifyResult sub_ret;
     sub_ret = avb_append_options(ops,
@@ -1600,7 +1628,11 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                  &toplevel_vbmeta,
                                  algorithm_type,
                                  hashtree_error_mode,
-                                 resolved_hashtree_error_mode);
+                                 resolved_hashtree_error_mode,
+                                 signedRotData,
+                                 signedRotDataLen,
+                                 rotSigningKeyCert,
+                                 rotSigningKeyCertLen);
     if (sub_ret != AVB_SLOT_VERIFY_RESULT_OK) {
       ret = sub_ret;
       goto fail;
@@ -1646,6 +1678,12 @@ fail:
   }
   if (additional_cmdline_subst != NULL) {
     avb_free_cmdline_subst_list(additional_cmdline_subst);
+  }
+  if (signedRotData != NULL) {
+    avb_free(signedRotData);
+  }
+  if (rotSigningKeyCert != NULL) {
+    avb_free(rotSigningKeyCert);
   }
   return ret;
 }

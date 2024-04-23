@@ -87,6 +87,9 @@ int avb_strncmp(const char* s1, const char* s2, size_t n);
 /* Copy |n| bytes from |src| to |dest|. */
 void* avb_memcpy(void* dest, const void* src, size_t n);
 
+/* Move |n| bytes from |src| to |dest|. */
+void* avb_memmove(void* dest, const void* src, size_t n);
+
 /* Set |n| bytes starting at |s| to |c|.  Returns |dest|. */
 void* avb_memset(void* dest, const int c, size_t n);
 
