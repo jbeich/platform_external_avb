@@ -76,6 +76,9 @@ typedef enum {
   AVB_IO_RESULT_ERROR_INSUFFICIENT_SPACE,
 } AvbIOResult;
 
+// Enumeration of verified boot state
+typedef enum { verified, self_signed, unverified, failed } vb_state_t;
+
 struct AvbOps;
 typedef struct AvbOps AvbOps;
 
@@ -331,6 +334,28 @@ struct AvbOps {
       size_t public_key_metadata_length,
       bool* out_is_trusted,
       uint32_t* out_rollback_index_location);
+
+  // Operation to get rot data.
+  AvbIOResult (*read_rot_data)(AvbOps* ops,
+                               uint64_t* out_nonce,
+                               vb_state_t* out_vb_state,
+                               bool* bootLoaderLocked,
+                               uint32_t* out_os_version,
+                               uint32_t* out_os_patch_lvl,
+                               uint32_t* out_boot_patch_lvl,
+                               uint32_t* out_vendor_patch_lvl);
+
+  // Operation to get 32 byte random number in network order:
+  AvbIOResult (*generate_true_random)(AvbOps* ops, uint8_t out_random[32]);
+
+  // Operation to sign the rot signing public key certificate:
+  AvbIOResult (*sign_key_with_cdi_attest)(AvbOps* ops,
+                                          const uint8_t* key_to_sign,
+                                          size_t key_to_sign_length,
+                                          const char* certificate_subject,
+                                          size_t buffer_size,
+                                          uint8_t* out_signed_data,
+                                          size_t* out_signed_data_length);
 };
 
 #ifdef __cplusplus

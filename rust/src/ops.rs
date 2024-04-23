@@ -28,6 +28,7 @@ use core::{
     pin::Pin,
     ptr, slice,
 };
+
 #[cfg(feature = "uuid")]
 use uuid::Uuid;
 
@@ -259,6 +260,14 @@ pub trait Ops<'a> {
     fn cert_ops(&mut self) -> Option<&mut dyn CertOps> {
         None
     }
+    fn generate_true_random(&mut self, bytes: &mut [u8]) -> IoResult<()>;
+    fn read_rot_data(&mut self) -> IoResult<RotData>;
+    fn sign_key_with_cdi_attest(
+        &mut self,
+        key_to_sign: &[u8],
+        certificate_subject: &CStr,
+        out_signed_data: &mut [u8],
+    ) -> IoResult<usize>;
 }
 
 /// Info returned from `validate_public_key_for_partition()`.
@@ -268,6 +277,18 @@ pub struct PublicKeyForPartitionInfo {
     pub trusted: bool,
     /// The rollback index to use for the given partition.
     pub rollback_index_location: u32,
+}
+
+pub type VbState = avb_bindgen::vb_state_t;
+#[derive(Clone, Copy, Debug)]
+pub struct RotData {
+    pub nonce: u64,
+    pub vb_state: VbState,
+    pub boot_locked: bool,
+    pub os_version: u32,
+    pub os_patch_lvl: u32,
+    pub boot_patch_lvl: u32,
+    pub vendor_patch_lvl: u32,
 }
 
 /// Provides the logic to bridge between the libavb C ops and our Rust ops.
@@ -324,6 +345,9 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
                 read_persistent_value: Some(read_persistent_value),
                 write_persistent_value: Some(write_persistent_value),
                 validate_public_key_for_partition: Some(validate_public_key_for_partition),
+                generate_true_random: Some(generate_true_random),
+                read_rot_data: Some(read_rot_data),
+                sign_key_with_cdi_attest: Some(sign_key_with_cdi_attest),
             },
             cert_ops: AvbCertOps {
                 ops: ptr::null_mut(), // Set at the time of use.
@@ -685,11 +709,7 @@ unsafe extern "C" fn read_rollback_index(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_read_rollback_index(
-            ops,
-            rollback_index_location,
-            out_rollback_index,
-        ))
+        result_to_io_enum(try_read_rollback_index(ops, rollback_index_location, out_rollback_index))
     }
 }
 
@@ -734,11 +754,7 @@ unsafe extern "C" fn write_rollback_index(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_write_rollback_index(
-            ops,
-            rollback_index_location,
-            rollback_index,
-        ))
+        result_to_io_enum(try_write_rollback_index(ops, rollback_index_location, rollback_index))
     }
 }
 
@@ -906,13 +922,7 @@ unsafe extern "C" fn get_size_of_partition(
     out_size_num_bytes: *mut u64,
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
-    unsafe {
-        result_to_io_enum(try_get_size_of_partition(
-            ops,
-            partition,
-            out_size_num_bytes,
-        ))
-    }
+    unsafe { result_to_io_enum(try_get_size_of_partition(ops, partition, out_size_num_bytes)) }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -1180,10 +1190,7 @@ unsafe fn try_validate_public_key_for_partition(
     // * libavb gives us a properly-allocated `out_*`.
     unsafe {
         ptr::write(out_is_trusted, key_info.trusted);
-        ptr::write(
-            out_rollback_index_location,
-            key_info.rollback_index_location,
-        );
+        ptr::write(out_rollback_index_location, key_info.rollback_index_location);
     }
     Ok(())
 }
@@ -1340,4 +1347,134 @@ unsafe fn try_get_random(
     // * `cert_ops` is only extracted once and is dropped at the end of the callback.
     let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
     cert_ops.get_random(output)
+}
+/// Dummy extern C calls
+/// TODO: Implement the following methods using try_* methods and also declare
+///  corresponding RUST method is Ops trait.
+unsafe extern "C" fn generate_true_random(
+    ops: *mut AvbOps,
+    out_random_number: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(unsafe { try_generate_true_random(ops, 32, out_random_number) })
+}
+
+unsafe fn try_generate_true_random(
+    ops: *mut AvbOps,
+    num_bytes: usize,
+    output: *mut u8,
+) -> IoResult<()> {
+    check_nonnull(output)?;
+    if num_bytes == 0 {
+        return Ok(());
+    }
+
+    let output = unsafe { slice::from_raw_parts_mut(output, num_bytes) };
+
+    let avb_ops = unsafe { as_ops(ops) }?;
+    avb_ops.generate_true_random(output)
+}
+
+unsafe extern "C" fn read_rot_data(
+    ops: *mut AvbOps,
+    out_nonce: *mut u64,
+    out_vb_state: *mut VbState,
+    out_boot_locked: *mut bool,
+    out_os_version: *mut u32,
+    out_os_patch_lvl: *mut u32,
+    out_boot_patch_lvl: *mut u32,
+    out_vendor_patch_lvl: *mut u32,
+) -> AvbIOResult {
+    result_to_io_enum(try_read_rot_data(
+        ops,
+        out_nonce,
+        out_vb_state,
+        out_boot_locked,
+        out_os_version,
+        out_os_patch_lvl,
+        out_boot_patch_lvl,
+        out_vendor_patch_lvl,
+    ))
+}
+fn try_read_rot_data(
+    ops: *mut AvbOps,
+    out_nonce: *mut u64,
+    out_vb_state: *mut VbState,
+    out_boot_locked: *mut bool,
+    out_os_version: *mut u32,
+    out_os_patch_lvl: *mut u32,
+    out_boot_patch_lvl: *mut u32,
+    out_vendor_patch_lvl: *mut u32,
+) -> IoResult<()> {
+    check_nonnull(out_nonce)?;
+    check_nonnull(out_vb_state)?;
+    check_nonnull(out_boot_locked)?;
+    check_nonnull(out_os_version)?;
+    check_nonnull(out_os_patch_lvl)?;
+    check_nonnull(out_boot_patch_lvl)?;
+    check_nonnull(out_vendor_patch_lvl)?;
+
+    let avb_ops = unsafe { as_ops(ops) }?;
+    let rot_data = avb_ops.read_rot_data()?;
+    unsafe {
+        ptr::write(out_nonce, rot_data.nonce);
+        ptr::write(out_vb_state, rot_data.vb_state);
+        ptr::write(out_boot_locked, rot_data.boot_locked);
+        ptr::write(out_os_version, rot_data.os_version);
+        ptr::write(out_os_patch_lvl, rot_data.os_patch_lvl);
+        ptr::write(out_boot_patch_lvl, rot_data.boot_patch_lvl);
+        ptr::write(out_vendor_patch_lvl, rot_data.vendor_patch_lvl);
+    }
+    Ok(())
+}
+unsafe extern "C" fn sign_key_with_cdi_attest(
+    ops: *mut AvbOps,
+    key_to_sign: *const u8,
+    key_to_sign_length: usize,
+    certificate_subject: *const c_char,
+    buffer_size: usize,
+    out_signed_data: *mut u8,
+    out_signed_data_length: *mut usize,
+) -> AvbIOResult {
+    result_to_io_enum(try_sign_key_with_cdi_attest(
+        ops,
+        key_to_sign,
+        key_to_sign_length,
+        certificate_subject,
+        buffer_size,
+        out_signed_data,
+        out_signed_data_length,
+    ))
+}
+
+fn try_sign_key_with_cdi_attest(
+    ops: *mut AvbOps,
+    key_to_sign: *const u8,
+    key_to_sign_length: usize,
+    certificate_subject: *const c_char,
+    buffer_size: usize,
+    out_signed_data: *mut u8,
+    out_signed_data_length: *mut usize,
+) -> IoResult<()> {
+    check_nonnull(out_signed_data)?;
+    check_nonnull(key_to_sign)?;
+    check_nonnull(certificate_subject)?;
+    check_nonnull(out_signed_data_length)?;
+
+    if buffer_size == 0 {
+        return Ok(());
+    }
+    unsafe {
+        ptr::write(out_signed_data_length, 0);
+    }
+
+    let pub_key = unsafe { slice::from_raw_parts(key_to_sign, key_to_sign_length) };
+    let subject = unsafe { CStr::from_ptr(certificate_subject) };
+    let output = unsafe { slice::from_raw_parts_mut(out_signed_data, buffer_size) };
+
+    let avb_ops = unsafe { as_ops(ops) }?;
+    let length = avb_ops.sign_key_with_cdi_attest(pub_key, subject, output)?;
+    unsafe {
+        ptr::write(out_signed_data_length, length);
+    }
+    Ok(())
 }
