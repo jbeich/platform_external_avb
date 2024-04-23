@@ -61,6 +61,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "5fa3d8cb_e4f39b8e",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 182,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T23:10:01Z",
+      "side": 1,
+      "message": "Looks like it\u0027s almost exactly 4KiB larger with this change (608320 bytes -\u003e 612512 bytes, ~0.7% increase):\n\n```\n$ lunch aosp_cf_arm64_phone-trunk_staging-eng\n\n$ m pvmfw_img\n$ ls -l out/soong/.../pvmfw.bin\n-rw-r----- 1 dpursell primarygroup 608320 Apr 23 15:36 out/soong/.../pvmfw.bin\n\n# Bring in this CL\n\n$ m pvmfw_img\n$ ls -l out/soong/.../pvmfw.bin\n-rw-r----- 1 dpursell primarygroup 612512 Apr 23 15:50 out/soong/.../pvmfw.bin\n```\n\nI\u0027m not sure how significant that is given your space budget, but we can add another feature to gate this behind if necessary.",
+      "parentUuid": "f5fb3a68_8f677ba9",
+      "range": {
+        "startLine": 182,
+        "startChar": 8,
+        "endLine": 182,
+        "endChar": 21
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "7224f9fa_bfc71652",
         "filename": "rust/src/cert.rs",
         "patchSetId": 1
@@ -72,6 +96,30 @@
       "writtenOn": "2024-04-18T13:03:07Z",
       "side": 1,
       "message": "nit: this can be removed.",
+      "range": {
+        "startLine": 224,
+        "startChar": 19,
+        "endLine": 224,
+        "endChar": 25
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0f9b1688_fb795033",
+        "filename": "rust/src/cert.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 224,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T23:10:01Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "7224f9fa_bfc71652",
       "range": {
         "startLine": 224,
         "startChar": 19,
@@ -105,6 +153,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22ed4251_bca4a237",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1260,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T23:10:01Z",
+      "side": 1,
+      "message": "Ah neat, done.",
+      "parentUuid": "80274b05_7e39d168",
+      "range": {
+        "startLine": 1259,
+        "startChar": 0,
+        "endLine": 1260,
+        "endChar": 44
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "2679ba16_4ed885ae",
@@ -118,6 +190,30 @@
       "writtenOn": "2024-04-18T13:03:07Z",
       "side": 1,
       "message": "Use `if let Err(e) \u003d result` to make it more rusty?",
+      "range": {
+        "startLine": 1285,
+        "startChar": 12,
+        "endLine": 1285,
+        "endChar": 31
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "83542d09_6bbc897d",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1285,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T23:10:01Z",
+      "side": 1,
+      "message": "Much better thanks.",
+      "parentUuid": "2679ba16_4ed885ae",
       "range": {
         "startLine": 1285,
         "startChar": 12,
@@ -151,6 +247,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "ba617353_472c295c",
+        "filename": "rust/tests/cert_tests.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 30,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T23:10:01Z",
+      "side": 1,
+      "message": "Good idea, done.",
+      "parentUuid": "2f68a573_9f79cad5",
+      "range": {
+        "startLine": 30,
+        "startChar": 3,
+        "endLine": 30,
+        "endChar": 37
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4c949a4e_faa8636f",
@@ -164,6 +284,30 @@
       "writtenOn": "2024-04-18T13:03:07Z",
       "side": 1,
       "message": "What about splitting the constants moving and this key struct refactoring into a separate cl to decrease the size of the current change a bit?",
+      "range": {
+        "startLine": 73,
+        "startChar": 9,
+        "endLine": 73,
+        "endChar": 22
+      },
+      "revId": "563015e3773126469f881c3f6b7ab4fe25919d7a",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2b3f4809_3e59201a",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T23:10:01Z",
+      "side": 1,
+      "message": "Oh yeah that\u0027s much better thanks, done.",
+      "parentUuid": "4c949a4e_faa8636f",
       "range": {
         "startLine": 73,
         "startChar": 9,
