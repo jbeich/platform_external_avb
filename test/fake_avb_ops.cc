@@ -429,6 +429,57 @@ AvbIOResult FakeAvbOps::get_random(size_t num_bytes, uint8_t* output) {
   return AVB_IO_RESULT_OK;
 }
 
+AvbIOResult FakeAvbOps::read_rot_data(AvbOps* ops,
+                                      uint64_t* out_nonce,
+                                      vb_state_t* out_vb_state,
+                                      bool* bootLoaderLocked,
+                                      uint32_t* out_os_version,
+                                      uint32_t* out_os_patch_lvl,
+                                      uint32_t* out_boot_patch_lvl,
+                                      uint32_t* out_vendor_patch_lvl) {
+  if (rot_data_ == NULL) {
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+  *out_nonce = rot_data_->nonce;
+  *out_vb_state = rot_data_->vb_state;
+  *bootLoaderLocked = rot_data_->bootLoaderLocked;
+  *out_os_version = rot_data_->os_version;
+  *out_os_patch_lvl = rot_data_->os_patch_lvl;
+  *out_boot_patch_lvl = rot_data_->boot_patch_lvl;
+  *out_vendor_patch_lvl = rot_data_->vendor_patch_lvl;
+  return AVB_IO_RESULT_OK;
+}
+
+AvbIOResult FakeAvbOps::generate_true_random(AvbOps* ops,
+                                             size_t num_bytes,
+                                             uint8_t* out_random) {
+  return get_random(num_bytes, out_random);
+}
+
+AvbIOResult FakeAvbOps::sign_key_with_cdi_attest(
+    AvbOps* ops,
+    const uint8_t* key_to_sign,
+    size_t key_to_sign_length,
+    const char* certificate_subject,
+    size_t buffer_size,
+    uint8_t* out_signed_data,
+    size_t* out_signed_data_length) {
+  if (key_to_sign_length != AVB_ROT_DICE_PUBLIC_KEY_LEN ||
+      rot_attest_private_key_ == NULL || rot_attest_public_key_ == NULL) {
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+  if (!avb_rot_dice_generate_certificate(key_to_sign,
+                                         certificate_subject,
+                                         rot_attest_public_key_,
+                                         rot_attest_private_key_,
+                                         buffer_size,
+                                         out_signed_data,
+                                         out_signed_data_length)) {
+    return AVB_IO_RESULT_ERROR_IO;
+  }
+  return AVB_IO_RESULT_OK;
+}
+
 static AvbIOResult my_ops_read_from_partition(AvbOps* ops,
                                               const char* partition,
                                               int64_t offset,
@@ -587,6 +638,52 @@ static AvbIOResult my_ops_get_random(AvbCertOps* cert_ops,
   return FakeAvbOps::GetInstanceFromAvbOps(cert_ops->ops)
       ->delegate()
       ->get_random(num_bytes, output);
+}
+
+static AvbIOResult my_ops_generate_true_random(AvbOps* ops,
+                                               size_t num_bytes,
+                                               uint8_t* output) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)
+      ->delegate()
+      ->generate_true_random(ops, num_bytes, output);
+}
+
+static AvbIOResult my_ops_read_rot_data(AvbOps* ops,
+                                        uint64_t* out_nonce,
+                                        vb_state_t* out_vb_state,
+                                        bool* bootLoaderLocked,
+                                        uint32_t* out_os_version,
+                                        uint32_t* out_os_patch_lvl,
+                                        uint32_t* out_boot_patch_lvl,
+                                        uint32_t* out_vendor_patch_lvl) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)->delegate()->read_rot_data(
+      ops,
+      out_nonce,
+      out_vb_state,
+      bootLoaderLocked,
+      out_os_version,
+      out_os_patch_lvl,
+      out_boot_patch_lvl,
+      out_vendor_patch_lvl);
+}
+
+static AvbIOResult my_ops_sign_key_with_cdi_attest(
+    AvbOps* ops,
+    const uint8_t* key_to_sign,
+    size_t key_to_sign_length,
+    const char* certificate_subject,
+    size_t buffer_size,
+    uint8_t* out_signed_data,
+    size_t* out_signed_data_length) {
+  return FakeAvbOps::GetInstanceFromAvbOps(ops)
+      ->delegate()
+      ->sign_key_with_cdi_attest(ops,
+                                 key_to_sign,
+                                 key_to_sign_length,
+                                 certificate_subject,
+                                 buffer_size,
+                                 out_signed_data,
+                                 out_signed_data_length);
 }
 
 FakeAvbOps::FakeAvbOps() {

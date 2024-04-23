@@ -28,8 +28,11 @@ use crate::{
     ops, Ops,
 };
 use alloc::vec::Vec;
+
 use avb_bindgen::{
-    avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
+    avb_rot_dice_generate_certificate, avb_slot_verify, avb_slot_verify_data_free,
+    AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData, AVB_ROT_DICE_PRIVATE_KEY_LEN,
+    AVB_ROT_DICE_PUBLIC_KEY_LEN,
 };
 use core::{
     ffi::{c_char, CStr},
@@ -457,4 +460,49 @@ pub fn slot_verify<'a>(
         // No other error provides verification data.
         Err(e) => Err(e),
     }
+}
+
+/// Wrap avb_rot_dice_generate_certificate method
+///    pub fn avb_rot_dice_generate_certificate(
+///        subject_public_key: *const u8,
+///        cert_subject: *const core::ffi::c_char,
+///        authority_public_key: *const u8,
+///        authority_private_key: *const u8,
+///        certificate_buffer_size: usize,
+///        certificate: *mut u8,
+///        certificate_actual_size: *mut usize,
+///    ) -> bool;
+#[allow(dead_code)]
+pub fn dice_generate_certificate(
+    subject_public_key: &[u8],
+    authority_public_key: &[u8],
+    authority_private_key: &[u8],
+    certificate_subject: &CStr,
+    out_signed_data: &mut [u8],
+) -> usize {
+    let mut result: usize = 0;
+    if (subject_public_key.len() == AVB_ROT_DICE_PUBLIC_KEY_LEN.try_into().unwrap())
+        && (authority_public_key.len() == AVB_ROT_DICE_PUBLIC_KEY_LEN.try_into().unwrap())
+        && (authority_private_key.len() == AVB_ROT_DICE_PRIVATE_KEY_LEN.try_into().unwrap())
+    {
+        let buf_size = out_signed_data.len();
+        let mut cert_actual_size: usize = 0;
+        // SAFETY: `out_data` was properly allocated by libavb and ownership has passed to us.
+        unsafe {
+            let cert_actual_size_ptr: *mut usize = &mut cert_actual_size;
+            result = match avb_rot_dice_generate_certificate(
+                subject_public_key.as_ptr(),
+                certificate_subject.as_ptr(),
+                authority_public_key.as_ptr(),
+                authority_private_key.as_ptr(),
+                buf_size,
+                out_signed_data.as_mut_ptr(),
+                cert_actual_size_ptr,
+            ) {
+                true => cert_actual_size,
+                false => 0,
+            }
+        }
+    }
+    result
 }
