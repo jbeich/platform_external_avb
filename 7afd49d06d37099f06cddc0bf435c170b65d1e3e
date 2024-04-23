@@ -26,6 +26,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d6b435e2_9551bd1b",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 346,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T17:12:46Z",
+      "side": 1,
+      "message": "Good call, done.",
+      "parentUuid": "34e303a7_eb330112",
+      "range": {
+        "startLine": 346,
+        "startChar": 28,
+        "endLine": 346,
+        "endChar": 32
+      },
+      "revId": "7afd49d06d37099f06cddc0bf435c170b65d1e3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "dbbfcb59_67f35887",
         "filename": "rust/src/ops.rs",
         "patchSetId": 6
@@ -89,6 +113,30 @@
         "startChar": 18,
         "endLine": 364,
         "endChar": 27
+      },
+      "revId": "7afd49d06d37099f06cddc0bf435c170b65d1e3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b201761f_69a66fca",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T17:12:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f41efcaa_dd573394",
+      "range": {
+        "startLine": 364,
+        "startChar": 60,
+        "endLine": 364,
+        "endChar": 61
       },
       "revId": "7afd49d06d37099f06cddc0bf435c170b65d1e3e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"

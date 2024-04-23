@@ -212,6 +212,30 @@
       },
       "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f5d6ccfb_a63b8010",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T17:12:46Z",
+      "side": 1,
+      "message": "Ack thanks, good to know about macros.\n\nI\u0027m reading \"current approach\" to mean patchset 2 where this comment thread is, rather than the latest patchset, but if I misunderstood please let me know and I will post a follow-up CL to switch to the approach in patchset 6. I also modified the name slightly to try to address the naming concern. Thanks!",
+      "parentUuid": "ec0699ac_4a932c8b",
+      "range": {
+        "startLine": 347,
+        "startChar": 18,
+        "endLine": 347,
+        "endChar": 21
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
