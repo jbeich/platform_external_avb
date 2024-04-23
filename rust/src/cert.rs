@@ -107,8 +107,8 @@ pub const CERT_PIK_VERSION_LOCATION: usize = avb_bindgen::AVB_CERT_PIK_VERSION_L
 /// If using libavb_cert, make sure no vbmetas use this location, it must be reserved for the PSK.
 pub const CERT_PSK_VERSION_LOCATION: usize = avb_bindgen::AVB_CERT_PSK_VERSION_LOCATION as usize;
 
-/// libavb_cert additional callbacks.
-pub trait CertOps<'a>: Ops<'a> {
+/// libavb_cert extension callbacks.
+pub trait CertOps {
     /// Reads the device's permanent attributes.
     ///
     /// The full permanent attributes are not required to be securely stored; corruption of this
@@ -198,14 +198,14 @@ pub trait CertOps<'a>: Ops<'a> {
 /// specific partitions.
 ///
 /// # Arguments
-/// * `ops`: the `CertOps` callback implementations.
+/// * `ops`: the `Ops` callback implementations, which must provide a `cert_ops()` implementation.
 /// * `public_key`: the public key.
 /// * `public_key_metadata`: public key metadata.
 ///
 /// # Returns
 /// True if the given key is valid, false if it is not, `IoError` on error.
 pub fn cert_validate_vbmeta_public_key(
-    _ops: &mut dyn CertOps,
+    _ops: &mut dyn Ops,
     _public_key: &[u8],
     _public_key_metadata: Option<&[u8]>,
 ) -> IoResult<bool> {
@@ -237,15 +237,18 @@ pub fn cert_generate_unlock_challenge(
 /// device's permanent attributes.
 ///
 /// # Arguments
-/// * `cert_ops`: the `CertOps` callback implementations.
+/// * `ops`: the `Ops` callback implementations, which must provide a `cert_ops()` implementation.
 /// * `credential`: the signed unlock credential to verify.
 ///
 /// # Returns
 /// * `Ok(true)` if the credential validated
 /// * `Ok(false)` if it failed validation
-/// * `Err(IoError)` on `cert_ops` failure
+/// * `Err(IoError)` on `ops` failure
 pub fn cert_validate_unlock_credential(
-    _cert_ops: &mut dyn CertOps,
+    // Note: in the libavb C API this function takes an `AvbCertOps` rather than `AvbOps`, but
+    // the implementation requires both, so we need an `Ops` here. This is also more consistent
+    // with `validate_vbmeta_public_key()` which similarly requires both but takes `AvbOps`.
+    _ops: &mut dyn Ops,
     _credential: &CertUnlockCredential,
 ) -> IoResult<bool> {
     // TODO(b/320543206): implement
