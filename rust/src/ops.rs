@@ -324,6 +324,9 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
                 read_persistent_value: Some(read_persistent_value),
                 write_persistent_value: Some(write_persistent_value),
                 validate_public_key_for_partition: Some(validate_public_key_for_partition),
+                generate_true_random: Some(generate_true_random),
+                read_rot_data: Some(read_rot_data),
+                sign_key_with_cdi_attest: Some(sign_key_with_cdi_attest),
             },
             cert_ops: AvbCertOps {
                 ops: ptr::null_mut(), // Set at the time of use.
@@ -1340,4 +1343,38 @@ unsafe fn try_get_random(
     // * `cert_ops` is only extracted once and is dropped at the end of the callback.
     let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
     cert_ops.get_random(output)
+
+/// Dummy extern C calls
+/// TODO: Implement the following methods using try_* methods and also declare
+///  corresponding RUST method is Ops trait.
+unsafe extern "C" fn generate_true_random(
+    _ops: *mut AvbOps,
+    _out_random_number: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(Ok(()))
+}
+
+unsafe extern "C" fn read_rot_data(
+    _ops: *mut AvbOps,
+    _out_nonce: *mut u64,
+    _out_vb_state: *mut avb_bindgen::vb_state_t,
+    _out_boot_locked: *mut bool,
+    _out_os_version: *mut u32,
+    _out_os_patch_lvl: *mut u32,
+    _out_boot_patch_lvl: *mut u32,
+    _out_vendor_patch_lvl: *mut u32,
+) -> AvbIOResult {
+    result_to_io_enum(Ok(()))
+}
+
+unsafe extern "C" fn sign_key_with_cdi_attest(
+    _ops: *mut AvbOps,
+    _key_to_sign: *const u8,
+    _key_to_sign_length: usize,
+    _certificate_subject: *const c_char,
+    _buffer_size: usize,
+    _out_signed_data: *mut u8,
+    _out_signed_data_length: *mut usize,
+) -> AvbIOResult {
+    result_to_io_enum(Ok(()))
 }
