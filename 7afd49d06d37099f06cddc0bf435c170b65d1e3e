@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dbbfcb59_67f35887",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 6
+      },
+      "lineNbr": 364,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T00:06:53Z",
+      "side": 1,
+      "message": "I couldn\u0027t figure out how to use the `AsMut` trait here because it takes `\u0026mut self` but we have a `Pin\u003c\u0026mut Self\u003e` instead, so I had to create a function instead.",
+      "range": {
+        "startLine": 364,
+        "startChar": 18,
+        "endLine": 364,
+        "endChar": 27
+      },
+      "revId": "7afd49d06d37099f06cddc0bf435c170b65d1e3e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
