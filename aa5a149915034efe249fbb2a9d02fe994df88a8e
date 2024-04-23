@@ -164,6 +164,30 @@
       },
       "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3f09d70_ffe92869",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 347,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-23T00:01:47Z",
+      "side": 1,
+      "message": "\u003e What about creating a separate, static function like new_ops_bridge that constructs a pinned OpsBridge instance and sets up all the necessary circular pointers?\n\nUnfortunately I don\u0027t think it\u0027s possible to return a stack-pinned object from a function, a `Pin` doesn\u0027t own the object but only a reference to it, so trying to create an object on the stack in a function and return a `Pin` to it would be a dangling reference.\n\nWe could probably create a macro to do this, since the macro executes in the caller\u0027s frame directly rather than trying to return a value from a function. I\u0027m not sure it would be worth the complexity of defining the macro though.\n\nIMO the compile-time-enforced correctness of this approach is worth doing a small amount of work inside an accessor, but I\u0027ve also uploaded a version with a separate init function (patch set 6) and if you strongly prefer it we can go that way.",
+      "parentUuid": "8c717b93_f081b1a0",
+      "range": {
+        "startLine": 347,
+        "startChar": 18,
+        "endLine": 347,
+        "endChar": 21
+      },
+      "revId": "aa5a149915034efe249fbb2a9d02fe994df88a8e",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
