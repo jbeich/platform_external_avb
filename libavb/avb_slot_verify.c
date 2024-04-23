@@ -23,12 +23,14 @@
  */
 
 #include "avb_slot_verify.h"
+
 #include "avb_chain_partition_descriptor.h"
 #include "avb_cmdline.h"
 #include "avb_footer.h"
 #include "avb_hash_descriptor.h"
 #include "avb_hashtree_descriptor.h"
 #include "avb_kernel_cmdline_descriptor.h"
+#include "avb_rot.h"
 #include "avb_sha.h"
 #include "avb_util.h"
 #include "avb_vbmeta_image.h"
@@ -1605,6 +1607,8 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
       ret = sub_ret;
       goto fail;
     }
+    /* generate rot data  and add that to command line, if supported*/
+    avb_rot_generate_rot_data(ops, slot_data);
   }
 
   /* Substitute $(ANDROID_SYSTEM_PARTUUID) and friends. */

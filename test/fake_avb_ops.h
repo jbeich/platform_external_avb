@@ -35,6 +35,16 @@
 
 namespace avb {
 
+typedef struct {
+  uint64_t nonce;
+  vb_state_t vb_state;
+  bool bootLoaderLocked;
+  uint32_t os_version;
+  uint32_t os_patch_lvl;
+  uint32_t boot_patch_lvl;
+  uint32_t vendor_patch_lvl;
+} FakeRotData;
+
 // A delegate interface for ops callbacks. This allows tests to override default
 // fake implementations. For convenience, test fixtures can inherit
 // FakeAvbOpsDelegateWithDefaults and only override as needed.
@@ -115,6 +125,28 @@ class FakeAvbOpsDelegate {
                                uint64_t key_version) = 0;
 
   virtual AvbIOResult get_random(size_t num_bytes, uint8_t* output) = 0;
+
+  virtual AvbIOResult read_rot_data(AvbOps* ops,
+                                    uint64_t* out_nonce,
+                                    vb_state_t* out_vb_state,
+                                    bool* bootLoaderLocked,
+                                    uint32_t* out_os_version,
+                                    uint32_t* out_os_patch_lvl,
+                                    uint32_t* out_boot_patch_lvl,
+                                    uint32_t* out_vendor_patch_lvl) = 0;
+
+  virtual AvbIOResult generate_true_random(AvbOps* ops,
+                                           size_t num_bytes,
+                                           uint8_t* out_random) = 0;
+
+  virtual AvbIOResult sign_key_with_cdi_attest(
+      AvbOps* ops,
+      const uint8_t* key_to_sign,
+      size_t key_to_sign_length,
+      const char* certificate_subject,
+      size_t buffer_size,
+      uint8_t* out_signed_data,
+      size_t* out_signed_data_length) = 0;
 };
 
 // Provides fake implementations of AVB ops. All instances of this class must be
@@ -206,6 +238,18 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
     hidden_partitions_ = partitions;
   }
 
+  void set_rot_data(const uint8_t* true_random,
+                    size_t rand_num_bytes,
+                    const FakeRotData* rot,
+                    uint8_t priv_key[AVB_ROT_DICE_PRIVATE_KEY_LEN],
+                    uint8_t pub_key[AVB_ROT_DICE_PUBLIC_KEY_LEN]) {
+    rot_true_random_ = true_random;
+    rot_true_random_num_len_ = rand_num_bytes;
+    rot_data_ = rot;
+    rot_attest_private_key_ = priv_key;
+    rot_attest_public_key_ = pub_key;
+  }
+
   void enable_get_preloaded_partition();
 
   bool preload_partition(const std::string& partition,
@@ -293,6 +337,27 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   AvbIOResult get_random(size_t num_bytes, uint8_t* output) override;
 
+  AvbIOResult read_rot_data(AvbOps* ops,
+                            uint64_t* out_nonce,
+                            vb_state_t* out_vb_state,
+                            bool* bootLoaderLocked,
+                            uint32_t* out_os_version,
+                            uint32_t* out_os_patch_lvl,
+                            uint32_t* out_boot_patch_lvl,
+                            uint32_t* out_vendor_patch_lvl) override;
+
+  AvbIOResult generate_true_random(AvbOps* ops,
+                                   size_t num_bytes,
+                                   uint8_t* out_random) override;
+
+  AvbIOResult sign_key_with_cdi_attest(AvbOps* ops,
+                                       const uint8_t* key_to_sign,
+                                       size_t key_to_sign_length,
+                                       const char* certificate_subject,
+                                       size_t buffer_size,
+                                       uint8_t* out_signed_data,
+                                       size_t* out_signed_data_length) override;
+
  private:
   AvbOps avb_ops_;
   AvbABOps avb_ab_ops_;
@@ -324,6 +389,12 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
   std::set<std::string> hidden_partitions_;
 
   std::map<std::string, std::string> stored_values_;
+
+  const FakeRotData* rot_data_;
+  const uint8_t* rot_attest_private_key_;
+  const uint8_t* rot_attest_public_key_;
+  const uint8_t* rot_true_random_;
+  size_t rot_true_random_num_len_;
 };
 
 // A delegate implementation that calls FakeAvbOps by default.
@@ -451,6 +522,49 @@ class FakeAvbOpsDelegateWithDefaults : public FakeAvbOpsDelegate {
   AvbIOResult get_random(size_t num_bytes, uint8_t* output) override {
     return ops_.get_random(num_bytes, output);
   }
+
+  AvbIOResult read_rot_data(AvbOps* ops,
+                            uint64_t* out_nonce,
+                            vb_state_t* out_vb_state,
+                            bool* bootLoaderLocked,
+                            uint32_t* out_os_version,
+                            uint32_t* out_os_patch_lvl,
+                            uint32_t* out_boot_patch_lvl,
+                            uint32_t* out_vendor_patch_lvl) override {
+    return ops_.read_rot_data(ops,
+                              out_nonce,
+                              out_vb_state,
+                              bootLoaderLocked,
+                              out_os_version,
+                              out_os_patch_lvl,
+                              out_boot_patch_lvl,
+                              out_vendor_patch_lvl);
+  }
+
+  AvbIOResult generate_true_random(AvbOps* ops,
+                                   size_t num_bytes,
+                                   uint8_t* out_random) override {
+    return ops_.generate_true_random(ops, num_bytes, out_random);
+  }
+
+  AvbIOResult sign_key_with_cdi_attest(
+      AvbOps* ops,
+      const uint8_t* key_to_sign,
+      size_t key_to_sign_length,
+      const char* certificate_subject,
+      size_t buffer_size,
+      uint8_t* out_signed_data,
+      size_t* out_signed_data_length) override {
+    return ops_.sign_key_with_cdi_attest(ops,
+                                         key_to_sign,
+                                         key_to_sign_length,
+                                         certificate_subject,
+                                         buffer_size,
+                                         out_signed_data,
+                                         out_signed_data_length);
+  }
+  void initAvbOpsForRot();
+  void initAvbOpsForRotNotImplemented();
 
  protected:
   FakeAvbOps ops_;
