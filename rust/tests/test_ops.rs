@@ -66,14 +66,13 @@ impl<'a> FakePartition<'a> {
     }
 }
 
-/// Fake vbmeta key state.
-pub struct FakeVbmetaKeyState {
-    /// Key trust & rollback index info.
-    pub info: PublicKeyForPartitionInfo,
-
-    /// If specified, indicates the specific partition this vbmeta is tied to (for
-    /// `validate_public_key_for_partition()`).
-    pub for_partition: Option<&'static str>,
+/// Fake vbmeta key.
+pub enum FakeVbmetaKey {
+    /// Standard AVB validation using a hardcoded key; if the signing key matches these contents
+    /// it is accepted, otherwise it's rejected.
+    Avb(Vec<u8>, Option<Vec<u8>>),
+    /// Return an `IoError` when trying to access this key.
+    IoError,
 }
 
 /// Fake `Ops` test fixture.
@@ -84,11 +83,14 @@ pub struct TestOps<'a> {
     /// Partitions to provide to libavb callbacks.
     pub partitions: HashMap<&'static str, FakePartition<'a>>,
 
-    /// Vbmeta public keys as a map of {(key, metadata): state}. Querying unknown keys will
-    /// return `IoError::Io`.
+    /// Default vbmeta key to use for the `validate_vbmeta_public_key()` callback.
+    pub vbmeta_key: FakeVbmetaKey,
+
+    /// Additional vbmeta keys for the `validate_public_key_for_partition()` callback.
     ///
-    /// See `add_vbmeta_key*()` functions for simpler wrappers to inject these keys.
-    pub vbmeta_keys: HashMap<(Vec<u8>, Option<Vec<u8>>), FakeVbmetaKeyState>,
+    /// Stored as a map of {partition_name: (key, rollback_location)}. Querying keys for partitions
+    /// not in this map will return `IoError::Io`.
+    pub vbmeta_keys_for_partition: HashMap<&'static str, (FakeVbmetaKey, u32)>,
 
     /// Rollback indices. Accessing unknown locations will return `IoError::Io`.
     pub rollbacks: HashMap<usize, u64>,
@@ -153,41 +155,25 @@ impl<'a> TestOps<'a> {
             .insert(name.into(), contents.map(|b| b.into()));
     }
 
-    /// Adds a fake vbmeta key not tied to any partition.
-    pub fn add_vbmeta_key(&mut self, key: Vec<u8>, metadata: Option<Vec<u8>>, trusted: bool) {
-        self.vbmeta_keys.insert(
-            (key, metadata),
-            FakeVbmetaKeyState {
-                // `rollback_index_location` doesn't matter in this case, it will be read from
-                // the vbmeta blob.
-                info: PublicKeyForPartitionInfo {
-                    trusted,
-                    rollback_index_location: 0,
-                },
-                for_partition: None,
-            },
-        );
-    }
-
-    /// Adds a fake vbmeta key tied to the given partition and rollback index location.
-    pub fn add_vbmeta_key_for_partition(
+    /// Internal helper to validate a vbmeta key.
+    fn validate_fake_key(
         &mut self,
-        key: Vec<u8>,
-        metadata: Option<Vec<u8>>,
-        trusted: bool,
-        partition: &'static str,
-        rollback_index_location: u32,
-    ) {
-        self.vbmeta_keys.insert(
-            (key, metadata),
-            FakeVbmetaKeyState {
-                info: PublicKeyForPartitionInfo {
-                    trusted,
-                    rollback_index_location,
-                },
-                for_partition: Some(partition),
-            },
-        );
+        partition: Option<&str>,
+        public_key: &[u8],
+        public_key_metadata: Option<&[u8]>,
+    ) -> IoResult<bool> {
+        let fake_key = match partition {
+            None => &self.vbmeta_key,
+            Some(p) => &self.vbmeta_keys_for_partition.get(p).ok_or(IoError::Io)?.0,
+        };
+
+        match fake_key {
+            FakeVbmetaKey::Avb(key, metadata) => {
+                // avb: only accept if it matches the hardcoded key + metadata.
+                Ok((&key[..], metadata.as_deref()) == (public_key, public_key_metadata))
+            }
+            FakeVbmetaKey::IoError => Err(IoError::Io),
+        }
     }
 }
 
@@ -195,7 +181,8 @@ impl Default for TestOps<'_> {
     fn default() -> Self {
         Self {
             partitions: HashMap::new(),
-            vbmeta_keys: HashMap::new(),
+            vbmeta_key: FakeVbmetaKey::IoError,
+            vbmeta_keys_for_partition: HashMap::new(),
             rollbacks: HashMap::new(),
             unlock_state: Err(IoError::Io),
             persistent_values: HashMap::new(),
@@ -259,13 +246,7 @@ impl<'a> Ops<'a> for TestOps<'a> {
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
     ) -> IoResult<bool> {
-        self.vbmeta_keys
-            // The compiler can't match (&[u8], Option<&[u8]>) to keys of type
-            // (Vec<u8>, Option<Vec<u8>>) so we turn the &[u8] into vectors here. This is a bit
-            // inefficient, but it's simple which is more important for tests than efficiency.
-            .get(&(public_key.to_vec(), public_key_metadata.map(|m| m.to_vec())))
-            .ok_or(IoError::Io)
-            .map(|k| k.info.trusted)
+        self.validate_fake_key(None, public_key, public_key_metadata)
     }
 
     fn read_rollback_index(&mut self, location: usize) -> IoResult<u64> {
@@ -345,19 +326,17 @@ impl<'a> Ops<'a> for TestOps<'a> {
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
     ) -> IoResult<PublicKeyForPartitionInfo> {
-        let key = self
-            .vbmeta_keys
-            .get(&(public_key.to_vec(), public_key_metadata.map(|m| m.to_vec())))
-            .ok_or(IoError::Io)?;
+        let partition = partition.to_str()?;
 
-        if let Some(for_partition) = key.for_partition {
-            if for_partition == partition.to_str()? {
-                // The key is registered for this partition; return its info.
-                return Ok(key.info);
-            }
-        }
+        let rollback_index_location = self
+            .vbmeta_keys_for_partition
+            .get(partition)
+            .ok_or(IoError::Io)?
+            .1;
 
-        // No match.
-        Err(IoError::Io)
+        Ok(PublicKeyForPartitionInfo {
+            trusted: self.validate_fake_key(Some(partition), public_key, public_key_metadata)?,
+            rollback_index_location,
+        })
     }
 }
