@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f323973f_5edb880b",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-24T17:40:24Z",
+      "side": 1,
+      "message": "Huh I totally forgot we could name enum fields, this is much better thanks.",
+      "parentUuid": "ec8eb95f_cbb96d81",
+      "range": {
+        "startLine": 73,
+        "startChar": 7,
+        "endLine": 73,
+        "endChar": 33
+      },
+      "revId": "96594951758f4fc02b536d223d5d010e632c85bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "0d2e0254_cd7d6a5c",
@@ -47,6 +71,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "96f3ddc9_79644cb7",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-24T17:40:24Z",
+      "side": 1,
+      "message": "That makes sense, I was thinking that tests might want to return a specific `IoError` here but in practice there\u0027s no need for this, just defaulting `None` -\u003e `IoError::Io` is simpler and sufficient.",
+      "parentUuid": "0d2e0254_cd7d6a5c",
+      "range": {
+        "startLine": 74,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 12
+      },
+      "revId": "96594951758f4fc02b536d223d5d010e632c85bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "53a2b26a_fefbb153",
@@ -60,6 +108,30 @@
       "writtenOn": "2024-04-24T13:57:41Z",
       "side": 1,
       "message": "Maybe rename this to `default_vbmeta_key` to be more clear?",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "96594951758f4fc02b536d223d5d010e632c85bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "331a5a30_d72cb464",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-24T17:40:24Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "53a2b26a_fefbb153",
       "range": {
         "startLine": 87,
         "startChar": 8,
