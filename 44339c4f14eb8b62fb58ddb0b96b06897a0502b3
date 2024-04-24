@@ -16,6 +16,29 @@
       "message": "First commit",
       "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b5b683d_335d0bc2",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-24T14:47:18Z",
+      "side": 1,
+      "message": "Until now, DICE is independent from AVB, but it appears that with this cl, they will become more closely linked. Could you provide more context regarding the rationale behind incorporating DICE into AVB and what do we try to achieve here?",
+      "range": {
+        "startLine": 1166,
+        "startChar": 35,
+        "endLine": 1166,
+        "endChar": 45
+      },
+      "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
