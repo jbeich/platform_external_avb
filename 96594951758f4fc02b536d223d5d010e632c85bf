@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ec8eb95f_cbb96d81",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-24T13:57:41Z",
+      "side": 1,
+      "message": "Can we give names to these types to make them more readable? Something like\n\n```\nAvb {\n  public_key: Vec\u003cu8\u003e,\n  public_key_metadata: Option\u003cVec\u003cu8\u003e\u003e,\n}\n```",
+      "range": {
+        "startLine": 73,
+        "startChar": 7,
+        "endLine": 73,
+        "endChar": 33
+      },
+      "revId": "96594951758f4fc02b536d223d5d010e632c85bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0d2e0254_cd7d6a5c",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-24T13:57:41Z",
+      "side": 1,
+      "message": "It\u0027s weird that an error is listed here as an item in the enum side by side with the data. Can `ops.vbmeta_key` just take the type of `Option\u003cFakeVbmetaKey\u003e` to avoid this error placeholder?",
+      "range": {
+        "startLine": 74,
+        "startChar": 4,
+        "endLine": 75,
+        "endChar": 12
+      },
+      "revId": "96594951758f4fc02b536d223d5d010e632c85bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "53a2b26a_fefbb153",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 87,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-24T13:57:41Z",
+      "side": 1,
+      "message": "Maybe rename this to `default_vbmeta_key` to be more clear?",
+      "range": {
+        "startLine": 87,
+        "startChar": 8,
+        "endLine": 87,
+        "endChar": 18
+      },
+      "revId": "96594951758f4fc02b536d223d5d010e632c85bf",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
