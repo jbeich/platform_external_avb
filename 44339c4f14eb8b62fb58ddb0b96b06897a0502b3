@@ -20,6 +20,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "cf3b4e3a_416d1993",
+        "filename": "libavb/avb_rot.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 558,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-24T14:52:31Z",
+      "side": 1,
+      "message": "This is just hmac, it has nothing to do with DICE. I think nowadays it\u0027s recommended to only use `boringssl` for crypto operations like this.",
+      "range": {
+        "startLine": 558,
+        "startChar": 12,
+        "endLine": 558,
+        "endChar": 42
+      },
+      "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "6b5b683d_335d0bc2",
         "filename": "rust/src/ops.rs",
         "patchSetId": 1
