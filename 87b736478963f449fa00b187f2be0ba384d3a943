@@ -22,6 +22,30 @@
       },
       "revId": "87b736478963f449fa00b187f2be0ba384d3a943",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "65ddab40_1edf18d4",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-25T16:01:42Z",
+      "side": 1,
+      "message": "It seems that calling `..Default::default()` from `fn default()` causes infinite recursion.\n\nI had thought that `..Default::default()` only initializes the non-specified fields, but it sounds like what it actually does is create a full `Default` object (which causes the recursion) and then overwrites the specified fields. TIL.",
+      "parentUuid": "06bdfb2a_559a117e",
+      "range": {
+        "startLine": 190,
+        "startChar": 8,
+        "endLine": 197,
+        "endChar": 9
+      },
+      "revId": "87b736478963f449fa00b187f2be0ba384d3a943",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
