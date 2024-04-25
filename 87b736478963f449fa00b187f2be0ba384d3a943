@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "06bdfb2a_559a117e",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 197,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-25T13:58:01Z",
+      "side": 1,
+      "message": "nit: Perhaps as follow?\n\n```suggestion\n        Self {\n            unlock_state: Err(IoError::Io),\n            ..Default::default()\n        }\n```",
+      "range": {
+        "startLine": 190,
+        "startChar": 8,
+        "endLine": 197,
+        "endChar": 9
+      },
+      "revId": "87b736478963f449fa00b187f2be0ba384d3a943",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
