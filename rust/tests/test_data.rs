@@ -65,3 +65,7 @@ pub const TEST_CERT_PSK_VERSION: u64 = 42;
 // $ sha256sum external/avb/test/data/cert_permanent_attributes.bin
 pub const TEST_CERT_PERMANENT_ATTRIBUTES_HASH_HEX: &str =
     "55419e1affff153b58f65ce8a5313a71d2a83a00d0abae10a25b9a8e493d04f7";
+
+// $ sha256sum external/avb/test/data/cert_product_id.bin
+pub const TEST_CERT_PRODUCT_ID_HASH_HEX: &str =
+    "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb";
