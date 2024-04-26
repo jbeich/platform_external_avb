@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cb30c3d3_010ef1d6",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 1326,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-04-26T14:23:16Z",
+      "side": 1,
+      "message": "nit: We can add a check after here to avoid all the unsafe tasks if `num_bytes` is zero.",
+      "range": {
+        "startLine": 1326,
+        "startChar": 26,
+        "endLine": 1326,
+        "endChar": 27
+      },
+      "revId": "ec64962c7587bf62a3e3a0439852052c2bc0c3d2",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
