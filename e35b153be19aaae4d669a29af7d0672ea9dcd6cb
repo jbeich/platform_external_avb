@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "79864824_3fba7d6e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-04-26T18:12:06Z",
+      "side": 1,
+      "message": "I think this should be the last CL!",
+      "revId": "e35b153be19aaae4d669a29af7d0672ea9dcd6cb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
