@@ -83,9 +83,11 @@
 //! # Internally, the device calls `cert_validate_unlock_credential()` to verify the credential.
 //! ```
 
-use crate::{error::io_enum_to_result, ops, IoError, IoResult, Ops};
-use avb_bindgen::avb_cert_validate_vbmeta_public_key;
-use core::pin::pin;
+use crate::{error::io_enum_to_result, ops, IoError, IoResult, Ops, PublicKeyForPartitionInfo};
+use avb_bindgen::{avb_cert_generate_unlock_challenge, avb_cert_validate_vbmeta_public_key};
+use core::{ffi::CStr, pin::pin};
+#[cfg(feature = "uuid")]
+use uuid::Uuid;
 
 /// libavb_cert permanent attributes.
 pub use avb_bindgen::AvbCertPermanentAttributes as CertPermanentAttributes;
@@ -249,15 +251,29 @@ pub fn cert_validate_vbmeta_public_key(
 /// The user can sign the resulting token via `avbtool make_cert_unlock_credential`.
 ///
 /// # Arguments
-/// * `cert_ops`: the `CertOps` callback implementations.
+/// * `cert_ops`: the `CertOps` callback implementations; base `Ops` are not required here.
 ///
 /// # Returns
 /// The challenge to sign with the PUK, or `IoError` on `cert_ops` failure.
-pub fn cert_generate_unlock_challenge(
-    _cert_ops: &mut dyn CertOps,
-) -> IoResult<CertUnlockChallenge> {
-    // TODO(b/320543206): implement
-    Err(IoError::NotImplemented)
+pub fn cert_generate_unlock_challenge(cert_ops: &mut dyn CertOps) -> IoResult<CertUnlockChallenge> {
+    // `OpsBridge` requires a full `Ops` object, so we wrap `cert_ops` in a do-nothing `Ops`
+    // implementation. This is simpler than teaching `OpsBridge` to handle the cert-only case.
+    let mut ops = CertOnlyOps { cert_ops };
+    let ops_bridge = pin!(ops::OpsBridge::new(&mut ops));
+    let mut challenge = CertUnlockChallenge::default();
+    io_enum_to_result(
+        // SAFETY:
+        // * `ops_bridge.init_and_get_c_ops()` gives us a valid `AvbOps` with cert.
+        // * `challenge` is a valid C-compatible `CertUnlockChallenge`.
+        // * this function does not retain references to any of these arguments.
+        unsafe {
+            avb_cert_generate_unlock_challenge(
+                ops_bridge.init_and_get_c_ops().cert_ops,
+                &mut challenge,
+            )
+        },
+    )?;
+    Ok(challenge)
 }
 
 /// Validates a signed credential for authenticated unlock.
@@ -282,4 +298,78 @@ pub fn cert_validate_unlock_credential(
 ) -> IoResult<bool> {
     // TODO(b/320543206): implement
     Err(IoError::NotImplemented)
+}
+
+/// An `Ops` implementation that only provides the `cert_ops()` callback.
+struct CertOnlyOps<'a> {
+    cert_ops: &'a mut dyn CertOps,
+}
+
+impl<'a> Ops<'static> for CertOnlyOps<'a> {
+    fn read_from_partition(
+        &mut self,
+        _partition: &CStr,
+        _offset: i64,
+        _buffer: &mut [u8],
+    ) -> IoResult<usize> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn validate_vbmeta_public_key(
+        &mut self,
+        _public_key: &[u8],
+        _public_key_metadata: Option<&[u8]>,
+    ) -> IoResult<bool> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn read_rollback_index(&mut self, _rollback_index_location: usize) -> IoResult<u64> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn write_rollback_index(
+        &mut self,
+        _rollback_index_location: usize,
+        _index: u64,
+    ) -> IoResult<()> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn read_is_device_unlocked(&mut self) -> IoResult<bool> {
+        Err(IoError::NotImplemented)
+    }
+
+    #[cfg(feature = "uuid")]
+    fn get_unique_guid_for_partition(&mut self, _partition: &CStr) -> IoResult<Uuid> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn get_size_of_partition(&mut self, _partition: &CStr) -> IoResult<u64> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn read_persistent_value(&mut self, _name: &CStr, _value: &mut [u8]) -> IoResult<usize> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn write_persistent_value(&mut self, _name: &CStr, _value: &[u8]) -> IoResult<()> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn erase_persistent_value(&mut self, _name: &CStr) -> IoResult<()> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn validate_public_key_for_partition(
+        &mut self,
+        _partition: &CStr,
+        _public_key: &[u8],
+        _public_key_metadata: Option<&[u8]>,
+    ) -> IoResult<PublicKeyForPartitionInfo> {
+        Err(IoError::NotImplemented)
+    }
+
+    fn cert_ops(&mut self) -> Option<&mut dyn CertOps> {
+        Some(self.cert_ops)
+    }
 }
