@@ -84,7 +84,10 @@
 //! ```
 
 use crate::{error::io_enum_to_result, ops, IoError, IoResult, Ops, PublicKeyForPartitionInfo};
-use avb_bindgen::{avb_cert_generate_unlock_challenge, avb_cert_validate_vbmeta_public_key};
+use avb_bindgen::{
+    avb_cert_generate_unlock_challenge, avb_cert_validate_unlock_credential,
+    avb_cert_validate_vbmeta_public_key,
+};
 use core::{ffi::CStr, pin::pin};
 #[cfg(feature = "uuid")]
 use uuid::Uuid;
@@ -288,16 +291,37 @@ pub fn cert_generate_unlock_challenge(cert_ops: &mut dyn CertOps) -> IoResult<Ce
 /// # Returns
 /// * `Ok(true)` if the credential validated
 /// * `Ok(false)` if it failed validation
+/// * `Err(IoError::NotImplemented)` if `ops` does not provide the required `cert_ops()`.
 /// * `Err(IoError)` on `ops` failure
 pub fn cert_validate_unlock_credential(
     // Note: in the libavb C API this function takes an `AvbCertOps` rather than `AvbOps`, but
     // the implementation requires both, so we need an `Ops` here. This is also more consistent
     // with `validate_vbmeta_public_key()` which similarly requires both but takes `AvbOps`.
-    _ops: &mut dyn Ops,
-    _credential: &CertUnlockCredential,
+    ops: &mut dyn Ops,
+    credential: &CertUnlockCredential,
 ) -> IoResult<bool> {
-    // TODO(b/320543206): implement
-    Err(IoError::NotImplemented)
+    // This API requires both AVB and cert ops.
+    if ops.cert_ops().is_none() {
+        return Err(IoError::NotImplemented);
+    }
+
+    let ops_bridge = pin!(ops::OpsBridge::new(ops));
+    let mut trusted = false;
+    io_enum_to_result(
+        // SAFETY:
+        // * `ops_bridge.init_and_get_c_ops()` gives us a valid `AvbOps` with cert.
+        // * `credential` is a valid C-compatible `CertUnlockCredential`.
+        // * `trusted` is a C-compatible bool.
+        // * this function does not retain references to any of these arguments.
+        unsafe {
+            avb_cert_validate_unlock_credential(
+                ops_bridge.init_and_get_c_ops().cert_ops,
+                credential,
+                &mut trusted,
+            )
+        },
+    )?;
+    Ok(trusted)
 }
 
 /// An `Ops` implementation that only provides the `cert_ops()` callback.
