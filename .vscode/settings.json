@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "libavb.h": "c",
+        "avb_ops.h": "c"
+    }
+}
