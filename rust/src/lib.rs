@@ -33,9 +33,9 @@ mod ops;
 mod verify;
 
 pub use cert::{
-    cert_generate_unlock_challenge, cert_validate_unlock_credential, cert_validate_vbmeta_public_key,
-    CertOps, CertPermanentAttributes, CERT_PIK_VERSION_LOCATION, CERT_PSK_VERSION_LOCATION,
-    SHA256_DIGEST_SIZE,
+    cert_generate_unlock_challenge, cert_validate_unlock_credential,
+    cert_validate_vbmeta_public_key, CertOps, CertPermanentAttributes, CertUnlockChallenge,
+    CertUnlockCredential, CERT_PIK_VERSION_LOCATION, CERT_PSK_VERSION_LOCATION, SHA256_DIGEST_SIZE,
 };
 pub use descriptor::{
     ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor, DescriptorError,
