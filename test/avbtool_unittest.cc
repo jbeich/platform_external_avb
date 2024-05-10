@@ -656,6 +656,8 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
   EXPECT_EQ(static_cast<size_t>(erased_footer_file_size), rootfs_size);
 
   // Check that --do_not_append_vbmeta_image works as intended.
+  // In this case we don't modify the input image so it should work read-only.
+  EXPECT_COMMAND(0, "chmod a-w %s", rootfs_path.value().c_str());
   EXPECT_COMMAND(0,
                  "./avbtool.py add_hash_footer --salt d00df00d "
                  "--hash_algorithm sha256 --image %s "
@@ -2311,6 +2313,7 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
       "      Rollback Index Location: 1\n"
       "      Public key (sha1):       "
       "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "      Flags:                   0\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'foo bar baz'\n"
@@ -2478,7 +2481,91 @@ TEST_F(AvbToolTest, ChainedPartition) {
       "      Partition Name:          system\n"
       "      Rollback Index Location: 1\n"
       "      Public key (sha1):       "
-      "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n",
+      "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "      Flags:                   0\n",
+      InfoImage(vbmeta_path));
+
+  // Now check the VBMeta image.
+  std::string image_data;
+  ASSERT_TRUE(base::ReadFileToString(vbmeta_path, &image_data));
+
+  const uint8_t* vbmeta_data =
+      reinterpret_cast<const uint8_t*>(image_data.data());
+  const size_t vbmeta_size = image_data.length();
+  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
+            avb_vbmeta_image_verify(vbmeta_data, vbmeta_size, NULL, NULL));
+
+  // Collect all descriptors.
+  std::vector<const AvbDescriptor*> descriptors;
+  avb_descriptor_foreach(
+      vbmeta_data, vbmeta_size, collect_descriptors, &descriptors);
+
+  // We should have one descriptor - check it.
+  EXPECT_EQ(1UL, descriptors.size());
+
+  std::string pk_data;
+  ASSERT_TRUE(base::ReadFileToString(pk_path, &pk_data));
+
+  AvbChainPartitionDescriptor d;
+  EXPECT_EQ(AVB_DESCRIPTOR_TAG_CHAIN_PARTITION,
+            avb_be64toh(descriptors[0]->tag));
+  EXPECT_NE(
+      0,
+      avb_chain_partition_descriptor_validate_and_byteswap(
+          reinterpret_cast<const AvbChainPartitionDescriptor*>(descriptors[0]),
+          &d));
+  const uint8_t* desc_end = reinterpret_cast<const uint8_t*>(descriptors[0]) +
+                            sizeof(AvbChainPartitionDescriptor);
+  uint64_t o = 0;
+  EXPECT_EQ("system",
+            std::string(reinterpret_cast<const char*>(desc_end + o),
+                        d.partition_name_len));
+  o += d.partition_name_len;
+  EXPECT_EQ(pk_data,
+            std::string(reinterpret_cast<const char*>(descriptors[0]) +
+                            sizeof(AvbChainPartitionDescriptor) + o,
+                        d.public_key_len));
+}
+
+TEST_F(AvbToolTest, ChainedPartitionNoAB) {
+  base::FilePath vbmeta_path = testdir_.Append("vbmeta_cp.bin");
+
+  base::FilePath pk_path = testdir_.Append("testkey_rsa2048.avbpubkey");
+
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py extract_public_key --key test/data/testkey_rsa2048.pem"
+      " --output %s",
+      pk_path.value().c_str());
+
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py make_vbmeta_image "
+      "--output %s "
+      "--chain_partition_do_not_use_ab system:1:%s "
+      "--algorithm SHA256_RSA2048 --key test/data/testkey_rsa2048.pem "
+      "--internal_release_string \"\"",
+      vbmeta_path.value().c_str(),
+      pk_path.value().c_str());
+
+  ASSERT_EQ(
+      "Minimum libavb version:   1.3\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          1152 bytes\n"
+      "Public key (sha1):        cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Rollback Index Location:  0\n"
+      "Release String:           ''\n"
+      "Descriptors:\n"
+      "    Chain Partition descriptor:\n"
+      "      Partition Name:          system\n"
+      "      Rollback Index Location: 1\n"
+      "      Public key (sha1):       "
+      "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "      Flags:                   1\n",
       InfoImage(vbmeta_path));
 
   // Now check the VBMeta image.
@@ -2587,7 +2674,7 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
       "Rollback Index:           0\n"
       "Flags:                    0\n"
       "Rollback Index Location:  0\n"
-      "Release String:           'avbtool 1.2.0 '\n"
+      "Release String:           'avbtool 1.3.0 '\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
@@ -3366,131 +3453,138 @@ TEST_F(AvbToolTest_PrintRequiredVersion, Vbmeta_1_2) {
   PrintWithMakeVbmetaImage(2);
 }
 
-TEST_F(AvbToolTest, MakeAtxPikCertificate) {
+TEST_F(AvbToolTest, MakeCertPikCertificate) {
   base::FilePath subject_path = testdir_.Append("tmp_subject");
   ASSERT_TRUE(base::WriteFile(subject_path, "fake PIK subject", 16));
   base::FilePath pubkey_path = testdir_.Append("tmp_pubkey.pem");
   EXPECT_COMMAND(
       0,
-      "openssl pkey -pubout -in test/data/testkey_atx_pik.pem -out %s",
+      "openssl pkey -pubout -in test/data/testkey_cert_pik.pem -out %s",
       pubkey_path.value().c_str());
 
   base::FilePath output_path = testdir_.Append("tmp_certificate.bin");
   EXPECT_COMMAND(0,
-                 "./avbtool.py make_atx_certificate"
+                 "./avbtool.py make_certificate"
                  " --subject %s"
                  " --subject_key %s"
                  " --subject_key_version 42"
                  " --subject_is_intermediate_authority"
-                 " --authority_key test/data/testkey_atx_prk.pem"
+                 " --authority_key test/data/testkey_cert_prk.pem"
                  " --output %s",
                  subject_path.value().c_str(),
                  pubkey_path.value().c_str(),
                  output_path.value().c_str());
 
   EXPECT_COMMAND(0,
-                 "diff test/data/atx_pik_certificate.bin %s",
+                 "diff test/data/cert_pik_certificate.bin %s",
                  output_path.value().c_str());
 }
 
-TEST_F(AvbToolTest, MakeAtxPskCertificate) {
+TEST_F(AvbToolTest, MakeCertPskCertificate) {
   base::FilePath pubkey_path = testdir_.Append("tmp_pubkey.pem");
   EXPECT_COMMAND(
       0,
-      "openssl pkey -pubout -in test/data/testkey_atx_psk.pem -out %s",
+      "openssl pkey -pubout -in test/data/testkey_cert_psk.pem -out %s",
       pubkey_path.value().c_str());
 
   base::FilePath output_path = testdir_.Append("tmp_certificate.bin");
   EXPECT_COMMAND(0,
-                 "./avbtool.py make_atx_certificate"
-                 " --subject test/data/atx_product_id.bin"
+                 "./avbtool.py make_certificate"
+                 " --subject test/data/cert_product_id.bin"
                  " --subject_key %s"
                  " --subject_key_version 42"
-                 " --authority_key test/data/testkey_atx_pik.pem"
+                 " --authority_key test/data/testkey_cert_pik.pem"
                  " --output %s",
                  pubkey_path.value().c_str(),
                  output_path.value().c_str());
 
   EXPECT_COMMAND(0,
-                 "diff test/data/atx_psk_certificate.bin %s",
+                 "diff test/data/cert_psk_certificate.bin %s",
                  output_path.value().c_str());
 }
 
-TEST_F(AvbToolTest, MakeAtxPukCertificate) {
+TEST_F(AvbToolTest, MakeCertPukCertificate) {
   base::FilePath pubkey_path = testdir_.Append("tmp_pubkey.pem");
   EXPECT_COMMAND(
       0,
-      "openssl pkey -pubout -in test/data/testkey_atx_puk.pem -out %s",
+      "openssl pkey -pubout -in test/data/testkey_cert_puk.pem -out %s",
       pubkey_path.value().c_str());
 
   base::FilePath output_path = testdir_.Append("tmp_certificate.bin");
-  EXPECT_COMMAND(0,
-                 "./avbtool.py make_atx_certificate"
-                 " --subject test/data/atx_product_id.bin"
-                 " --subject_key %s"
-                 " --subject_key_version 42"
-                 " --usage com.google.android.things.vboot.unlock"
-                 " --authority_key test/data/testkey_atx_pik.pem"
-                 " --output %s",
-                 pubkey_path.value().c_str(),
-                 output_path.value().c_str());
 
-  EXPECT_COMMAND(0,
-                 "diff test/data/atx_puk_certificate.bin %s",
-                 output_path.value().c_str());
+  // Test with both legacy manual unlock --usage as well as --usage_for_unlock.
+  std::string usage_args[] = {"--usage com.google.android.things.vboot.unlock",
+                              "--usage_for_unlock"};
+  for (const auto& usage : usage_args) {
+    EXPECT_COMMAND(0,
+                   "./avbtool.py make_certificate"
+                   " --subject test/data/cert_product_id.bin"
+                   " --subject_key %s"
+                   " --subject_key_version 42"
+                   " %s"
+                   " --authority_key test/data/testkey_cert_pik.pem"
+                   " --output %s",
+                   pubkey_path.value().c_str(),
+                   usage.c_str(),
+                   output_path.value().c_str());
+
+    EXPECT_COMMAND(0,
+                   "diff test/data/cert_puk_certificate.bin %s",
+                   output_path.value().c_str());
+  }
 }
 
-TEST_F(AvbToolTest, MakeAtxPermanentAttributes) {
+TEST_F(AvbToolTest, MakeCertPermanentAttributes) {
   base::FilePath pubkey_path = testdir_.Append("tmp_pubkey.pem");
   EXPECT_COMMAND(
       0,
-      "openssl pkey -pubout -in test/data/testkey_atx_prk.pem -out %s",
+      "openssl pkey -pubout -in test/data/testkey_cert_prk.pem -out %s",
       pubkey_path.value().c_str());
 
   base::FilePath output_path = testdir_.Append("tmp_attributes.bin");
   EXPECT_COMMAND(0,
-                 "./avbtool.py make_atx_permanent_attributes"
+                 "./avbtool.py make_cert_permanent_attributes"
                  " --root_authority_key %s"
-                 " --product_id test/data/atx_product_id.bin"
+                 " --product_id test/data/cert_product_id.bin"
                  " --output %s",
                  pubkey_path.value().c_str(),
                  output_path.value().c_str());
 
   EXPECT_COMMAND(0,
-                 "diff test/data/atx_permanent_attributes.bin %s",
+                 "diff test/data/cert_permanent_attributes.bin %s",
                  output_path.value().c_str());
 }
 
-TEST_F(AvbToolTest, MakeAtxMetadata) {
+TEST_F(AvbToolTest, MakeCertMetadata) {
   base::FilePath output_path = testdir_.Append("tmp_metadata.bin");
 
   EXPECT_COMMAND(
       0,
-      "./avbtool.py make_atx_metadata"
-      " --intermediate_key_certificate test/data/atx_pik_certificate.bin"
-      " --product_key_certificate test/data/atx_psk_certificate.bin"
+      "./avbtool.py make_cert_metadata"
+      " --intermediate_key_certificate test/data/cert_pik_certificate.bin"
+      " --product_key_certificate test/data/cert_psk_certificate.bin"
       " --output %s",
       output_path.value().c_str());
 
   EXPECT_COMMAND(
-      0, "diff test/data/atx_metadata.bin %s", output_path.value().c_str());
+      0, "diff test/data/cert_metadata.bin %s", output_path.value().c_str());
 }
 
-TEST_F(AvbToolTest, MakeAtxUnlockCredential) {
+TEST_F(AvbToolTest, MakeCertUnlockCredential) {
   base::FilePath output_path = testdir_.Append("tmp_credential.bin");
 
   EXPECT_COMMAND(
       0,
-      "./avbtool.py make_atx_unlock_credential"
-      " --intermediate_key_certificate test/data/atx_pik_certificate.bin"
-      " --unlock_key_certificate test/data/atx_puk_certificate.bin"
-      " --challenge test/data/atx_unlock_challenge.bin"
-      " --unlock_key test/data/testkey_atx_puk.pem"
+      "./avbtool.py make_cert_unlock_credential"
+      " --intermediate_key_certificate test/data/cert_pik_certificate.bin"
+      " --unlock_key_certificate test/data/cert_puk_certificate.bin"
+      " --challenge test/data/cert_unlock_challenge.bin"
+      " --unlock_key test/data/testkey_cert_puk.pem"
       " --output %s",
       output_path.value().c_str());
 
   EXPECT_COMMAND(0,
-                 "diff test/data/atx_unlock_credential.bin %s",
+                 "diff test/data/cert_unlock_credential.bin %s",
                  output_path.value().c_str());
 }
 

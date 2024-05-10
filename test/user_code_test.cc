@@ -26,4 +26,4 @@
 // defining AVB_COMPILATION (which user code must not).
 #include "libavb/libavb.h"
 #include "libavb_ab/libavb_ab.h"
-#include "libavb_atx/libavb_atx.h"
+#include "libavb_cert/libavb_cert.h"
