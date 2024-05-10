@@ -22,29 +22,29 @@
  * SOFTWARE.
  */
 
-#ifndef AVB_ATX_SLOT_VERIFY_H_
-#define AVB_ATX_SLOT_VERIFY_H_
+#ifndef AVB_CERT_SLOT_VERIFY_H_
+#define AVB_CERT_SLOT_VERIFY_H_
 
-#include <libavb_atx/libavb_atx.h>
+#include <libavb_cert/libavb_cert.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef enum {
-  AVB_ATX_LOCKED,
-  AVB_ATX_UNLOCKED,
-} AvbAtxLockState;
+  AVB_CERT_LOCKED,
+  AVB_CERT_UNLOCKED,
+} AvbCertLockState;
 
 typedef enum {
-  AVB_ATX_SLOT_MARKED_SUCCESSFUL,
-  AVB_ATX_SLOT_NOT_MARKED_SUCCESSFUL,
-} AvbAtxSlotState;
+  AVB_CERT_SLOT_MARKED_SUCCESSFUL,
+  AVB_CERT_SLOT_NOT_MARKED_SUCCESSFUL,
+} AvbCertSlotState;
 
 typedef enum {
-  AVB_ATX_OEM_DATA_USED,
-  AVB_ATX_OEM_DATA_NOT_USED,
-} AvbAtxOemDataState;
+  AVB_CERT_OEM_DATA_USED,
+  AVB_CERT_OEM_DATA_NOT_USED,
+} AvbCertOemDataState;
 
 /* Performs a full verification of the slot identified by |ab_suffix|. If
  * |lock_state| indicates verified boot is unlocked then verification errors
@@ -61,21 +61,20 @@ typedef enum {
  *
  * The semantics of |out_data| are the same as for avb_slot_verify().
  *
- * On success, an Android Things |vbh_extension| is populated. This value must
- * be extended into the Verified Boot Hash value accumulated from earlier boot
- * stages.
+ * On success, the SHA256 vbmeta digest is written to |vbmeta_digest|. This
+ * value may be used e.g. for device attestation.
  *
  * All of the function pointers in |ops| must be valid except for
  * set_key_version, which will be ignored and may be NULL.
  */
-AvbSlotVerifyResult avb_atx_slot_verify(
-    AvbAtxOps* ops,
+AvbSlotVerifyResult avb_cert_slot_verify(
+    AvbCertOps* ops,
     const char* ab_suffix,
-    AvbAtxLockState lock_state,
-    AvbAtxSlotState slot_state,
-    AvbAtxOemDataState oem_data_state,
+    AvbCertLockState lock_state,
+    AvbCertSlotState slot_state,
+    AvbCertOemDataState oem_data_state,
     AvbSlotVerifyData** verify_data,
-    uint8_t vbh_extension[AVB_SHA256_DIGEST_SIZE]);
+    uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE]);
 
 #ifdef __cplusplus
 }
