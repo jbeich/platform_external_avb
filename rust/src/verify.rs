@@ -34,6 +34,8 @@ use avb_bindgen::{
 use core::{
     ffi::{c_char, CStr},
     fmt,
+    marker::PhantomData,
+    pin::pin,
     ptr::{self, null, null_mut, NonNull},
     slice,
 };
@@ -200,13 +202,25 @@ impl fmt::Debug for PartitionData {
 /// Wraps a raw C `AvbSlotVerifyData` struct.
 ///
 /// This provides a Rust safe view over the raw data; no copies are made.
+///
+/// # Lifetimes
+/// * `'a`: the lifetime of any preloaded partition data borrowed from an `Ops<'a>` object.
+///
+/// If the `Ops` doesn't provide any preloaded data, `SlotVerifyData` doesn't borrow anything
+/// and instead allocates and owns all data internally, freeing it accordingly on `Drop`. In this
+/// case, `'a` can be `'static` which imposes no lifetime restrictions on `SlotVerifyData`.
 pub struct SlotVerifyData<'a> {
     /// Internally owns the underlying data and deletes it on drop.
     raw_data: NonNull<AvbSlotVerifyData>,
 
-    /// This provides the necessary lifetime borrow so the compiler can make sure that the `Ops`
-    /// stays alive at least as long as we do, since it owns any preloaded partition data.
-    _ops: &'a dyn Ops,
+    /// This provides the necessary lifetimes so the compiler can make sure that the preloaded
+    /// partition data stays alive at least as long as we do, since the underlying
+    /// `AvbSlotVerifyData` may wrap this data rather than making a copy.
+    //
+    // We do not want to actually borrow an `Ops` here, since in some cases `Ops` is just a
+    // temporary object and may go out of scope before us. The only shared data is the preloaded
+    // partition contents, not the entire `Ops` object.
+    _preloaded: PhantomData<&'a [u8]>,
 }
 
 // Useful so that `SlotVerifyError`, which may hold a `SlotVerifyData`, can derive `PartialEq`.
@@ -225,24 +239,28 @@ impl<'a> SlotVerifyData<'a> {
     /// The returned `SlotVerifyData` will take ownership of the given `AvbSlotVerifyData` and
     /// properly release the allocated memory when it drops.
     ///
+    /// If `ops` provided any preloaded data, the returned `SlotVerifyData` also borrows the data to
+    /// account for the underlying `AvbSlotVerifyData` holding a pointer to it. If there was no
+    /// preloaded data, then `SlotVerifyData` owns all its data.
+    ///
     /// # Arguments
-    /// * `data`: a `AvbSlotVerifyData` object created by libavb.
-    /// * `ops`: the user-provided callback ops; borrowing this here ensures that any preloaded
-    ///          partition data stays unmodified while `data` is wrapping it.
+    /// * `data`: a `AvbSlotVerifyData` object created by libavb using `ops`.
+    /// * `ops`: the user-provided `Ops` object that was used for verification; only used here to
+    ///          grab the preloaded data lifetime.
     ///
     /// # Returns
     /// The new object, or `Err(SlotVerifyError::Internal)` if the data looks invalid.
     ///
     /// # Safety
-    /// * `data` must be a valid `AvbSlotVerifyData` object created by libavb
+    /// * `data` must be a valid `AvbSlotVerifyData` object created by libavb using `ops`.
     /// * after calling this function, do not access `data` except through the returned object
     unsafe fn new(
         data: *mut AvbSlotVerifyData,
-        ops: &'a mut dyn Ops,
+        _ops: &dyn Ops<'a>,
     ) -> SlotVerifyNoDataResult<Self> {
         let ret = Self {
             raw_data: NonNull::new(data).ok_or(SlotVerifyError::Internal)?,
-            _ops: ops,
+            _preloaded: PhantomData,
         };
 
         // Validate all the contained data here so accessors will never fail.
@@ -319,6 +337,7 @@ impl<'a> SlotVerifyData<'a> {
     }
 }
 
+/// Frees any internally-allocated and owned data.
 impl<'a> Drop for SlotVerifyData<'a> {
     fn drop(&mut self) {
         // SAFETY:
@@ -371,20 +390,16 @@ impl<'a> fmt::Debug for SlotVerifyData<'a> {
 /// 2. if `AllowVerificationError` is given in `flags`, it will also be returned on verification
 ///    failure
 ///
-/// If a `SlotVerifyData` is returned, it will borrow the provided `ops`. This is to ensure that
-/// any data shared by `SlotVerifyData` and `ops` - in particular preloaded partition contents -
-/// is not modified until `SlotVerifyData` is dropped.
+/// A returned `SlotVerifyData` will also borrow any preloaded data provided by `ops`. The `ops`
+/// object itself can go out of scope, but any preloaded data it could provide must outlive the
+/// returned object.
 pub fn slot_verify<'a>(
-    ops: &'a mut dyn Ops,
+    ops: &mut dyn Ops<'a>,
     requested_partitions: &[&CStr],
     ab_suffix: Option<&CStr>,
     flags: SlotVerifyFlags,
     hashtree_error_mode: HashtreeErrorMode,
 ) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
-    let mut user_data = ops::UserData::new(ops);
-    let mut scoped_ops = ops::ScopedAvbOps::new(&mut user_data);
-    let avb_ops = scoped_ops.as_mut();
-
     // libavb detects the size of the `requested_partitions` array by NULL termination. Expecting
     // the Rust caller to do this would make the API much more awkward, so we populate a
     // NULL-terminated array of c-string pointers ourselves. For now we use a fixed-sized array
@@ -402,6 +417,7 @@ pub fn slot_verify<'a>(
     // pointer to an empty string in this case, not NULL.
     let ab_suffix = ab_suffix.unwrap_or(CStr::from_bytes_with_nul(b"\0").unwrap());
 
+    let ops_bridge = pin!(ops::OpsBridge::new(ops));
     let mut out_data: *mut AvbSlotVerifyData = null_mut();
 
     // Call the libavb verification function.
@@ -411,11 +427,12 @@ pub fn slot_verify<'a>(
     // or else the memory will leak.
     //
     // SAFETY:
+    // * `ops_bridge.init_and_get_c_ops()` gives us a valid `AvbOps`.
     // * we've properly initialized all objects passed into libavb.
     // * if `out_data` is non-null on return, we take ownership via `SlotVerifyData`.
     let result = slot_verify_enum_to_result(unsafe {
         avb_slot_verify(
-            avb_ops,
+            ops_bridge.init_and_get_c_ops(),
             partitions_array.as_ptr(),
             ab_suffix.as_ptr(),
             flags,
