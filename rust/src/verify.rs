@@ -23,13 +23,16 @@ use crate::{
     descriptor::{get_descriptors, Descriptor, DescriptorResult},
     error::{
         slot_verify_enum_to_result, vbmeta_verify_enum_to_result, SlotVerifyError,
-        SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
+        SlotVerifyNoDataResult, SlotVerifyResult, VbmetaGetPropertyError, VbmetaGetPropertyResult,
+        VbmetaVerifyResult,
     },
     ops, Ops,
 };
+use alloc::ffi::CString;
 use alloc::vec::Vec;
 use avb_bindgen::{
-    avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
+    avb_property_lookup, avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData,
+    AvbSlotVerifyData, AvbVBMetaData,
 };
 use core::{
     ffi::{c_char, CStr},
@@ -89,6 +92,34 @@ impl VbmetaData {
         // * libavb gives us a properly-allocated byte array.
         // * the returned contents remain valid and unmodified while we exist.
         unsafe { slice::from_raw_parts(self.0.vbmeta_data, self.0.vbmeta_size) }
+    }
+
+    /// Get a property from the vbmeta image for the given key
+    ///
+    /// # Returns
+    /// Byte array with property data or VbmetaGetPropertyError
+    pub fn get_property(&self, key: &str) -> VbmetaGetPropertyResult<&[u8]> {
+        let mut size: usize = 0;
+
+        // SAFETY:
+        // * `vbmeta_data` / `vbmeta_size` is a properly-allocated byte array
+        // * returns pointer to buffer within vbmeta_data or null in case property
+        // is not found.
+        match unsafe {
+            avb_property_lookup(
+                self.0.vbmeta_data,
+                self.0.vbmeta_size,
+                CString::new(key).unwrap().as_bytes_with_nul().as_ptr() as *mut _,
+                0,
+                &mut size,
+            )
+        } {
+            result if result.is_null() => Err(VbmetaGetPropertyError::NotFound),
+            // SAFETY:
+            // * avb_property_lookup gives us a pointer to buffer within vbmeta_data,
+            // * which remain valid and unmodified while we exist.
+            result => unsafe { Ok(slice::from_raw_parts(result as *mut _, size)) },
+        }
     }
 
     /// Returns the vbmeta verification result.
