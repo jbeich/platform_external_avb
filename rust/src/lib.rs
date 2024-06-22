@@ -38,8 +38,8 @@ pub use descriptor::{
     PropertyDescriptor,
 };
 pub use error::{
-    IoError, IoResult, SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult,
-    VbmetaVerifyError, VbmetaVerifyResult,
+    AvbGetPropertyError, AvbGetPropertyResult, IoError, IoResult, SlotVerifyError,
+    SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyError, VbmetaVerifyResult,
 };
 pub use ops::{Ops, PublicKeyForPartitionInfo};
 pub use verify::{

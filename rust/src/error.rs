@@ -276,6 +276,23 @@ pub fn vbmeta_verify_enum_to_result(result: AvbVBMetaVerifyResult) -> VbmetaVeri
     }
 }
 
+/// Get AVB property error result type. This type is rust only (doesn't represent any libavb C type)
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum AvbGetPropertyError {
+    NotFound,
+}
+
+/// `Result` type for `AvbGetPropertyError` errors.
+pub type AvbGetPropertyResult<T> = Result<T, AvbGetPropertyError>;
+
+impl fmt::Display for AvbGetPropertyError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::NotFound => write!(f, "property not found"),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
