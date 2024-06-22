@@ -25,6 +25,7 @@ use avb::{
     HashDescriptor, HashDescriptorFlags, HashtreeDescriptor, HashtreeDescriptorFlags,
     HashtreeErrorMode, IoError, KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags,
     PropertyDescriptor, SlotVerifyData, SlotVerifyError, SlotVerifyFlags, SlotVerifyResult,
+    VbmetaGetPropertyError,
 };
 use hex::decode;
 use std::{ffi::CString, fs};
@@ -793,4 +794,30 @@ fn verify_chain_partition_descriptor() {
         .descriptors()
         .unwrap()
         .contains(&Descriptor::ChainPartition(expected)));
+}
+
+#[test]
+fn verify_get_property() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
+
+    let data = verify_one_image_one_vbmeta(&mut ops).unwrap();
+
+    match &data.vbmeta_data()[0].get_property(TEST_PROPERTY_KEY) {
+        Ok(buffer) => assert_eq!(buffer, &TEST_PROPERTY_VALUE),
+        Err(_) => panic!("Expected valid buffer for the given key"),
+    };
+}
+
+#[test]
+fn verify_get_property_not_found() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
+
+    let data = verify_one_image_one_vbmeta(&mut ops).unwrap();
+
+    assert_eq!(
+        data.vbmeta_data()[0].get_property("test_prop_doesnt_exist"),
+        Err(VbmetaGetPropertyError::NotFound),
+    );
 }

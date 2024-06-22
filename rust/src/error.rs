@@ -297,6 +297,24 @@ pub fn vbmeta_verify_enum_to_result(result: AvbVBMetaVerifyResult) -> VbmetaVeri
     }
 }
 
+/// Get Vbmeta property error result type. This type is rust only (doesn't represent any libavb C type)
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub enum VbmetaGetPropertyError {
+    /// Property is not found
+    NotFound,
+}
+
+/// `Result` type for `VbmetaGetPropertyError` errors.
+pub type VbmetaGetPropertyResult<T> = Result<T, VbmetaGetPropertyError>;
+
+impl fmt::Display for VbmetaGetPropertyError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match self {
+            Self::NotFound => write!(f, "property not found"),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

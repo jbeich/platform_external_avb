@@ -45,7 +45,7 @@ pub use descriptor::{
 };
 pub use error::{
     IoError, IoResult, SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult,
-    VbmetaVerifyError, VbmetaVerifyResult,
+    VbmetaGetPropertyError, VbmetaGetPropertyResult, VbmetaVerifyError, VbmetaVerifyResult,
 };
 pub use ops::{Ops, PublicKeyForPartitionInfo};
 pub use verify::{
