@@ -1,0 +1,90 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aa6860df_4fd59e8e",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-06-24T21:03:02Z",
+      "side": 1,
+      "message": "nit: 100-column limit",
+      "range": {
+        "startLine": 300,
+        "startChar": 100,
+        "endLine": 300,
+        "endChar": 103
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccd13d51_c61668dd",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-06-24T21:03:02Z",
+      "side": 1,
+      "message": "For simplicity, I would suggest just using `Option\u003c\u003e` as a return value if there\u0027s only one possible error code, and then document that `None` means the property wasn\u0027t found.\n\nIt\u0027s already hard to keep all the different error types here straight, if we can avoid adding more that would be ideal :)",
+      "range": {
+        "startLine": 304,
+        "startChar": 4,
+        "endLine": 304,
+        "endChar": 12
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d3ddffc6_35e40a86",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-06-24T21:03:02Z",
+      "side": 1,
+      "message": "I think we may be able to accomplish this with existing safe APIs. Does something like this work?\n\n```\nvbmeta_data\n  .descriptors()?\n  .iter()\n  .filter_map(|d| match d {\n    Descriptor::Property(p) \u0026\u0026 p.key \u003d\u003d key \u003d\u003e Some(p.value),\n    _ \u003d\u003e None\n  })\n  .next()\n```\n\nIf this is a common-enough operation it may still be worth exposing this as a higher-level `get_property()` API, but this way our implementation is a little more idiomatic Rust and doesn\u0027t require any additional `unsafe` blocks.",
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ccb55938_9532b29e",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-06-24T21:03:02Z",
+      "side": 1,
+      "message": "optional: I think `assert_eq!()` should be able to provide an error message if you think it\u0027s important, no need for a `match`:\n\n```\nassert_eq!(\n  data.vbmeta_data()[0].get_property(TEST_PROPERTY_KEY),\n  Ok(\u0026TEST_PROPERTY_VALUE),\n  \"Expected valid buffer for the given key\"\n);\n```",
+      "range": {
+        "startLine": 806,
+        "startChar": 0,
+        "endLine": 809,
+        "endChar": 6
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
