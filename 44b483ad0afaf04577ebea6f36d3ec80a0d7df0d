@@ -49,6 +49,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "56e7ac8b_e34db00b",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-06-25T07:49:11Z",
+      "side": 1,
+      "message": "+1 :) Or we can add a `PropertyKeyNotFound` error to the existing `DescriptorError` so that your find function could return `DescriptorResult\u003c\u0026[u8]\u003e`.",
+      "parentUuid": "ccd13d51_c61668dd",
+      "range": {
+        "startLine": 304,
+        "startChar": 4,
+        "endLine": 304,
+        "endChar": 12
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "d3ddffc6_35e40a86",
         "filename": "rust/src/verify.rs",
         "patchSetId": 4
@@ -60,6 +84,47 @@
       "writtenOn": "2024-06-24T21:03:02Z",
       "side": 1,
       "message": "I think we may be able to accomplish this with existing safe APIs. Does something like this work?\n\n```\nvbmeta_data\n  .descriptors()?\n  .iter()\n  .filter_map(|d| match d {\n    Descriptor::Property(p) \u0026\u0026 p.key \u003d\u003d key \u003d\u003e Some(p.value),\n    _ \u003d\u003e None\n  })\n  .next()\n```\n\nIf this is a common-enough operation it may still be worth exposing this as a higher-level `get_property()` API, but this way our implementation is a little more idiomatic Rust and doesn\u0027t require any additional `unsafe` blocks.",
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "22c9e2b9_6264e7ad",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-06-25T07:49:11Z",
+      "side": 1,
+      "message": "nit: what about renaming this to `get_property_value(key)` to make it more clear?",
+      "range": {
+        "startLine": 120,
+        "startChar": 11,
+        "endLine": 120,
+        "endChar": 23
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "32d13702_96680ee0",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-06-25T07:49:11Z",
+      "side": 1,
+      "message": "+1. We already have `PropertyDescriptor`, we could use it here directly instead of searching the raw vbmeta.",
+      "parentUuid": "d3ddffc6_35e40a86",
       "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
