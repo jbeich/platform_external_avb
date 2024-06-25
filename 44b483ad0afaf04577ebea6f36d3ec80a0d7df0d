@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "823505ee_c05c1573",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 300,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-06-25T20:58:18Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "aa6860df_4fd59e8e",
+      "range": {
+        "startLine": 300,
+        "startChar": 100,
+        "endLine": 300,
+        "endChar": 103
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ccd13d51_c61668dd",
@@ -61,6 +85,30 @@
       "side": 1,
       "message": "+1 :) Or we can add a `PropertyKeyNotFound` error to the existing `DescriptorError` so that your find function could return `DescriptorResult\u003c\u0026[u8]\u003e`.",
       "parentUuid": "ccd13d51_c61668dd",
+      "range": {
+        "startLine": 304,
+        "startChar": 4,
+        "endLine": 304,
+        "endChar": 12
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "5f6f59e2_c1bd059e",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 304,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-06-25T20:58:18Z",
+      "side": 1,
+      "message": "The problem with Option\u003c\u003e that it\u0027s hard to extend to have more then 2 states. For example even here we have (Found(data), NotFound, Error), but since I\u0027m not handling it anyway, we can merge these 2 states and use Option for a simplicity. Thank you!",
+      "parentUuid": "56e7ac8b_e34db00b",
       "range": {
         "startLine": 304,
         "startChar": 4,
@@ -129,6 +177,48 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "981e7296_a4632816",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-06-25T20:58:18Z",
+      "side": 1,
+      "message": "I also had this idea, but my main concern was that in this case Rust AVB wrapper starts re-implementing some of the AVB features instead of wrapping them out which may be dangerous and hard to support as a concept.\n\nI\u0027m agree that in this particular case the simplicity/safety is a good argument. Added comment about this situation.",
+      "parentUuid": "32d13702_96680ee0",
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "91f9be7e_0a4e1ba7",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 120,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-06-25T20:58:18Z",
+      "side": 1,
+      "message": "I\u0027m agree it\u0027s more clear, thank you!",
+      "parentUuid": "22c9e2b9_6264e7ad",
+      "range": {
+        "startLine": 120,
+        "startChar": 11,
+        "endLine": 120,
+        "endChar": 23
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ccb55938_9532b29e",
@@ -142,6 +232,30 @@
       "writtenOn": "2024-06-24T21:03:02Z",
       "side": 1,
       "message": "optional: I think `assert_eq!()` should be able to provide an error message if you think it\u0027s important, no need for a `match`:\n\n```\nassert_eq!(\n  data.vbmeta_data()[0].get_property(TEST_PROPERTY_KEY),\n  Ok(\u0026TEST_PROPERTY_VALUE),\n  \"Expected valid buffer for the given key\"\n);\n```",
+      "range": {
+        "startLine": 806,
+        "startChar": 0,
+        "endLine": 809,
+        "endChar": 6
+      },
+      "revId": "44b483ad0afaf04577ebea6f36d3ec80a0d7df0d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b82c0ac7_1dadf1c0",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-06-25T20:58:18Z",
+      "side": 1,
+      "message": "Thank you!",
+      "parentUuid": "ccb55938_9532b29e",
       "range": {
         "startLine": 806,
         "startChar": 0,
