@@ -24,6 +24,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c22fff34_1ba14180",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 21,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-07-01T11:45:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "af2f866e_2c878f34",
+      "range": {
+        "startLine": 21,
+        "startChar": 0,
+        "endLine": 21,
+        "endChar": 18
+      },
+      "revId": "28b0b384a109b305d36ebfee8c818169bb39b969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "103f3b96_1594caa0",
@@ -37,6 +61,30 @@
       "writtenOn": "2024-07-01T07:59:01Z",
       "side": 1,
       "message": "Is this needed? `Option` should be part of the Rust prelude and get brought into scope automatically.",
+      "range": {
+        "startLine": 35,
+        "startChar": 0,
+        "endLine": 35,
+        "endChar": 25
+      },
+      "revId": "28b0b384a109b305d36ebfee8c818169bb39b969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "38e27cf7_df202d68",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-07-01T11:45:23Z",
+      "side": 1,
+      "message": "Thank you a lot for your comments. Everything you mentioned got fixed here: aosp/3154140. Please take a quick look.",
+      "parentUuid": "103f3b96_1594caa0",
       "range": {
         "startLine": 35,
         "startChar": 0,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "fdb26e31_d2135fe8",
+        "filename": "rust/src/verify.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-07-01T11:45:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "dea21b63_af7315c6",
+      "range": {
+        "startLine": 115,
+        "startChar": 8,
+        "endLine": 115,
+        "endChar": 11
+      },
+      "revId": "28b0b384a109b305d36ebfee8c818169bb39b969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "037c9a6c_f9a5e5b5",
@@ -83,6 +155,30 @@
       "writtenOn": "2024-07-01T07:59:01Z",
       "side": 1,
       "message": "nit: Use `assert_eq!(..., None)` here so the error message would be more clear in case it fails?",
+      "range": {
+        "startLine": 819,
+        "startChar": 4,
+        "endLine": 824,
+        "endChar": 6
+      },
+      "revId": "28b0b384a109b305d36ebfee8c818169bb39b969",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3fb09f11_d6efcdc1",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 5
+      },
+      "lineNbr": 824,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-07-01T11:45:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "037c9a6c_f9a5e5b5",
       "range": {
         "startLine": 819,
         "startChar": 4,
