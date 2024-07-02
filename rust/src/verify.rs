@@ -18,7 +18,6 @@
 //! libavb and Rust for verifying images.
 
 extern crate alloc;
-extern crate core;
 
 use crate::{
     descriptor::{get_descriptors, Descriptor, DescriptorResult},
@@ -32,7 +31,6 @@ use alloc::vec::Vec;
 use avb_bindgen::{
     avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
 };
-use core::option::Option;
 use core::{
     ffi::{c_char, CStr},
     fmt,
@@ -112,7 +110,7 @@ impl VbmetaData {
         unsafe { get_descriptors(self) }
     }
 
-    /// Get a property from the vbmeta image for the given key
+    /// Gets a property from the vbmeta image for the given key
     ///
     /// This function re-implements the libavb avb_property_lookup logic.
     ///
