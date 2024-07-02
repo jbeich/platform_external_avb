@@ -109,6 +109,19 @@ impl VbmetaData {
         // `slot_verify()`, so we know we have been properly validated.
         unsafe { get_descriptors(self) }
     }
+
+    /// Gets a property from the vbmeta image for the given key
+    ///
+    /// This function re-implements the libavb avb_property_lookup logic.
+    ///
+    /// # Returns
+    /// Byte array with property data or None in case property not found or failure.
+    pub fn get_property_value(&self, key: &str) -> Option<&[u8]> {
+        self.descriptors().ok()?.iter().find_map(|d| match d {
+            Descriptor::Property(p) if p.key == key => Some(p.value),
+            _ => None,
+        })
+    }
 }
 
 impl fmt::Display for VbmetaData {
