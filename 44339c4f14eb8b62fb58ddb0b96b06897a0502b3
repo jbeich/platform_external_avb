@@ -110,6 +110,30 @@
       },
       "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "446f9a9e_07758f7d",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-07-22T09:07:15Z",
+      "side": 1,
+      "message": "Could you pass a callback for the signing operation instead of handling the DICE serialization and KDF in libavb? Specifically, `ed25519` is not the only supported ASYM_KDF for DICE - there are also EC algorithms [1]. Additionally, there can be different versions of KDF operating on the CDI_Attest before ASYM_KDF. Why not just let lib open-dice[2] handle this instead of managing all of this in libavb?\n\n[1] https://pigweed.googlesource.com/open-dice/+/HEAD/docs/specification.md#key-derivation-functions\n[2] https://cs.android.com/android/platform/superproject/main/+/main:external/open-dice/",
+      "parentUuid": "8c74f9a5_287147bd",
+      "range": {
+        "startLine": 1166,
+        "startChar": 35,
+        "endLine": 1166,
+        "endChar": 45
+      },
+      "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
