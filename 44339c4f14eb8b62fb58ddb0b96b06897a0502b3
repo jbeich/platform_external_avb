@@ -134,6 +134,30 @@
       },
       "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "59a3c8ed_cc3ef1d8",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1647128
+      },
+      "writtenOn": "2024-07-24T21:01:19Z",
+      "side": 1,
+      "message": "This is a callback to get the rot signing key attested by dice specific cdi attestation key. Perhaps I am not able to understand the comment. Can you clarify?",
+      "parentUuid": "446f9a9e_07758f7d",
+      "range": {
+        "startLine": 1166,
+        "startChar": 35,
+        "endLine": 1166,
+        "endChar": 45
+      },
+      "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
