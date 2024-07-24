@@ -19,12 +19,13 @@
 
 extern crate alloc;
 
-use crate::{error::result_to_io_enum, IoError, IoResult};
-use avb_bindgen::{AvbIOResult, AvbOps};
+use crate::{error::result_to_io_enum, CertOps, IoError, IoResult, SHA256_DIGEST_SIZE};
+use avb_bindgen::{AvbCertOps, AvbCertPermanentAttributes, AvbIOResult, AvbOps};
 use core::{
     cmp::min,
     ffi::{c_char, c_void, CStr},
-    marker::PhantomData,
+    marker::PhantomPinned,
+    pin::Pin,
     ptr, slice,
 };
 #[cfg(feature = "uuid")]
@@ -33,7 +34,19 @@ use uuid::Uuid;
 /// Base implementation-provided callbacks for verification.
 ///
 /// See libavb `AvbOps` for more complete documentation.
-pub trait Ops {
+///
+/// # Lifetimes
+/// The trait lifetime `'a` indicates the lifetime of any preloaded partition data.
+///
+/// Preloading partitions is an optional feature which allows libavb to use data already loaded to
+/// RAM rather than allocating memory itself and loading data from disk. Preloading changes the
+/// data ownership model so that the verification result borrows this existing data rather than
+/// allocating and owning the data itself. Because of this borrow, we need the lifetime here to
+/// ensure that the underlying data outlives the verification result object.
+///
+/// If `get_preloaded_partition()` is left unimplemented, all data is loaded and owned by the
+/// verification result rather than borrowed, and this trait lifetime can be `'static`.
+pub trait Ops<'a> {
     /// Reads data from the requested partition on disk.
     ///
     /// # Arguments
@@ -68,11 +81,13 @@ pub trait Ops {
     /// * `Err<IoError::NotImplemented>` if the requested partition has not been preloaded;
     ///   verification will next attempt to load the partition via `read_from_partition()`.
     /// * Any other `Err<IoError>` if an error occurred; verification will exit immediately.
-    fn get_preloaded_partition(&mut self, _partition: &CStr) -> IoResult<&[u8]> {
+    fn get_preloaded_partition(&mut self, _partition: &CStr) -> IoResult<&'a [u8]> {
         Err(IoError::NotImplemented)
     }
 
     /// Checks if the given public key is valid for vbmeta image signing.
+    ///
+    /// If using libavb_cert, this should forward to `cert_validate_vbmeta_public_key()`.
     ///
     /// # Arguments
     /// * `public_key`: the public key.
@@ -204,6 +219,9 @@ pub trait Ops {
     /// partition. If this flag is not used, the `validate_vbmeta_public_key()` callback is used
     /// instead, and this function will never be called.
     ///
+    /// If using libavb_cert for `partition`, this should forward to
+    /// `cert_validate_vbmeta_public_key()`.
+    ///
     /// # Arguments
     /// * `partition`: partition name.
     /// * `public_key`: the public key.
@@ -221,9 +239,29 @@ pub trait Ops {
         public_key: &[u8],
         public_key_metadata: Option<&[u8]>,
     ) -> IoResult<PublicKeyForPartitionInfo>;
+
+    /// Returns the libavb_cert certificate ops if supported.
+    ///
+    /// The libavb_cert extension provides some additional key management and authentication support
+    /// APIs, see the cert module documentation for more info.
+    ///
+    /// The default implementation returns `None` to disable cert APIs.
+    ///
+    /// Commonly when using certs the same struct will implement both `Ops` and `CertOps`, in which
+    /// case this can just return `Some(self)`.
+    ///
+    /// Note: changing this return value in the middle of a libavb operation (e.g. from another
+    /// callback) is not recommended; it may cause runtime errors or a panic later on in the
+    /// operation. It's fine to change this return value outside of libavb operations.
+    ///
+    /// # Returns
+    /// The `CertOps` object, or `None` if not supported.
+    fn cert_ops(&mut self) -> Option<&mut dyn CertOps> {
+        None
+    }
 }
 
-/// Info returned from `validare_public_key_for_partition()`.
+/// Info returned from `validate_public_key_for_partition()`.
 #[derive(Clone, Copy, Debug)]
 pub struct PublicKeyForPartitionInfo {
     /// Whether the key is trusted for the given partition..
@@ -232,76 +270,48 @@ pub struct PublicKeyForPartitionInfo {
     pub rollback_index_location: u32,
 }
 
-/// Helper to pass user-provided `Ops` through libavb via the `user_data` pointer.
+/// Provides the logic to bridge between the libavb C ops and our Rust ops.
 ///
-/// This is a bit tricky in Rust, we can't just cast `Ops` to `void*` and back directly because
-/// `Ops` is a trait to be implemented by the user, which means we don't know the concrete type
-/// at this point and must use dynamic dispatch.
+/// This struct internally owns the C ops structs, and borrows ownership of the Rust `Ops`. This
+/// allows us to translate in both directions, from Rust -> C to call into libavb and then back
+/// from C -> Rust when servicing the callbacks.
 ///
-/// However, dynamic dispatch in Rust requires a "fat pointer" (2 pointers) which cannot be cast to
-/// a single `void*`. So instead, we wrap the dynamic dispatch inside this struct which _can_ be
-/// represented as a single `void*`, and then we can unwrap it again to fetch the original
-/// `&dyn Ops`.
+/// The general control flow look like this:
 ///
-/// A more typical approach is to use `Box` to heap-allocate the `&dyn` and then pass the `Box`
-/// around, but we want to avoid allocation as much as possible.
-///
-/// Control flow:
+/// ```ignore
+/// user calls a Rust API with their `Ops` {
+///     we create `OpsBridge` wrapping `Ops` and the C structs
+///     we call into C libavb API {
+///         libavb makes C ops callback {
+///             we retrieve `OpsBridge` from the callback `user_data` param
+///             we make the corresponding Rust `Ops` callback
+///         }
+///         ... libavb makes more callbacks as needed ...
+///     }
+/// }
 /// ```
-///         user                             libavb_rs                        libavb
-/// -----------------------------------------------------------------------------------------------
-/// create `Ops` (Rust) with
-/// callback implementations
-///                           ---->
-///                                  `UserData::new()` wraps:
-///                                  `Ops` (Rust/fat) ->
-///                                  `UserData` (Rust/thin)
 ///
-///                                  `ScopedAvbOps` makes
-///                                  `AvbOps` (C) containing:
-///                                  1. `UserData*` (C)
-///                                  2. our callbacks (C)
-///                                                            ---->
-///                                                                   execute `AvbOps` (C)
-///                                                                   callbacks as needed
-///                                                            <----
-///                                  `as_ops()` unwraps:
-///                                  `AvbOps` (C) ->
-///                                  `UserData` (Rust/thin) ->
-///                                  `Ops` (Rust/fat)
-///
-///                                  Convert callback data to
-///                                  safe Rust
-///                           <----
-/// perform `Ops` (Rust)
-/// callback
-/// ```
-pub(crate) struct UserData<'a>(&'a mut dyn Ops);
-
-impl<'a> UserData<'a> {
-    pub(crate) fn new(ops: &'a mut dyn Ops) -> Self {
-        Self(ops)
-    }
-}
-
-/// Wraps the C `AvbOps` struct with lifetime information for the compiler.
-pub(crate) struct ScopedAvbOps<'a> {
-    /// `AvbOps` holds a raw pointer to `UserData` with no lifetime information.
+/// # Lifetimes
+/// * `'o`: lifetime of the `Ops` object
+/// * `'p`: lifetime of any preloaded data provided by `Ops`
+pub(crate) struct OpsBridge<'o, 'p> {
+    /// C `AvbOps` holds a raw pointer to the `OpsBridge` so we can retrieve it during callbacks.
     avb_ops: AvbOps,
-    /// This provides the necessary lifetime information so the compiler can make sure that
-    /// the `UserData` stays alive at least as long as we do.
-    _user_data: PhantomData<UserData<'a>>,
+    /// When using libavb_cert, C `AvbOps`/`AvbCertOps` hold circular pointers to each other.
+    cert_ops: AvbCertOps,
+    /// Rust `Ops` implementation, which may also provide Rust `CertOps`.
+    rust_ops: &'o mut dyn Ops<'p>,
+    /// Remove the `Unpin` trait to indicate this type has address-sensitive state.
+    _pin: PhantomPinned,
 }
 
-impl<'a> ScopedAvbOps<'a> {
-    pub(crate) fn new(user_data: &'a mut UserData<'a>) -> Self {
+impl<'o, 'p> OpsBridge<'o, 'p> {
+    pub(crate) fn new(ops: &'o mut dyn Ops<'p>) -> Self {
         Self {
             avb_ops: AvbOps {
-                // Rust won't transitively cast so we need to cast twice manually, but the compiler
-                // is smart enough to deduce the types we need.
-                user_data: user_data as *mut _ as *mut _,
-                ab_ops: ptr::null_mut(),  // Deprecated, no need to support.
-                atx_ops: ptr::null_mut(), // TODO: support optional ATX.
+                user_data: ptr::null_mut(), // Set at the time of use.
+                ab_ops: ptr::null_mut(),    // Deprecated, no need to support.
+                cert_ops: ptr::null_mut(),  // Set at the time of use.
                 read_from_partition: Some(read_from_partition),
                 get_preloaded_partition: Some(get_preloaded_partition),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
@@ -315,18 +325,49 @@ impl<'a> ScopedAvbOps<'a> {
                 write_persistent_value: Some(write_persistent_value),
                 validate_public_key_for_partition: Some(validate_public_key_for_partition),
             },
-            _user_data: PhantomData,
+            cert_ops: AvbCertOps {
+                ops: ptr::null_mut(), // Set at the time of use.
+                read_permanent_attributes: Some(read_permanent_attributes),
+                read_permanent_attributes_hash: Some(read_permanent_attributes_hash),
+                set_key_version: Some(set_key_version),
+                get_random: Some(get_random),
+            },
+            rust_ops: ops,
+            _pin: PhantomPinned,
         }
     }
-}
 
-impl<'a> AsMut<AvbOps> for ScopedAvbOps<'a> {
-    fn as_mut(&mut self) -> &mut AvbOps {
-        &mut self.avb_ops
+    /// Initializes and returns the C `AvbOps` structure from an `OpsBridge`.
+    ///
+    /// If the contained `Ops` supports `CertOps`, the returned `AvbOps` will also be configured
+    /// properly for libavb_cert.
+    ///
+    /// Pinning is necessary here because the returned `AvbOps` contains pointers into `self`, so
+    /// we cannot allow `self` to subsequently move or else the pointers would become invalid.
+    ///
+    /// # Returns
+    /// The C `AvbOps` struct to make libavb calls with.
+    pub(crate) fn init_and_get_c_ops<'a>(self: Pin<&'a mut Self>) -> &'a mut AvbOps {
+        // SAFETY: we do not move out of `self_mut`, but only set pointers to pinned addresses.
+        let self_mut = unsafe { self.get_unchecked_mut() };
+
+        // Set the C `user_data` to point back to us so we can retrieve ourself in callbacks.
+        self_mut.avb_ops.user_data = self_mut as *mut _ as *mut _;
+
+        // If the `Ops` supports certs, set up the necessary additional pointer tracking.
+        if self_mut.rust_ops.cert_ops().is_some() {
+            self_mut.avb_ops.cert_ops = &mut self_mut.cert_ops;
+            self_mut.cert_ops.ops = &mut self_mut.avb_ops;
+        }
+
+        &mut self_mut.avb_ops
     }
 }
 
 /// Extracts the user-provided `Ops` from a raw `AvbOps`.
+///
+/// This function is used in libavb callbacks to bridge libavb's raw C `AvbOps` struct to our Rust
+/// implementation.
 ///
 /// # Arguments
 /// * `avb_ops`: The raw `AvbOps` pointer used by libavb.
@@ -335,25 +376,58 @@ impl<'a> AsMut<AvbOps> for ScopedAvbOps<'a> {
 /// The Rust `Ops` extracted from `avb_ops.user_data`.
 ///
 /// # Safety
-/// Only call this function on an `AvbOps` created via `ScopedAvbOps`.
+/// * only call this function on an `AvbOps` created via `OpsBridge`
+/// * drop all references to the returned `Ops` and preloaded data before returning control to
+///   libavb or calling this function again
 ///
-/// Additionally, this should be considered a mutable borrow of the contained `Ops`:
-/// * do not return back to libavb while still holding the returned reference, or it will result
-///   in a dangling reference
-/// * do not call this again until the previous `Ops` goes out of scope, or it will violate Rust's
-///   mutable borrowing rules
+/// In practice, these conditions are met since we call this at most once in each callback
+/// to extract the `Ops`, and drop the references at callback completion.
 ///
-/// In practice, these conditions are met since we call this exactly once in each callback
-/// to extract the `Ops`, and drop it at callback completion.
-unsafe fn as_ops<'a>(avb_ops: *mut AvbOps) -> IoResult<&'a mut dyn Ops> {
+/// # Lifetimes
+/// * `'o`: lifetime of the `Ops` object
+/// * `'p`: lifetime of any preloaded data provided by `Ops`
+///
+/// It's difficult to accurately provide the lifetimes when calling this function, since we are in
+/// a C callback which provides no lifetime information in the args. We solve this in the safety
+/// requirements by requiring the caller to drop both references before returning, which is always
+/// a subset of the actual object lifetimes as the objects must remain valid while libavb is
+/// actively using them:
+///
+/// ```ignore
+/// ops/preloaded lifetime {  // Actual 'o/'p start
+///   call into libavb {
+///     libavb callbacks {
+///       as_ops()            // as_ops() 'o/'p start
+///     }                     // as_ops() 'o/'p end
+///   }
+/// }                         // Actual 'o/'p end
+/// ```
+unsafe fn as_ops<'o, 'p>(avb_ops: *mut AvbOps) -> IoResult<&'o mut dyn Ops<'p>> {
     // SAFETY: we created this AvbOps object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
     let avb_ops = unsafe { avb_ops.as_mut() }.ok_or(IoError::Io)?;
-    // Cast the void* `user_data` back to a UserData*.
-    let user_data = avb_ops.user_data as *mut UserData;
-    // SAFETY: we created this UserData object and passed it to libavb so we know it meets all
+    // Cast the void* `user_data` back to a OpsBridge*.
+    let bridge = avb_ops.user_data as *mut OpsBridge;
+    // SAFETY: we created this OpsBridge object and passed it to libavb so we know it meets all
     // the criteria for `as_mut()`.
-    Ok(unsafe { user_data.as_mut() }.ok_or(IoError::Io)?.0)
+    Ok(unsafe { bridge.as_mut() }.ok_or(IoError::Io)?.rust_ops)
+}
+
+/// Similar to `as_ops()`, but for `CertOps`.
+///
+/// # Safety
+/// Same as `as_ops()`.
+unsafe fn as_cert_ops<'o>(cert_ops: *mut AvbCertOps) -> IoResult<&'o mut dyn CertOps> {
+    // SAFETY: we created this `CertOps` object and passed it to libavb so we know it meets all
+    // the criteria for `as_mut()`.
+    let cert_ops = unsafe { cert_ops.as_mut() }.ok_or(IoError::Io)?;
+
+    // SAFETY: caller must adhere to `as_ops()` safety requirements.
+    let ops = unsafe { as_ops(cert_ops.ops) }?;
+
+    // Return the `CertOps` implementation. If it doesn't exist here, it indicates an internal error
+    // in this library; somewhere we accepted a non-cert `Ops` into a function that requires cert.
+    ops.cert_ops().ok_or(IoError::NotImplemented)
 }
 
 /// Converts a non-NULL `ptr` to `()`, NULL to `Err(IoError::Io)`.
@@ -391,7 +465,7 @@ unsafe extern "C" fn read_from_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 /// * `out_num_read` must adhere to the requirements of `ptr::write()`.
@@ -414,7 +488,7 @@ unsafe fn try_read_from_partition(
     unsafe { ptr::write(out_num_read, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -463,7 +537,7 @@ unsafe extern "C" fn get_preloaded_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_pointer` and `out_num_bytes_preloaded` must adhere to the requirements of `ptr::write()`.
 /// * `out_pointer` will become an alias to the `ops` preloaded partition data, so the preloaded
@@ -489,7 +563,7 @@ unsafe fn try_get_preloaded_partition(
     }
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -552,7 +626,7 @@ unsafe extern "C" fn validate_vbmeta_public_key(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
 /// * `out_is_trusted` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_validate_vbmeta_public_key(
@@ -573,7 +647,7 @@ unsafe fn try_validate_vbmeta_public_key(
     unsafe { ptr::write(out_is_trusted, false) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -622,7 +696,7 @@ unsafe extern "C" fn read_rollback_index(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `out_rollback_index` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_read_rollback_index(
     ops: *mut AvbOps,
@@ -638,7 +712,7 @@ unsafe fn try_read_rollback_index(
     unsafe { ptr::write(out_rollback_index, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     let index = ops.read_rollback_index(rollback_index_location)?;
@@ -671,14 +745,14 @@ unsafe extern "C" fn write_rollback_index(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 unsafe fn try_write_rollback_index(
     ops: *mut AvbOps,
     rollback_index_location: usize,
     rollback_index: u64,
 ) -> IoResult<()> {
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     ops.write_rollback_index(rollback_index_location, rollback_index)
@@ -698,7 +772,7 @@ unsafe extern "C" fn read_is_device_unlocked(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `out_is_unlocked` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_read_is_device_unlocked(
     ops: *mut AvbOps,
@@ -713,7 +787,7 @@ unsafe fn try_read_is_device_unlocked(
     unsafe { ptr::write(out_is_unlocked, false) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     let unlocked = ops.read_is_device_unlocked()?;
@@ -751,7 +825,7 @@ unsafe extern "C" fn get_unique_guid_for_partition(
 /// gives the empty string for all partitions.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `guid_buf` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 unsafe fn try_get_unique_guid_for_partition(
@@ -798,7 +872,7 @@ unsafe fn try_get_unique_guid_for_partition(
         let partition = unsafe { CStr::from_ptr(partition) };
 
         // SAFETY:
-        // * we only use `ops` objects created via `ScopedAvbOps` as required.
+        // * we only use `ops` objects created via `OpsBridge` as required.
         // * `ops` is only extracted once and is dropped at the end of the callback.
         let ops = unsafe { as_ops(ops) }?;
         let guid = ops.get_unique_guid_for_partition(partition)?;
@@ -844,7 +918,7 @@ unsafe extern "C" fn get_size_of_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_size_num_bytes` must adhere to the requirements of `ptr::write()`.
 unsafe fn try_get_size_of_partition(
@@ -862,7 +936,7 @@ unsafe fn try_get_size_of_partition(
     unsafe { ptr::write(out_size_num_bytes, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -905,7 +979,7 @@ unsafe extern "C" fn read_persistent_value(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `name` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts_mut()`.
 /// * `out_num_bytes_read` must adhere to the requirements of `ptr::write()`.
@@ -926,7 +1000,7 @@ unsafe fn try_read_persistent_value(
     unsafe { ptr::write(out_num_bytes_read, 0) };
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -977,7 +1051,7 @@ unsafe extern "C" fn write_persistent_value(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `name` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `out_buffer` must adhere to the requirements of `slice::from_raw_parts()`.
 unsafe fn try_write_persistent_value(
@@ -989,7 +1063,7 @@ unsafe fn try_write_persistent_value(
     check_nonnull(name)?;
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -1044,7 +1118,7 @@ unsafe extern "C" fn validate_public_key_for_partition(
 /// Bounces the C callback into the user-provided Rust implementation.
 ///
 /// # Safety
-/// * `ops` must have been created via `ScopedAvbOps`.
+/// * `ops` must have been created via `OpsBridge`.
 /// * `partition` must adhere to the requirements of `CStr::from_ptr()`.
 /// * `public_key_*` args must adhere to the requirements of `slice::from_raw_parts()`.
 /// * `out_*` must adhere to the requirements of `ptr::write()`.
@@ -1074,7 +1148,7 @@ unsafe fn try_validate_public_key_for_partition(
     }
 
     // SAFETY:
-    // * we only use `ops` objects created via `ScopedAvbOps` as required.
+    // * we only use `ops` objects created via `OpsBridge` as required.
     // * `ops` is only extracted once and is dropped at the end of the callback.
     let ops = unsafe { as_ops(ops) }?;
     // SAFETY:
@@ -1112,4 +1186,158 @@ unsafe fn try_validate_public_key_for_partition(
         );
     }
     Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_permanent_attributes(
+    cert_ops: *mut AvbCertOps,
+    attributes: *mut AvbCertPermanentAttributes,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_read_permanent_attributes(cert_ops, attributes) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `cert_ops` must have been created via `ScopedAvbOps`.
+/// * `attributes` must be a valid `AvbCertPermanentAttributes` that we have exclusive access to.
+unsafe fn try_read_permanent_attributes(
+    cert_ops: *mut AvbCertOps,
+    attributes: *mut AvbCertPermanentAttributes,
+) -> IoResult<()> {
+    // SAFETY: `attributes` is a valid object provided by libavb that we have exclusive access to.
+    let attributes = unsafe { attributes.as_mut() }.ok_or(IoError::Io)?;
+
+    // SAFETY:
+    // * we only use `cert_ops` objects created via `ScopedAvbOps` as required.
+    // * `cert_ops` is only extracted once and is dropped at the end of the callback.
+    let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
+    cert_ops.read_permanent_attributes(attributes)
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to raw `AvbIOResult` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn read_permanent_attributes_hash(
+    cert_ops: *mut AvbCertOps,
+    hash: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_read_permanent_attributes_hash(cert_ops, hash) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `cert_ops` must have been created via `ScopedAvbOps`.
+/// * `hash` must point to a valid buffer of size `SHA256_DIGEST_SIZE` that we have exclusive
+///   access to.
+unsafe fn try_read_permanent_attributes_hash(
+    cert_ops: *mut AvbCertOps,
+    hash: *mut u8,
+) -> IoResult<()> {
+    check_nonnull(hash)?;
+
+    // SAFETY:
+    // * we only use `cert_ops` objects created via `ScopedAvbOps` as required.
+    // * `cert_ops` is only extracted once and is dropped at the end of the callback.
+    let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
+    let provided_hash = cert_ops.read_permanent_attributes_hash()?;
+
+    // SAFETY:
+    // * `provided_hash` is a valid `[u8]` with size `SHA256_DIGEST_SIZE`.
+    // * libavb gives us a properly-allocated `hash` with size `SHA256_DIGEST_SIZE`.
+    // * the arrays are independent objects and cannot overlap.
+    unsafe { ptr::copy_nonoverlapping(provided_hash.as_ptr(), hash, SHA256_DIGEST_SIZE) };
+
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to `None` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn set_key_version(
+    cert_ops: *mut AvbCertOps,
+    rollback_index_location: usize,
+    key_version: u64,
+) {
+    // SAFETY: see corresponding `try_*` function safety documentation.
+    let result = unsafe { try_set_key_version(cert_ops, rollback_index_location, key_version) };
+
+    // `set_key_version()` is unique in that it has no return value, and therefore cannot fail.
+    // However, our internal C -> Rust logic does have some potential failure points when we unwrap
+    // the C pointers to extract our Rust objects.
+    //
+    // Ignoring the error could be a security risk, as it would silently prevent the device from
+    // updating key rollback versions, so instead we panic here.
+    if let Err(e) = result {
+        panic!("Fatal error in set_key_version(): {:?}", e);
+    }
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// `cert_ops` must have been created via `ScopedAvbOps`.
+unsafe fn try_set_key_version(
+    cert_ops: *mut AvbCertOps,
+    rollback_index_location: usize,
+    key_version: u64,
+) -> IoResult<()> {
+    // SAFETY:
+    // * we only use `cert_ops` objects created via `ScopedAvbOps` as required.
+    // * `cert_ops` is only extracted once and is dropped at the end of the callback.
+    let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
+    cert_ops.set_key_version(rollback_index_location, key_version);
+    Ok(())
+}
+
+/// Wraps a callback to convert the given `IoResult<>` to `None` for libavb.
+///
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn get_random(
+    cert_ops: *mut AvbCertOps,
+    num_bytes: usize,
+    output: *mut u8,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_get_random(cert_ops, num_bytes, output) },
+    )
+}
+
+/// Bounces the C callback into the user-provided Rust implementation.
+///
+/// # Safety
+/// * `cert_ops` must have been created via `ScopedAvbOps`.
+/// * `output` must point to a valid buffer of size `num_bytes` that we have exclusive access to.
+unsafe fn try_get_random(
+    cert_ops: *mut AvbCertOps,
+    num_bytes: usize,
+    output: *mut u8,
+) -> IoResult<()> {
+    check_nonnull(output)?;
+    if num_bytes == 0 {
+        return Ok(());
+    }
+
+    // SAFETY:
+    // * we've checked that the pointer is non-NULL.
+    // * libavb gives us a properly-allocated `output` with size `num_bytes`.
+    // * we only access the contents via the returned slice.
+    // * the returned slice is not held past the scope of this callback.
+    let output = unsafe { slice::from_raw_parts_mut(output, num_bytes) };
+
+    // SAFETY:
+    // * we only use `cert_ops` objects created via `ScopedAvbOps` as required.
+    // * `cert_ops` is only extracted once and is dropped at the end of the callback.
+    let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
+    cert_ops.get_random(output)
 }
