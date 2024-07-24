@@ -91,7 +91,6 @@ python_binary_host {
             embedded_launcher: true,
         },
     },
-    compile_multilib: "first",
 }
 
 python_library_host {
@@ -155,9 +154,7 @@ python_test_host {
     data: [
         "test/data/**/*.*",
     ],
-    test_options: {
-        unit_test: true,
-    },
+    test_suites: ["general-tests"],
     version: {
         py2: {
             enabled: false,
