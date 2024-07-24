@@ -14,7 +14,12 @@
 
 //! libavb_rs verification tests.
 
-use crate::test_ops::TestOps;
+use crate::{
+    build_test_ops_one_image_one_vbmeta,
+    test_data::*,
+    test_ops::{FakeVbmetaKey, TestOps},
+    verify_one_image_one_vbmeta,
+};
 use avb::{
     slot_verify, ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor,
     HashDescriptor, HashDescriptorFlags, HashtreeDescriptor, HashtreeDescriptorFlags,
@@ -26,71 +31,10 @@ use std::{ffi::CString, fs};
 #[cfg(feature = "uuid")]
 use uuid::uuid;
 
-// These constants must match the values used to create the images in Android.bp.
-const TEST_IMAGE_PATH: &str = "test_image.img";
-const TEST_IMAGE_SIZE: usize = 16 * 1024;
-const TEST_IMAGE_SALT_HEX: &str = "1000";
-const TEST_HASHTREE_SALT_HEX: &str = "B000";
-const TEST_VBMETA_PATH: &str = "test_vbmeta.img";
-const TEST_VBMETA_2_PARTITIONS_PATH: &str = "test_vbmeta_2_parts.img";
-const TEST_VBMETA_PERSISTENT_DIGEST_PATH: &str = "test_vbmeta_persistent_digest.img";
-const TEST_VBMETA_WITH_PROPERTY_PATH: &str = "test_vbmeta_with_property.img";
-const TEST_VBMETA_WITH_HASHTREE_PATH: &str = "test_vbmeta_with_hashtree.img";
-const TEST_VBMETA_WITH_COMMANDLINE_PATH: &str = "test_vbmeta_with_commandline.img";
-const TEST_VBMETA_WITH_CHAINED_PARTITION_PATH: &str = "test_vbmeta_with_chained_partition.img";
-const TEST_IMAGE_WITH_VBMETA_FOOTER_PATH: &str = "avbrs_test_image_with_vbmeta_footer.img";
-const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_BOOT_PATH: &str =
-    "avbrs_test_image_with_vbmeta_footer_for_boot.img";
-const TEST_IMAGE_WITH_VBMETA_FOOTER_FOR_TEST_PART_2: &str =
-    "avbrs_test_image_with_vbmeta_footer_for_test_part_2.img";
-const TEST_PUBLIC_KEY_PATH: &str = "data/testkey_rsa4096_pub.bin";
-const TEST_PUBLIC_KEY_RSA8192_PATH: &str = "data/testkey_rsa8192_pub.bin";
-const TEST_PARTITION_NAME: &str = "test_part";
-const TEST_PARTITION_SLOT_C_NAME: &str = "test_part_c";
-const TEST_PARTITION_2_NAME: &str = "test_part_2";
-const TEST_PARTITION_PERSISTENT_DIGEST_NAME: &str = "test_part_persistent_digest";
-const TEST_PARTITION_HASH_TREE_NAME: &str = "test_part_hashtree";
-const TEST_VBMETA_ROLLBACK_LOCATION: usize = 0; // Default value, we don't explicitly set this.
-const TEST_PROPERTY_KEY: &str = "test_prop_key";
-const TEST_PROPERTY_VALUE: &[u8] = b"test_prop_value";
-const TEST_KERNEL_COMMANDLINE: &str = "test_cmdline_key=test_cmdline_value";
-const TEST_CHAINED_PARTITION_ROLLBACK_LOCATION: usize = 4;
-const TEST_CHAINED_PARTITION_ROLLBACK_INDEX: u64 = 7;
-
-// Expected values determined by examining the vbmeta image with `avbtool info_image`.
-// Images can be found in <out>/soong/.intermediates/external/avb/rust/.
-const TEST_IMAGE_DIGEST_HEX: &str =
-    "89e6fd3142917b8c34ac7d30897a907a71bd3bf5d9b39d00bf938b41dcf3b84f";
-const TEST_IMAGE_HASH_ALGO: &str = "sha256";
-const TEST_HASHTREE_DIGEST_HEX: &str = "5373fc4ee3dd898325eeeffb5a1dbb041900c5f1";
-const TEST_HASHTREE_ALGORITHM: &str = "sha1";
-
-/// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME`.
-fn test_ops_one_image_one_vbmeta() -> TestOps {
-    let mut ops = TestOps::default();
-    ops.add_partition(TEST_PARTITION_NAME, fs::read(TEST_IMAGE_PATH).unwrap());
-    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_PATH).unwrap());
-    ops.add_vbmeta_key(fs::read(TEST_PUBLIC_KEY_PATH).unwrap(), None, true);
-    ops.rollbacks.insert(TEST_VBMETA_ROLLBACK_LOCATION, 0);
-    ops.unlock_state = Ok(false);
-    ops
-}
-
-/// Calls `slot_verify()` using standard args for `test_ops_one_image_one_vbmeta()` setup.
-fn verify_one_image_one_vbmeta(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
-    slot_verify(
-        ops,
-        &[&CString::new(TEST_PARTITION_NAME).unwrap()],
-        None,
-        SlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_NONE,
-        HashtreeErrorMode::AVB_HASHTREE_ERROR_MODE_EIO,
-    )
-}
-
 /// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME` and
 /// `TEST_PARTITION_2_NAME`.
-fn test_ops_two_images_one_vbmeta() -> TestOps {
-    let mut ops = test_ops_one_image_one_vbmeta();
+fn build_test_ops_two_images_one_vbmeta<'a>() -> TestOps<'a> {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     // Add in the contents of the second partition and overwrite the vbmeta partition to
     // include both partition descriptors.
     ops.add_partition(TEST_PARTITION_2_NAME, fs::read(TEST_IMAGE_PATH).unwrap());
@@ -99,7 +43,7 @@ fn test_ops_two_images_one_vbmeta() -> TestOps {
 }
 
 /// Calls `slot_verify()` for both test partitions.
-fn verify_two_images(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
+fn verify_two_images<'a>(ops: &mut TestOps<'a>) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     slot_verify(
         ops,
         &[
@@ -114,8 +58,8 @@ fn verify_two_images(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
 
 /// Initializes a `TestOps` object such that verification will succeed on the `boot` partition with
 /// a combined image + vbmeta.
-fn test_ops_boot_partition() -> TestOps {
-    let mut ops = test_ops_one_image_one_vbmeta();
+fn build_test_ops_boot_partition<'a>() -> TestOps<'a> {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     ops.partitions.clear();
     ops.add_partition(
         "boot",
@@ -124,8 +68,8 @@ fn test_ops_boot_partition() -> TestOps {
     ops
 }
 
-/// Calls `slot_verify()` using standard args for `test_ops_boot_partition()` setup.
-fn verify_boot_partition(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
+/// Calls `slot_verify()` using standard args for `build_test_ops_boot_partition()` setup.
+fn verify_boot_partition<'a>(ops: &mut TestOps<'a>) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     slot_verify(
         ops,
         &[&CString::new("boot").unwrap()],
@@ -140,8 +84,8 @@ fn verify_boot_partition(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> 
 
 /// Initializes a `TestOps` object such that verification will succeed on
 /// `TEST_PARTITION_PERSISTENT_DIGEST_NAME`.
-fn test_ops_persistent_digest(image: Vec<u8>) -> TestOps {
-    let mut ops = test_ops_one_image_one_vbmeta();
+fn build_test_ops_persistent_digest<'a>(image: Vec<u8>) -> TestOps<'a> {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     ops.partitions.clear();
     // Use the vbmeta image with the persistent digest descriptor.
     ops.add_partition(
@@ -153,8 +97,8 @@ fn test_ops_persistent_digest(image: Vec<u8>) -> TestOps {
     ops
 }
 
-/// Calls `slot_verify()` using standard args for `test_ops_persistent_digest()` setup.
-fn verify_persistent_digest(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyData> {
+/// Calls `slot_verify()` using standard args for `build_test_ops_persistent_digest()` setup.
+fn verify_persistent_digest<'a>(ops: &mut TestOps<'a>) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
     slot_verify(
         ops,
         &[&CString::new(TEST_PARTITION_PERSISTENT_DIGEST_NAME).unwrap()],
@@ -166,7 +110,11 @@ fn verify_persistent_digest(ops: &mut TestOps) -> SlotVerifyResult<SlotVerifyDat
 
 /// Modifies the partition contents by flipping a bit.
 fn modify_partition_contents(ops: &mut TestOps, partition: &str) {
-    ops.partitions.get_mut(partition).unwrap().contents[0] ^= 0x01;
+    ops.partitions
+        .get_mut(partition)
+        .unwrap()
+        .contents
+        .as_mut_vec()[0] ^= 0x01;
 }
 
 /// Returns the persistent value name for `TEST_PARTITION_PERSISTENT_DIGEST_NAME`.
@@ -178,7 +126,7 @@ fn persistent_digest_value_name() -> String {
 
 #[test]
 fn one_image_one_vbmeta_passes_verification_with_correct_data() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -219,12 +167,10 @@ fn one_image_one_vbmeta_passes_verification_with_correct_data() {
 
 #[test]
 fn preloaded_image_passes_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
-    // Mark the image partition to be preloaded.
-    ops.partitions
-        .get_mut(TEST_PARTITION_NAME)
-        .unwrap()
-        .preloaded = true;
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    // Use preloaded data instead for the test partition.
+    let preloaded = fs::read(TEST_IMAGE_PATH).unwrap();
+    ops.add_preloaded_partition(TEST_PARTITION_NAME, &preloaded);
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -233,9 +179,66 @@ fn preloaded_image_passes_verification() {
     assert!(partition_data.preloaded());
 }
 
+// When all images are loaded from disk (rather than preloaded), libavb allocates memory itself for
+// the data, so there is no shared ownership; the returned verification data owns the image data
+// and can hold onto it even after the `ops` goes away.
+#[test]
+fn verification_data_from_disk_can_outlive_ops() {
+    let result = {
+        let mut ops = build_test_ops_one_image_one_vbmeta();
+        verify_one_image_one_vbmeta(&mut ops)
+    };
+
+    let data = result.unwrap();
+
+    // The verification data owns the images and we can still access them.
+    assert_eq!(
+        data.partition_data()[0].data(),
+        fs::read(TEST_IMAGE_PATH).unwrap()
+    );
+}
+
+// When preloaded data is passed into ops but outlives it, we can also continue to access it from
+// the verification data after the ops goes away. The ops was only borrowing it, and now the
+// verification data continues to borrow it.
+#[test]
+fn verification_data_preloaded_can_outlive_ops() {
+    let preloaded = fs::read(TEST_IMAGE_PATH).unwrap();
+
+    let result = {
+        let mut ops = build_test_ops_one_image_one_vbmeta();
+        ops.add_preloaded_partition(TEST_PARTITION_NAME, &preloaded);
+        verify_one_image_one_vbmeta(&mut ops)
+    };
+
+    let data = result.unwrap();
+
+    // The verification data is borrowing the preloaded images and we can still access them.
+    assert_eq!(data.partition_data()[0].data(), preloaded);
+}
+
+// When preloaded data is passed into ops but also goes out of scope, the verification data loses
+// access to it, violating lifetime rules.
+//
+// Our lifetimes *must* be configured such that this does not compile, since `result` is borrowing
+// `preloaded` which has gone out of scope.
+//
+// TODO: figure out how to make a compile-fail test; for now we just have to manually test by
+// un-commenting the code.
+// #[test]
+// fn verification_data_preloaded_cannot_outlive_result() {
+//     let result = {
+//         let preloaded = fs::read(TEST_IMAGE_PATH).unwrap();
+//         let mut ops = build_test_ops_one_image_one_vbmeta();
+//         ops.add_preloaded_partition(TEST_PARTITION_NAME, &preloaded);
+//         verify_one_image_one_vbmeta(&mut ops)
+//     };
+//     result.unwrap();
+// }
+
 #[test]
 fn slotted_partition_passes_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     // Move the partitions to a "_c" slot.
     ops.partitions.clear();
     ops.add_partition(
@@ -258,7 +261,7 @@ fn slotted_partition_passes_verification() {
 
 #[test]
 fn two_images_one_vbmeta_passes_verification() {
-    let mut ops = test_ops_two_images_one_vbmeta();
+    let mut ops = build_test_ops_two_images_one_vbmeta();
 
     let result = verify_two_images(&mut ops);
 
@@ -279,20 +282,25 @@ fn two_images_one_vbmeta_passes_verification() {
 
 #[test]
 fn combined_image_vbmeta_partition_passes_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     ops.partitions.clear();
     // Register the single combined image + vbmeta in `TEST_PARTITION_NAME`.
     ops.add_partition(
         TEST_PARTITION_NAME,
         fs::read(TEST_IMAGE_WITH_VBMETA_FOOTER_PATH).unwrap(),
     );
-    // For a combined image we need to register the public key specifically for this partition.
-    ops.add_vbmeta_key_for_partition(
-        fs::read(TEST_PUBLIC_KEY_PATH).unwrap(),
-        None,
-        true,
+    // For a combined image it should not attempt to use the default "vbmeta" key, instead we
+    // register the public key specifically for this partition.
+    ops.default_vbmeta_key = None;
+    ops.vbmeta_keys_for_partition.insert(
         TEST_PARTITION_NAME,
-        TEST_VBMETA_ROLLBACK_LOCATION as u32,
+        (
+            FakeVbmetaKey::Avb {
+                public_key: fs::read(TEST_PUBLIC_KEY_PATH).unwrap(),
+                public_key_metadata: None,
+            },
+            TEST_VBMETA_ROLLBACK_LOCATION as u32,
+        ),
     );
 
     let result = slot_verify(
@@ -328,7 +336,7 @@ fn combined_image_vbmeta_partition_passes_verification() {
 // Validate the custom behavior if the combined image + vbmeta live in the `boot` partition.
 #[test]
 fn vbmeta_with_boot_partition_passes_verification() {
-    let mut ops = test_ops_boot_partition();
+    let mut ops = build_test_ops_boot_partition();
 
     let result = verify_boot_partition(&mut ops);
 
@@ -352,7 +360,7 @@ fn persistent_digest_verification_updates_persistent_value() {
     // calculated on-demand and stored into a named persistent value. So our test image can contain
     // anything, but does have to match the size indicated by the descriptor.
     let image_contents = vec![0xAAu8; TEST_IMAGE_SIZE];
-    let mut ops = test_ops_persistent_digest(image_contents.clone());
+    let mut ops = build_test_ops_persistent_digest(image_contents.clone());
 
     {
         let result = verify_persistent_digest(&mut ops);
@@ -368,7 +376,7 @@ fn persistent_digest_verification_updates_persistent_value() {
 #[cfg(feature = "uuid")]
 #[test]
 fn successful_verification_substitutes_partition_guid() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     ops.partitions.get_mut("vbmeta").unwrap().uuid = uuid!("01234567-89ab-cdef-0123-456789abcdef");
 
     let result = verify_one_image_one_vbmeta(&mut ops);
@@ -384,7 +392,7 @@ fn successful_verification_substitutes_partition_guid() {
 #[cfg(feature = "uuid")]
 #[test]
 fn successful_verification_substitutes_boot_partition_guid() {
-    let mut ops = test_ops_boot_partition();
+    let mut ops = build_test_ops_boot_partition();
     ops.partitions.get_mut("boot").unwrap().uuid = uuid!("01234567-89ab-cdef-0123-456789abcdef");
 
     let result = verify_boot_partition(&mut ops);
@@ -400,7 +408,7 @@ fn successful_verification_substitutes_boot_partition_guid() {
 
 #[test]
 fn corrupted_image_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     modify_partition_contents(&mut ops, TEST_PARTITION_NAME);
 
     let result = verify_one_image_one_vbmeta(&mut ops);
@@ -411,7 +419,7 @@ fn corrupted_image_fails_verification() {
 
 #[test]
 fn read_partition_callback_error_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     ops.partitions.remove(TEST_PARTITION_NAME);
 
     let result = verify_one_image_one_vbmeta(&mut ops);
@@ -422,11 +430,12 @@ fn read_partition_callback_error_fails_verification() {
 
 #[test]
 fn undersized_partition_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     ops.partitions
         .get_mut(TEST_PARTITION_NAME)
         .unwrap()
         .contents
+        .as_mut_vec()
         .pop();
 
     let result = verify_one_image_one_vbmeta(&mut ops);
@@ -437,7 +446,7 @@ fn undersized_partition_fails_verification() {
 
 #[test]
 fn corrupted_vbmeta_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     modify_partition_contents(&mut ops, "vbmeta");
 
     let result = verify_one_image_one_vbmeta(&mut ops);
@@ -448,7 +457,7 @@ fn corrupted_vbmeta_fails_verification() {
 
 #[test]
 fn rollback_violation_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     // Device with rollback = 1 should refuse to boot image with rollback = 0.
     ops.rollbacks.insert(TEST_VBMETA_ROLLBACK_LOCATION, 1);
 
@@ -460,7 +469,7 @@ fn rollback_violation_fails_verification() {
 
 #[test]
 fn rollback_callback_error_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     ops.rollbacks.clear();
 
     let result = verify_one_image_one_vbmeta(&mut ops);
@@ -471,8 +480,11 @@ fn rollback_callback_error_fails_verification() {
 
 #[test]
 fn untrusted_vbmeta_keys_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
-    ops.add_vbmeta_key(fs::read(TEST_PUBLIC_KEY_PATH).unwrap(), None, false);
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.default_vbmeta_key = Some(FakeVbmetaKey::Avb {
+        public_key: b"not_the_key".into(),
+        public_key_metadata: None,
+    });
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -482,8 +494,8 @@ fn untrusted_vbmeta_keys_fails_verification() {
 
 #[test]
 fn vbmeta_keys_callback_error_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
-    ops.vbmeta_keys.clear();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.default_vbmeta_key = None;
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -493,7 +505,7 @@ fn vbmeta_keys_callback_error_fails_verification() {
 
 #[test]
 fn unlock_state_callback_error_fails_verification() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     ops.unlock_state = Err(IoError::Io);
 
     let result = verify_one_image_one_vbmeta(&mut ops);
@@ -505,7 +517,7 @@ fn unlock_state_callback_error_fails_verification() {
 #[test]
 fn persistent_digest_mismatch_fails_verification() {
     let image_contents = vec![0xAAu8; TEST_IMAGE_SIZE];
-    let mut ops = test_ops_persistent_digest(image_contents.clone());
+    let mut ops = build_test_ops_persistent_digest(image_contents.clone());
     // Put in an incorrect persistent digest; `slot_verify()` should detect the mismatch and fail.
     ops.add_persistent_value(&persistent_digest_value_name(), Ok(b"incorrect_digest"));
     // Make a copy so we can verify the persistent values don't change on failure.
@@ -520,7 +532,7 @@ fn persistent_digest_mismatch_fails_verification() {
 #[test]
 fn persistent_digest_callback_error_fails_verification() {
     let image_contents = vec![0xAAu8; TEST_IMAGE_SIZE];
-    let mut ops = test_ops_persistent_digest(image_contents.clone());
+    let mut ops = build_test_ops_persistent_digest(image_contents.clone());
     ops.add_persistent_value(&persistent_digest_value_name(), Err(IoError::NoSuchValue));
 
     let result = verify_persistent_digest(&mut ops);
@@ -531,7 +543,7 @@ fn persistent_digest_callback_error_fails_verification() {
 
 #[test]
 fn corrupted_image_with_allow_verification_error_flag_fails_verification_with_data() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     modify_partition_contents(&mut ops, TEST_PARTITION_NAME);
 
     let result = slot_verify(
@@ -564,7 +576,7 @@ fn corrupted_image_with_allow_verification_error_flag_fails_verification_with_da
 
 #[test]
 fn one_image_one_vbmeta_verification_data_display() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -577,11 +589,9 @@ fn one_image_one_vbmeta_verification_data_display() {
 
 #[test]
 fn preloaded_image_verification_data_display() {
-    let mut ops = test_ops_one_image_one_vbmeta();
-    ops.partitions
-        .get_mut(TEST_PARTITION_NAME)
-        .unwrap()
-        .preloaded = true;
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    let preloaded = fs::read(TEST_IMAGE_PATH).unwrap();
+    ops.add_preloaded_partition(TEST_PARTITION_NAME, &preloaded);
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -594,7 +604,7 @@ fn preloaded_image_verification_data_display() {
 
 #[test]
 fn two_images_one_vbmeta_verification_data_display() {
-    let mut ops = test_ops_two_images_one_vbmeta();
+    let mut ops = build_test_ops_two_images_one_vbmeta();
 
     let result = verify_two_images(&mut ops);
 
@@ -607,7 +617,7 @@ fn two_images_one_vbmeta_verification_data_display() {
 
 #[test]
 fn corrupted_image_verification_data_display() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
     modify_partition_contents(&mut ops, TEST_PARTITION_NAME);
 
     let result = slot_verify(
@@ -631,7 +641,7 @@ fn corrupted_image_verification_data_display() {
 
 #[test]
 fn one_image_gives_single_descriptor() {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -641,7 +651,7 @@ fn one_image_gives_single_descriptor() {
 
 #[test]
 fn two_images_gives_two_descriptors() {
-    let mut ops = test_ops_two_images_one_vbmeta();
+    let mut ops = build_test_ops_two_images_one_vbmeta();
 
     let result = verify_two_images(&mut ops);
 
@@ -658,7 +668,7 @@ fn two_images_gives_two_descriptors() {
 /// 3. run verification
 /// 4. check that the given `descriptor` exists in the verification data
 fn verify_and_find_descriptor(vbmeta_path: &str, expected_descriptor: &Descriptor) {
-    let mut ops = test_ops_one_image_one_vbmeta();
+    let mut ops = build_test_ops_one_image_one_vbmeta();
 
     // Replace the vbmeta image with the requested variation.
     ops.add_partition("vbmeta", fs::read(vbmeta_path).unwrap());
@@ -733,7 +743,7 @@ fn verify_kernel_commandline_descriptor() {
 
 #[test]
 fn verify_chain_partition_descriptor() {
-    let mut ops = test_ops_two_images_one_vbmeta();
+    let mut ops = build_test_ops_two_images_one_vbmeta();
 
     // Set up the fake ops to contain:
     // * the default test image in TEST_PARTITION_NAME
@@ -783,4 +793,32 @@ fn verify_chain_partition_descriptor() {
         .descriptors()
         .unwrap()
         .contains(&Descriptor::ChainPartition(expected)));
+}
+
+#[test]
+fn verify_get_property_value() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
+
+    let data = verify_one_image_one_vbmeta(&mut ops).unwrap();
+
+    assert_eq!(
+        data.vbmeta_data()[0].get_property_value(TEST_PROPERTY_KEY),
+        Some(TEST_PROPERTY_VALUE),
+        "Expected valid buffer for the given key"
+    );
+}
+
+#[test]
+fn verify_get_property_value_not_found() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
+
+    let data = verify_one_image_one_vbmeta(&mut ops).unwrap();
+
+    assert_eq!(
+        data.vbmeta_data()[0].get_property_value("test_prop_doesnt_exist"),
+        None,
+        "Expected property not found for not existing key"
+    );
 }
