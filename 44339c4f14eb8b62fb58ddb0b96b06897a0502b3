@@ -158,6 +158,30 @@
       },
       "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "a8223d3b_45fedc09",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 1166,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2024-07-25T07:39:58Z",
+      "side": 1,
+      "message": "In general, it\u0027s better not to have the key derivation part in libavb at all, and just leave the key derivation outside of libavb. I\u0027ve noticed that you are currently adding `Ed25519`. `Ed25519` doesn\u0027t work for all the DICE chains. There\u0027re other ASYM_KDFs in use for DICE, and also different KDFs for the key derivation. As the eventual `[authority key in DICE] \u003d ASYM_KDF(KDF(CDI_Attest))`, instead of supporting all these types + CBOR handling in libavb, it would be better to leave them outside the libavb and use open-dice to handle these. open-dice already does all this and supports different algorithms.\n\nHowever, this seems to be part of Shawn\u0027s plan for KeyMint RoT provisioning, right? I think we\u0027ve paused that plan for now (b/354939828).\n\n@swillden@google.com",
+      "parentUuid": "59a3c8ed_cc3ef1d8",
+      "range": {
+        "startLine": 1166,
+        "startChar": 35,
+        "endLine": 1166,
+        "endChar": 45
+      },
+      "revId": "44339c4f14eb8b62fb58ddb0b96b06897a0502b3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
