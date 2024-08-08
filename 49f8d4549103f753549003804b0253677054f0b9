@@ -22,6 +22,30 @@
       },
       "revId": "49f8d4549103f753549003804b0253677054f0b9",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ec26a980_cb1976a2",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 82,
+      "author": {
+        "id": 1115178
+      },
+      "writtenOn": "2024-08-08T18:36:21Z",
+      "side": 1,
+      "message": "I believe so, I think you\u0027ll just need to ensure the panic_handler is defined for the dylib build.\n\nWe handle this in some of our other no_std crates by conditionally adding std for the dylib build with the `android_dylib` cfg flag. See `libm` as an example\nhttps://cs.android.com/android/platform/superproject/main/+/main:external/rust/crates/libm/src/lib.rs;drc\u003d1219dfba4a9a98bff94ec295593b6a1a00ad420c;l\u003d15\n\nThere isn\u0027t a separate bug specifically for this, it was just blocking work related to that bug. I\u0027ll make a note to update relevant documentation though, and feel free to ping me directly as well.",
+      "parentUuid": "34e19702_a6ab1964",
+      "range": {
+        "startLine": 80,
+        "startChar": 0,
+        "endLine": 82,
+        "endChar": 64
+      },
+      "revId": "49f8d4549103f753549003804b0253677054f0b9",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
