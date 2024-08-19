@@ -794,3 +794,31 @@ fn verify_chain_partition_descriptor() {
         .unwrap()
         .contains(&Descriptor::ChainPartition(expected)));
 }
+
+#[test]
+fn verify_get_property_value() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
+
+    let data = verify_one_image_one_vbmeta(&mut ops).unwrap();
+
+    assert_eq!(
+        data.vbmeta_data()[0].get_property_value(TEST_PROPERTY_KEY),
+        Some(TEST_PROPERTY_VALUE),
+        "Expected valid buffer for the given key"
+    );
+}
+
+#[test]
+fn verify_get_property_value_not_found() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
+
+    let data = verify_one_image_one_vbmeta(&mut ops).unwrap();
+
+    assert_eq!(
+        data.vbmeta_data()[0].get_property_value("test_prop_doesnt_exist"),
+        None,
+        "Expected property not found for not existing key"
+    );
+}
