@@ -70,6 +70,9 @@ rust_defaults {
         "libcrypto_baremetal",
     ],
     rustlibs: ["libzerocopy_nostd_noalloc"],
+    dylib: {
+        enabled: false,
+    },
 }
 
 // Internal source-only bindgen with std.
