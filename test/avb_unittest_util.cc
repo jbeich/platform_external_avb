@@ -152,12 +152,12 @@ std::string BaseAvbToolTest::InfoImage(const base::FilePath& image_path) {
   return info_data;
 }
 
-std::string BaseAvbToolTest::PublicKeyAVB(const base::FilePath& key_path) {
+std::string BaseAvbToolTest::PublicKeyAVB(const std::string& key_path) {
   base::FilePath tmp_path = testdir_.Append("public_key.bin");
   EXPECT_COMMAND(0,
                  "./avbtool.py extract_public_key --key %s"
                  " --output %s",
-                 key_path.value().c_str(),
+                 key_path.c_str(),
                  tmp_path.value().c_str());
   std::string key_data;
   EXPECT_TRUE(base::ReadFileToString(tmp_path, &key_data));

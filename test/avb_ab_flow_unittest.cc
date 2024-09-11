@@ -150,8 +150,7 @@ class AvbABFlowTest : public BaseAvbToolTest {
                                   misc.size())));
 
     // We're going to use this key for all images.
-    ops_.set_expected_public_key(
-        PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+    ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }
 
   void GenerateSlot(unsigned int slot_number,

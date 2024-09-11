@@ -91,7 +91,7 @@ class BaseAvbToolTest : public ::testing::Test {
   std::string InfoImage(const base::FilePath& image_path);
 
   /* Returns public key in AVB format for a .pem key */
-  std::string PublicKeyAVB(const base::FilePath& key_path);
+  std::string PublicKeyAVB(const std::string& key_path);
 
   void SetUp() override;
   void TearDown() override;
