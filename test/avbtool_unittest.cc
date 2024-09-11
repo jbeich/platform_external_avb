@@ -145,8 +145,7 @@ TEST_F(AvbToolTest, ExtractPublicKey) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  std::string key_data =
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem"));
+  std::string key_data = PublicKeyAVB("test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader h;
   avb_vbmeta_image_header_to_host_byte_order(

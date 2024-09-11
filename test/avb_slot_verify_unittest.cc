@@ -60,8 +60,7 @@ TEST_F(AvbSlotVerifyTest, Basic) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -101,8 +100,7 @@ TEST_F(AvbSlotVerifyTest, BasicSha512) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -147,8 +145,7 @@ TEST_F(AvbSlotVerifyTest, BasicUnlocked) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   ops_.set_stored_is_device_unlocked(true);
 
@@ -182,8 +179,7 @@ TEST_F(AvbSlotVerifyTest, PreloadedEnabledButNotUsed) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   ops_.enable_get_preloaded_partition();
 
   AvbSlotVerifyData* slot_data = NULL;
@@ -206,8 +202,7 @@ TEST_F(AvbSlotVerifyTest, SlotDataIsCorrect) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -369,8 +364,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndex) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -417,8 +411,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationSpecified) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--rollback_index_location 15");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -477,8 +470,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInvalid) {
                       base::StringPrintf("--rollback_index_location %d",
                                          rollback_index_location));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -538,8 +530,7 @@ TEST_F(AvbSlotVerifyTest, LoadEntirePartitionIfAllowingVerificationError) {
   // to return ERROR_VERIFICATION below.
   GenerateImage("boot_a.img", new_boot_image_size, 1 /* start_byte */);
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -606,8 +597,7 @@ TEST_F(AvbSlotVerifyTest, LoadSmallerPartitionIfAllowingVerificationError) {
   // to return ERROR_VERIFICATION below.
   GenerateImage("boot_a.img", new_boot_image_size, 1 /* start_byte */);
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -697,8 +687,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
   EXPECT_COMMAND(
       1, "./avbtool.py info_image --image %s", boot_path.value().c_str());
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -791,8 +780,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaWithPreloadedPartition) {
   EXPECT_COMMAND(
       1, "./avbtool.py info_image --image %s", boot_path.value().c_str());
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   ops_.enable_get_preloaded_partition();
   EXPECT_TRUE(ops_.preload_partition("boot_a", boot_path));
 
@@ -871,8 +859,7 @@ TEST_F(AvbSlotVerifyTest, SmallPreallocatedPreloadedPartitionFailGracefully) {
                  " --image %s",
                  boot_path.value().c_str());
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   ops_.enable_get_preloaded_partition();
   EXPECT_TRUE(ops_.preload_preallocated_partition(
       "boot_a", fake_preload_buf, fake_preload_image_size));
@@ -918,8 +905,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
                  " --image %s",
                  boot_path.value().c_str());
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   // So far, so good.
   AvbSlotVerifyData* slot_data = NULL;
@@ -1052,8 +1038,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
       InfoImage(boot_path));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
@@ -1230,8 +1215,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "      Flags:                 1\n",
       InfoImage(boot_path));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -1400,8 +1384,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
       InfoImage(boot_path));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   // Verify that the rollback index location in the chained partition is ignored
   ops_.set_stored_rollback_indexes({{1, 11}, {2, 12}, {3, 20}});
@@ -1524,8 +1507,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
       InfoImage(other_vbmeta_path));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
@@ -1653,8 +1635,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
                                          " --internal_release_string \"\"",
                                          pk_path.value().c_str()));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
@@ -1733,8 +1714,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
                                          " --internal_release_string \"\"",
                                          pk_path.value().c_str()));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED,
@@ -1789,8 +1769,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
                                          " --internal_release_string \"\"",
                                          pk_path.value().c_str()));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
 
@@ -1903,8 +1882,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
       InfoImage(vbmeta_image_path_));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
@@ -2027,8 +2005,7 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
       "      Flags:                 0\n",
       InfoImage(vbmeta_image_path_));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"foo", "bar", NULL};
@@ -2142,8 +2119,7 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
       "      Flags:                 0\n",
       InfoImage(vbmeta_image_path_));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"foo", NULL};
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_OK,
@@ -2205,13 +2181,9 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
                  bar_partition_size);
 
   ops_.set_expected_public_key_for_partition(
-      "foo_a",
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa4096.pem")),
-      1);
+      "foo_a", PublicKeyAVB("test/data/testkey_rsa4096.pem"), 1);
   ops_.set_expected_public_key_for_partition(
-      "bar_a",
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")),
-      2);
+      "bar_a", PublicKeyAVB("test/data/testkey_rsa2048.pem"), 2);
   ops_.set_stored_rollback_indexes({{0, 1000}, {1, 10}, {2, 11}});
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"foo", "bar", NULL};
@@ -2286,8 +2258,7 @@ TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
                                          " --internal_release_string \"\"",
                                          md_path.value().c_str()));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   std::string md_data;
   ASSERT_TRUE(base::ReadFileToString(md_path, &md_data));
@@ -2391,8 +2362,7 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
       InfoImage(vbmeta_image_path_));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   // Check that avb_slot_verify() picks the cmdline decsriptors based
   // on their flags value.
@@ -2572,8 +2542,7 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
                              : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
       InfoImage(vbmeta_image_path_));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   // Check that avb_slot_verify() picks the cmdline descriptors based
   // on their flags value... note that these descriptors are in the
@@ -2714,8 +2683,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
           use_avbctl ? 0 : AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED),
       InfoImage(vbmeta_image_path_));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   if (!has_system_partition) {
     ops_.set_hidden_partitions({"system", "system_a", "system_b"});
@@ -2979,8 +2947,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
       "      Flags:                 0\n",
       InfoImage(boot_path));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   // Now check that libavb will fall back to reading from 'boot'
   // instead of 'vbmeta' when encountering
@@ -3055,8 +3022,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
                          " --internal_release_string \"\"",
                          pk_path.value().c_str()));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA,
@@ -3110,8 +3076,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceNoChainPartitions) {
                          " --internal_release_string \"\"",
                          pk_path.value().c_str()));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   EXPECT_EQ(AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA,
@@ -3150,8 +3115,7 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
                                          system_path.value().c_str(),
                                          system_path.value().c_str()));
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -3377,8 +3341,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                                  do_not_use_ab ? 1 : 0),
               InfoImage(vbmeta_image_path_));
 
-    ops_.set_expected_public_key(
-        PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+    ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }
 
   void SetupWithHashtreeDescriptor(bool do_not_use_ab = true) {
@@ -3455,8 +3418,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                                  do_not_use_ab ? 1 : 0),
               InfoImage(vbmeta_image_path_));
 
-    ops_.set_expected_public_key(
-        PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+    ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }
 
   void Verify(bool expect_success) {
@@ -3899,8 +3861,7 @@ TEST_F(AvbSlotVerifyTest, ManagedVerityMode) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -4061,8 +4022,7 @@ TEST_F(AvbSlotVerifyTest, NoSystemPartition) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   ops_.set_hidden_partitions({"system_a"});
 
   AvbSlotVerifyData* slot_data = NULL;
