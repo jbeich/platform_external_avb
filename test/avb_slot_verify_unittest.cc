@@ -673,7 +673,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "      Digest:                "
       "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d\n"
       "      Flags:                 0\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
@@ -1002,7 +1002,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   EXPECT_EQ(
       "Footer version:           1.0\n"
@@ -1033,7 +1033,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
-      InfoImage(boot_path));
+      InfoImage(boot_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1181,7 +1181,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "      Public key (sha1):       "
       "2597c218aae470a130f61162feaae70afd97f011\n"
       "      Flags:                   1\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   EXPECT_EQ(
       "Footer version:           1.0\n"
@@ -1210,7 +1210,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "      Digest:                "
       "e54d3d497d1cb01bd9b0a2ebda4a305b12b4f5ba084c9cc588690d33ae1e9940\n"
       "      Flags:                 1\n",
-      InfoImage(boot_path));
+      InfoImage(boot_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1348,7 +1348,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   EXPECT_EQ(
       "Footer version:           1.0\n"
@@ -1379,7 +1379,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
-      InfoImage(boot_path));
+      InfoImage(boot_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1477,7 +1477,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1502,7 +1502,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
-      InfoImage(other_vbmeta_path));
+      InfoImage(other_vbmeta_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1877,7 +1877,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2000,7 +2000,7 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
       "      Digest:                "
       "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d\n"
       "      Flags:                 0\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2114,7 +2114,7 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
       "      Digest:                "
       "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d\n"
       "      Flags:                 0\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   AvbSlotVerifyData* slot_data = NULL;
@@ -2357,7 +2357,7 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
           "      Kernel Cmdline:        'should_be_in_both=1'\n",
           hashtree_verification_on ? 0
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2488,7 +2488,7 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
       "      Flags:                 2\n"
       "      Kernel Cmdline:        "
       "'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'\n",
-      InfoImage(system_path));
+      InfoImage(system_path.value()));
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa2048.avbpubkey");
   EXPECT_COMMAND(
@@ -2537,7 +2537,7 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
                          hashtree_verification_on
                              ? 0
                              : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2678,7 +2678,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
           "      Flags:                 0\n"
           "      Kernel Cmdline:        'should_be_in_both=1'\n",
           use_avbctl ? 0 : AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED),
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2942,7 +2942,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           c9ffc3bfae5000269a55a56621547fd1fcf819df\n"
       "      Flags:                 0\n",
-      InfoImage(boot_path));
+      InfoImage(boot_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3336,7 +3336,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                                  "      Digest:                \n"
                                  "      Flags:                 %d\n",
                                  do_not_use_ab ? 1 : 0),
-              InfoImage(vbmeta_image_path_));
+              InfoImage(vbmeta_image_path_.value()));
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }
@@ -3413,7 +3413,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                                  expected_fec_offset,
                                  verity_hash_algorithm_.c_str(),
                                  do_not_use_ab ? 1 : 0),
-              InfoImage(vbmeta_image_path_));
+              InfoImage(vbmeta_image_path_.value()));
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }

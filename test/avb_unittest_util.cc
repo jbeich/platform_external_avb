@@ -141,11 +141,11 @@ base::FilePath BaseAvbToolTest::GenerateImage(const std::string file_name,
   return image_path;
 }
 
-std::string BaseAvbToolTest::InfoImage(const base::FilePath& image_path) {
+std::string BaseAvbToolTest::InfoImage(const std::string& image_path) {
   base::FilePath tmp_path = testdir_.Append("info_output.txt");
   EXPECT_COMMAND(0,
                  "./avbtool.py info_image --image %s --output %s",
-                 image_path.value().c_str(),
+                 image_path.c_str(),
                  tmp_path.value().c_str());
   std::string info_data;
   EXPECT_TRUE(base::ReadFileToString(tmp_path, &info_data));
