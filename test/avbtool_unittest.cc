@@ -80,10 +80,8 @@ TEST_F(AvbToolTest, AvbVersionInSync) {
 }
 
 TEST_F(AvbToolTest, DefaultReleaseString) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   // Default release string is "avbtool " + avb_version_string().
   AvbVBMetaImageHeader h;
@@ -97,7 +95,7 @@ TEST_F(AvbToolTest, ReleaseStringAppend) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--append_to_release_string \"Woot XYZ\"");
 
   // Note that avbtool inserts the space by itself.
@@ -123,7 +121,7 @@ TEST_F(AvbToolTest, ReleaseStringAppendTruncated) {
       "vbmeta.img",
       "SHA256_RSA2048",
       0,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       std::string("--append_to_release_string \"") + append_str + "\"");
 
   // This checks that it ends with a NUL byte.
@@ -142,7 +140,7 @@ TEST_F(AvbToolTest, ExtractPublicKey) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   std::string key_data =
@@ -165,7 +163,7 @@ TEST_F(AvbToolTest, CheckDescriptors) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--prop foo:brillo "
                       "--prop bar:chromeos "
                       "--prop prisoner:24601 "
@@ -271,13 +269,13 @@ TEST_F(AvbToolTest, Padding) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   GenerateVBMetaImage("vbmeta_padded.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\" --padding_size 4096");
 
   base::FilePath vbmeta_path = testdir_.Append("vbmeta.img");
@@ -301,7 +299,7 @@ TEST_F(AvbToolTest, CheckRollbackIndex) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       rollback_index,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   AvbVBMetaImageHeader h;
@@ -317,7 +315,7 @@ TEST_F(AvbToolTest, CheckRollbackIndexLocationOmitted) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   AvbVBMetaImageHeader h;
@@ -334,7 +332,7 @@ TEST_F(AvbToolTest, CheckRollbackIndexLocation) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--rollback_index_location %d",
                                          rollback_index_location));
 
@@ -351,7 +349,7 @@ TEST_F(AvbToolTest, CheckPubkeyReturned) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   const uint8_t* pubkey = NULL;
@@ -378,7 +376,7 @@ TEST_F(AvbToolTest, Info) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--prop foo:brillo "
                       "--prop bar:chromeos "
                       "--prop prisoner:24601 "
@@ -2644,7 +2642,7 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       std::string("--append_to_release_string \"\" "
                                   "--kernel_cmdline foo"));
 
@@ -2771,7 +2769,7 @@ TEST_F(AvbToolTest, VerifyImageNoSignature) {
   GenerateVBMetaImage("vbmeta.img",
                       "",  // NONE
                       0,
-                      base::FilePath());
+                      "");
 
   EXPECT_COMMAND(0,
                  "./avbtool.py verify_image "
@@ -2780,10 +2778,8 @@ TEST_F(AvbToolTest, VerifyImageNoSignature) {
 }
 
 TEST_F(AvbToolTest, VerifyImageValidSignature) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   EXPECT_COMMAND(0,
                  "./avbtool.py verify_image "
@@ -2792,10 +2788,8 @@ TEST_F(AvbToolTest, VerifyImageValidSignature) {
 }
 
 TEST_F(AvbToolTest, VerifyImageCorruptedVBMeta) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   // Corrupt four bytes of data in the end of the image. Since the aux
   // data is at the end and this data is signed, this will change the
@@ -2815,10 +2809,8 @@ TEST_F(AvbToolTest, VerifyImageCorruptedVBMeta) {
 }
 
 TEST_F(AvbToolTest, VerifyImageOtherKeyMatching) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   EXPECT_COMMAND(0,
                  "./avbtool.py verify_image "
@@ -2827,10 +2819,8 @@ TEST_F(AvbToolTest, VerifyImageOtherKeyMatching) {
 }
 
 TEST_F(AvbToolTest, VerifyImageOtherKeyNotMatching) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   EXPECT_COMMAND(1,
                  "./avbtool.py verify_image "
@@ -2888,7 +2878,7 @@ void AvbToolTest::GenerateImageWithHashAndHashtreeSetup() {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s "
                                          "--include_descriptors_from_image %s",
                                          boot_path.value().c_str(),
@@ -2932,7 +2922,7 @@ TEST_F(AvbToolTest, VerifyImageWithHashAndZeroedHashtree) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s ",
                                          system_path.value().c_str()));
 
@@ -2967,7 +2957,7 @@ TEST_F(AvbToolTest, VerifyImageWithNoHashtree) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s ",
                                          system_path.value().c_str()));
 
@@ -3048,7 +3038,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartition) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition system:1:%s ",
                                          pk4096_path.value().c_str()));
 
@@ -3102,7 +3092,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionWithFollow) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition system:1:%s ",
                                          pk4096_path.value().c_str()));
 
@@ -3196,7 +3186,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionOtherVBMeta) {
       "vbmeta.img",
       "SHA256_RSA2048",
       0,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition vbmeta_google:1:%s ",
                          pk4096_path.value().c_str()));
 
@@ -3262,7 +3252,7 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition system:1:%s "
                                          "--include_descriptors_from_image %s",
                                          pk4096_path.value().c_str(),

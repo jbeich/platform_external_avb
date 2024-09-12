@@ -77,7 +77,7 @@ class BaseAvbToolTest : public ::testing::Test {
   void GenerateVBMetaImage(const std::string& image_name,
                            const std::string& algorithm,
                            uint64_t rollback_index,
-                           const base::FilePath& key_path,
+                           const std::string& key_path,
                            const std::string& additional_options = "");
 
   /* Generate a file with name |file_name| of size |image_size| with
