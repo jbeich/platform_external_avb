@@ -460,12 +460,13 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationSpecified) {
 
 TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInvalid) {
   uint32_t rollback_index_location = AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS;
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      42,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--rollback_index_location %d",
-                                         rollback_index_location));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      42,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--rollback_index_location %d",
+                                  rollback_index_location));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -511,7 +512,7 @@ TEST_F(AvbSlotVerifyTest, LoadEntirePartitionIfAllowingVerificationError) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -578,7 +579,7 @@ TEST_F(AvbSlotVerifyTest, LoadSmallerPartitionIfAllowingVerificationError) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -639,7 +640,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -762,7 +763,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaWithPreloadedPartition) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -845,7 +846,7 @@ TEST_F(AvbSlotVerifyTest, SmallPreallocatedPreloadedPartitionFailGracefully) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -889,13 +890,14 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
                  boot_path.value().c_str(),
                  boot_partition_size);
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s"
-                                         " --internal_release_string \"\"",
-                                         boot_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s"
+                                  " --internal_release_string \"\"",
+                                  boot_path.value().c_str()));
 
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
@@ -976,10 +978,10 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1159,9 +1161,9 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.3\n"
@@ -1321,11 +1323,11 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:2:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --rollback_index_location 1"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:2:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --rollback_index_location 1"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.2\n"
@@ -1451,10 +1453,10 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition vbmeta_google:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition vbmeta_google:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1624,13 +1626,14 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition boot:1:%s"
-                                         " --internal_release_string \"\"",
-                                         pk_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1703,13 +1706,14 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition boot:1:%s"
-                                         " --internal_release_string \"\"",
-                                         pk_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1758,13 +1762,14 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      110,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition boot:1:%s"
-                                         " --internal_release_string \"\"",
-                                         pk_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      110,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1851,10 +1856,10 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1962,15 +1967,16 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
                  bar_path.value().c_str(),
                  bar_partition_size);
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      4,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s"
-                                         " --include_descriptors_from_image %s"
-                                         " --internal_release_string \"\"",
-                                         foo_path.value().c_str(),
-                                         bar_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      4,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s"
+                                  " --include_descriptors_from_image %s"
+                                  " --internal_release_string \"\"",
+                                  foo_path.value().c_str(),
+                                  bar_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -2076,15 +2082,16 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
                  bar_path.value().c_str(),
                  bar_partition_size);
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      4,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s"
-                                         " --include_descriptors_from_image %s"
-                                         " --internal_release_string \"\"",
-                                         foo_path.value().c_str(),
-                                         bar_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      4,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s"
+                                  " --include_descriptors_from_image %s"
+                                  " --internal_release_string \"\"",
+                                  foo_path.value().c_str(),
+                                  bar_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -2247,13 +2254,14 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
 TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
   base::FilePath md_path = GenerateImage("md.bin", 1536);
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--public_key_metadata %s"
-                                         " --internal_release_string \"\"",
-                                         md_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--public_key_metadata %s"
+                                  " --internal_release_string \"\"",
+                                  md_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2318,18 +2326,18 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--setup_rootfs_from_kernel %s "
-                         "--kernel_cmdline should_be_in_both=1 "
-                         "--algorithm SHA256_RSA2048 "
-                         "--flags %d "
-                         "--internal_release_string \"\"",
-                         rootfs_path.value().c_str(),
-                         hashtree_verification_on
-                             ? 0
-                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED));
+      android::base::StringPrintf(
+          "--setup_rootfs_from_kernel %s "
+          "--kernel_cmdline should_be_in_both=1 "
+          "--algorithm SHA256_RSA2048 "
+          "--flags %d "
+          "--internal_release_string \"\"",
+          rootfs_path.value().c_str(),
+          hashtree_verification_on ? 0
+                                   : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED));
 
   EXPECT_EQ(
-      base::StringPrintf(
+      android::base::StringPrintf(
           "Minimum libavb version:   1.0\n"
           "Header Block:             256 bytes\n"
           "Authentication Block:     320 bytes\n"
@@ -2502,41 +2510,41 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--kernel_cmdline should_be_in_both=1 "
-                         "--algorithm SHA256_RSA2048 "
-                         "--flags %d "
-                         "--chain_partition system:1:%s "
-                         "--internal_release_string \"\"",
-                         hashtree_verification_on
-                             ? 0
-                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED,
-                         pk_path.value().c_str()));
+      android::base::StringPrintf(
+          "--kernel_cmdline should_be_in_both=1 "
+          "--algorithm SHA256_RSA2048 "
+          "--flags %d "
+          "--chain_partition system:1:%s "
+          "--internal_release_string \"\"",
+          hashtree_verification_on ? 0
+                                   : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED,
+          pk_path.value().c_str()));
 
   EXPECT_EQ(
-      base::StringPrintf("Minimum libavb version:   1.0\n"
-                         "Header Block:             256 bytes\n"
-                         "Authentication Block:     320 bytes\n"
-                         "Auxiliary Block:          1216 bytes\n"
-                         "Public key (sha1):        "
-                         "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                         "Algorithm:                SHA256_RSA2048\n"
-                         "Rollback Index:           4\n"
-                         "Flags:                    %d\n"
-                         "Rollback Index Location:  0\n"
-                         "Release String:           ''\n"
-                         "Descriptors:\n"
-                         "    Chain Partition descriptor:\n"
-                         "      Partition Name:          system\n"
-                         "      Rollback Index Location: 1\n"
-                         "      Public key (sha1):       "
-                         "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                         "      Flags:                   0\n"
-                         "    Kernel Cmdline descriptor:\n"
-                         "      Flags:                 0\n"
-                         "      Kernel Cmdline:        'should_be_in_both=1'\n",
-                         hashtree_verification_on
-                             ? 0
-                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
+      android::base::StringPrintf(
+          "Minimum libavb version:   1.0\n"
+          "Header Block:             256 bytes\n"
+          "Authentication Block:     320 bytes\n"
+          "Auxiliary Block:          1216 bytes\n"
+          "Public key (sha1):        "
+          "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+          "Algorithm:                SHA256_RSA2048\n"
+          "Rollback Index:           4\n"
+          "Flags:                    %d\n"
+          "Rollback Index Location:  0\n"
+          "Release String:           ''\n"
+          "Descriptors:\n"
+          "    Chain Partition descriptor:\n"
+          "      Partition Name:          system\n"
+          "      Rollback Index Location: 1\n"
+          "      Public key (sha1):       "
+          "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+          "      Flags:                   0\n"
+          "    Kernel Cmdline descriptor:\n"
+          "      Flags:                 0\n"
+          "      Kernel Cmdline:        'should_be_in_both=1'\n",
+          hashtree_verification_on ? 0
+                                   : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
       InfoImage(vbmeta_image_path_.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -2641,7 +2649,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--setup_rootfs_from_kernel %s "
           "--kernel_cmdline should_be_in_both=1 "
           "--algorithm SHA256_RSA2048 "
@@ -2651,7 +2659,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
           use_avbctl ? 0 : AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED));
 
   EXPECT_EQ(
-      base::StringPrintf(
+      android::base::StringPrintf(
           "Minimum libavb version:   1.0\n"
           "Header Block:             256 bytes\n"
           "Authentication Block:     320 bytes\n"
@@ -3014,10 +3022,10 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3068,10 +3076,10 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceNoChainPartitions) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3102,15 +3110,16 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
                  system_path.value().c_str(),
                  (int)system_part_size);
 
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--setup_rootfs_from_kernel %s "
-                                         "--include_descriptors_from_image %s"
-                                         " --internal_release_string \"\"",
-                                         system_path.value().c_str(),
-                                         system_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--setup_rootfs_from_kernel %s "
+                                  "--include_descriptors_from_image %s"
+                                  " --internal_release_string \"\"",
+                                  system_path.value().c_str(),
+                                  system_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3248,16 +3257,17 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
 
   // Check we'll get androidboot.veritymode=disabled for any
   // |hashtree_error_mode| if dm-verity is disabled.
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--setup_rootfs_from_kernel %s "
-                                         "--include_descriptors_from_image %s "
-                                         "--set_hashtree_disabled_flag "
-                                         "--internal_release_string \"\"",
-                                         system_path.value().c_str(),
-                                         system_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--setup_rootfs_from_kernel %s "
+                                  "--include_descriptors_from_image %s "
+                                  "--set_hashtree_disabled_flag "
+                                  "--internal_release_string \"\"",
+                                  system_path.value().c_str(),
+                                  system_path.value().c_str()));
   for (int n = 0; n < 4; n++) {
     AvbHashtreeErrorMode modes[4] = {
         AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
@@ -3312,30 +3322,31 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "SHA256_RSA2048",
         0,
         "test/data/testkey_rsa2048.pem",
-        base::StringPrintf("--internal_release_string \"\" "
-                           "--include_descriptors_from_image %s ",
-                           factory_path.value().c_str()));
+        android::base::StringPrintf("--internal_release_string \"\" "
+                                    "--include_descriptors_from_image %s ",
+                                    factory_path.value().c_str()));
 
-    EXPECT_EQ(base::StringPrintf("Minimum libavb version:   1.1\n"
-                                 "Header Block:             256 bytes\n"
-                                 "Authentication Block:     320 bytes\n"
-                                 "Auxiliary Block:          704 bytes\n"
-                                 "Public key (sha1):        "
-                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                                 "Algorithm:                SHA256_RSA2048\n"
-                                 "Rollback Index:           0\n"
-                                 "Flags:                    0\n"
-                                 "Rollback Index Location:  0\n"
-                                 "Release String:           ''\n"
-                                 "Descriptors:\n"
-                                 "    Hash descriptor:\n"
-                                 "      Image Size:            5242880 bytes\n"
-                                 "      Hash Algorithm:        sha256\n"
-                                 "      Partition Name:        factory\n"
-                                 "      Salt:                  \n"
-                                 "      Digest:                \n"
-                                 "      Flags:                 %d\n",
-                                 do_not_use_ab ? 1 : 0),
+    EXPECT_EQ(android::base::StringPrintf(
+                  "Minimum libavb version:   1.1\n"
+                  "Header Block:             256 bytes\n"
+                  "Authentication Block:     320 bytes\n"
+                  "Auxiliary Block:          704 bytes\n"
+                  "Public key (sha1):        "
+                  "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                  "Algorithm:                SHA256_RSA2048\n"
+                  "Rollback Index:           0\n"
+                  "Flags:                    0\n"
+                  "Rollback Index Location:  0\n"
+                  "Release String:           ''\n"
+                  "Descriptors:\n"
+                  "    Hash descriptor:\n"
+                  "      Image Size:            5242880 bytes\n"
+                  "      Hash Algorithm:        sha256\n"
+                  "      Partition Name:        factory\n"
+                  "      Salt:                  \n"
+                  "      Digest:                \n"
+                  "      Flags:                 %d\n",
+                  do_not_use_ab ? 1 : 0),
               InfoImage(vbmeta_image_path_.value()));
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -3369,50 +3380,51 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "SHA256_RSA2048",
         0,
         "test/data/testkey_rsa2048.pem",
-        base::StringPrintf("--internal_release_string \"\" "
-                           "--include_descriptors_from_image %s ",
-                           factory_path.value().c_str()));
+        android::base::StringPrintf("--internal_release_string \"\" "
+                                    "--include_descriptors_from_image %s ",
+                                    factory_path.value().c_str()));
 
     int expected_tree_size =
         (verity_hash_algorithm_ == "sha512") ? 86016 : 45056;
     int expected_fec_offset =
         (verity_hash_algorithm_ == "sha512") ? 5328896 : 5287936;
-    EXPECT_EQ(base::StringPrintf("Minimum libavb version:   1.1\n"
-                                 "Header Block:             256 bytes\n"
-                                 "Authentication Block:     320 bytes\n"
-                                 "Auxiliary Block:          832 bytes\n"
-                                 "Public key (sha1):        "
-                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                                 "Algorithm:                SHA256_RSA2048\n"
-                                 "Rollback Index:           0\n"
-                                 "Flags:                    0\n"
-                                 "Rollback Index Location:  0\n"
-                                 "Release String:           ''\n"
-                                 "Descriptors:\n"
-                                 "    Kernel Cmdline descriptor:\n"
-                                 "      Flags:                 0\n"
-                                 "      Kernel Cmdline:        "
-                                 "'androidboot.vbmeta.root_digest.factory=$("
-                                 "AVB_FACTORY_ROOT_DIGEST)'\n"
-                                 "    Hashtree descriptor:\n"
-                                 "      Version of dm-verity:  1\n"
-                                 "      Image Size:            5242880 bytes\n"
-                                 "      Tree Offset:           5242880\n"
-                                 "      Tree Size:             %d bytes\n"
-                                 "      Data Block Size:       4096 bytes\n"
-                                 "      Hash Block Size:       4096 bytes\n"
-                                 "      FEC num roots:         2\n"
-                                 "      FEC offset:            %d\n"
-                                 "      FEC size:              49152 bytes\n"
-                                 "      Hash Algorithm:        %s\n"
-                                 "      Partition Name:        factory\n"
-                                 "      Salt:                  \n"
-                                 "      Root Digest:           \n"
-                                 "      Flags:                 %d\n",
-                                 expected_tree_size,
-                                 expected_fec_offset,
-                                 verity_hash_algorithm_.c_str(),
-                                 do_not_use_ab ? 1 : 0),
+    EXPECT_EQ(android::base::StringPrintf(
+                  "Minimum libavb version:   1.1\n"
+                  "Header Block:             256 bytes\n"
+                  "Authentication Block:     320 bytes\n"
+                  "Auxiliary Block:          832 bytes\n"
+                  "Public key (sha1):        "
+                  "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                  "Algorithm:                SHA256_RSA2048\n"
+                  "Rollback Index:           0\n"
+                  "Flags:                    0\n"
+                  "Rollback Index Location:  0\n"
+                  "Release String:           ''\n"
+                  "Descriptors:\n"
+                  "    Kernel Cmdline descriptor:\n"
+                  "      Flags:                 0\n"
+                  "      Kernel Cmdline:        "
+                  "'androidboot.vbmeta.root_digest.factory=$("
+                  "AVB_FACTORY_ROOT_DIGEST)'\n"
+                  "    Hashtree descriptor:\n"
+                  "      Version of dm-verity:  1\n"
+                  "      Image Size:            5242880 bytes\n"
+                  "      Tree Offset:           5242880\n"
+                  "      Tree Size:             %d bytes\n"
+                  "      Data Block Size:       4096 bytes\n"
+                  "      Hash Block Size:       4096 bytes\n"
+                  "      FEC num roots:         2\n"
+                  "      FEC offset:            %d\n"
+                  "      FEC size:              49152 bytes\n"
+                  "      Hash Algorithm:        %s\n"
+                  "      Partition Name:        factory\n"
+                  "      Salt:                  \n"
+                  "      Root Digest:           \n"
+                  "      Flags:                 %d\n",
+                  expected_tree_size,
+                  expected_fec_offset,
+                  verity_hash_algorithm_.c_str(),
+                  do_not_use_ab ? 1 : 0),
               InfoImage(vbmeta_image_path_.value()));
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));

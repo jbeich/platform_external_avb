@@ -22,17 +22,14 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
-#include <endian.h>
-#include <inttypes.h>
-#include <string.h>
-
 #include <base/files/file_util.h>
 #include <base/strings/string_util.h>
-#include <base/strings/stringprintf.h>
-
+#include <endian.h>
+#include <inttypes.h>
 #include <libavb/libavb.h>
+#include <string.h>
+
+#include <iostream>
 
 #include "avb_unittest_util.h"
 
