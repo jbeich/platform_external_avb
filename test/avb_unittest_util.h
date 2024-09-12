@@ -88,7 +88,7 @@ class BaseAvbToolTest : public ::testing::Test {
                                uint8_t start_byte = 0);
 
   /* Returns the output of 'avbtool info_image' for a given image. */
-  std::string InfoImage(const base::FilePath& image_path);
+  std::string InfoImage(const std::string& image_path);
 
   /* Returns public key in AVB format for a .pem key */
   std::string PublicKeyAVB(const base::FilePath& key_path);
