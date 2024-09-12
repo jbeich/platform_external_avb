@@ -93,14 +93,14 @@ void BaseAvbToolTest::GenerateVBMetaImage(
     const std::string& image_name,
     const std::string& algorithm,
     uint64_t rollback_index,
-    const base::FilePath& key_path,
+    const std::string& key_path,
     const std::string& additional_options) {
   std::string signing_options;
   if (algorithm == "") {
     signing_options = " --algorithm NONE ";
   } else {
-    signing_options = std::string(" --algorithm ") + algorithm + " --key " +
-                      key_path.value() + " ";
+    signing_options =
+        std::string(" --algorithm ") + algorithm + " --key " + key_path + " ";
   }
   vbmeta_image_path_ = testdir_.Append(image_name);
   EXPECT_COMMAND(0,

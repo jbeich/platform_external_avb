@@ -223,7 +223,7 @@ class AvbABFlowTest : public BaseAvbToolTest {
     GenerateVBMetaImage(vbmeta_name,
                         "SHA256_RSA2048",
                         rollback_boot,
-                        base::FilePath("test/data/testkey_rsa2048.pem"),
+                        "test/data/testkey_rsa2048.pem",
                         base::StringPrintf("--include_descriptors_from_image %s"
                                            " --chain_partition odm:1:%s",
                                            boot_path.value().c_str(),

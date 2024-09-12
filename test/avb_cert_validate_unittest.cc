@@ -1022,7 +1022,7 @@ TEST_F(AvbCertSlotVerifyTest, SlotVerifyWithCert) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA512_RSA4096",
                       0,
-                      base::FilePath("test/data/testkey_cert_psk.pem"),
+                      "test/data/testkey_cert_psk.pem",
                       metadata_option);
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_cert_psk.pem"));
