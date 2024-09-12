@@ -25,12 +25,10 @@
 #ifndef AVB_UNITTEST_UTIL_H_
 #define AVB_UNITTEST_UTIL_H_
 
-#include <inttypes.h>
-
-#include <gtest/gtest.h>
-
+#include <android-base/stringprintf.h>
 #include <base/files/file_util.h>
-#include <base/strings/stringprintf.h>
+#include <gtest/gtest.h>
+#include <inttypes.h>
 
 // Encodes |len| bytes of |data| as a lower-case hex-string.
 std::string mem_to_hexstring(const uint8_t* data, size_t len);
@@ -42,12 +40,12 @@ std::string string_trim(const std::string& str);
  * |command_format| using the system(3) utility function. Will assert unless
  * the command exits normally with exit status |expected_exit_status|.
  */
-#define EXPECT_COMMAND(expected_exit_status, command_format, ...)          \
-  do {                                                                     \
-    int rc =                                                               \
-        system(base::StringPrintf(command_format, ##__VA_ARGS__).c_str()); \
-    EXPECT_TRUE(WIFEXITED(rc));                                            \
-    EXPECT_EQ(WEXITSTATUS(rc), expected_exit_status);                      \
+#define EXPECT_COMMAND(expected_exit_status, command_format, ...)            \
+  do {                                                                       \
+    int rc = system(                                                         \
+        android::base::StringPrintf(command_format, ##__VA_ARGS__).c_str()); \
+    EXPECT_TRUE(WIFEXITED(rc));                                              \
+    EXPECT_EQ(WEXITSTATUS(rc), expected_exit_status);                        \
   } while (0);
 
 namespace avb {
