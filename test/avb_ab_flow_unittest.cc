@@ -150,8 +150,7 @@ class AvbABFlowTest : public BaseAvbToolTest {
                                   misc.size())));
 
     // We're going to use this key for all images.
-    ops_.set_expected_public_key(
-        PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+    ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }
 
   void GenerateSlot(unsigned int slot_number,
@@ -221,14 +220,15 @@ class AvbABFlowTest : public BaseAvbToolTest {
       pk_path = GenerateImage("dummy.avbpubkey", 32);
     }
 
-    GenerateVBMetaImage(vbmeta_name,
-                        "SHA256_RSA2048",
-                        rollback_boot,
-                        base::FilePath("test/data/testkey_rsa2048.pem"),
-                        base::StringPrintf("--include_descriptors_from_image %s"
-                                           " --chain_partition odm:1:%s",
-                                           boot_path.value().c_str(),
-                                           pk_path.value().c_str()));
+    GenerateVBMetaImage(
+        vbmeta_name,
+        "SHA256_RSA2048",
+        rollback_boot,
+        "test/data/testkey_rsa2048.pem",
+        android::base::StringPrintf("--include_descriptors_from_image %s"
+                                    " --chain_partition odm:1:%s",
+                                    boot_path.value().c_str(),
+                                    pk_path.value().c_str()));
   }
 
   void SetMD(int a_pri,

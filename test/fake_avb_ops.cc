@@ -22,25 +22,22 @@
  * SOFTWARE.
  */
 
-#include <iostream>
+#include "fake_avb_ops.h"
 
+#include <base/files/file_util.h>
+#include <base/strings/string_util.h>
 #include <endian.h>
 #include <errno.h>
-#include <inttypes.h>
-#include <string.h>
-
 #include <fcntl.h>
+#include <inttypes.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <base/files/file_util.h>
-#include <base/strings/string_util.h>
-#include <base/strings/stringprintf.h>
-#include <openssl/rand.h>
-#include <openssl/sha.h>
-
-#include "fake_avb_ops.h"
+#include <iostream>
 
 namespace avb {
 
