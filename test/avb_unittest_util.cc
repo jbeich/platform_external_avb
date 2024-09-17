@@ -123,9 +123,9 @@ void BaseAvbToolTest::GenerateVBMetaImage(
 /* Generate a file with name |file_name| of size |image_size| with
  * known content (0x00 0x01 0x02 .. 0xff 0x00 0x01 ..).
  */
-base::FilePath BaseAvbToolTest::GenerateImage(const std::string file_name,
-                                              size_t image_size,
-                                              uint8_t start_byte) {
+std::string BaseAvbToolTest::GenerateImage(const std::string file_name,
+                                           size_t image_size,
+                                           uint8_t start_byte) {
   base::FilePath image_path = testdir_.Append(file_name);
   EXPECT_COMMAND(0,
                  "./avbtool.py generate_test_image "
@@ -138,7 +138,7 @@ base::FilePath BaseAvbToolTest::GenerateImage(const std::string file_name,
   base::File::Info stats;
   EXPECT_TRUE(base::GetFileInfo(image_path, &stats));
   EXPECT_EQ((size_t)stats.size, image_size);
-  return image_path;
+  return image_path.value();
 }
 
 std::string BaseAvbToolTest::InfoImage(const std::string& image_path) {
