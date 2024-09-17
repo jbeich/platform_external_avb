@@ -80,10 +80,8 @@ TEST_F(AvbToolTest, AvbVersionInSync) {
 }
 
 TEST_F(AvbToolTest, DefaultReleaseString) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   // Default release string is "avbtool " + avb_version_string().
   AvbVBMetaImageHeader h;
@@ -97,7 +95,7 @@ TEST_F(AvbToolTest, ReleaseStringAppend) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--append_to_release_string \"Woot XYZ\"");
 
   // Note that avbtool inserts the space by itself.
@@ -123,7 +121,7 @@ TEST_F(AvbToolTest, ReleaseStringAppendTruncated) {
       "vbmeta.img",
       "SHA256_RSA2048",
       0,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       std::string("--append_to_release_string \"") + append_str + "\"");
 
   // This checks that it ends with a NUL byte.
@@ -142,11 +140,10 @@ TEST_F(AvbToolTest, ExtractPublicKey) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
-  std::string key_data =
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem"));
+  std::string key_data = PublicKeyAVB("test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader h;
   avb_vbmeta_image_header_to_host_byte_order(
@@ -165,7 +162,7 @@ TEST_F(AvbToolTest, CheckDescriptors) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--prop foo:brillo "
                       "--prop bar:chromeos "
                       "--prop prisoner:24601 "
@@ -271,13 +268,13 @@ TEST_F(AvbToolTest, Padding) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   GenerateVBMetaImage("vbmeta_padded.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\" --padding_size 4096");
 
   base::FilePath vbmeta_path = testdir_.Append("vbmeta.img");
@@ -301,7 +298,7 @@ TEST_F(AvbToolTest, CheckRollbackIndex) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       rollback_index,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   AvbVBMetaImageHeader h;
@@ -317,7 +314,7 @@ TEST_F(AvbToolTest, CheckRollbackIndexLocationOmitted) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   AvbVBMetaImageHeader h;
@@ -334,7 +331,7 @@ TEST_F(AvbToolTest, CheckRollbackIndexLocation) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--rollback_index_location %d",
                                          rollback_index_location));
 
@@ -351,7 +348,7 @@ TEST_F(AvbToolTest, CheckPubkeyReturned) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   const uint8_t* pubkey = NULL;
@@ -378,7 +375,7 @@ TEST_F(AvbToolTest, Info) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--prop foo:brillo "
                       "--prop bar:chromeos "
                       "--prop prisoner:24601 "
@@ -414,7 +411,7 @@ TEST_F(AvbToolTest, Info) {
       "    Prop: blob -> '\\x00\\x00brillo "
       "ftw!\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\n'\n"
       "    Prop: large_blob -> (2048 bytes)\n",
-      InfoImage(vbmeta_image_path_));
+      InfoImage(vbmeta_image_path_.value()));
 }
 
 static bool collect_descriptors(const AvbDescriptor* descriptor,
@@ -514,7 +511,7 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                    external_vbmeta_path.value().c_str());
 
     ASSERT_EQ(AddHashFooterGetExpectedVBMetaInfo(sparse_image, partition_size),
-              InfoImage(rootfs_path));
+              InfoImage(rootfs_path.value()));
 
     ASSERT_EQ(
         "Minimum libavb version:   1.0\n"
@@ -537,7 +534,7 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
         "9a58cc996d405e08a1e00f96dbfe9104fedf41cb83b1f"
         "5e4ed357fbcf58d88d9\n"
         "      Flags:                 0\n",
-        InfoImage(external_vbmeta_path));
+        InfoImage(external_vbmeta_path.value()));
 
     // Check that the extracted vbmeta matches the externally generally one.
     EXPECT_COMMAND(0,
@@ -568,7 +565,7 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                  (int)resized_partition_size);
   ASSERT_EQ(
       AddHashFooterGetExpectedVBMetaInfo(sparse_image, resized_partition_size),
-      InfoImage(rootfs_path));
+      InfoImage(rootfs_path.value()));
 
   if (sparse_image) {
     EXPECT_COMMAND(0,
@@ -733,8 +730,8 @@ TEST_F(AvbToolTest, DISABLED_AddHashFooterSparseWithHoleAtTheEnd) {
   // (because of different branches) the contents of the resulting
   // disk image may slightly change. It's enough to just remove the
   // "Digest:" line from the output to work around this.
-  std::string info =
-      RemoveLinesStartingWith(InfoImage(partition_path), "      Digest:");
+  std::string info = RemoveLinesStartingWith(InfoImage(partition_path.value()),
+                                             "      Digest:");
   ASSERT_EQ(
       "Footer version:           1.0\n"
       "Image size:               10485760 bytes\n"
@@ -847,7 +844,7 @@ TEST_F(AvbToolTest, AddHashFooterWithPersistentDigest) {
       "      Salt:                  \n"
       "      Digest:                \n"
       "      Flags:                 0\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashFooterWithNoAB) {
@@ -892,7 +889,7 @@ TEST_F(AvbToolTest, AddHashFooterWithNoAB) {
       "      Digest:                "
       "91386fea3e251ad0c2cb6859e4f4772f37fdb69f17d46636ddc9e7fbfd3bf3d0\n"
       "      Flags:                 1\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashFooterWithPersistentDigestAndNoAB) {
@@ -937,7 +934,7 @@ TEST_F(AvbToolTest, AddHashFooterWithPersistentDigestAndNoAB) {
       "      Salt:                  \n"
       "      Digest:                \n"
       "      Flags:                 1\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 void AvbToolTest::CreateRootfsWithHashtreeFooter(
@@ -1028,7 +1025,7 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                                  sparse_image ? " (Sparse)" : "",
                                  hash_algorithm.c_str(),
                                  root_digest.c_str()),
-              InfoImage(rootfs_path));
+              InfoImage(rootfs_path.value()));
 
     ASSERT_EQ(base::StringPrintf("Minimum libavb version:   1.0\n"
                                  "Header Block:             256 bytes\n"
@@ -1060,7 +1057,7 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                                  "      Flags:                 0\n",
                                  hash_algorithm.c_str(),
                                  root_digest.c_str()),
-              InfoImage(external_vbmeta_path));
+              InfoImage(external_vbmeta_path.value()));
 
     // Check that the extracted vbmeta matches the externally generally one.
     EXPECT_COMMAND(0,
@@ -1262,7 +1259,7 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
       "      Flags:                 2\n"
       "      Kernel Cmdline:        "
       "'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'\n",
-      InfoImage(vbmeta_dmv_path));
+      InfoImage(vbmeta_dmv_path.value()));
 
   // Check that the footer is correctly erased and the hashtree
   // remains - see above for why the constant 1069056 is used.
@@ -1393,7 +1390,7 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                                  "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
                                  "      Flags:                 0\n",
                                  sparse_image ? " (Sparse)" : ""),
-              InfoImage(rootfs_path));
+              InfoImage(rootfs_path.value()));
   }
 
   /* Zero the hashtree and FEC on a copy of the image. */
@@ -1562,7 +1559,7 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
       "      Flags:                 2\n"
       "      Kernel Cmdline:        "
       "'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'\n",
-      InfoImage(vbmeta_dmv_path));
+      InfoImage(vbmeta_dmv_path.value()));
 
   // Check that the footer is correctly erased and the hashtree and
   // FEC data remains. The constant 1085440 is used because it's where
@@ -1720,7 +1717,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithNoHashtree) {
       "      Salt:                  deadbeef\n"
       "      Root Digest:           4215bd42bcc99636f42956ce3d2c7884d6a8093b\n"
       "      Flags:                 0\n",
-      InfoImage(system_path));
+      InfoImage(system_path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigest) {
@@ -1772,7 +1769,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigest) {
       "      Salt:                  \n"
       "      Root Digest:           \n"
       "      Flags:                 0\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterWithNoAB) {
@@ -1825,7 +1822,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithNoAB) {
       "      Root Digest:           "
       "d0e31526f5a3f8e3f59acf726bd31ae7861ee78f9baa9195356bf479c6f9119d\n"
       "      Flags:                 1\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigestAndNoAB) {
@@ -1878,7 +1875,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigestAndNoAB) {
       "      Salt:                  \n"
       "      Root Digest:           \n"
       "      Flags:                 1\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterNoSizeOrName) {
@@ -1928,7 +1925,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterNoSizeOrName) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           2f73fb340e982794643e1121d82d5195677c2b31\n"
       "      Flags:                 0\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 
   // Check that at least avbtool can verify the image and hashtree.
   EXPECT_COMMAND(0,
@@ -1984,7 +1981,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterSingleBlock) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           4bd1e1f0aa1c2c793bb9f3e52de6ae7393889e61\n"
       "      Flags:                 0\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 
   // Check that at least avbtool can verify the image and hashtree.
   EXPECT_COMMAND(0,
@@ -2099,7 +2096,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithCheckAtMostOnce) {
       "      Root Digest:           "
       "d0e31526f5a3f8e3f59acf726bd31ae7861ee78f9baa9195356bf479c6f9119d\n"
       "      Flags:                 2\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
@@ -2134,7 +2131,7 @@ TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'second cmdline'\n",
-      InfoImage(vbmeta_path));
+      InfoImage(vbmeta_path.value()));
 
   // Now check the VBMeta image.
   std::string image_data;
@@ -2281,7 +2278,7 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
       "      Flags:                 2\n"
       "      Kernel Cmdline:        "
       "'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'\n",
-      InfoImage(rootfs_path));
+      InfoImage(rootfs_path.value()));
 
   // Chain to the rootfs.img and include two cmdline descriptors.
   base::FilePath vbmeta_path = testdir_.Append("vbmeta.bin");
@@ -2320,7 +2317,7 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'second cmdline'\n",
-      InfoImage(vbmeta_path));
+      InfoImage(vbmeta_path.value()));
 
   base::FilePath out_path = testdir_.Append("out.txt");
   std::string out;
@@ -2441,7 +2438,7 @@ TEST_F(AvbToolTest, IncludeDescriptor) {
       "      Kernel Cmdline:        'something'\n"
       "    Prop: name2 -> 'value2'\n"
       "    Prop: name3 -> 'value3'\n",
-      InfoImage(vbmeta3_path));
+      InfoImage(vbmeta3_path.value()));
 }
 
 TEST_F(AvbToolTest, ChainedPartition) {
@@ -2483,7 +2480,7 @@ TEST_F(AvbToolTest, ChainedPartition) {
       "      Public key (sha1):       "
       "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
       "      Flags:                   0\n",
-      InfoImage(vbmeta_path));
+      InfoImage(vbmeta_path.value()));
 
   // Now check the VBMeta image.
   std::string image_data;
@@ -2566,7 +2563,7 @@ TEST_F(AvbToolTest, ChainedPartitionNoAB) {
       "      Public key (sha1):       "
       "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
       "      Flags:                   1\n",
-      InfoImage(vbmeta_path));
+      InfoImage(vbmeta_path.value()));
 
   // Now check the VBMeta image.
   std::string image_data;
@@ -2644,7 +2641,7 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       std::string("--append_to_release_string \"\" "
                                   "--kernel_cmdline foo"));
 
@@ -2657,8 +2654,8 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
                  (int)boot_partition_size,
                  vbmeta_image_path_.value().c_str());
 
-  std::string vbmeta_contents = InfoImage(vbmeta_image_path_);
-  std::string boot_contents = InfoImage(boot_path);
+  std::string vbmeta_contents = InfoImage(vbmeta_image_path_.value());
+  std::string boot_contents = InfoImage(boot_path.value());
 
   // Check that boot.img has the same vbmeta blob as from vbmeta.img -
   // we do this by inspecting 'avbtool info_image' output combined
@@ -2771,7 +2768,7 @@ TEST_F(AvbToolTest, VerifyImageNoSignature) {
   GenerateVBMetaImage("vbmeta.img",
                       "",  // NONE
                       0,
-                      base::FilePath());
+                      "");
 
   EXPECT_COMMAND(0,
                  "./avbtool.py verify_image "
@@ -2780,10 +2777,8 @@ TEST_F(AvbToolTest, VerifyImageNoSignature) {
 }
 
 TEST_F(AvbToolTest, VerifyImageValidSignature) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   EXPECT_COMMAND(0,
                  "./avbtool.py verify_image "
@@ -2792,10 +2787,8 @@ TEST_F(AvbToolTest, VerifyImageValidSignature) {
 }
 
 TEST_F(AvbToolTest, VerifyImageCorruptedVBMeta) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   // Corrupt four bytes of data in the end of the image. Since the aux
   // data is at the end and this data is signed, this will change the
@@ -2815,10 +2808,8 @@ TEST_F(AvbToolTest, VerifyImageCorruptedVBMeta) {
 }
 
 TEST_F(AvbToolTest, VerifyImageOtherKeyMatching) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   EXPECT_COMMAND(0,
                  "./avbtool.py verify_image "
@@ -2827,10 +2818,8 @@ TEST_F(AvbToolTest, VerifyImageOtherKeyMatching) {
 }
 
 TEST_F(AvbToolTest, VerifyImageOtherKeyNotMatching) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   EXPECT_COMMAND(1,
                  "./avbtool.py verify_image "
@@ -2888,7 +2877,7 @@ void AvbToolTest::GenerateImageWithHashAndHashtreeSetup() {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s "
                                          "--include_descriptors_from_image %s",
                                          boot_path.value().c_str(),
@@ -2932,7 +2921,7 @@ TEST_F(AvbToolTest, VerifyImageWithHashAndZeroedHashtree) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s ",
                                          system_path.value().c_str()));
 
@@ -2967,7 +2956,7 @@ TEST_F(AvbToolTest, VerifyImageWithNoHashtree) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s ",
                                          system_path.value().c_str()));
 
@@ -3048,7 +3037,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartition) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition system:1:%s ",
                                          pk4096_path.value().c_str()));
 
@@ -3102,7 +3091,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionWithFollow) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition system:1:%s ",
                                          pk4096_path.value().c_str()));
 
@@ -3196,7 +3185,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionOtherVBMeta) {
       "vbmeta.img",
       "SHA256_RSA2048",
       0,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition vbmeta_google:1:%s ",
                          pk4096_path.value().c_str()));
 
@@ -3262,7 +3251,7 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition system:1:%s "
                                          "--include_descriptors_from_image %s",
                                          pk4096_path.value().c_str(),

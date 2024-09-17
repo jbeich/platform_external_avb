@@ -77,7 +77,7 @@ class BaseAvbToolTest : public ::testing::Test {
   void GenerateVBMetaImage(const std::string& image_name,
                            const std::string& algorithm,
                            uint64_t rollback_index,
-                           const base::FilePath& key_path,
+                           const std::string& key_path,
                            const std::string& additional_options = "");
 
   /* Generate a file with name |file_name| of size |image_size| with
@@ -88,10 +88,10 @@ class BaseAvbToolTest : public ::testing::Test {
                                uint8_t start_byte = 0);
 
   /* Returns the output of 'avbtool info_image' for a given image. */
-  std::string InfoImage(const base::FilePath& image_path);
+  std::string InfoImage(const std::string& image_path);
 
   /* Returns public key in AVB format for a .pem key */
-  std::string PublicKeyAVB(const base::FilePath& key_path);
+  std::string PublicKeyAVB(const std::string& key_path);
 
   void SetUp() override;
   void TearDown() override;
