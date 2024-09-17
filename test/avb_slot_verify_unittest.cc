@@ -57,7 +57,7 @@ TEST_F(AvbSlotVerifyTest, Basic) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -97,7 +97,7 @@ TEST_F(AvbSlotVerifyTest, BasicSha512) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA512_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -142,7 +142,7 @@ TEST_F(AvbSlotVerifyTest, BasicUnlocked) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -176,7 +176,7 @@ TEST_F(AvbSlotVerifyTest, PreloadedEnabledButNotUsed) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -199,7 +199,7 @@ TEST_F(AvbSlotVerifyTest, SlotDataIsCorrect) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -221,7 +221,7 @@ TEST_F(AvbSlotVerifyTest, WrongPublicKey) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   AvbSlotVerifyData* slot_data = NULL;
@@ -259,11 +259,8 @@ TEST_F(AvbSlotVerifyTest, NoImage) {
 }
 
 TEST_F(AvbSlotVerifyTest, UnsignedVBMeta) {
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "",
-                      0,
-                      base::FilePath(""),
-                      "--internal_release_string \"\"");
+  GenerateVBMetaImage(
+      "vbmeta_a.img", "", 0, "", "--internal_release_string \"\"");
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -290,7 +287,7 @@ TEST_F(AvbSlotVerifyTest, CorruptedImage) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   // Corrupt four bytes of data in the end of the image. Since the aux
@@ -329,7 +326,7 @@ TEST_F(AvbSlotVerifyTest, CorruptedMetadata) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   // Corrupt four bytes of data in the beginning of the image. Unlike
@@ -361,7 +358,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndex) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       42,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -408,7 +405,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationSpecified) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       42,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--rollback_index_location 15");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -466,7 +463,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInvalid) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       42,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--rollback_index_location %d",
                                          rollback_index_location));
 
@@ -513,7 +510,7 @@ TEST_F(AvbSlotVerifyTest, LoadEntirePartitionIfAllowingVerificationError) {
       "vbmeta_a.img",
       "SHA256_RSA2048",
       4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
@@ -580,7 +577,7 @@ TEST_F(AvbSlotVerifyTest, LoadSmallerPartitionIfAllowingVerificationError) {
       "vbmeta_a.img",
       "SHA256_RSA2048",
       4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
@@ -641,7 +638,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "vbmeta_a.img",
       "SHA256_RSA2048",
       4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
@@ -764,7 +761,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaWithPreloadedPartition) {
       "vbmeta_a.img",
       "SHA256_RSA2048",
       4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
@@ -847,7 +844,7 @@ TEST_F(AvbSlotVerifyTest, SmallPreallocatedPreloadedPartitionFailGracefully) {
       "vbmeta_a.img",
       "SHA256_RSA2048",
       4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
@@ -895,7 +892,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s"
                                          " --internal_release_string \"\"",
                                          boot_path.value().c_str()));
@@ -978,7 +975,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "vbmeta.img",
       "SHA256_RSA2048",
       11,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition boot:1:%s"
                          " --kernel_cmdline 'cmdline2 in vbmeta'"
                          " --internal_release_string \"\"",
@@ -1161,7 +1158,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "vbmeta_a.img",
       "SHA256_RSA2048",
       11,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
                          " --internal_release_string \"\"",
                          pk_path.value().c_str()));
@@ -1323,7 +1320,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "vbmeta.img",
       "SHA256_RSA2048",
       11,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition boot:2:%s"
                          " --kernel_cmdline 'cmdline2 in vbmeta'"
                          " --rollback_index_location 1"
@@ -1453,7 +1450,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "vbmeta.img",
       "SHA256_RSA2048",
       11,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition vbmeta_google:1:%s"
                          " --kernel_cmdline 'cmdline2 in vbmeta'"
                          " --internal_release_string \"\"",
@@ -1630,7 +1627,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition boot:1:%s"
                                          " --internal_release_string \"\"",
                                          pk_path.value().c_str()));
@@ -1709,7 +1706,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition boot:1:%s"
                                          " --internal_release_string \"\"",
                                          pk_path.value().c_str()));
@@ -1764,7 +1761,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       110,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--chain_partition boot:1:%s"
                                          " --internal_release_string \"\"",
                                          pk_path.value().c_str()));
@@ -1853,7 +1850,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "vbmeta.img",
       "SHA256_RSA2048",
       11,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition boot:1:%s"
                          " --kernel_cmdline 'cmdline2 in vbmeta'"
                          " --internal_release_string \"\"",
@@ -1968,7 +1965,7 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       4,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s"
                                          " --include_descriptors_from_image %s"
                                          " --internal_release_string \"\"",
@@ -2082,7 +2079,7 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       4,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--include_descriptors_from_image %s"
                                          " --include_descriptors_from_image %s"
                                          " --internal_release_string \"\"",
@@ -2253,7 +2250,7 @@ TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--public_key_metadata %s"
                                          " --internal_release_string \"\"",
                                          md_path.value().c_str()));
@@ -2320,7 +2317,7 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
       "vbmeta_a.img",
       "SHA256_RSA2048",
       4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--setup_rootfs_from_kernel %s "
                          "--kernel_cmdline should_be_in_both=1 "
                          "--algorithm SHA256_RSA2048 "
@@ -2504,7 +2501,7 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
       "vbmeta_a.img",
       "SHA256_RSA2048",
       4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--kernel_cmdline should_be_in_both=1 "
                          "--algorithm SHA256_RSA2048 "
                          "--flags %d "
@@ -2643,7 +2640,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
       "vbmeta_a.img",
       "SHA256_RSA2048",
       4,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf(
           "--setup_rootfs_from_kernel %s "
           "--kernel_cmdline should_be_in_both=1 "
@@ -3016,7 +3013,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
       "vbmeta_a.img",
       "SHA256_RSA2048",
       11,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition boot:1:%s"
                          " --kernel_cmdline 'cmdline2 in vbmeta'"
                          " --internal_release_string \"\"",
@@ -3070,7 +3067,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceNoChainPartitions) {
       "vbmeta_a.img",
       "SHA256_RSA2048",
       11,
-      base::FilePath("test/data/testkey_rsa2048.pem"),
+      "test/data/testkey_rsa2048.pem",
       base::StringPrintf("--chain_partition boot:1:%s"
                          " --kernel_cmdline 'cmdline2 in vbmeta'"
                          " --internal_release_string \"\"",
@@ -3108,7 +3105,7 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--setup_rootfs_from_kernel %s "
                                          "--include_descriptors_from_image %s"
                                          " --internal_release_string \"\"",
@@ -3254,7 +3251,7 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       base::StringPrintf("--setup_rootfs_from_kernel %s "
                                          "--include_descriptors_from_image %s "
                                          "--set_hashtree_disabled_flag "
@@ -3314,7 +3311,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "vbmeta_a.img",
         "SHA256_RSA2048",
         0,
-        base::FilePath("test/data/testkey_rsa2048.pem"),
+        "test/data/testkey_rsa2048.pem",
         base::StringPrintf("--internal_release_string \"\" "
                            "--include_descriptors_from_image %s ",
                            factory_path.value().c_str()));
@@ -3371,7 +3368,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "vbmeta_a.img",
         "SHA256_RSA2048",
         0,
-        base::FilePath("test/data/testkey_rsa2048.pem"),
+        "test/data/testkey_rsa2048.pem",
         base::StringPrintf("--internal_release_string \"\" "
                            "--include_descriptors_from_image %s ",
                            factory_path.value().c_str()));
@@ -3858,7 +3855,7 @@ TEST_F(AvbSlotVerifyTest, ManagedVerityMode) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -3975,7 +3972,7 @@ TEST_F(AvbSlotVerifyTest, ManagedVerityMode) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\" --prop key:value");
 
   // run 7: Reboot again, but this time the OS changed underneath.. check
@@ -4019,7 +4016,7 @@ TEST_F(AvbSlotVerifyTest, NoSystemPartition) {
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      "test/data/testkey_rsa2048.pem",
                       "--internal_release_string \"\"");
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
