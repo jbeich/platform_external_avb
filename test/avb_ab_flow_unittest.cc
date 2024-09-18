@@ -220,14 +220,15 @@ class AvbABFlowTest : public BaseAvbToolTest {
       pk_path = GenerateImage("dummy.avbpubkey", 32);
     }
 
-    GenerateVBMetaImage(vbmeta_name,
-                        "SHA256_RSA2048",
-                        rollback_boot,
-                        "test/data/testkey_rsa2048.pem",
-                        base::StringPrintf("--include_descriptors_from_image %s"
-                                           " --chain_partition odm:1:%s",
-                                           boot_path.value().c_str(),
-                                           pk_path.value().c_str()));
+    GenerateVBMetaImage(
+        vbmeta_name,
+        "SHA256_RSA2048",
+        rollback_boot,
+        "test/data/testkey_rsa2048.pem",
+        android::base::StringPrintf("--include_descriptors_from_image %s"
+                                    " --chain_partition odm:1:%s",
+                                    boot_path.value().c_str(),
+                                    pk_path.value().c_str()));
   }
 
   void SetMD(int a_pri,

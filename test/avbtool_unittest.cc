@@ -328,12 +328,13 @@ TEST_F(AvbToolTest, CheckRollbackIndexLocationOmitted) {
 
 TEST_F(AvbToolTest, CheckRollbackIndexLocation) {
   uint32_t rollback_index_location = 42;
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--rollback_index_location %d",
-                                         rollback_index_location));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--rollback_index_location %d",
+                                  rollback_index_location));
 
   AvbVBMetaImageHeader h;
   avb_vbmeta_image_header_to_host_byte_order(
@@ -424,7 +425,7 @@ static bool collect_descriptors(const AvbDescriptor* descriptor,
 
 static std::string AddHashFooterGetExpectedVBMetaInfo(
     const bool sparse_image, const uint64_t partition_size) {
-  return base::StringPrintf(
+  return android::base::StringPrintf(
       "Footer version:           1.0\n"
       "Image size:               %" PRIu64
       " bytes\n"
@@ -988,75 +989,77 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                    (int)partition_size,
                    external_vbmeta_path.value().c_str());
 
-    ASSERT_EQ(base::StringPrintf("Footer version:           1.0\n"
-                                 "Image size:               1572864 bytes\n"
-                                 "Original image size:      1052672 bytes\n"
-                                 "VBMeta offset:            1069056\n"
-                                 "VBMeta size:              1344 bytes\n"
-                                 "--\n"
-                                 "Minimum libavb version:   1.0%s\n"
-                                 "Header Block:             256 bytes\n"
-                                 "Authentication Block:     320 bytes\n"
-                                 "Auxiliary Block:          768 bytes\n"
-                                 "Public key (sha1):        "
-                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                                 "Algorithm:                SHA256_RSA2048\n"
-                                 "Rollback Index:           0\n"
-                                 "Flags:                    0\n"
-                                 "Rollback Index Location:  0\n"
-                                 "Release String:           ''\n"
-                                 "Descriptors:\n"
-                                 "    Hashtree descriptor:\n"
-                                 "      Version of dm-verity:  1\n"
-                                 "      Image Size:            1052672 bytes\n"
-                                 "      Tree Offset:           1052672\n"
-                                 "      Tree Size:             16384 bytes\n"
-                                 "      Data Block Size:       4096 bytes\n"
-                                 "      Hash Block Size:       4096 bytes\n"
-                                 "      FEC num roots:         0\n"
-                                 "      FEC offset:            0\n"
-                                 "      FEC size:              0 bytes\n"
-                                 "      Hash Algorithm:        %s\n"
-                                 "      Partition Name:        foobar\n"
-                                 "      Salt:                  d00df00d\n"
-                                 "      Root Digest:           "
-                                 "%s\n"
-                                 "      Flags:                 0\n",
-                                 sparse_image ? " (Sparse)" : "",
-                                 hash_algorithm.c_str(),
-                                 root_digest.c_str()),
+    ASSERT_EQ(android::base::StringPrintf(
+                  "Footer version:           1.0\n"
+                  "Image size:               1572864 bytes\n"
+                  "Original image size:      1052672 bytes\n"
+                  "VBMeta offset:            1069056\n"
+                  "VBMeta size:              1344 bytes\n"
+                  "--\n"
+                  "Minimum libavb version:   1.0%s\n"
+                  "Header Block:             256 bytes\n"
+                  "Authentication Block:     320 bytes\n"
+                  "Auxiliary Block:          768 bytes\n"
+                  "Public key (sha1):        "
+                  "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                  "Algorithm:                SHA256_RSA2048\n"
+                  "Rollback Index:           0\n"
+                  "Flags:                    0\n"
+                  "Rollback Index Location:  0\n"
+                  "Release String:           ''\n"
+                  "Descriptors:\n"
+                  "    Hashtree descriptor:\n"
+                  "      Version of dm-verity:  1\n"
+                  "      Image Size:            1052672 bytes\n"
+                  "      Tree Offset:           1052672\n"
+                  "      Tree Size:             16384 bytes\n"
+                  "      Data Block Size:       4096 bytes\n"
+                  "      Hash Block Size:       4096 bytes\n"
+                  "      FEC num roots:         0\n"
+                  "      FEC offset:            0\n"
+                  "      FEC size:              0 bytes\n"
+                  "      Hash Algorithm:        %s\n"
+                  "      Partition Name:        foobar\n"
+                  "      Salt:                  d00df00d\n"
+                  "      Root Digest:           "
+                  "%s\n"
+                  "      Flags:                 0\n",
+                  sparse_image ? " (Sparse)" : "",
+                  hash_algorithm.c_str(),
+                  root_digest.c_str()),
               InfoImage(rootfs_path.value()));
 
-    ASSERT_EQ(base::StringPrintf("Minimum libavb version:   1.0\n"
-                                 "Header Block:             256 bytes\n"
-                                 "Authentication Block:     320 bytes\n"
-                                 "Auxiliary Block:          768 bytes\n"
-                                 "Public key (sha1):        "
-                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                                 "Algorithm:                SHA256_RSA2048\n"
-                                 "Rollback Index:           0\n"
-                                 "Flags:                    0\n"
-                                 "Rollback Index Location:  0\n"
-                                 "Release String:           ''\n"
-                                 "Descriptors:\n"
-                                 "    Hashtree descriptor:\n"
-                                 "      Version of dm-verity:  1\n"
-                                 "      Image Size:            1052672 bytes\n"
-                                 "      Tree Offset:           1052672\n"
-                                 "      Tree Size:             16384 bytes\n"
-                                 "      Data Block Size:       4096 bytes\n"
-                                 "      Hash Block Size:       4096 bytes\n"
-                                 "      FEC num roots:         0\n"
-                                 "      FEC offset:            0\n"
-                                 "      FEC size:              0 bytes\n"
-                                 "      Hash Algorithm:        %s\n"
-                                 "      Partition Name:        foobar\n"
-                                 "      Salt:                  d00df00d\n"
-                                 "      Root Digest:           "
-                                 "%s\n"
-                                 "      Flags:                 0\n",
-                                 hash_algorithm.c_str(),
-                                 root_digest.c_str()),
+    ASSERT_EQ(android::base::StringPrintf(
+                  "Minimum libavb version:   1.0\n"
+                  "Header Block:             256 bytes\n"
+                  "Authentication Block:     320 bytes\n"
+                  "Auxiliary Block:          768 bytes\n"
+                  "Public key (sha1):        "
+                  "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                  "Algorithm:                SHA256_RSA2048\n"
+                  "Rollback Index:           0\n"
+                  "Flags:                    0\n"
+                  "Rollback Index Location:  0\n"
+                  "Release String:           ''\n"
+                  "Descriptors:\n"
+                  "    Hashtree descriptor:\n"
+                  "      Version of dm-verity:  1\n"
+                  "      Image Size:            1052672 bytes\n"
+                  "      Tree Offset:           1052672\n"
+                  "      Tree Size:             16384 bytes\n"
+                  "      Data Block Size:       4096 bytes\n"
+                  "      Hash Block Size:       4096 bytes\n"
+                  "      FEC num roots:         0\n"
+                  "      FEC offset:            0\n"
+                  "      FEC size:              0 bytes\n"
+                  "      Hash Algorithm:        %s\n"
+                  "      Partition Name:        foobar\n"
+                  "      Salt:                  d00df00d\n"
+                  "      Root Digest:           "
+                  "%s\n"
+                  "      Flags:                 0\n",
+                  hash_algorithm.c_str(),
+                  root_digest.c_str()),
               InfoImage(external_vbmeta_path.value()));
 
     // Check that the extracted vbmeta matches the externally generally one.
@@ -1355,41 +1358,42 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                    rootfs_path.value().c_str(),
                    (int)partition_size);
 
-    ASSERT_EQ(base::StringPrintf("Footer version:           1.0\n"
-                                 "Image size:               1572864 bytes\n"
-                                 "Original image size:      1052672 bytes\n"
-                                 "VBMeta offset:            1085440\n"
-                                 "VBMeta size:              1344 bytes\n"
-                                 "--\n"
-                                 "Minimum libavb version:   1.0%s\n"
-                                 "Header Block:             256 bytes\n"
-                                 "Authentication Block:     320 bytes\n"
-                                 "Auxiliary Block:          768 bytes\n"
-                                 "Public key (sha1):        "
-                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                                 "Algorithm:                SHA256_RSA2048\n"
-                                 "Rollback Index:           0\n"
-                                 "Flags:                    0\n"
-                                 "Rollback Index Location:  0\n"
-                                 "Release String:           ''\n"
-                                 "Descriptors:\n"
-                                 "    Hashtree descriptor:\n"
-                                 "      Version of dm-verity:  1\n"
-                                 "      Image Size:            1052672 bytes\n"
-                                 "      Tree Offset:           1052672\n"
-                                 "      Tree Size:             16384 bytes\n"
-                                 "      Data Block Size:       4096 bytes\n"
-                                 "      Hash Block Size:       4096 bytes\n"
-                                 "      FEC num roots:         2\n"
-                                 "      FEC offset:            1069056\n"
-                                 "      FEC size:              16384 bytes\n"
-                                 "      Hash Algorithm:        sha1\n"
-                                 "      Partition Name:        foobar\n"
-                                 "      Salt:                  d00df00d\n"
-                                 "      Root Digest:           "
-                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
-                                 "      Flags:                 0\n",
-                                 sparse_image ? " (Sparse)" : ""),
+    ASSERT_EQ(android::base::StringPrintf(
+                  "Footer version:           1.0\n"
+                  "Image size:               1572864 bytes\n"
+                  "Original image size:      1052672 bytes\n"
+                  "VBMeta offset:            1085440\n"
+                  "VBMeta size:              1344 bytes\n"
+                  "--\n"
+                  "Minimum libavb version:   1.0%s\n"
+                  "Header Block:             256 bytes\n"
+                  "Authentication Block:     320 bytes\n"
+                  "Auxiliary Block:          768 bytes\n"
+                  "Public key (sha1):        "
+                  "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                  "Algorithm:                SHA256_RSA2048\n"
+                  "Rollback Index:           0\n"
+                  "Flags:                    0\n"
+                  "Rollback Index Location:  0\n"
+                  "Release String:           ''\n"
+                  "Descriptors:\n"
+                  "    Hashtree descriptor:\n"
+                  "      Version of dm-verity:  1\n"
+                  "      Image Size:            1052672 bytes\n"
+                  "      Tree Offset:           1052672\n"
+                  "      Tree Size:             16384 bytes\n"
+                  "      Data Block Size:       4096 bytes\n"
+                  "      Hash Block Size:       4096 bytes\n"
+                  "      FEC num roots:         2\n"
+                  "      FEC offset:            1069056\n"
+                  "      FEC size:              16384 bytes\n"
+                  "      Hash Algorithm:        sha1\n"
+                  "      Partition Name:        foobar\n"
+                  "      Salt:                  d00df00d\n"
+                  "      Root Digest:           "
+                  "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
+                  "      Flags:                 0\n",
+                  sparse_image ? " (Sparse)" : ""),
               InfoImage(rootfs_path.value()));
   }
 
@@ -2874,14 +2878,15 @@ void AvbToolTest::GenerateImageWithHashAndHashtreeSetup() {
                  system_path.value().c_str(),
                  system_partition_size);
 
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s "
-                                         "--include_descriptors_from_image %s",
-                                         boot_path.value().c_str(),
-                                         system_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s "
+                                  "--include_descriptors_from_image %s",
+                                  boot_path.value().c_str(),
+                                  system_path.value().c_str()));
 }
 
 TEST_F(AvbToolTest, VerifyImageWithHashAndHashtree) {
@@ -2918,12 +2923,13 @@ TEST_F(AvbToolTest, VerifyImageWithHashAndZeroedHashtree) {
                  system_path.value().c_str(),
                  system_partition_size);
 
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s ",
-                                         system_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s ",
+                                  system_path.value().c_str()));
 
   EXPECT_COMMAND(0,
                  "./avbtool.py verify_image --image %s --accept_zeroed_hashtree",
@@ -2953,12 +2959,13 @@ TEST_F(AvbToolTest, VerifyImageWithNoHashtree) {
                  system_path.value().c_str(),
                  system_partition_size);
 
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s ",
-                                         system_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s ",
+                                  system_path.value().c_str()));
 
   EXPECT_COMMAND(1,
                  "./avbtool.py verify_image --image %s",
@@ -3034,12 +3041,13 @@ TEST_F(AvbToolTest, VerifyImageChainPartition) {
       " --output %s",
       pk8192_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition system:1:%s ",
-                                         pk4096_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition system:1:%s ",
+                                  pk4096_path.value().c_str()));
 
   // Should not fail (name, rollback_index, contents all correct).
   EXPECT_COMMAND(0,
@@ -3088,12 +3096,13 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionWithFollow) {
       " --output %s",
       pk4096_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition system:1:%s ",
-                                         pk4096_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition system:1:%s ",
+                                  pk4096_path.value().c_str()));
 
   const size_t system_partition_size = 10 * 1024 * 1024;
   const size_t system_image_size = 8 * 1024 * 1024;
@@ -3186,8 +3195,8 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionOtherVBMeta) {
       "SHA256_RSA2048",
       0,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition vbmeta_google:1:%s ",
-                         pk4096_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition vbmeta_google:1:%s ",
+                                  pk4096_path.value().c_str()));
 
   // Should not fail (name, rollback_index, contents all correct).
   EXPECT_COMMAND(0,
@@ -3248,14 +3257,15 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
                  boot_path.value().c_str(),
                  boot_partition_size);
 
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition system:1:%s "
-                                         "--include_descriptors_from_image %s",
-                                         pk4096_path.value().c_str(),
-                                         boot_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition system:1:%s "
+                                  "--include_descriptors_from_image %s",
+                                  pk4096_path.value().c_str(),
+                                  boot_path.value().c_str()));
 
   const size_t system_partition_size = 10 * 1024 * 1024;
   const size_t system_image_size = 8 * 1024 * 1024;
@@ -3378,8 +3388,8 @@ class AvbToolTest_PrintRequiredVersion : public AvbToolTest {
                      "--do_not_use_ab",
                      image_path.value().c_str(),
                      (int)boot_partition_size);
-      extra_args = base::StringPrintf("--include_descriptors_from_image %s",
-                                      image_path.value().c_str());
+      extra_args = android::base::StringPrintf(
+          "--include_descriptors_from_image %s", image_path.value().c_str());
     } else if (target_required_minor_version == 2) {
       extra_args = "--rollback_index_location 2";
     }
@@ -3401,8 +3411,9 @@ class AvbToolTest_PrintRequiredVersion : public AvbToolTest {
     base::FilePath output_path = testdir_.Append(kOutputFile);
     std::string output;
     ASSERT_TRUE(base::ReadFileToString(output_path, &output));
-    EXPECT_EQ(output,
-              base::StringPrintf("1.%d\n", expected_required_minor_version));
+    EXPECT_EQ(
+        output,
+        android::base::StringPrintf("1.%d\n", expected_required_minor_version));
   }
 };
 
