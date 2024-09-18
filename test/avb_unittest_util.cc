@@ -93,14 +93,14 @@ void BaseAvbToolTest::GenerateVBMetaImage(
     const std::string& image_name,
     const std::string& algorithm,
     uint64_t rollback_index,
-    const base::FilePath& key_path,
+    const std::string& key_path,
     const std::string& additional_options) {
   std::string signing_options;
   if (algorithm == "") {
     signing_options = " --algorithm NONE ";
   } else {
-    signing_options = std::string(" --algorithm ") + algorithm + " --key " +
-                      key_path.value() + " ";
+    signing_options =
+        std::string(" --algorithm ") + algorithm + " --key " + key_path + " ";
   }
   vbmeta_image_path_ = testdir_.Append(image_name);
   EXPECT_COMMAND(0,
@@ -141,23 +141,23 @@ base::FilePath BaseAvbToolTest::GenerateImage(const std::string file_name,
   return image_path;
 }
 
-std::string BaseAvbToolTest::InfoImage(const base::FilePath& image_path) {
+std::string BaseAvbToolTest::InfoImage(const std::string& image_path) {
   base::FilePath tmp_path = testdir_.Append("info_output.txt");
   EXPECT_COMMAND(0,
                  "./avbtool.py info_image --image %s --output %s",
-                 image_path.value().c_str(),
+                 image_path.c_str(),
                  tmp_path.value().c_str());
   std::string info_data;
   EXPECT_TRUE(base::ReadFileToString(tmp_path, &info_data));
   return info_data;
 }
 
-std::string BaseAvbToolTest::PublicKeyAVB(const base::FilePath& key_path) {
+std::string BaseAvbToolTest::PublicKeyAVB(const std::string& key_path) {
   base::FilePath tmp_path = testdir_.Append("public_key.bin");
   EXPECT_COMMAND(0,
                  "./avbtool.py extract_public_key --key %s"
                  " --output %s",
-                 key_path.value().c_str(),
+                 key_path.c_str(),
                  tmp_path.value().c_str());
   std::string key_data;
   EXPECT_TRUE(base::ReadFileToString(tmp_path, &key_data));
