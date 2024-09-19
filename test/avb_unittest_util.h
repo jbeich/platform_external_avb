@@ -81,9 +81,9 @@ class BaseAvbToolTest : public ::testing::Test {
   /* Generate a file with name |file_name| of size |image_size| with
    * known content (0x00 0x01 0x02 .. 0xff 0x00 0x01 ..).
    */
-  base::FilePath GenerateImage(const std::string file_name,
-                               size_t image_size,
-                               uint8_t start_byte = 0);
+  std::string GenerateImage(const std::string file_name,
+                            size_t image_size,
+                            uint8_t start_byte = 0);
 
   /* Returns the output of 'avbtool info_image' for a given image. */
   std::string InfoImage(const std::string& image_path);
