@@ -107,12 +107,12 @@ class AvbCertSlotVerifyExampleTest
     GenerateVBMetaImage("vbmeta_a.img",
                         "SHA512_RSA4096",
                         kNewRollbackValue,
-                        base::FilePath("test/data/testkey_cert_psk.pem"),
+                        "test/data/testkey_cert_psk.pem",
                         metadata_option);
     SHA256(vbmeta_image_.data(), vbmeta_image_.size(), expected_vbh_extension_);
 
     ops_.set_expected_public_key(
-        PublicKeyAVB(base::FilePath("test/data/testkey_cert_psk.pem")));
+        PublicKeyAVB("test/data/testkey_cert_psk.pem"));
 
     AvbSlotVerifyData* slot_data = NULL;
     EXPECT_EQ(expected_result_,

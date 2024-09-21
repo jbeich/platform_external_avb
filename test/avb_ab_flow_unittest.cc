@@ -22,14 +22,13 @@
  * SOFTWARE.
  */
 
+#include <android-base/file.h>
+#include <gtest/gtest.h>
+#include <libavb_ab/libavb_ab.h>
 #include <string.h>
 
 #include <map>
 #include <vector>
-
-#include <gtest/gtest.h>
-
-#include <libavb_ab/libavb_ab.h>
 
 #include "avb_unittest_util.h"
 #include "fake_avb_ops.h"
@@ -150,8 +149,7 @@ class AvbABFlowTest : public BaseAvbToolTest {
                                   misc.size())));
 
     // We're going to use this key for all images.
-    ops_.set_expected_public_key(
-        PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+    ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }
 
   void GenerateSlot(unsigned int slot_number,
@@ -178,7 +176,7 @@ class AvbABFlowTest : public BaseAvbToolTest {
 
     const size_t boot_partition_size = 16 * 1024 * 1024;
     const size_t boot_image_size = 5 * 1024 * 1024;
-    base::FilePath boot_path = GenerateImage(boot_name, boot_image_size);
+    std::string boot_path = GenerateImage(boot_name, boot_image_size);
     EXPECT_COMMAND(0,
                    "./avbtool.py add_hash_footer"
                    " --image %s"
@@ -186,13 +184,13 @@ class AvbABFlowTest : public BaseAvbToolTest {
                    " --partition_name boot"
                    " --partition_size %zd"
                    " --salt deadbeef",
-                   boot_path.value().c_str(),
+                   boot_path.c_str(),
                    rollback_boot,
                    boot_partition_size);
 
     const size_t odm_partition_size = 512 * 1024;
     const size_t odm_image_size = 80 * 1024;
-    base::FilePath odm_path = GenerateImage(odm_name, odm_image_size);
+    std::string odm_path = GenerateImage(odm_name, odm_image_size);
     EXPECT_COMMAND(0,
                    "./avbtool.py add_hashtree_footer"
                    " --image %s"
@@ -203,16 +201,16 @@ class AvbABFlowTest : public BaseAvbToolTest {
                    " --algorithm SHA512_RSA4096 "
                    " --key test/data/testkey_rsa4096.pem"
                    " --do_not_generate_fec",
-                   odm_path.value().c_str(),
+                   odm_path.c_str(),
                    rollback_odm,
                    odm_partition_size);
 
-    base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
+    std::string pk_path = testdir_.Append("testkey_rsa4096.avbpubkey").value();
     EXPECT_COMMAND(
         0,
         "./avbtool.py extract_public_key --key test/data/testkey_rsa4096.pem"
         " --output %s",
-        pk_path.value().c_str());
+        pk_path.c_str());
 
     // If requested to make the image unverified, just use another key
     // in the chain_partition descriptor since this will cause
@@ -221,14 +219,15 @@ class AvbABFlowTest : public BaseAvbToolTest {
       pk_path = GenerateImage("dummy.avbpubkey", 32);
     }
 
-    GenerateVBMetaImage(vbmeta_name,
-                        "SHA256_RSA2048",
-                        rollback_boot,
-                        base::FilePath("test/data/testkey_rsa2048.pem"),
-                        base::StringPrintf("--include_descriptors_from_image %s"
-                                           " --chain_partition odm:1:%s",
-                                           boot_path.value().c_str(),
-                                           pk_path.value().c_str()));
+    GenerateVBMetaImage(
+        vbmeta_name,
+        "SHA256_RSA2048",
+        rollback_boot,
+        "test/data/testkey_rsa2048.pem",
+        android::base::StringPrintf("--include_descriptors_from_image %s"
+                                    " --chain_partition odm:1:%s",
+                                    boot_path.c_str(),
+                                    pk_path.c_str()));
   }
 
   void SetMD(int a_pri,
@@ -1324,12 +1323,12 @@ TEST_F(AvbABFlowTest, AvbtoolMetadataGeneratorExistingFile) {
   size_t n;
 
   size_t misc_size = 1024 * 1024;
-  base::FilePath misc_path = GenerateImage("misc.img", misc_size);
+  std::string misc_path = GenerateImage("misc.img", misc_size);
   EXPECT_COMMAND(0,
                  "./avbtool.py set_ab_metadata"
                  " --misc_image %s"
                  " --slot_data 12:2:1:10:5:0",
-                 misc_path.value().c_str());
+                 misc_path.c_str());
 
   EXPECT_EQ(AVB_IO_RESULT_OK,
             ops_.avb_ab_ops()->read_ab_metadata(ops_.avb_ab_ops(), &data));
@@ -1341,7 +1340,7 @@ TEST_F(AvbABFlowTest, AvbtoolMetadataGeneratorExistingFile) {
   EXPECT_EQ(0, data.slots[1].successful_boot);
 
   std::string misc_data;
-  ASSERT_TRUE(base::ReadFileToString(misc_path, &misc_data));
+  ASSERT_TRUE(android::base::ReadFileToString(misc_path, &misc_data));
   EXPECT_EQ(misc_size, misc_data.size());
   for (n = 0; n < 2048; n++) {
     ASSERT_EQ(uint8_t(misc_data[n]), uint8_t(n));
