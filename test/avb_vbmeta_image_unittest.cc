@@ -22,17 +22,14 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
-#include <endian.h>
-#include <inttypes.h>
-#include <string.h>
-
 #include <base/files/file_util.h>
 #include <base/strings/string_util.h>
-#include <base/strings/stringprintf.h>
-
+#include <endian.h>
+#include <inttypes.h>
 #include <libavb/libavb.h>
+#include <string.h>
+
+#include <iostream>
 
 #include "avb_unittest_util.h"
 
@@ -57,77 +54,63 @@ TEST_F(VerifyTest, BootImageStructSize) {
 }
 
 TEST_F(VerifyTest, CheckSHA256RSA2048) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
                 vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA256RSA4096) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA4096",
-                      0,
-                      base::FilePath("test/data/testkey_rsa4096.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA4096", 0, "test/data/testkey_rsa4096.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
                 vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA256RSA8192) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA8192",
-                      0,
-                      base::FilePath("test/data/testkey_rsa8192.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA8192", 0, "test/data/testkey_rsa8192.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
                 vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA512RSA2048) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA512_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA512_RSA2048", 0, "test/data/testkey_rsa2048.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
                 vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA512RSA4096) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA512_RSA4096",
-                      0,
-                      base::FilePath("test/data/testkey_rsa4096.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA512_RSA4096", 0, "test/data/testkey_rsa4096.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
                 vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA512RSA8192) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA512_RSA8192",
-                      0,
-                      base::FilePath("test/data/testkey_rsa8192.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA512_RSA8192", 0, "test/data/testkey_rsa8192.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
                 vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckUnsigned) {
-  GenerateVBMetaImage("vbmeta.img", "", 0, base::FilePath(""));
+  GenerateVBMetaImage("vbmeta.img", "", 0, "");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK_NOT_SIGNED,
             avb_vbmeta_image_verify(
                 vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckBiggerLength) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
   // Check that it's OK if we pass a bigger length than what the
   // header indicates.
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
@@ -136,10 +119,8 @@ TEST_F(VerifyTest, CheckBiggerLength) {
 }
 
 TEST_F(VerifyTest, BadMagic) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
   vbmeta_image_[0] = 'Z';
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
@@ -147,10 +128,8 @@ TEST_F(VerifyTest, BadMagic) {
 }
 
 TEST_F(VerifyTest, MajorVersionCheck) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   // Bail if it's a different major version.
   AvbVBMetaImageHeader* h =
@@ -162,7 +141,7 @@ TEST_F(VerifyTest, MajorVersionCheck) {
 }
 
 TEST_F(VerifyTest, MinorVersionCheck) {
-  GenerateVBMetaImage("vbmeta.img", "", 0, base::FilePath(""));
+  GenerateVBMetaImage("vbmeta.img", "", 0, "");
 
   // Bail if required_libavb_version_minor exceeds our libavb version.
   AvbVBMetaImageHeader* h =
@@ -174,7 +153,7 @@ TEST_F(VerifyTest, MinorVersionCheck) {
 }
 
 TEST_F(VerifyTest, NulTerminatedReleaseString) {
-  GenerateVBMetaImage("vbmeta.img", "", 0, base::FilePath(""));
+  GenerateVBMetaImage("vbmeta.img", "", 0, "");
 
   // Bail if |release_string| isn't NUL-terminated.
   AvbVBMetaImageHeader* h =
@@ -188,10 +167,8 @@ TEST_F(VerifyTest, NulTerminatedReleaseString) {
 }
 
 TEST_F(VerifyTest, BlockSizesAddUpToLessThanLength) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader* h =
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data());
@@ -236,10 +213,8 @@ TEST_F(VerifyTest, BlockSizesAddUpToLessThanLength) {
 }
 
 TEST_F(VerifyTest, BlockSizesMultipleOf64) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader* h =
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data());
@@ -265,10 +240,8 @@ TEST_F(VerifyTest, BlockSizesMultipleOf64) {
 }
 
 TEST_F(VerifyTest, HashOutOfBounds) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader* h =
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data());
@@ -289,10 +262,8 @@ TEST_F(VerifyTest, HashOutOfBounds) {
 }
 
 TEST_F(VerifyTest, SignatureOutOfBounds) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader* h =
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data());
@@ -313,10 +284,8 @@ TEST_F(VerifyTest, SignatureOutOfBounds) {
 }
 
 TEST_F(VerifyTest, PublicKeyOutOfBounds) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader* h =
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data());
@@ -337,10 +306,8 @@ TEST_F(VerifyTest, PublicKeyOutOfBounds) {
 }
 
 TEST_F(VerifyTest, PublicKeyMetadataOutOfBounds) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader* h =
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data());
@@ -361,10 +328,8 @@ TEST_F(VerifyTest, PublicKeyMetadataOutOfBounds) {
 }
 
 TEST_F(VerifyTest, InvalidAlgorithmField) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader* h =
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data());
@@ -382,10 +347,8 @@ TEST_F(VerifyTest, InvalidAlgorithmField) {
 }
 
 TEST_F(VerifyTest, PublicKeyBlockTooSmall) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   AvbVBMetaImageHeader* h =
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data());
@@ -434,10 +397,8 @@ bool VerifyTest::test_modification(AvbVBMetaVerifyResult expected_result,
 }
 
 TEST_F(VerifyTest, ModificationDetection) {
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"));
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
 
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
