@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-#include <iostream>
-
+#include <android-base/file.h>
+#include <android-base/stringprintf.h>
 #include <base/files/file_util.h>
-#include <base/strings/string_util.h>
-#include <base/strings/stringprintf.h>
+
+#include <iostream>
 
 #include "avb_unittest_util.h"
 #include "fake_avb_ops.h"
@@ -460,12 +460,13 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationSpecified) {
 
 TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInvalid) {
   uint32_t rollback_index_location = AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS;
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      42,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--rollback_index_location %d",
-                                         rollback_index_location));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      42,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--rollback_index_location %d",
+                                  rollback_index_location));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -486,7 +487,7 @@ TEST_F(AvbSlotVerifyTest, LoadEntirePartitionIfAllowingVerificationError) {
   const size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
   const size_t new_boot_image_size = 10 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot_a.img", boot_image_size);
 
   // If we're allowing verification errors then check that the whole
   // partition is loaded. This is needed because in this mode for
@@ -503,7 +504,7 @@ TEST_F(AvbSlotVerifyTest, LoadEntirePartitionIfAllowingVerificationError) {
       " --kernel_cmdline 'cmdline in hash footer $(ANDROID_SYSTEM_PARTUUID)'"
       " --salt deadbeef"
       " --internal_release_string \"\"",
-      boot_path.value().c_str(),
+      boot_path.c_str(),
       boot_partition_size);
 
   GenerateVBMetaImage(
@@ -511,11 +512,11 @@ TEST_F(AvbSlotVerifyTest, LoadEntirePartitionIfAllowingVerificationError) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
-          boot_path.value().c_str()));
+          boot_path.c_str()));
 
   // Now replace the boot partition with something bigger and
   // different. Because FakeOps's get_size_of_partition() operation
@@ -553,7 +554,7 @@ TEST_F(AvbSlotVerifyTest, LoadSmallerPartitionIfAllowingVerificationError) {
   const size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
   const size_t new_boot_image_size = 1 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot_a.img", boot_image_size);
 
   // If we're allowing verification errors then check that the whole
   // partition is loaded. This is needed because in this mode for
@@ -570,7 +571,7 @@ TEST_F(AvbSlotVerifyTest, LoadSmallerPartitionIfAllowingVerificationError) {
       " --kernel_cmdline 'cmdline in hash footer $(ANDROID_SYSTEM_PARTUUID)'"
       " --salt deadbeef"
       " --internal_release_string \"\"",
-      boot_path.value().c_str(),
+      boot_path.c_str(),
       boot_partition_size);
 
   GenerateVBMetaImage(
@@ -578,11 +579,11 @@ TEST_F(AvbSlotVerifyTest, LoadSmallerPartitionIfAllowingVerificationError) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
-          boot_path.value().c_str()));
+          boot_path.c_str()));
 
   // Now replace the boot partition with something bigger and
   // different. Because FakeOps's get_size_of_partition() operation
@@ -619,7 +620,7 @@ TEST_F(AvbSlotVerifyTest, LoadSmallerPartitionIfAllowingVerificationError) {
 TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
   const size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot_a.img", boot_image_size);
 
   EXPECT_COMMAND(
       0,
@@ -631,7 +632,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       " --kernel_cmdline 'cmdline in hash footer $(ANDROID_SYSTEM_PARTUUID)'"
       " --salt deadbeef"
       " --internal_release_string \"\"",
-      boot_path.value().c_str(),
+      boot_path.c_str(),
       boot_partition_size);
 
   GenerateVBMetaImage(
@@ -639,11 +640,11 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
-          boot_path.value().c_str()));
+          boot_path.c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -678,11 +679,10 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
                  " --image %s",
-                 boot_path.value().c_str());
+                 boot_path.c_str());
 
   // With no footer, 'avbtool info_image' should fail (exit status 1).
-  EXPECT_COMMAND(
-      1, "./avbtool.py info_image --image %s", boot_path.value().c_str());
+  EXPECT_COMMAND(1, "./avbtool.py info_image --image %s", boot_path.c_str());
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -742,7 +742,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
 TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaWithPreloadedPartition) {
   const size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot_a.img", boot_image_size);
 
   EXPECT_COMMAND(
       0,
@@ -754,7 +754,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaWithPreloadedPartition) {
       " --kernel_cmdline 'cmdline in hash footer $(ANDROID_SYSTEM_PARTUUID)'"
       " --salt deadbeef"
       " --internal_release_string \"\"",
-      boot_path.value().c_str(),
+      boot_path.c_str(),
       boot_partition_size);
 
   GenerateVBMetaImage(
@@ -762,24 +762,23 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaWithPreloadedPartition) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
-          boot_path.value().c_str()));
+          boot_path.c_str()));
 
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
                  " --image %s",
-                 boot_path.value().c_str());
+                 boot_path.c_str());
 
   // With no footer, 'avbtool info_image' should fail (exit status 1).
-  EXPECT_COMMAND(
-      1, "./avbtool.py info_image --image %s", boot_path.value().c_str());
+  EXPECT_COMMAND(1, "./avbtool.py info_image --image %s", boot_path.c_str());
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   ops_.enable_get_preloaded_partition();
-  EXPECT_TRUE(ops_.preload_partition("boot_a", boot_path));
+  EXPECT_TRUE(ops_.preload_partition("boot_a", base::FilePath(boot_path)));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -820,7 +819,7 @@ TEST_F(AvbSlotVerifyTest, SmallPreallocatedPreloadedPartitionFailGracefully) {
   const size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
   // Generate vbmeta based on this boot image.
-  base::FilePath boot_path = GenerateImage("boot_a.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot_a.img", boot_image_size);
 
   // Preload smaller image than expected on the stack
   // libavb should not attempt to free this buffer.
@@ -837,7 +836,7 @@ TEST_F(AvbSlotVerifyTest, SmallPreallocatedPreloadedPartitionFailGracefully) {
       " --kernel_cmdline 'cmdline in hash footer $(ANDROID_SYSTEM_PARTUUID)'"
       " --salt deadbeef"
       " --internal_release_string \"\"",
-      boot_path.value().c_str(),
+      boot_path.c_str(),
       boot_partition_size);
 
   GenerateVBMetaImage(
@@ -845,16 +844,16 @@ TEST_F(AvbSlotVerifyTest, SmallPreallocatedPreloadedPartitionFailGracefully) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
-          boot_path.value().c_str()));
+          boot_path.c_str()));
 
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
                  " --image %s",
-                 boot_path.value().c_str());
+                 boot_path.c_str());
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   ops_.enable_get_preloaded_partition();
@@ -875,7 +874,7 @@ TEST_F(AvbSlotVerifyTest, SmallPreallocatedPreloadedPartitionFailGracefully) {
 
 TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
   size_t boot_partition_size = 16 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", 5 * 1024 * 1024);
+  std::string boot_path = GenerateImage("boot_a.img", 5 * 1024 * 1024);
   const char* requested_partitions[] = {"boot", NULL};
 
   EXPECT_COMMAND(0,
@@ -886,21 +885,22 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
                  " --partition_size %zd"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s"
-                                         " --internal_release_string \"\"",
-                                         boot_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s"
+                                  " --internal_release_string \"\"",
+                                  boot_path.c_str()));
 
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
                  " --image %s",
-                 boot_path.value().c_str());
+                 boot_path.c_str());
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -947,7 +947,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
 TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
   size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot.img", boot_image_size);
   const char* requested_partitions[] = {"boot", NULL};
 
   EXPECT_COMMAND(0,
@@ -961,7 +961,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -976,10 +976,10 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1033,7 +1033,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
-      InfoImage(boot_path.value()));
+      InfoImage(boot_path));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1132,20 +1132,21 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
 TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
   size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot.img", boot_image_size);
-  EXPECT_COMMAND(0,
-                 "./avbtool.py add_hash_footer"
-                 " --image %s"
-                 " --rollback_index 12"
-                 " --partition_name boot"
-                 " --partition_size %zd"
-                 " --algorithm SHA256_RSA4096"
-                 " --key test/data/testkey_rsa4096.pem"
-                 " --salt d70fd60d0f7d9c3b4587b9782c0dd2012ba01bfb3598a47ca8dce88d6afb9415"
-                 " --internal_release_string \"\""
-                 " --do_not_use_ab",
-                 boot_path.value().c_str(),
-                 boot_partition_size);
+  std::string boot_path = GenerateImage("boot.img", boot_image_size);
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py add_hash_footer"
+      " --image %s"
+      " --rollback_index 12"
+      " --partition_name boot"
+      " --partition_size %zd"
+      " --algorithm SHA256_RSA4096"
+      " --key test/data/testkey_rsa4096.pem"
+      " --salt d70fd60d0f7d9c3b4587b9782c0dd2012ba01bfb3598a47ca8dce88d6afb9415"
+      " --internal_release_string \"\""
+      " --do_not_use_ab",
+      boot_path.c_str(),
+      boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
   EXPECT_COMMAND(
@@ -1159,9 +1160,9 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.3\n"
@@ -1210,7 +1211,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "      Digest:                "
       "e54d3d497d1cb01bd9b0a2ebda4a305b12b4f5ba084c9cc588690d33ae1e9940\n"
       "      Flags:                 1\n",
-      InfoImage(boot_path.value()));
+      InfoImage(boot_path));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1291,7 +1292,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
 TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
   size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot.img", boot_image_size);
   const char* requested_partitions[] = {"boot", NULL};
 
   EXPECT_COMMAND(0,
@@ -1306,7 +1307,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -1321,11 +1322,11 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:2:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --rollback_index_location 1"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:2:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --rollback_index_location 1"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.2\n"
@@ -1379,7 +1380,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
-      InfoImage(boot_path.value()));
+      InfoImage(boot_path));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1408,7 +1409,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
 TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
   size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot.img", boot_image_size);
   base::FilePath other_vbmeta_path = testdir_.Append("vbmeta_google.img");
   const char* requested_partitions[] = {"boot", NULL};
 
@@ -1423,7 +1424,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
   // Extract the vbmeta blob from the footer in boot.img, put it into
@@ -1432,12 +1433,12 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
                  "./avbtool.py extract_vbmeta_image"
                  " --image %s"
                  " --output %s",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  other_vbmeta_path.value().c_str());
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
                  " --image %s",
-                 boot_path.value().c_str());
+                 boot_path.c_str());
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
   EXPECT_COMMAND(
@@ -1451,10 +1452,10 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition vbmeta_google:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition vbmeta_google:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1601,7 +1602,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
 
 TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
   size_t boot_partition_size = 16 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", 5 * 1024 * 1024);
+  std::string boot_path = GenerateImage("boot_a.img", 5 * 1024 * 1024);
   const char* requested_partitions[] = {"boot", NULL};
 
   EXPECT_COMMAND(0,
@@ -1614,7 +1615,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -1624,13 +1625,14 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition boot:1:%s"
-                                         " --internal_release_string \"\"",
-                                         pk_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1675,7 +1677,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
 
 TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
   size_t boot_partition_size = 16 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", 5 * 1024 * 1024);
+  std::string boot_path = GenerateImage("boot_a.img", 5 * 1024 * 1024);
   const char* requested_partitions[] = {"boot", NULL};
 
   // Use different key to sign vbmeta in boot_a (we use the 8192 bit
@@ -1693,7 +1695,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
                  " --key test/data/testkey_rsa8192.pem"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -1703,13 +1705,14 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition boot:1:%s"
-                                         " --internal_release_string \"\"",
-                                         pk_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1735,7 +1738,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
 
 TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
   size_t boot_partition_size = 16 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", 5 * 1024 * 1024);
+  std::string boot_path = GenerateImage("boot_a.img", 5 * 1024 * 1024);
   const char* requested_partitions[] = {"boot", NULL};
 
   EXPECT_COMMAND(0,
@@ -1748,7 +1751,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -1758,13 +1761,14 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
       " --output %s",
       pk_path.value().c_str());
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      110,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--chain_partition boot:1:%s"
-                                         " --internal_release_string \"\"",
-                                         pk_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      110,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1822,7 +1826,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
 TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
   size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot.img", boot_image_size);
   const char* requested_partitions[] = {"boot", NULL};
 
   EXPECT_COMMAND(0,
@@ -1836,7 +1840,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
                  " --key test/data/testkey_rsa4096.pem"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -1851,10 +1855,10 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1939,8 +1943,8 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
   const size_t bar_partition_size = 32 * 1024 * 1024;
   const size_t foo_image_size = 5 * 1024 * 1024;
   const size_t bar_image_size = 10 * 1024 * 1024;
-  base::FilePath foo_path = GenerateImage("foo_a.img", foo_image_size);
-  base::FilePath bar_path = GenerateImage("bar_a.img", bar_image_size);
+  std::string foo_path = GenerateImage("foo_a.img", foo_image_size);
+  std::string bar_path = GenerateImage("bar_a.img", bar_image_size);
 
   EXPECT_COMMAND(0,
                  "./avbtool.py add_hash_footer"
@@ -1949,7 +1953,7 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
                  " --partition_size %zd"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 foo_path.value().c_str(),
+                 foo_path.c_str(),
                  foo_partition_size);
 
   EXPECT_COMMAND(0,
@@ -1959,18 +1963,19 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
                  " --partition_size %zd"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 bar_path.value().c_str(),
+                 bar_path.c_str(),
                  bar_partition_size);
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      4,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s"
-                                         " --include_descriptors_from_image %s"
-                                         " --internal_release_string \"\"",
-                                         foo_path.value().c_str(),
-                                         bar_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      4,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s"
+                                  " --include_descriptors_from_image %s"
+                                  " --internal_release_string \"\"",
+                                  foo_path.c_str(),
+                                  bar_path.c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -2053,8 +2058,8 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
   const size_t bar_partition_size = 32 * 1024 * 1024;
   const size_t foo_image_size = 5 * 1024 * 1024;
   const size_t bar_image_size = 10 * 1024 * 1024;
-  base::FilePath foo_path = GenerateImage("foo_a.img", foo_image_size);
-  base::FilePath bar_path = GenerateImage("bar_a.img", bar_image_size);
+  std::string foo_path = GenerateImage("foo_a.img", foo_image_size);
+  std::string bar_path = GenerateImage("bar_a.img", bar_image_size);
 
   EXPECT_COMMAND(0,
                  "./avbtool.py add_hash_footer"
@@ -2063,7 +2068,7 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
                  " --partition_size %zd"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 foo_path.value().c_str(),
+                 foo_path.c_str(),
                  foo_partition_size);
 
   EXPECT_COMMAND(0,
@@ -2073,18 +2078,19 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
                  " --partition_size %zd"
                  " --salt deadbeef"
                  " --internal_release_string \"\"",
-                 bar_path.value().c_str(),
+                 bar_path.c_str(),
                  bar_partition_size);
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      4,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--include_descriptors_from_image %s"
-                                         " --include_descriptors_from_image %s"
-                                         " --internal_release_string \"\"",
-                                         foo_path.value().c_str(),
-                                         bar_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      4,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s"
+                                  " --include_descriptors_from_image %s"
+                                  " --internal_release_string \"\"",
+                                  foo_path.c_str(),
+                                  bar_path.c_str()));
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -2144,8 +2150,8 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
   const size_t bar_partition_size = 32 * 1024 * 1024;
   const size_t foo_image_size = 5 * 1024 * 1024;
   const size_t bar_image_size = 10 * 1024 * 1024;
-  base::FilePath foo_path = GenerateImage("foo_a.img", foo_image_size);
-  base::FilePath bar_path = GenerateImage("bar_a.img", bar_image_size);
+  std::string foo_path = GenerateImage("foo_a.img", foo_image_size);
+  std::string bar_path = GenerateImage("bar_a.img", bar_image_size);
 
   EXPECT_COMMAND(0,
                  "./avbtool.py add_hash_footer"
@@ -2159,7 +2165,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
                  " --salt deadbeef"
                  " --key test/data/testkey_rsa4096.pem"
                  " --rollback_index 42",
-                 foo_path.value().c_str(),
+                 foo_path.c_str(),
                  foo_partition_size);
 
   EXPECT_COMMAND(0,
@@ -2174,7 +2180,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
                  " --salt deadbeef"
                  " --key test/data/testkey_rsa2048.pem"
                  " --rollback_index 43",
-                 bar_path.value().c_str(),
+                 bar_path.c_str(),
                  bar_partition_size);
 
   ops_.set_expected_public_key_for_partition(
@@ -2245,20 +2251,21 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
 }
 
 TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
-  base::FilePath md_path = GenerateImage("md.bin", 1536);
+  std::string md_path = GenerateImage("md.bin", 1536);
 
-  GenerateVBMetaImage("vbmeta_a.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--public_key_metadata %s"
-                                         " --internal_release_string \"\"",
-                                         md_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta_a.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--public_key_metadata %s"
+                                  " --internal_release_string \"\"",
+                                  md_path.c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
   std::string md_data;
-  ASSERT_TRUE(base::ReadFileToString(md_path, &md_data));
+  ASSERT_TRUE(android::base::ReadFileToString(md_path, &md_data));
   ops_.set_expected_public_key_metadata(md_data);
 
   AvbSlotVerifyData* slot_data = NULL;
@@ -2318,18 +2325,18 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--setup_rootfs_from_kernel %s "
-                         "--kernel_cmdline should_be_in_both=1 "
-                         "--algorithm SHA256_RSA2048 "
-                         "--flags %d "
-                         "--internal_release_string \"\"",
-                         rootfs_path.value().c_str(),
-                         hashtree_verification_on
-                             ? 0
-                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED));
+      android::base::StringPrintf(
+          "--setup_rootfs_from_kernel %s "
+          "--kernel_cmdline should_be_in_both=1 "
+          "--algorithm SHA256_RSA2048 "
+          "--flags %d "
+          "--internal_release_string \"\"",
+          rootfs_path.value().c_str(),
+          hashtree_verification_on ? 0
+                                   : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED));
 
   EXPECT_EQ(
-      base::StringPrintf(
+      android::base::StringPrintf(
           "Minimum libavb version:   1.0\n"
           "Header Block:             256 bytes\n"
           "Authentication Block:     320 bytes\n"
@@ -2502,41 +2509,41 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--kernel_cmdline should_be_in_both=1 "
-                         "--algorithm SHA256_RSA2048 "
-                         "--flags %d "
-                         "--chain_partition system:1:%s "
-                         "--internal_release_string \"\"",
-                         hashtree_verification_on
-                             ? 0
-                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED,
-                         pk_path.value().c_str()));
+      android::base::StringPrintf(
+          "--kernel_cmdline should_be_in_both=1 "
+          "--algorithm SHA256_RSA2048 "
+          "--flags %d "
+          "--chain_partition system:1:%s "
+          "--internal_release_string \"\"",
+          hashtree_verification_on ? 0
+                                   : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED,
+          pk_path.value().c_str()));
 
   EXPECT_EQ(
-      base::StringPrintf("Minimum libavb version:   1.0\n"
-                         "Header Block:             256 bytes\n"
-                         "Authentication Block:     320 bytes\n"
-                         "Auxiliary Block:          1216 bytes\n"
-                         "Public key (sha1):        "
-                         "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                         "Algorithm:                SHA256_RSA2048\n"
-                         "Rollback Index:           4\n"
-                         "Flags:                    %d\n"
-                         "Rollback Index Location:  0\n"
-                         "Release String:           ''\n"
-                         "Descriptors:\n"
-                         "    Chain Partition descriptor:\n"
-                         "      Partition Name:          system\n"
-                         "      Rollback Index Location: 1\n"
-                         "      Public key (sha1):       "
-                         "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                         "      Flags:                   0\n"
-                         "    Kernel Cmdline descriptor:\n"
-                         "      Flags:                 0\n"
-                         "      Kernel Cmdline:        'should_be_in_both=1'\n",
-                         hashtree_verification_on
-                             ? 0
-                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
+      android::base::StringPrintf(
+          "Minimum libavb version:   1.0\n"
+          "Header Block:             256 bytes\n"
+          "Authentication Block:     320 bytes\n"
+          "Auxiliary Block:          1216 bytes\n"
+          "Public key (sha1):        "
+          "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+          "Algorithm:                SHA256_RSA2048\n"
+          "Rollback Index:           4\n"
+          "Flags:                    %d\n"
+          "Rollback Index Location:  0\n"
+          "Release String:           ''\n"
+          "Descriptors:\n"
+          "    Chain Partition descriptor:\n"
+          "      Partition Name:          system\n"
+          "      Rollback Index Location: 1\n"
+          "      Public key (sha1):       "
+          "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+          "      Flags:                   0\n"
+          "    Kernel Cmdline descriptor:\n"
+          "      Flags:                 0\n"
+          "      Kernel Cmdline:        'should_be_in_both=1'\n",
+          hashtree_verification_on ? 0
+                                   : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
       InfoImage(vbmeta_image_path_.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -2607,9 +2614,9 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
   // Generate boot_a.img and dtbo_a.img since avb_slot_verify() will
   // attempt to load them upon encountering the VERIFICATION_DISABLED
   // flag.
-  base::FilePath boot_path = GenerateImage("boot_a.img", boot_part_size);
+  std::string boot_path = GenerateImage("boot_a.img", boot_part_size);
   const size_t DTBO_DATA_OFFSET = 42;
-  base::FilePath dtbo_path =
+  std::string dtbo_path =
       GenerateImage("dtbo_a.img", dtbo_part_size, DTBO_DATA_OFFSET);
 
   // Generate a 1028 KiB file with known content.
@@ -2641,7 +2648,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf(
+      android::base::StringPrintf(
           "--setup_rootfs_from_kernel %s "
           "--kernel_cmdline should_be_in_both=1 "
           "--algorithm SHA256_RSA2048 "
@@ -2651,7 +2658,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
           use_avbctl ? 0 : AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED));
 
   EXPECT_EQ(
-      base::StringPrintf(
+      android::base::StringPrintf(
           "Minimum libavb version:   1.0\n"
           "Header Block:             256 bytes\n"
           "Authentication Block:     320 bytes\n"
@@ -2702,7 +2709,7 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
 
   if (preload_boot) {
     ops_.enable_get_preloaded_partition();
-    EXPECT_TRUE(ops_.preload_partition("boot_a", boot_path));
+    EXPECT_TRUE(ops_.preload_partition("boot_a", base::FilePath(boot_path)));
   }
 
   // Check that avb_slot_verify() doesn't return any of the
@@ -2806,10 +2813,10 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
   const size_t foobar_part_size = 16 * MiB;
   const size_t bazboo_size = 4 * MiB;
   const size_t bazboo_part_size = 8 * MiB;
-  base::FilePath boot_path = GenerateImage("boot.img", boot_size);
-  base::FilePath system_path = GenerateImage("system.img", system_size);
-  base::FilePath foobar_path = GenerateImage("foobar.img", foobar_size);
-  base::FilePath bazboo_path = GenerateImage("bazboo.img", bazboo_size);
+  std::string boot_path = GenerateImage("boot.img", boot_size);
+  std::string system_path = GenerateImage("system.img", system_size);
+  std::string foobar_path = GenerateImage("foobar.img", foobar_size);
+  std::string bazboo_path = GenerateImage("bazboo.img", bazboo_size);
 
   EXPECT_COMMAND(0,
                  "./avbtool.py add_hashtree_footer --salt d00df00d --image %s "
@@ -2818,7 +2825,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
                  "--key test/data/testkey_rsa2048.pem "
                  "--internal_release_string \"\" "
                  "--do_not_generate_fec",
-                 system_path.value().c_str(),
+                 system_path.c_str(),
                  (int)system_part_size);
 
   EXPECT_COMMAND(0,
@@ -2828,7 +2835,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
                  "--key test/data/testkey_rsa2048.pem "
                  "--internal_release_string \"\" "
                  "--do_not_generate_fec",
-                 foobar_path.value().c_str(),
+                 foobar_path.c_str(),
                  (int)foobar_part_size);
 
   EXPECT_COMMAND(0,
@@ -2838,7 +2845,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
                  "--key test/data/testkey_rsa4096.pem "
                  "--internal_release_string \"\" "
                  "--do_not_generate_fec",
-                 bazboo_path.value().c_str(),
+                 bazboo_path.c_str(),
                  (int)bazboo_part_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -2863,11 +2870,11 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
                  "--setup_rootfs_from_kernel %s "
                  "--chain_partition bazboo:1:%s "
                  "--flags 2147483648",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  (int)boot_part_size,
-                 system_path.value().c_str(),
-                 foobar_path.value().c_str(),
-                 system_path.value().c_str(),
+                 system_path.c_str(),
+                 foobar_path.c_str(),
+                 system_path.c_str(),
                  pk_path.value().c_str());
 
   ASSERT_EQ(
@@ -2942,7 +2949,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           c9ffc3bfae5000269a55a56621547fd1fcf819df\n"
       "      Flags:                 0\n",
-      InfoImage(boot_path.value()));
+      InfoImage(boot_path));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2984,7 +2991,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
 TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
   size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot_a.img", boot_image_size);
   const char* requested_partitions[] = {"boot", NULL};
 
   EXPECT_COMMAND(0,
@@ -2999,7 +3006,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
                  " --salt deadbeef"
                  " --flags 1"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size);
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -3014,10 +3021,10 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3037,7 +3044,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
 TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceNoChainPartitions) {
   size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
-  base::FilePath boot_path = GenerateImage("boot_a.img", boot_image_size);
+  std::string boot_path = GenerateImage("boot_a.img", boot_image_size);
   const char* requested_partitions[] = {"boot", NULL};
 
   base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
@@ -3059,7 +3066,7 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceNoChainPartitions) {
                  " --salt deadbeef"
                  " --chain_partition other:2:%s"
                  " --internal_release_string \"\"",
-                 boot_path.value().c_str(),
+                 boot_path.c_str(),
                  boot_partition_size,
                  pk_path.value().c_str());
 
@@ -3068,10 +3075,10 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceNoChainPartitions) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
-      base::StringPrintf("--chain_partition boot:1:%s"
-                         " --kernel_cmdline 'cmdline2 in vbmeta'"
-                         " --internal_release_string \"\"",
-                         pk_path.value().c_str()));
+      android::base::StringPrintf("--chain_partition boot:1:%s"
+                                  " --kernel_cmdline 'cmdline2 in vbmeta'"
+                                  " --internal_release_string \"\"",
+                                  pk_path.value().c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3090,7 +3097,7 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
   const size_t MiB = 1024 * 1024;
   const size_t system_size = 16 * MiB;
   const size_t system_part_size = 32 * MiB;
-  base::FilePath system_path = GenerateImage("system.img", system_size);
+  std::string system_path = GenerateImage("system.img", system_size);
 
   EXPECT_COMMAND(0,
                  "./avbtool.py add_hashtree_footer --salt d00df00d --image %s "
@@ -3099,18 +3106,19 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
                  "--key test/data/testkey_rsa2048.pem "
                  "--internal_release_string \"\" "
                  "--do_not_generate_fec",
-                 system_path.value().c_str(),
+                 system_path.c_str(),
                  (int)system_part_size);
 
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--setup_rootfs_from_kernel %s "
-                                         "--include_descriptors_from_image %s"
-                                         " --internal_release_string \"\"",
-                                         system_path.value().c_str(),
-                                         system_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--setup_rootfs_from_kernel %s "
+                                  "--include_descriptors_from_image %s"
+                                  " --internal_release_string \"\"",
+                                  system_path.c_str(),
+                                  system_path.c_str()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3248,16 +3256,17 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
 
   // Check we'll get androidboot.veritymode=disabled for any
   // |hashtree_error_mode| if dm-verity is disabled.
-  GenerateVBMetaImage("vbmeta.img",
-                      "SHA256_RSA2048",
-                      0,
-                      "test/data/testkey_rsa2048.pem",
-                      base::StringPrintf("--setup_rootfs_from_kernel %s "
-                                         "--include_descriptors_from_image %s "
-                                         "--set_hashtree_disabled_flag "
-                                         "--internal_release_string \"\"",
-                                         system_path.value().c_str(),
-                                         system_path.value().c_str()));
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--setup_rootfs_from_kernel %s "
+                                  "--include_descriptors_from_image %s "
+                                  "--set_hashtree_disabled_flag "
+                                  "--internal_release_string \"\"",
+                                  system_path.c_str(),
+                                  system_path.c_str()));
   for (int n = 0; n < 4; n++) {
     AvbHashtreeErrorMode modes[4] = {
         AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
@@ -3292,8 +3301,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
   void SetupWithHashDescriptor(bool do_not_use_ab = true) {
     const size_t factory_partition_size = 16 * 1024 * 1024;
     const size_t factory_image_size = 5 * 1024 * 1024;
-    base::FilePath factory_path =
-        GenerateImage("factory.img", factory_image_size);
+    std::string factory_path = GenerateImage("factory.img", factory_image_size);
 
     EXPECT_COMMAND(0,
                    "./avbtool.py add_hash_footer"
@@ -3303,7 +3311,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                    " --partition_size %zd"
                    " --internal_release_string \"\""
                    " --use_persistent_digest %s",
-                   factory_path.value().c_str(),
+                   factory_path.c_str(),
                    factory_partition_size,
                    do_not_use_ab ? "--do_not_use_ab" : "");
 
@@ -3312,30 +3320,31 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "SHA256_RSA2048",
         0,
         "test/data/testkey_rsa2048.pem",
-        base::StringPrintf("--internal_release_string \"\" "
-                           "--include_descriptors_from_image %s ",
-                           factory_path.value().c_str()));
+        android::base::StringPrintf("--internal_release_string \"\" "
+                                    "--include_descriptors_from_image %s ",
+                                    factory_path.c_str()));
 
-    EXPECT_EQ(base::StringPrintf("Minimum libavb version:   1.1\n"
-                                 "Header Block:             256 bytes\n"
-                                 "Authentication Block:     320 bytes\n"
-                                 "Auxiliary Block:          704 bytes\n"
-                                 "Public key (sha1):        "
-                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                                 "Algorithm:                SHA256_RSA2048\n"
-                                 "Rollback Index:           0\n"
-                                 "Flags:                    0\n"
-                                 "Rollback Index Location:  0\n"
-                                 "Release String:           ''\n"
-                                 "Descriptors:\n"
-                                 "    Hash descriptor:\n"
-                                 "      Image Size:            5242880 bytes\n"
-                                 "      Hash Algorithm:        sha256\n"
-                                 "      Partition Name:        factory\n"
-                                 "      Salt:                  \n"
-                                 "      Digest:                \n"
-                                 "      Flags:                 %d\n",
-                                 do_not_use_ab ? 1 : 0),
+    EXPECT_EQ(android::base::StringPrintf(
+                  "Minimum libavb version:   1.1\n"
+                  "Header Block:             256 bytes\n"
+                  "Authentication Block:     320 bytes\n"
+                  "Auxiliary Block:          704 bytes\n"
+                  "Public key (sha1):        "
+                  "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                  "Algorithm:                SHA256_RSA2048\n"
+                  "Rollback Index:           0\n"
+                  "Flags:                    0\n"
+                  "Rollback Index Location:  0\n"
+                  "Release String:           ''\n"
+                  "Descriptors:\n"
+                  "    Hash descriptor:\n"
+                  "      Image Size:            5242880 bytes\n"
+                  "      Hash Algorithm:        sha256\n"
+                  "      Partition Name:        factory\n"
+                  "      Salt:                  \n"
+                  "      Digest:                \n"
+                  "      Flags:                 %d\n",
+                  do_not_use_ab ? 1 : 0),
               InfoImage(vbmeta_image_path_.value()));
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
@@ -3344,8 +3353,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
   void SetupWithHashtreeDescriptor(bool do_not_use_ab = true) {
     const size_t factory_partition_size = 16 * 1024 * 1024;
     const size_t factory_image_size = 5 * 1024 * 1024;
-    base::FilePath factory_path =
-        GenerateImage("factory.img", factory_image_size);
+    std::string factory_path = GenerateImage("factory.img", factory_image_size);
 
     EXPECT_COMMAND(
         0,
@@ -3359,7 +3367,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         " --kernel_cmdline "
         "'androidboot.vbmeta.root_digest.factory=$(AVB_FACTORY_ROOT_DIGEST)'"
         " --use_persistent_digest %s",
-        factory_path.value().c_str(),
+        factory_path.c_str(),
         factory_partition_size,
         verity_hash_algorithm_.c_str(),
         do_not_use_ab ? "--do_not_use_ab" : "");
@@ -3369,50 +3377,51 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "SHA256_RSA2048",
         0,
         "test/data/testkey_rsa2048.pem",
-        base::StringPrintf("--internal_release_string \"\" "
-                           "--include_descriptors_from_image %s ",
-                           factory_path.value().c_str()));
+        android::base::StringPrintf("--internal_release_string \"\" "
+                                    "--include_descriptors_from_image %s ",
+                                    factory_path.c_str()));
 
     int expected_tree_size =
         (verity_hash_algorithm_ == "sha512") ? 86016 : 45056;
     int expected_fec_offset =
         (verity_hash_algorithm_ == "sha512") ? 5328896 : 5287936;
-    EXPECT_EQ(base::StringPrintf("Minimum libavb version:   1.1\n"
-                                 "Header Block:             256 bytes\n"
-                                 "Authentication Block:     320 bytes\n"
-                                 "Auxiliary Block:          832 bytes\n"
-                                 "Public key (sha1):        "
-                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
-                                 "Algorithm:                SHA256_RSA2048\n"
-                                 "Rollback Index:           0\n"
-                                 "Flags:                    0\n"
-                                 "Rollback Index Location:  0\n"
-                                 "Release String:           ''\n"
-                                 "Descriptors:\n"
-                                 "    Kernel Cmdline descriptor:\n"
-                                 "      Flags:                 0\n"
-                                 "      Kernel Cmdline:        "
-                                 "'androidboot.vbmeta.root_digest.factory=$("
-                                 "AVB_FACTORY_ROOT_DIGEST)'\n"
-                                 "    Hashtree descriptor:\n"
-                                 "      Version of dm-verity:  1\n"
-                                 "      Image Size:            5242880 bytes\n"
-                                 "      Tree Offset:           5242880\n"
-                                 "      Tree Size:             %d bytes\n"
-                                 "      Data Block Size:       4096 bytes\n"
-                                 "      Hash Block Size:       4096 bytes\n"
-                                 "      FEC num roots:         2\n"
-                                 "      FEC offset:            %d\n"
-                                 "      FEC size:              49152 bytes\n"
-                                 "      Hash Algorithm:        %s\n"
-                                 "      Partition Name:        factory\n"
-                                 "      Salt:                  \n"
-                                 "      Root Digest:           \n"
-                                 "      Flags:                 %d\n",
-                                 expected_tree_size,
-                                 expected_fec_offset,
-                                 verity_hash_algorithm_.c_str(),
-                                 do_not_use_ab ? 1 : 0),
+    EXPECT_EQ(android::base::StringPrintf(
+                  "Minimum libavb version:   1.1\n"
+                  "Header Block:             256 bytes\n"
+                  "Authentication Block:     320 bytes\n"
+                  "Auxiliary Block:          832 bytes\n"
+                  "Public key (sha1):        "
+                  "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                  "Algorithm:                SHA256_RSA2048\n"
+                  "Rollback Index:           0\n"
+                  "Flags:                    0\n"
+                  "Rollback Index Location:  0\n"
+                  "Release String:           ''\n"
+                  "Descriptors:\n"
+                  "    Kernel Cmdline descriptor:\n"
+                  "      Flags:                 0\n"
+                  "      Kernel Cmdline:        "
+                  "'androidboot.vbmeta.root_digest.factory=$("
+                  "AVB_FACTORY_ROOT_DIGEST)'\n"
+                  "    Hashtree descriptor:\n"
+                  "      Version of dm-verity:  1\n"
+                  "      Image Size:            5242880 bytes\n"
+                  "      Tree Offset:           5242880\n"
+                  "      Tree Size:             %d bytes\n"
+                  "      Data Block Size:       4096 bytes\n"
+                  "      Hash Block Size:       4096 bytes\n"
+                  "      FEC num roots:         2\n"
+                  "      FEC offset:            %d\n"
+                  "      FEC size:              49152 bytes\n"
+                  "      Hash Algorithm:        %s\n"
+                  "      Partition Name:        factory\n"
+                  "      Salt:                  \n"
+                  "      Root Digest:           \n"
+                  "      Flags:                 %d\n",
+                  expected_tree_size,
+                  expected_fec_offset,
+                  verity_hash_algorithm_.c_str(),
+                  do_not_use_ab ? 1 : 0),
               InfoImage(vbmeta_image_path_.value()));
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
