@@ -29,6 +29,7 @@
 #include <libavb_ab/libavb_ab.h>
 #include <libavb_cert/libavb_cert.h>
 
+#include <filesystem>
 #include <map>
 #include <set>
 #include <string>
@@ -152,7 +153,7 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
     delegate_ = delegate;
   }
 
-  void set_partition_dir(const base::FilePath& partition_dir) {
+  void set_partition_dir(const std::filesystem::path& partition_dir) {
     partition_dir_ = partition_dir;
   }
 
@@ -300,7 +301,7 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   FakeAvbOpsDelegate* delegate_;
 
-  base::FilePath partition_dir_;
+  std::filesystem::path partition_dir_;
 
   std::string expected_public_key_;
   std::string expected_public_key_metadata_;

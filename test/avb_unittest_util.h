@@ -30,6 +30,8 @@
 #include <gtest/gtest.h>
 #include <inttypes.h>
 
+#include <filesystem>
+
 // Encodes |len| bytes of |data| as a lower-case hex-string.
 std::string mem_to_hexstring(const uint8_t* data, size_t len);
 
@@ -95,10 +97,10 @@ class BaseAvbToolTest : public ::testing::Test {
   void TearDown() override;
 
   /* Temporary directory created in SetUp(). */
-  base::FilePath testdir_;
+  std::filesystem::path testdir_;
 
   /* Path to vbmeta image generated with GenerateVBMetaImage(). */
-  base::FilePath vbmeta_image_path_;
+  std::filesystem::path vbmeta_image_path_;
 
   /* Contents of the image generated with GenerateVBMetaImage(). */
   std::vector<uint8_t> vbmeta_image_;
