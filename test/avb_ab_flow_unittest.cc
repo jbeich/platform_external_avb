@@ -141,10 +141,10 @@ class AvbABFlowTest : public BaseAvbToolTest {
     // zeroes.
     std::vector<uint8_t> misc;
     misc.resize(MISC_PART_SIZE);
-    base::FilePath misc_path = testdir_.Append("misc.img");
+    std::filesystem::path misc_path = testdir_ / "misc.img";
     EXPECT_EQ(misc.size(),
               static_cast<const size_t>(
-                  base::WriteFile(misc_path,
+                  base::WriteFile(base::FilePath(misc_path.c_str()),
                                   reinterpret_cast<const char*>(misc.data()),
                                   misc.size())));
 
@@ -205,7 +205,7 @@ class AvbABFlowTest : public BaseAvbToolTest {
                    rollback_odm,
                    odm_partition_size);
 
-    std::string pk_path = testdir_.Append("testkey_rsa4096.avbpubkey").value();
+    std::string pk_path = (testdir_ / "testkey_rsa4096.avbpubkey").string();
     EXPECT_COMMAND(
         0,
         "./avbtool.py extract_public_key --key test/data/testkey_rsa4096.pem"
@@ -1224,8 +1224,8 @@ TEST_F(AvbABFlowTest, OtherMetadataStorage) {
 
   // Check that 'misc' hasn't been written to at all.
   std::string misc_data;
-  base::FilePath misc_path = testdir_.Append("misc.img");
-  ASSERT_TRUE(base::ReadFileToString(misc_path, &misc_data));
+  std::filesystem::path misc_path = testdir_ / "misc.img";
+  ASSERT_TRUE(android::base::ReadFileToString(misc_path.string(), &misc_data));
   EXPECT_EQ(size_t(MISC_PART_SIZE), misc_data.size());
   for (size_t n = 0; n < misc_data.size(); n++) {
     ASSERT_EQ(uint8_t(misc_data[n]), 0);
@@ -1301,12 +1301,12 @@ TEST_F(AvbABFlowTest, UnlockedUnverifiedSlot) {
 TEST_F(AvbABFlowTest, AvbtoolMetadataGeneratorEmptyFile) {
   AvbABData data;
 
-  base::FilePath misc_path = testdir_.Append("misc.img");
+  std::filesystem::path misc_path = testdir_ / "misc.img";
   EXPECT_COMMAND(0,
                  "./avbtool.py set_ab_metadata"
                  " --misc_image %s"
                  " --slot_data 13:3:0:11:2:1",
-                 misc_path.value().c_str());
+                 misc_path.c_str());
 
   EXPECT_EQ(AVB_IO_RESULT_OK,
             ops_.avb_ab_ops()->read_ab_metadata(ops_.avb_ab_ops(), &data));
