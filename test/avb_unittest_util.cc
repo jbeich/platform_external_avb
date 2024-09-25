@@ -51,11 +51,9 @@ void BaseAvbToolTest::SetUp() {
   /* Change current directory to test executable directory so that relative path
    * references to test dependencies don't rely on being manually run from
    * correct directory */
-  base::SetCurrentDirectory(
-      base::FilePath(android::base::GetExecutableDirectory()));
+  ASSERT_TRUE(chdir(android::base::GetExecutableDirectory().c_str()) == 0);
 
   /* Create temporary directory to stash images in. */
-  base::FilePath ret;
   char* buf = strdup("/tmp/libavb-tests.XXXXXX");
   ASSERT_TRUE(mkdtemp(buf) != nullptr);
   testdir_ = buf;
