@@ -51,14 +51,12 @@ void BaseAvbToolTest::SetUp() {
   /* Change current directory to test executable directory so that relative path
    * references to test dependencies don't rely on being manually run from
    * correct directory */
-  base::SetCurrentDirectory(
-      base::FilePath(android::base::GetExecutableDirectory()));
+  ASSERT_TRUE(chdir(android::base::GetExecutableDirectory().c_str()) == 0);
 
   /* Create temporary directory to stash images in. */
-  base::FilePath ret;
   char* buf = strdup("/tmp/libavb-tests.XXXXXX");
   ASSERT_TRUE(mkdtemp(buf) != nullptr);
-  testdir_ = base::FilePath(buf);
+  testdir_ = buf;
   free(buf);
 
   /* Reset memory leak tracing */
@@ -67,25 +65,27 @@ void BaseAvbToolTest::SetUp() {
 
 void BaseAvbToolTest::TearDown() {
   /* Nuke temporary directory. */
-  ASSERT_EQ(0U, testdir_.value().find("/tmp/libavb-tests"));
-  ASSERT_TRUE(base::DeleteFile(testdir_, true /* recursive */));
+  ASSERT_EQ(0U, testdir_.string().find("/tmp/libavb-tests"));
+  ASSERT_TRUE(
+      base::DeleteFile(base::FilePath(testdir_.c_str()), true /* recursive */));
   /* Ensure all memory has been freed. */
   EXPECT_TRUE(avb::testing_memory_all_freed());
 }
 
 std::string BaseAvbToolTest::CalcVBMetaDigest(const std::string& vbmeta_image,
                                               const std::string& digest_alg) {
-  base::FilePath vbmeta_path = testdir_.Append(vbmeta_image);
-  base::FilePath vbmeta_digest_path = testdir_.Append("vbmeta_digest");
+  std::filesystem::path vbmeta_path = testdir_ / vbmeta_image;
+  std::filesystem::path vbmeta_digest_path = testdir_ / "vbmeta_digest";
   EXPECT_COMMAND(
       0,
       "./avbtool.py calculate_vbmeta_digest --image %s --hash_algorithm %s"
       " --output %s",
-      vbmeta_path.value().c_str(),
+      vbmeta_path.c_str(),
       digest_alg.c_str(),
-      vbmeta_digest_path.value().c_str());
+      vbmeta_digest_path.c_str());
   std::string vbmeta_digest_data;
-  EXPECT_TRUE(base::ReadFileToString(vbmeta_digest_path, &vbmeta_digest_data));
+  EXPECT_TRUE(android::base::ReadFileToString(vbmeta_digest_path.string(),
+                                              &vbmeta_digest_data));
   return string_trim(vbmeta_digest_data);
 }
 
@@ -102,7 +102,7 @@ void BaseAvbToolTest::GenerateVBMetaImage(
     signing_options =
         std::string(" --algorithm ") + algorithm + " --key " + key_path + " ";
   }
-  vbmeta_image_path_ = testdir_.Append(image_name);
+  vbmeta_image_path_ = testdir_ / image_name;
   EXPECT_COMMAND(0,
                  "./avbtool.py make_vbmeta_image"
                  " --rollback_index %" PRIu64
@@ -111,11 +111,12 @@ void BaseAvbToolTest::GenerateVBMetaImage(
                  rollback_index,
                  additional_options.c_str(),
                  signing_options.c_str(),
-                 vbmeta_image_path_.value().c_str());
+                 vbmeta_image_path_.c_str());
   int64_t file_size;
-  ASSERT_TRUE(base::GetFileSize(vbmeta_image_path_, &file_size));
+  ASSERT_TRUE(base::GetFileSize(base::FilePath(vbmeta_image_path_.c_str()),
+                                &file_size));
   vbmeta_image_.resize(file_size);
-  ASSERT_TRUE(base::ReadFile(vbmeta_image_path_,
+  ASSERT_TRUE(base::ReadFile(base::FilePath(vbmeta_image_path_.c_str()),
                              reinterpret_cast<char*>(vbmeta_image_.data()),
                              vbmeta_image_.size()));
 }
@@ -126,7 +127,7 @@ void BaseAvbToolTest::GenerateVBMetaImage(
 std::string BaseAvbToolTest::GenerateImage(const std::string file_name,
                                            size_t image_size,
                                            uint8_t start_byte) {
-  base::FilePath image_path = testdir_.Append(file_name);
+  std::filesystem::path image_path = testdir_ / file_name;
   EXPECT_COMMAND(0,
                  "./avbtool.py generate_test_image "
                  "--image_size %d "
@@ -134,33 +135,33 @@ std::string BaseAvbToolTest::GenerateImage(const std::string file_name,
                  "--output %s",
                  image_size,
                  start_byte,
-                 image_path.value().c_str());
+                 image_path.c_str());
   base::File::Info stats;
-  EXPECT_TRUE(base::GetFileInfo(image_path, &stats));
+  EXPECT_TRUE(base::GetFileInfo(base::FilePath(image_path.c_str()), &stats));
   EXPECT_EQ((size_t)stats.size, image_size);
-  return image_path.value();
+  return image_path.string();
 }
 
 std::string BaseAvbToolTest::InfoImage(const std::string& image_path) {
-  base::FilePath tmp_path = testdir_.Append("info_output.txt");
+  std::filesystem::path tmp_path = testdir_ / "info_output.txt";
   EXPECT_COMMAND(0,
                  "./avbtool.py info_image --image %s --output %s",
                  image_path.c_str(),
-                 tmp_path.value().c_str());
+                 tmp_path.c_str());
   std::string info_data;
-  EXPECT_TRUE(base::ReadFileToString(tmp_path, &info_data));
+  EXPECT_TRUE(android::base::ReadFileToString(tmp_path.string(), &info_data));
   return info_data;
 }
 
 std::string BaseAvbToolTest::PublicKeyAVB(const std::string& key_path) {
-  base::FilePath tmp_path = testdir_.Append("public_key.bin");
+  std::filesystem::path tmp_path = testdir_ / "public_key.bin";
   EXPECT_COMMAND(0,
                  "./avbtool.py extract_public_key --key %s"
                  " --output %s",
                  key_path.c_str(),
-                 tmp_path.value().c_str());
+                 tmp_path.c_str());
   std::string key_data;
-  EXPECT_TRUE(base::ReadFileToString(tmp_path, &key_data));
+  EXPECT_TRUE(android::base::ReadFileToString(tmp_path.string(), &key_data));
   return key_data;
 }
 
