@@ -1,6 +1,6 @@
 # Verifier of Binary Transparency for Pixel Factory Images
 
-This repository contains code to read the transparency log for [Binary Transparency for Pixel Factory Images](https://developers.google.com/android/binary_transparency/pixel). See the particular section for this tool [here](https://developers.google.com/android/binary_transparency/pixel#verifying-image-inclusion-inclusion-proof).
+This repository contains code to read the transparency log for [Pixel Factory Images Binary Transparency](https://developers.google.com/android/binary_transparency/pixel_overview). See the particular section for this tool [here](https://developers.google.com/android/binary_transparency/pixel_verification#verifying-image-inclusion-inclusion-proof).
 
 ## Files and Directories
 * `cmd/verifier/`
@@ -24,14 +24,14 @@ $ ./verifier --payload_path=${PAYLOAD_PATH}
 ### Input
 The verifier takes a `payload_path` as input.
 
-Each Pixel Factory image corresponds to a [payload](https://developers.google.com/android/binary_transparency/pixel#log-content) stored in the transparency log, the format of which is:
+Each Pixel Factory image corresponds to a [payload](https://developers.google.com/android/binary_transparency/pixel_overview#log_content) stored in the transparency log, the format of which is:
 ```
 <build_fingerprint>\n<vbmeta_digest>\n
 ```
-See [here](https://developers.google.com/android/binary_transparency/pixel#construct-the-payload-for-verification) for a few methods detailing how to extract this payload from an image.
+See [here](https://developers.google.com/android/binary_transparency/pixel_verification#construct-the-payload-for-verification) for a few methods detailing how to extract this payload from an image.
 
 ### Output
 The output of the command is written to stdout:
-  * `OK` if the image is included in the log, i.e. that this [claim](https://developers.google.com/android/binary_transparency/pixel#claimant-model) is true,
+  * `OK` if the image is included in the log, i.e. that this [claim](https://developers.google.com/android/binary_transparency/pixel_overview#claimant_model) is true,
   * `FAILURE` otherwise.
 

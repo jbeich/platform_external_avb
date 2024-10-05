@@ -7,7 +7,7 @@
 //     Transparency Log, see:
 //     https://developers.google.com/android/binary_transparency/image_info.txt
 //   - the path to a file containing the payload, see this page for instructions
-//     https://developers.google.com/android/binary_transparency/pixel#construct-the-payload-for-verification.
+//     https://developers.google.com/android/binary_transparency/pixel_verification#construct-the-payload-for-verification.
 //   - the log's base URL, if different from the default provided.
 //
 // Outputs:
@@ -16,7 +16,7 @@
 //
 // Usage: See README.md.
 // For more details on inclusion proofs, see:
-// https://developers.google.com/android/binary_transparency/pixel#verifying-image-inclusion-inclusion-proof
+// https://developers.google.com/android/binary_transparency/pixel_verification#verifying-image-inclusion-inclusion-proof
 package main
 
 import (
@@ -40,7 +40,7 @@ const (
 	KeyNameForVerifier = "pixel_transparency_log"
 )
 
-// See https://developers.google.com/android/binary_transparency/pixel#signature-verification.
+// See https://developers.google.com/android/binary_transparency/pixel_tech_details#log_implementation.
 //go:embed log_pub_key.pem
 var logPubKey []byte
 
