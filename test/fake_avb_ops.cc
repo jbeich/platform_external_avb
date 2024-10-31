@@ -22,25 +22,23 @@
  * SOFTWARE.
  */
 
-#include <iostream>
+#include "fake_avb_ops.h"
 
+#include <base/files/file_util.h>
+#include <base/strings/string_util.h>
 #include <endian.h>
 #include <errno.h>
-#include <inttypes.h>
-#include <string.h>
-
 #include <fcntl.h>
+#include <inttypes.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
+#include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
 
-#include <base/files/file_util.h>
-#include <base/strings/string_util.h>
-#include <base/strings/stringprintf.h>
-#include <openssl/rand.h>
-#include <openssl/sha.h>
-
-#include "fake_avb_ops.h"
+#include <filesystem>
+#include <iostream>
 
 namespace avb {
 
@@ -108,27 +106,24 @@ AvbIOResult FakeAvbOps::read_from_partition(const char* partition,
     return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
   }
 
-  base::FilePath path =
-      partition_dir_.Append(std::string(partition)).AddExtension("img");
+  std::filesystem::path path =
+      (partition_dir_ / partition).replace_extension("img");
 
   partition_names_read_from_.insert(partition);
 
   if (offset < 0) {
     int64_t file_size;
-    if (!base::GetFileSize(path, &file_size)) {
-      fprintf(
-          stderr, "Error getting size of file '%s'\n", path.value().c_str());
+    if (!base::GetFileSize(base::FilePath(path.c_str()), &file_size)) {
+      fprintf(stderr, "Error getting size of file '%s'\n", path.c_str());
       return AVB_IO_RESULT_ERROR_IO;
     }
     offset = file_size - (-offset);
   }
 
-  int fd = open(path.value().c_str(), O_RDONLY);
+  int fd = open(path.c_str(), O_RDONLY);
   if (fd < 0) {
-    fprintf(stderr,
-            "Error opening file '%s': %s\n",
-            path.value().c_str(),
-            strerror(errno));
+    fprintf(
+        stderr, "Error opening file '%s': %s\n", path.c_str(), strerror(errno));
     if (errno == ENOENT) {
       return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
     } else {
@@ -139,7 +134,7 @@ AvbIOResult FakeAvbOps::read_from_partition(const char* partition,
     fprintf(stderr,
             "Error seeking to pos %zd in file %s: %s\n",
             offset,
-            path.value().c_str(),
+            path.c_str(),
             strerror(errno));
     close(fd);
     return AVB_IO_RESULT_ERROR_IO;
@@ -150,7 +145,7 @@ AvbIOResult FakeAvbOps::read_from_partition(const char* partition,
             "Error reading %zd bytes from pos %" PRId64 " in file %s: %s\n",
             num_bytes,
             offset,
-            path.value().c_str(),
+            path.c_str(),
             strerror(errno));
     close(fd);
     return AVB_IO_RESULT_ERROR_IO;
@@ -208,25 +203,22 @@ AvbIOResult FakeAvbOps::write_to_partition(const char* partition,
     return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
   }
 
-  base::FilePath path =
-      partition_dir_.Append(std::string(partition)).AddExtension("img");
+  std::filesystem::path path =
+      (partition_dir_ / partition).replace_extension("img");
 
   if (offset < 0) {
     int64_t file_size;
-    if (!base::GetFileSize(path, &file_size)) {
-      fprintf(
-          stderr, "Error getting size of file '%s'\n", path.value().c_str());
+    if (!base::GetFileSize(base::FilePath(path.c_str()), &file_size)) {
+      fprintf(stderr, "Error getting size of file '%s'\n", path.c_str());
       return AVB_IO_RESULT_ERROR_IO;
     }
     offset = file_size - (-offset);
   }
 
-  int fd = open(path.value().c_str(), O_WRONLY);
+  int fd = open(path.c_str(), O_WRONLY);
   if (fd < 0) {
-    fprintf(stderr,
-            "Error opening file '%s': %s\n",
-            path.value().c_str(),
-            strerror(errno));
+    fprintf(
+        stderr, "Error opening file '%s': %s\n", path.c_str(), strerror(errno));
     if (errno == ENOENT) {
       return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
     } else {
@@ -237,7 +229,7 @@ AvbIOResult FakeAvbOps::write_to_partition(const char* partition,
     fprintf(stderr,
             "Error seeking to pos %zd in file %s: %s\n",
             offset,
-            path.value().c_str(),
+            path.c_str(),
             strerror(errno));
     close(fd);
     return AVB_IO_RESULT_ERROR_IO;
@@ -248,7 +240,7 @@ AvbIOResult FakeAvbOps::write_to_partition(const char* partition,
             "Error writing %zd bytes at pos %" PRId64 " in file %s: %s\n",
             num_bytes,
             offset,
-            path.value().c_str(),
+            path.c_str(),
             strerror(errno));
     close(fd);
     return AVB_IO_RESULT_ERROR_IO;
@@ -359,11 +351,11 @@ AvbIOResult FakeAvbOps::get_size_of_partition(AvbOps* ops,
     return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
   }
 
-  base::FilePath path =
-      partition_dir_.Append(std::string(partition)).AddExtension("img");
+  std::filesystem::path path =
+      (partition_dir_ / partition).replace_extension("img");
 
   int64_t file_size;
-  if (!base::GetFileSize(path, &file_size)) {
+  if (!base::GetFileSize(base::FilePath(path.c_str()), &file_size)) {
     return AVB_IO_RESULT_ERROR_NO_SUCH_PARTITION;
   }
   *out_size = file_size;
