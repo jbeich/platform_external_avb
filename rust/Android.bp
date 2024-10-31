@@ -295,6 +295,7 @@ filegroup {
 rust_defaults {
     name: "libavb_rs_test.defaults",
     srcs: ["tests/tests.rs"],
+    compile_multilib: "first",
     data: [
         ":avb_cert_test_permanent_attributes",
         ":avb_cert_test_unlock_challenge",
@@ -392,8 +393,9 @@ genrule {
 }
 
 // Standalone vbmeta image signing the test image descriptor.
-genrule {
+cc_genrule {
     name: "avbrs_test_vbmeta",
+    compile_multilib: "first",
     tools: ["avbtool"],
     srcs: [
         ":avbrs_test_image_descriptor",
@@ -405,8 +407,9 @@ genrule {
 
 // Standalone vbmeta image signing the test image descriptor with
 // `avb_cert_testkey_psk` and `avb_cert_test_metadata`.
-genrule {
+cc_genrule {
     name: "avbrs_test_vbmeta_cert",
+    compile_multilib: "first",
     tools: ["avbtool"],
     srcs: [
         ":avbrs_test_image_descriptor",
@@ -418,8 +421,9 @@ genrule {
 }
 
 // Standalone vbmeta image signing the test image descriptors for "test_part" and "test_part_2".
-genrule {
+cc_genrule {
     name: "avbrs_test_vbmeta_2_parts",
+    compile_multilib: "first",
     tools: ["avbtool"],
     srcs: [
         ":avbrs_test_image_descriptor",
@@ -431,7 +435,7 @@ genrule {
 }
 
 // Standalone vbmeta image signing the test image persistent digest descriptor.
-genrule {
+cc_genrule {
     name: "avbrs_test_vbmeta_persistent_digest",
     tools: ["avbtool"],
     srcs: [
@@ -443,8 +447,9 @@ genrule {
 }
 
 // Standalone vbmeta image with property descriptor "test_prop_key" = "test_prop_value".
-genrule {
+cc_genrule {
     name: "avbrs_test_vbmeta_with_property",
+    compile_multilib: "first",
     tools: ["avbtool"],
     srcs: [
         ":avbrs_test_image_descriptor",
@@ -455,7 +460,7 @@ genrule {
 }
 
 // Standalone vbmeta image with the test image hashtree descriptor.
-genrule {
+cc_genrule {
     name: "avbrs_test_vbmeta_with_hashtree",
     tools: ["avbtool"],
     srcs: [
@@ -467,8 +472,9 @@ genrule {
 }
 
 // Standalone vbmeta image with kernel commandline "test_cmdline_key=test_cmdline_value".
-genrule {
+cc_genrule {
     name: "avbrs_test_vbmeta_with_commandline",
+    compile_multilib: "first",
     tools: ["avbtool"],
     srcs: [
         ":avbrs_test_image_descriptor",
@@ -480,8 +486,9 @@ genrule {
 
 // Standalone vbmeta image with chain descriptor to "test_part_2" with rollback
 // index 4, signed by avb_testkey_rsa8192.
-genrule {
+cc_genrule {
     name: "avbrs_test_vbmeta_with_chained_partition",
+    compile_multilib: "first",
     tools: ["avbtool"],
     srcs: [
         ":avbrs_test_image_descriptor",
