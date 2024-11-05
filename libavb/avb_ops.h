@@ -85,6 +85,34 @@ struct AvbABOps;
 /* Forward-declaration of operations in libavb_cert. */
 struct AvbCertOps;
 
+typedef struct AvbHashOps AvbHashOps;
+
+/*
+ * Platform-dependent hash operations, which can be overridden at runtime.
+ *
+ * Calls must follow this order:
+ * 1. init     - Start a new hash session
+ * 2. update   - Add data to hash (can be called multiple times)
+ * 3. finalize - Complete and output the hash result
+ *
+ * Use `AvbOps.user_data` or static memory to store a state of the current
+ * session.
+ */
+struct AvbHashOps {
+  AvbOps* ops;
+
+  // Start a new hash session
+  AvbIOResult (*init)(AvbHashOps* sha_ops);
+
+  // Add data to the hash (requires init)
+  AvbIOResult (*update)(AvbHashOps* sha_ops, const uint8_t* data, size_t len);
+
+  // Complete the hash and output the result (requires init)
+  AvbIOResult (*finalize)(AvbHashOps* sha_ops,
+                          const uint8_t** out_data,
+                          size_t* out_data_len);
+};
+
 /* High-level operations/functions/methods that are platform
  * dependent.
  *
@@ -108,6 +136,15 @@ struct AvbOps {
    * AvbCertOps. Otherwise it must be set to NULL.
    */
   struct AvbCertOps* cert_ops;
+
+  /*
+   * Allows for run-time override of hash operations. The compile-time
+   * requirements defined in `avb_hash.h` must still be met; however,
+   * they can be set as no-ops if `sha256_ops` is provided at run-time.
+   */
+  struct AvbHashOps* sha256_ops;
+
+  // TODO: struct AvbHashOps* sha512_ops;
 
   /* Reads |num_bytes| from offset |offset| from partition with name
    * |partition| (NUL-terminated UTF-8 string). If |offset| is

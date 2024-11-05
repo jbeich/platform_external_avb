@@ -29,6 +29,7 @@
 mod cert;
 mod descriptor;
 mod error;
+mod hash;
 mod ops;
 mod verify;
 
@@ -47,6 +48,7 @@ pub use error::{
     IoError, IoResult, SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult,
     VbmetaVerifyError, VbmetaVerifyResult,
 };
+pub use hash::HashOps;
 pub use ops::{Ops, PublicKeyForPartitionInfo};
 pub use verify::{
     slot_verify, HashtreeErrorMode, PartitionData, SlotVerifyData, SlotVerifyFlags, VbmetaData,

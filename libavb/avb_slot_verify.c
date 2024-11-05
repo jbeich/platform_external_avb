@@ -289,7 +289,7 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
   AvbIOResult io_ret;
   uint8_t* image_buf = NULL;
   bool image_preloaded = false;
-  uint8_t* digest;
+  const uint8_t* digest;
   size_t digest_len;
   const char* found;
   uint64_t image_size;
@@ -395,11 +395,18 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
     image_size_to_hash = image_size;
   }
   if (avb_strcmp((const char*)hash_desc.hash_algorithm, "sha256") == 0) {
-    avb_sha256_init(&sha256_ctx);
-    avb_sha256_update(&sha256_ctx, desc_salt, hash_desc.salt_len);
-    avb_sha256_update(&sha256_ctx, image_buf, image_size_to_hash);
-    digest = avb_sha256_final(&sha256_ctx);
-    digest_len = AVB_SHA256_DIGEST_SIZE;
+    if (ops->sha256_ops != NULL) {
+      ops->sha256_ops->init(ops->sha256_ops);
+      ops->sha256_ops->update(ops->sha256_ops, desc_salt, hash_desc.salt_len);
+      ops->sha256_ops->update(ops->sha256_ops, image_buf, image_size_to_hash);
+      ops->sha256_ops->finalize(ops->sha256_ops, &digest, &digest_len);
+    } else {
+      avb_sha256_init(&sha256_ctx);
+      avb_sha256_update(&sha256_ctx, desc_salt, hash_desc.salt_len);
+      avb_sha256_update(&sha256_ctx, image_buf, image_size_to_hash);
+      digest = avb_sha256_final(&sha256_ctx);
+      digest_len = AVB_SHA256_DIGEST_SIZE;
+    }
   } else if (avb_strcmp((const char*)hash_desc.hash_algorithm, "sha512") == 0) {
     avb_sha512_init(&sha512_ctx);
     avb_sha512_update(&sha512_ctx, desc_salt, hash_desc.salt_len);
@@ -1280,7 +1287,7 @@ static AvbIOResult avb_manage_hashtree_error_mode(
         "Rebooting because of dm-verity corruption - "
         "recording OS instance and using 'eio' mode.\n");
     avb_slot_verify_data_calculate_vbmeta_digest(
-        data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest_sha256);
+        ops, data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest_sha256);
     io_ret = ops->write_persistent_value(ops,
                                          AVB_NPV_MANAGED_VERITY_MODE,
                                          AVB_SHA256_DIGEST_SIZE,
@@ -1323,7 +1330,7 @@ static AvbIOResult avb_manage_hashtree_error_mode(
   // that caused this is in |stored_vbmeta_digest_sha256| ... now see if
   // the OS we're dealing with now is the same.
   avb_slot_verify_data_calculate_vbmeta_digest(
-      data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest_sha256);
+      ops, data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest_sha256);
   if (avb_memcmp(vbmeta_digest_sha256,
                  stored_vbmeta_digest_sha256,
                  AVB_SHA256_DIGEST_SIZE) == 0) {
@@ -1728,7 +1735,8 @@ const char* avb_slot_verify_result_to_string(AvbSlotVerifyResult result) {
   return ret;
 }
 
-void avb_slot_verify_data_calculate_vbmeta_digest(const AvbSlotVerifyData* data,
+void avb_slot_verify_data_calculate_vbmeta_digest(AvbOps* ops,
+                                                  const AvbSlotVerifyData* data,
                                                   AvbDigestType digest_type,
                                                   uint8_t* out_digest) {
   bool ret = false;
@@ -1736,14 +1744,29 @@ void avb_slot_verify_data_calculate_vbmeta_digest(const AvbSlotVerifyData* data,
 
   switch (digest_type) {
     case AVB_DIGEST_TYPE_SHA256: {
+      const uint8_t* digest;
+      size_t digest_len;
       AvbSHA256Ctx ctx;
-      avb_sha256_init(&ctx);
-      for (n = 0; n < data->num_vbmeta_images; n++) {
-        avb_sha256_update(&ctx,
-                          data->vbmeta_images[n].vbmeta_data,
-                          data->vbmeta_images[n].vbmeta_size);
+      if (ops->sha256_ops != NULL) {
+        ops->sha256_ops->init(ops->sha256_ops);
+        for (n = 0; n < data->num_vbmeta_images; n++) {
+          ops->sha256_ops->update(ops->sha256_ops,
+                                  data->vbmeta_images[n].vbmeta_data,
+                                  data->vbmeta_images[n].vbmeta_size);
+        }
+        ops->sha256_ops->finalize(ops->sha256_ops, &digest, &digest_len);
+      } else {
+        avb_sha256_init(&ctx);
+        for (n = 0; n < data->num_vbmeta_images; n++) {
+          avb_sha256_update(&ctx,
+                            data->vbmeta_images[n].vbmeta_data,
+                            data->vbmeta_images[n].vbmeta_size);
+        }
+        digest = avb_sha256_final(&ctx);
+        digest_len = AVB_SHA256_DIGEST_SIZE;
       }
-      avb_memcpy(out_digest, avb_sha256_final(&ctx), AVB_SHA256_DIGEST_SIZE);
+
+      avb_memcpy(out_digest, digest, digest_len);
       ret = true;
     } break;
 
