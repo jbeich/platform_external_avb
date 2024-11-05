@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f0b9c0f5_adc5bce9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-11-05T21:33:18Z",
+      "side": 1,
+      "message": "I think this is the right approach, thanks for doing this! I\u0027ll ping one of the libavb owners as well and get their input but I think it shouldn\u0027t be too contentious.",
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d703c4f0_1f9e02a6",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-11-05T21:33:18Z",
+      "side": 1,
+      "message": "nit: it\u0027s fairly common to \"extend\" a structure in C to pair it with additional data, e.g.\n\n```\nstruct MyAvbHashOps {\n  // Since AvbHashOps is the first member here, we can pass in MyAvbHashOps*\n  // wherever AvbHashOps* is expected - their pointers are identical - and then\n  // convert back in the callback implementations to get our data out.\n  AvbHashOps hash_ops;\n  MyExtraData data;\n}\n```\n\nonly listing those two approaches makes it seem like we\u0027re prohibiting this technique, was that the intention?",
+      "range": {
+        "startLine": 98,
+        "startChar": 3,
+        "endLine": 98,
+        "endChar": 42
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "534f9b04_b51beebf",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-11-05T21:33:18Z",
+      "side": 1,
+      "message": "If we go forward with this approach it would be useful to provide either a compile-time flag to skip this, or a reference implementation that implements them as no-ops, to minimize the amount of boilerplate needed.",
+      "range": {
+        "startLine": 141,
+        "startChar": 54,
+        "endLine": 143,
+        "endChar": 71
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c9c05ed5_99423831",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-11-05T21:33:18Z",
+      "side": 1,
+      "message": "I would lean towards just a single `hash_ops` struct if possible; e.g. maybe we could just pass the requested algorithm as a parameter to `init()` to differentiate 256 vs 512?",
+      "range": {
+        "startLine": 147,
+        "startChar": 11,
+        "endLine": 147,
+        "endChar": 41
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c8d89d10_2ba7c57a",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-11-05T21:33:18Z",
+      "side": 1,
+      "message": "optional: it might help clean up implementation to always go through the hash ops struct; if the `AvbOps` that the caller provides doesn\u0027t contain its own hashing ops, we can just hook in our own that routes through the global hash functions. e.g. maybe something like:\n\n```\nAvbHashOps* hash_ops \u003d ops-\u003ehash_ops ? ops-\u003ehash_ops : kGlobalHashOps;\n```",
+      "range": {
+        "startLine": 404,
+        "startChar": 0,
+        "endLine": 408,
+        "endChar": 42
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
