@@ -1393,6 +1393,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
   AvbAlgorithmType algorithm_type = AVB_ALGORITHM_TYPE_NONE;
   bool using_boot_for_vbmeta = false;
   AvbVBMetaImageHeader toplevel_vbmeta;
+  AvbPublicKey toplevel_vbmeta_public_key;
   bool allow_verification_error =
       (flags & AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR);
   AvbCmdlineSubstList* additional_cmdline_subst = NULL;
@@ -1598,6 +1599,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                  flags,
                                  slot_data,
                                  &toplevel_vbmeta,
+                                 toplevel_vbmeta_public_key,
                                  algorithm_type,
                                  hashtree_error_mode,
                                  resolved_hashtree_error_mode);
@@ -1726,6 +1728,14 @@ const char* avb_slot_verify_result_to_string(AvbSlotVerifyResult result) {
   }
 
   return ret;
+}
+
+void avb_slot_verify_get_public_key_sha256_digest(AvbPublicKey public_key,
+                                                  uint8_t* out_digest) {
+  AvbSHA256Ctx ctx;
+  avb_sha256_init(&ctx);
+  avb_sha256_update(&ctx, public_key.data, public_key.len);
+  avb_memcpy(out_digest, avb_sha256_final(&ctx), AVB_SHA256_DIGEST_SIZE);
 }
 
 void avb_slot_verify_data_calculate_vbmeta_digest(const AvbSlotVerifyData* data,

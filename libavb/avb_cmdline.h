@@ -65,6 +65,7 @@ AvbSlotVerifyResult avb_append_options(
     AvbSlotVerifyFlags flags,
     AvbSlotVerifyData* slot_data,
     AvbVBMetaImageHeader* toplevel_vbmeta,
+    AvbPublicKey toplevel_vbmeta_public_key,
     AvbAlgorithmType algorithm_type,
     AvbHashtreeErrorMode hashtree_error_mode,
     AvbHashtreeErrorMode resolved_hashtree_error_mode);
