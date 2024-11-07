@@ -38,6 +38,7 @@ extern "C" {
 #endif
 
 #include "avb_crypto.h"
+#include "avb_ops.h"
 #include "avb_sysdeps.h"
 
 /* The following defines must be set to something appropriate
@@ -65,14 +66,10 @@ typedef struct {
   uint8_t buf[AVB_SHA512_DIGEST_SIZE]; /* Used for storing the final digest. */
 } AvbSHA512Ctx;
 
-/* Initializes the SHA-256 context. */
-void avb_sha256_init(AvbSHA256Ctx* ctx);
+/* Fallback to compile-time provided hash_ops implementation */
+AvbHashOps* or_default_hash_ops(AvbHashOps* ops);
 
-/* Updates the SHA-256 context with |len| bytes from |data|. */
-void avb_sha256_update(AvbSHA256Ctx* ctx, const uint8_t* data, size_t len);
-
-/* Returns the SHA-256 digest. */
-uint8_t* avb_sha256_final(AvbSHA256Ctx* ctx) AVB_ATTR_WARN_UNUSED_RESULT;
+// TODO: migrate to DefaultAvbHashOps once high level approach is approved
 
 /* Initializes the SHA-512 context. */
 void avb_sha512_init(AvbSHA512Ctx* ctx);
