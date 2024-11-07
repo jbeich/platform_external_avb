@@ -93,6 +93,10 @@ class BaseAvbToolTest : public ::testing::Test {
   /* Returns public key in AVB format for a .pem key */
   std::string PublicKeyAVB(const std::string& key_path);
 
+  /* Returns the SHA-256 digest of the public key in AVB format for a .pem key.
+   */
+  std::string PublicKeyAVBDigest(const std::string& key_path);
+
   void SetUp() override;
   void TearDown() override;
 
