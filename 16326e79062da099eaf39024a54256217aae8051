@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "92052bdd_2a166ece",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 98,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-11-07T17:16:25Z",
+      "side": 1,
+      "message": "Didn\u0027t know about it, extremely useful one, huge thanks! Already applied this approach to implement `DefaultAvbHashOps`.",
+      "parentUuid": "d703c4f0_1f9e02a6",
+      "range": {
+        "startLine": 98,
+        "startChar": 3,
+        "endLine": 98,
+        "endChar": 42
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "534f9b04_b51beebf",
@@ -87,6 +111,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "090cdfc5_607f4c7b",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 147,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-11-07T17:16:25Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c9c05ed5_99423831",
+      "range": {
+        "startLine": 147,
+        "startChar": 11,
+        "endLine": 147,
+        "endChar": 41
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c8d89d10_2ba7c57a",
@@ -100,6 +148,30 @@
       "writtenOn": "2024-11-05T21:33:18Z",
       "side": 1,
       "message": "optional: it might help clean up implementation to always go through the hash ops struct; if the `AvbOps` that the caller provides doesn\u0027t contain its own hashing ops, we can just hook in our own that routes through the global hash functions. e.g. maybe something like:\n\n```\nAvbHashOps* hash_ops \u003d ops-\u003ehash_ops ? ops-\u003ehash_ops : kGlobalHashOps;\n```",
+      "range": {
+        "startLine": 404,
+        "startChar": 0,
+        "endLine": 408,
+        "endChar": 42
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "fa2854f0_e46e7dee",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-11-07T17:16:25Z",
+      "side": 1,
+      "message": "Done. Defined `kDefaultAvbHashOps` in new introduced `avb_sha.c`. Thank you!",
+      "parentUuid": "c8d89d10_2ba7c57a",
       "range": {
         "startLine": 404,
         "startChar": 0,
