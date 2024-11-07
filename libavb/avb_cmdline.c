@@ -212,6 +212,8 @@ AvbSlotVerifyResult avb_append_options(
     AvbSlotVerifyFlags flags,
     AvbSlotVerifyData* slot_data,
     AvbVBMetaImageHeader* toplevel_vbmeta,
+    const uint8_t* toplevel_vbmeta_public_key_data,
+    size_t toplevel_vbmeta_public_key_length,
     AvbAlgorithmType algorithm_type,
     AvbHashtreeErrorMode hashtree_error_mode,
     AvbHashtreeErrorMode resolved_hashtree_error_mode) {
@@ -220,13 +222,26 @@ AvbSlotVerifyResult avb_append_options(
   bool is_device_unlocked;
   AvbIOResult io_ret;
 
-  /* Add androidboot.vbmeta.device option... except if not using a vbmeta
-   * partition since it doesn't make sense in that case.
-   */
+  /* Add options that only make sense if there is a vbmeta partition. */
   if (!(flags & AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION)) {
+    /* Add androidboot.vbmeta.device option. */
     if (!cmdline_append_option(slot_data,
                                "androidboot.vbmeta.device",
                                "PARTUUID=$(ANDROID_VBMETA_PARTUUID)")) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto out;
+    }
+    /* Set androidboot.vbmeta.public_key_digest to the SHA-256 hash of the
+     * public key used to verify the vbmeta image. */
+    uint8_t vbmeta_public_key_digest[AVB_SHA256_DIGEST_SIZE];
+    avb_slot_verify_get_public_key_sha256_digest(
+        toplevel_vbmeta_public_key_data,
+        toplevel_vbmeta_public_key_length,
+        vbmeta_public_key_digest);
+    if (!cmdline_append_hex(slot_data,
+                            "androidboot.vbmeta.public_key_digest",
+                            vbmeta_public_key_digest,
+                            AVB_SHA256_DIGEST_SIZE)) {
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
       goto out;
     }
