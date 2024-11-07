@@ -161,6 +161,10 @@ typedef struct {
   AvbSlotVerifyResult verify_result;
 } AvbPartitionData;
 
+void avb_slot_verify_get_public_key_sha256_digest(uint8_t* public_key_data,
+                                                  size_t public_key_length,
+                                                  uint8_t* out_digest);
+
 /* AvbVBMetaData contains a vbmeta struct loaded from a partition when
  * using avb_slot_verify(). The |partition_name| field contains the
  * name of the partition (without A/B suffix), |vbmeta_data| points to
@@ -252,6 +256,10 @@ typedef struct {
  *
  *   androidboot.vbmeta.{hash_alg, size, digest}: Will be set to
  *   the digest of all images in |vbmeta_images|.
+ *
+ *   androidboot.vbmeta.public_key_digest: Will be set to the SHA-256
+ *   digest of the public key used to verify the vbmeta partition of
+ *   the verified slot.
  *
  *   androidboot.vbmeta.device: This is set to the value
  *   PARTUUID=$(ANDROID_VBMETA_PARTUUID) before substitution so it

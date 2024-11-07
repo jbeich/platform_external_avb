@@ -565,6 +565,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     size_t expected_public_key_length,
     AvbSlotVerifyData* slot_data,
     AvbAlgorithmType* out_algorithm_type,
+    const uint8_t** out_public_key_data,
+    size_t* out_public_key_length,
     AvbCmdlineSubstList* out_additional_cmdline_subst,
     bool use_ab_suffix) {
   char full_partition_name[AVB_PART_NAME_MAX_SIZE];
@@ -575,8 +577,6 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   uint8_t* vbmeta_buf = NULL;
   size_t vbmeta_num_read;
   AvbVBMetaVerifyResult vbmeta_ret;
-  const uint8_t* pk_data;
-  size_t pk_len;
   AvbVBMetaImageHeader vbmeta_header;
   uint64_t stored_rollback_index;
   const AvbDescriptor** descriptors = NULL;
@@ -753,6 +753,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
                                    0 /* expected_public_key_length */,
                                    slot_data,
                                    out_algorithm_type,
+                                   out_public_key_data,
+                                   out_public_key_length,
                                    out_additional_cmdline_subst,
                                    use_ab_suffix);
       goto out;
@@ -767,11 +769,11 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   /* Check if the image is properly signed and get the public key used
    * to sign the image.
    */
-  vbmeta_ret =
-      avb_vbmeta_image_verify(vbmeta_buf, vbmeta_num_read, &pk_data, &pk_len);
+  vbmeta_ret = avb_vbmeta_image_verify(
+      vbmeta_buf, vbmeta_num_read, out_public_key_data, out_public_key_length);
   switch (vbmeta_ret) {
     case AVB_VBMETA_VERIFY_RESULT_OK:
-      avb_assert(pk_data != NULL && pk_len > 0);
+      avb_assert(*out_public_key_data != NULL && *out_public_key_length > 0);
       break;
 
     case AVB_VBMETA_VERIFY_RESULT_OK_NOT_SIGNED:
@@ -824,11 +826,13 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   }
 
   /* Check if key used to make signature matches what is expected. */
-  if (pk_data != NULL) {
+  if (out_public_key_data != NULL) {
     if (expected_public_key != NULL) {
       avb_assert(!is_main_vbmeta);
-      if (expected_public_key_length != pk_len ||
-          avb_safe_memcmp(expected_public_key, pk_data, pk_len) != 0) {
+      if (expected_public_key_length != *out_public_key_length ||
+          avb_safe_memcmp(expected_public_key,
+                          *out_public_key_data,
+                          *out_public_key_length) != 0) {
         avb_error(full_partition_name,
                   ": Public key used to sign data does not match key in chain "
                   "partition descriptor.\n");
@@ -854,8 +858,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
         io_ret = ops->validate_public_key_for_partition(
             ops,
             full_partition_name,
-            pk_data,
-            pk_len,
+            *out_public_key_data,
+            *out_public_key_length,
             pk_metadata,
             pk_metadata_len,
             &key_is_trusted,
@@ -863,8 +867,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
       } else {
         avb_assert(is_main_vbmeta);
         io_ret = ops->validate_vbmeta_public_key(ops,
-                                                 pk_data,
-                                                 pk_len,
+                                                 *out_public_key_data,
+                                                 *out_public_key_length,
                                                  pk_metadata,
                                                  pk_metadata_len,
                                                  &key_is_trusted);
@@ -1393,6 +1397,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
   AvbAlgorithmType algorithm_type = AVB_ALGORITHM_TYPE_NONE;
   bool using_boot_for_vbmeta = false;
   AvbVBMetaImageHeader toplevel_vbmeta;
+  AvbPublicKey toplevel_vbmeta_public_key;
   bool allow_verification_error =
       (flags & AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR);
   AvbCmdlineSubstList* additional_cmdline_subst = NULL;
@@ -1496,6 +1501,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                    0 /* expected_public_key_length */,
                                    slot_data,
                                    &algorithm_type,
+                                   &toplevel_vbmeta_public_key,
                                    additional_cmdline_subst,
                                    true /*use_ab_suffix*/);
       if (!allow_verification_error && ret != AVB_SLOT_VERIFY_RESULT_OK) {
@@ -1518,6 +1524,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                  0 /* expected_public_key_length */,
                                  slot_data,
                                  &algorithm_type,
+                                 &toplevel_vbmeta_public_key,
                                  additional_cmdline_subst,
                                  true /*use_ab_suffix*/);
     if (!allow_verification_error && ret != AVB_SLOT_VERIFY_RESULT_OK) {
@@ -1598,6 +1605,7 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
                                  flags,
                                  slot_data,
                                  &toplevel_vbmeta,
+                                 toplevel_vbmeta_public_key,
                                  algorithm_type,
                                  hashtree_error_mode,
                                  resolved_hashtree_error_mode);
@@ -1726,6 +1734,15 @@ const char* avb_slot_verify_result_to_string(AvbSlotVerifyResult result) {
   }
 
   return ret;
+}
+
+void avb_slot_verify_get_public_key_sha256_digest(uint8_t* public_key_data,
+                                                  size_t public_key_length,
+                                                  uint8_t* out_digest) {
+  AvbSHA256Ctx ctx;
+  avb_sha256_init(&ctx);
+  avb_sha256_update(&ctx, public_key_data, public_key_length);
+  avb_memcpy(out_digest, avb_sha256_final(&ctx), AVB_SHA256_DIGEST_SIZE);
 }
 
 void avb_slot_verify_data_calculate_vbmeta_digest(const AvbSlotVerifyData* data,
