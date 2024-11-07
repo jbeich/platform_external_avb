@@ -69,6 +69,10 @@ class BaseAvbToolTest : public ::testing::Test {
   std::string CalcVBMetaDigest(const std::string& vbmeta_image,
                                const std::string& digest_alg);
 
+  /* Calculates the digest of the given input data. */
+  std::string CalcDigest(const std::string& data,
+                         const std::string& digest_alg);
+
   /* Generates a vbmeta image, using avbtoool, with file name
    * |image_name|. The generated vbmeta image will written to disk,
    * see the |vbmeta_image_path_| variable for its path and

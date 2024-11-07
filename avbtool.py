@@ -2712,6 +2712,20 @@ class Avb(object):
     digest = hasher.digest()
     output.write('{}\n'.format(digest.hex()))
 
+  def calculate_digest(self, data, hash_algorithm, output):
+    """Implements the 'calculate_digest' command.
+
+    Arguments:
+      data: Input data.
+      hash_algorithm: Hash algorithm used.
+      output: Output file to write human-readable information to (file object).
+    """
+
+    hasher = hashlib.new(hash_algorithm)
+    hasher.update(data)
+    digest = hasher.digest()
+    output.write('{}\n'.format(digest.hex()))
+
   def calculate_kernel_cmdline(self, image_filename, hashtree_disabled, output):
     """Implements the 'calculate_kernel_cmdline' command.
 
@@ -4631,6 +4645,21 @@ class AvbTool(object):
     sub_parser.set_defaults(func=self.calculate_vbmeta_digest)
 
     sub_parser = subparsers.add_parser(
+        'calculate_digest',
+        help='Calculate digest of arbitrary data.')
+    sub_parser.add_argument('--data',
+                            help='Data to calculate digest for',
+                            required=True)
+    sub_parser.add_argument('--hash_algorithm',
+                            help='Hash algorithm to use (default: sha256)',
+                            default='sha256')
+    sub_parser.add_argument('--output',
+                            help='Write hex digest to file (default: stdout)',
+                            type=argparse.FileType('wt'),
+                            default=sys.stdout)
+    sub_parser.set_defaults(func=self.calculate_digest)
+
+    sub_parser = subparsers.add_parser(
         'calculate_kernel_cmdline',
         help='Calculate kernel cmdline.')
     sub_parser.add_argument('--image',
@@ -4954,6 +4983,10 @@ Please use '--hash_algorithm sha256'.
     """Implements the 'calculate_vbmeta_digest' sub-command."""
     self.avb.calculate_vbmeta_digest(args.image.name, args.hash_algorithm,
                                      args.output)
+
+  def calculate_digest(self, args):
+    """Implements the 'calculate_digest' sub-command."""
+    self.avb.calculate_digest(args.data, args.hash_algorithm, args.output)
 
   def calculate_kernel_cmdline(self, args):
     """Implements the 'calculate_kernel_cmdline' sub-command."""

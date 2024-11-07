@@ -89,6 +89,20 @@ std::string BaseAvbToolTest::CalcVBMetaDigest(const std::string& vbmeta_image,
   return string_trim(vbmeta_digest_data);
 }
 
+std::string BaseAvbToolTest::CalcDigest(const std::string& data,
+                                        const std::string& digest_alg) {
+  base::FilePath digest_path = testdir_.Append("digest");
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py calculate_digest --data %s --hash_algorithm %s --output %s",
+      data.c_str(),
+      digest_alg.c_str(),
+      digest_path.value().c_str());
+  std::string digest;
+  EXPECT_TRUE(base::ReadFileToString(digest_path, &digest));
+  return string_trim(digest);
+}
+
 void BaseAvbToolTest::GenerateVBMetaImage(
     const std::string& image_name,
     const std::string& algorithm,

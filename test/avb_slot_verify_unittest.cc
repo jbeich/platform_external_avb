@@ -60,8 +60,9 @@ TEST_F(AvbSlotVerifyTest, Basic) {
                       base::FilePath("test/data/testkey_rsa2048.pem"),
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  const std::string vbmeta_public_key =
+      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem"));
+  ops_.set_expected_public_key(vbmeta_public_key);
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -77,21 +78,28 @@ TEST_F(AvbSlotVerifyTest, Basic) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1152 "
       "androidboot.vbmeta.digest="
       "4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d "
       "androidboot.vbmeta.invalidate_on_error=yes "
       "androidboot.veritymode=enforcing",
       std::string(slot_data->cmdline));
+
+  // Cross-reference the VBMeta digest.
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
       slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
   avb_slot_verify_data_free(slot_data);
-
   EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
             CalcVBMetaDigest("vbmeta_a.img", "sha256"));
+
+  // Cross-reference the vbmeta image's public key.
+  EXPECT_EQ("22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c",
+            CalcDigest(vbmeta_public_key, "sha256"));
 }
 
 TEST_F(AvbSlotVerifyTest, BasicSha512) {
