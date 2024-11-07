@@ -120,6 +120,21 @@ void BaseAvbToolTest::GenerateVBMetaImage(
                              vbmeta_image_.size()));
 }
 
+std::string BaseAvbToolTest::GetVBMetaPublicKeyDigest(
+    const std::string& vbmeta_image) {
+  base::FilePath vbmeta_path = testdir_.Append(vbmeta_image);
+  base::FilePath vbmeta_public_key_digest_path =
+      testdir_.Append("vbmeta_digest");
+  EXPECT_COMMAND(0,
+                 "./avbtool.py extract_public_key --key_path %s --output %s",
+                 vbmeta_path.value().c_str(),  // TODO: Update
+                 vbmeta_public_key_digest_path.value().c_str());
+  std::string vbmeta_public_key_digest_data;
+  EXPECT_TRUE(base::ReadFileToString(vbmeta_public_key_digest_path,
+                                     &vbmeta_public_key_digest_data));
+  return string_trim(vbmeta_public_key_digest_data);
+}
+
 /* Generate a file with name |file_name| of size |image_size| with
  * known content (0x00 0x01 0x02 .. 0xff 0x00 0x01 ..).
  */

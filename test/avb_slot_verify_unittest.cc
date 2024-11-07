@@ -80,6 +80,8 @@ TEST_F(AvbSlotVerifyTest, Basic) {
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1152 "
       "androidboot.vbmeta.digest="
       "4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d "
+      "androidboot.vbmeta.public_key_digest="
+      "abc123abc123abc123abc123abc123abc123abc123abc123abc123abc123abc1 "
       "androidboot.vbmeta.invalidate_on_error=yes "
       "androidboot.veritymode=enforcing",
       std::string(slot_data->cmdline));

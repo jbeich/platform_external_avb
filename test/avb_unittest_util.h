@@ -80,6 +80,11 @@ class BaseAvbToolTest : public ::testing::Test {
                            const base::FilePath& key_path,
                            const std::string& additional_options = "");
 
+  /* Calculates the SHA-256 digest of the public key in the given "vbmeta" image
+   * using the 'avbtool extract_public_key' command.
+   */
+  std::string GetVBMetaPublicKeyDigest(const std::string& vbmeta_image);
+
   /* Generate a file with name |file_name| of size |image_size| with
    * known content (0x00 0x01 0x02 .. 0xff 0x00 0x01 ..).
    */
