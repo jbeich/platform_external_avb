@@ -54,14 +54,16 @@ class AvbSlotVerifyTest : public BaseAvbToolTest,
 };
 
 TEST_F(AvbSlotVerifyTest, Basic) {
+  base::FilePath private_key_path =
+      base::FilePath("test/data/testkey_rsa2048.pem");
+
   GenerateVBMetaImage("vbmeta_a.img",
                       "SHA256_RSA2048",
                       0,
-                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      private_key_path,
                       "--internal_release_string \"\"");
 
-  ops_.set_expected_public_key(
-      PublicKeyAVB(base::FilePath("test/data/testkey_rsa2048.pem")));
+  ops_.set_expected_public_key(PublicKeyAVB(private_key_path));
 
   AvbSlotVerifyData* slot_data = NULL;
   const char* requested_partitions[] = {"boot", NULL};
@@ -77,21 +79,26 @@ TEST_F(AvbSlotVerifyTest, Basic) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1152 "
       "androidboot.vbmeta.digest="
       "4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d "
       "androidboot.vbmeta.invalidate_on_error=yes "
       "androidboot.veritymode=enforcing",
       std::string(slot_data->cmdline));
+
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
       slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
   avb_slot_verify_data_free(slot_data);
-
   EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
             CalcVBMetaDigest("vbmeta_a.img", "sha256"));
+
+  EXPECT_EQ("22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c",
+            PublicKeyAVBDigest(private_key_path));
 }
 
 TEST_F(AvbSlotVerifyTest, BasicSha512) {
@@ -118,6 +125,8 @@ TEST_F(AvbSlotVerifyTest, BasicSha512) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha512 androidboot.vbmeta.size=1152 "
       "androidboot.vbmeta.digest="
       "cb913d2f1a884f4e04c1db5bb181f3133fd16ac02fb367a20ef0776c0b07b3656ad1f081"
@@ -166,6 +175,8 @@ TEST_F(AvbSlotVerifyTest, BasicUnlocked) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=unlocked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1152 "
       "androidboot.vbmeta.digest="
       "4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d "
@@ -740,6 +751,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1472 "
       "androidboot.vbmeta.digest="
       "99e84e34697a77414f0d7dd7896e98ac4da2d26bdd3756ef59ec79918de2adbe "
@@ -1125,6 +1138,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=4416 "
       "androidboot.vbmeta.digest="
       "4a45faa9adfeb94e9154fe682c11fef1a1a3d829b67cbf1a12ac7f0aa4f8e2e4 "
@@ -1598,6 +1613,8 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=4416 "
       "androidboot.vbmeta.digest="
       "232447e92370ed31c2b6c5fb7328eb5d828a9819b3e6f6c10d96b9ca6fd209a1 "
@@ -1945,6 +1962,8 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=4416 "
       "androidboot.vbmeta.digest="
       "4a45faa9adfeb94e9154fe682c11fef1a1a3d829b67cbf1a12ac7f0aa4f8e2e4 "
@@ -2244,6 +2263,8 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
       "this is=5 from foo=42 and=43 from bar "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=3456 "
       "androidboot.vbmeta.digest="
@@ -2307,6 +2328,8 @@ TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=2688 "
       "androidboot.vbmeta.digest="
       "5edcaa54f40382ee6a2fc3b86cdf383348b35ed07955e83ea32d84b69a97eaa0 "
@@ -2417,6 +2440,8 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
         "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
         "androidboot.vbmeta.avb_version=1.3 "
         "androidboot.vbmeta.device_state=locked "
+        "androidboot.vbmeta.public_key_digest="
+        "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
         "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1536 "
         "androidboot.vbmeta.digest="
         "946996b4cd78f2c060f6bb062b94054b809cbfbe9bf4425df263a0e55395ceea "
@@ -2431,6 +2456,8 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
         "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
         "androidboot.vbmeta.avb_version=1.3 "
         "androidboot.vbmeta.device_state=locked "
+        "androidboot.vbmeta.public_key_digest="
+        "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
         "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1536 "
         "androidboot.vbmeta.digest="
         "c74338b2b366f7f774d264abb4ac06c997cbaacbf5edd70a6ef1a552f744076b "
@@ -2599,6 +2626,8 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
         "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
         "androidboot.vbmeta.avb_version=1.3 "
         "androidboot.vbmeta.device_state=locked "
+        "androidboot.vbmeta.public_key_digest="
+        "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
         "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=3456 "
         "androidboot.vbmeta.digest="
         "5ee1669b112625322657b83ec932c73dad9b0222011b5aa3e8273f4e0ee025dc "
@@ -2613,6 +2642,8 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
         "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
         "androidboot.vbmeta.avb_version=1.3 "
         "androidboot.vbmeta.device_state=locked "
+        "androidboot.vbmeta.public_key_digest="
+        "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
         "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=3456 "
         "androidboot.vbmeta.digest="
         "ae792c45a9d898b532ff9625b60043a8d9eae7e6106b9cba31837d50ba40f81c "
@@ -3006,6 +3037,8 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:boot "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=5312 "
       "androidboot.vbmeta.digest="
       "b297d90aa92a5d49725d1206ff1301b054c5a0214f1cb2fc12b809b317d943e4 "
@@ -3177,6 +3210,8 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=1664 "
       "androidboot.vbmeta.digest="
@@ -3207,6 +3242,8 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=1664 "
       "androidboot.vbmeta.digest="
@@ -3236,6 +3273,8 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=1664 "
       "androidboot.vbmeta.digest="
@@ -3277,6 +3316,8 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=1664 "
       "androidboot.vbmeta.digest="
@@ -3316,6 +3357,8 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
         "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta "
         "androidboot.vbmeta.avb_version=1.3 "
         "androidboot.vbmeta.device_state=locked "
+        "androidboot.vbmeta.public_key_digest="
+        "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
         "androidboot.vbmeta.hash_alg=sha256 "
         "androidboot.vbmeta.size=1664 "
         "androidboot.vbmeta.digest="
@@ -3508,6 +3551,8 @@ TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=1280 "
       "androidboot.vbmeta.digest="
@@ -3713,6 +3758,8 @@ TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic_Hashtree_Sha1) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=1408 "
       "androidboot.vbmeta.digest="
@@ -3740,6 +3787,8 @@ TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic_Hashtree_Sha256) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=1408 "
       "androidboot.vbmeta.digest="
@@ -3771,6 +3820,8 @@ TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic_Hashtree_Sha512) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 "
       "androidboot.vbmeta.size=1408 "
       "androidboot.vbmeta.digest="
@@ -4079,6 +4130,8 @@ TEST_F(AvbSlotVerifyTest, NoSystemPartition) {
       "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
       "androidboot.vbmeta.avb_version=1.3 "
       "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.public_key_digest="
+      "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c "
       "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1152 "
       "androidboot.vbmeta.digest="
       "4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d "
