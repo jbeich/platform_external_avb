@@ -3280,6 +3280,20 @@ class Avb(object):
     """
     output.write(RSAPublicKey(key_path).encode())
 
+  def extract_public_key_digest(self, key_path, output):
+    """Implements the 'extract_public_key_digest' command.
+
+    Arguments:
+      key_path: The path to a RSA private key file.
+      output: The file to write to.
+
+    Raises:
+      AvbError: If the public key could not be extracted.
+    """
+    hasher = hashlib.sha256()
+    hasher.update(RSAPublicKey(key_path).encode())
+    output.write(hasher.hexdigest())
+
   def append_vbmeta_image(self, image_filename, vbmeta_image_filename,
                           partition_size):
     """Implementation of the append_vbmeta_image command.
@@ -4369,6 +4383,17 @@ class AvbTool(object):
                             required=True)
     sub_parser.set_defaults(func=self.extract_public_key)
 
+    sub_parser = subparsers.add_parser('extract_public_key_digest',
+                                       help='Extract SHA-256 digest of public key.')
+    sub_parser.add_argument('--key',
+                            help='Path to RSA private key file',
+                            required=True)
+    sub_parser.add_argument('--output',
+                            help='Output file name',
+                            type=argparse.FileType('w', encoding='UTF-8'),
+                            required=True)
+    sub_parser.set_defaults(func=self.extract_public_key_digest)
+
     sub_parser = subparsers.add_parser('make_vbmeta_image',
                                        help='Makes a vbmeta image.')
     sub_parser.add_argument('--output',
@@ -4814,6 +4839,10 @@ class AvbTool(object):
   def extract_public_key(self, args):
     """Implements the 'extract_public_key' sub-command."""
     self.avb.extract_public_key(args.key, args.output)
+
+  def extract_public_key_digest(self, args):
+    """Implements the 'extract_public_key_digest' sub-command."""
+    self.avb.extract_public_key_digest(args.key, args.output)
 
   def make_vbmeta_image(self, args):
     """Implements the 'make_vbmeta_image' sub-command."""
