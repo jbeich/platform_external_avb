@@ -164,4 +164,17 @@ std::string BaseAvbToolTest::PublicKeyAVB(const base::FilePath& key_path) {
   return key_data;
 }
 
+std::string BaseAvbToolTest::PublicKeyAVBDigest(
+    const base::FilePath& key_path) {
+  base::FilePath tmp_path = testdir_.Append("public_key_digest");
+  EXPECT_COMMAND(0,
+                 "./avbtool.py extract_public_key_digest --key %s"
+                 " --output %s",
+                 key_path.value().c_str(),
+                 tmp_path.value().c_str());
+  std::string digest_data;
+  EXPECT_TRUE(base::ReadFileToString(tmp_path, &digest_data));
+  return digest_data;
+}
+
 }  // namespace avb
