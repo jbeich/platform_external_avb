@@ -23,6 +23,7 @@
  */
 
 #include "avb_slot_verify.h"
+
 #include "avb_chain_partition_descriptor.h"
 #include "avb_cmdline.h"
 #include "avb_footer.h"
@@ -289,7 +290,7 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
   AvbIOResult io_ret;
   uint8_t* image_buf = NULL;
   bool image_preloaded = false;
-  uint8_t* digest;
+  const uint8_t* digest;
   size_t digest_len;
   const char* found;
   uint64_t image_size;
@@ -386,7 +387,6 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
   // Although only one of the type might be used, we have to defined the
   // structure here so that they would live outside the 'if/else' scope to be
   // used later.
-  AvbSHA256Ctx sha256_ctx;
   AvbSHA512Ctx sha512_ctx;
   size_t image_size_to_hash = hash_desc.image_size;
   // If we allow verification error and the whole partition is smaller than
@@ -394,11 +394,13 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
   if (image_size_to_hash > image_size) {
     image_size_to_hash = image_size;
   }
+
+  AvbHashOps* hash_ops = or_default_hash_ops(ops->hash_ops);
   if (avb_strcmp((const char*)hash_desc.hash_algorithm, "sha256") == 0) {
-    avb_sha256_init(&sha256_ctx);
-    avb_sha256_update(&sha256_ctx, desc_salt, hash_desc.salt_len);
-    avb_sha256_update(&sha256_ctx, image_buf, image_size_to_hash);
-    digest = avb_sha256_final(&sha256_ctx);
+    hash_ops->init(hash_ops, AVB_DIGEST_TYPE_SHA256);
+    hash_ops->update(hash_ops, desc_salt, hash_desc.salt_len);
+    hash_ops->update(hash_ops, image_buf, image_size_to_hash);
+    hash_ops->finalize(hash_ops, &digest);
     digest_len = AVB_SHA256_DIGEST_SIZE;
   } else if (avb_strcmp((const char*)hash_desc.hash_algorithm, "sha512") == 0) {
     avb_sha512_init(&sha512_ctx);
@@ -623,14 +625,14 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
     }
     avb_memcpy(full_partition_name, partition_name, partition_name_len);
     full_partition_name[partition_name_len] = '\0';
-  }else{
+  } else {
     /* Construct full partition name e.g. system_a. */
     if (!avb_str_concat(full_partition_name,
-                      sizeof full_partition_name,
-                      partition_name,
-                      partition_name_len,
-                      ab_suffix,
-                      avb_strlen(ab_suffix))) {
+                        sizeof full_partition_name,
+                        partition_name,
+                        partition_name_len,
+                        ab_suffix,
+                        avb_strlen(ab_suffix))) {
       avb_error("Partition name and suffix does not fit.\n");
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
       goto out;
@@ -767,8 +769,8 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
   /* Check if the image is properly signed and get the public key used
    * to sign the image.
    */
-  vbmeta_ret =
-      avb_vbmeta_image_verify(vbmeta_buf, vbmeta_num_read, &pk_data, &pk_len);
+  vbmeta_ret = avb_vbmeta_image_verify(
+      ops->hash_ops, vbmeta_buf, vbmeta_num_read, &pk_data, &pk_len);
   switch (vbmeta_ret) {
     case AVB_VBMETA_VERIFY_RESULT_OK:
       avb_assert(pk_data != NULL && pk_len > 0);
@@ -1029,9 +1031,9 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
           ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
           goto out;
         }
-        if ((chain_desc.flags & AVB_HASH_DESCRIPTOR_FLAGS_DO_NOT_USE_AB) != 0){
+        if ((chain_desc.flags & AVB_HASH_DESCRIPTOR_FLAGS_DO_NOT_USE_AB) != 0) {
           use_ab_suffix = false;
-        }else{
+        } else {
           use_ab_suffix = true;
         }
         chain_partition_name = ((const uint8_t*)descriptors[n]) +
@@ -1280,7 +1282,7 @@ static AvbIOResult avb_manage_hashtree_error_mode(
         "Rebooting because of dm-verity corruption - "
         "recording OS instance and using 'eio' mode.\n");
     avb_slot_verify_data_calculate_vbmeta_digest(
-        data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest_sha256);
+        ops->hash_ops, data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest_sha256);
     io_ret = ops->write_persistent_value(ops,
                                          AVB_NPV_MANAGED_VERITY_MODE,
                                          AVB_SHA256_DIGEST_SIZE,
@@ -1323,7 +1325,7 @@ static AvbIOResult avb_manage_hashtree_error_mode(
   // that caused this is in |stored_vbmeta_digest_sha256| ... now see if
   // the OS we're dealing with now is the same.
   avb_slot_verify_data_calculate_vbmeta_digest(
-      data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest_sha256);
+      ops->hash_ops, data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest_sha256);
   if (avb_memcmp(vbmeta_digest_sha256,
                  stored_vbmeta_digest_sha256,
                  AVB_SHA256_DIGEST_SIZE) == 0) {
@@ -1728,22 +1730,25 @@ const char* avb_slot_verify_result_to_string(AvbSlotVerifyResult result) {
   return ret;
 }
 
-void avb_slot_verify_data_calculate_vbmeta_digest(const AvbSlotVerifyData* data,
+void avb_slot_verify_data_calculate_vbmeta_digest(AvbHashOps* hash_ops,
+                                                  const AvbSlotVerifyData* data,
                                                   AvbDigestType digest_type,
                                                   uint8_t* out_digest) {
+  const uint8_t* digest;
   bool ret = false;
   size_t n;
 
+  AvbHashOps* provided_hash_ops = or_default_hash_ops(hash_ops);
   switch (digest_type) {
     case AVB_DIGEST_TYPE_SHA256: {
-      AvbSHA256Ctx ctx;
-      avb_sha256_init(&ctx);
+      provided_hash_ops->init(provided_hash_ops, AVB_DIGEST_TYPE_SHA256);
       for (n = 0; n < data->num_vbmeta_images; n++) {
-        avb_sha256_update(&ctx,
-                          data->vbmeta_images[n].vbmeta_data,
-                          data->vbmeta_images[n].vbmeta_size);
+        provided_hash_ops->update(provided_hash_ops,
+                                  data->vbmeta_images[n].vbmeta_data,
+                                  data->vbmeta_images[n].vbmeta_size);
       }
-      avb_memcpy(out_digest, avb_sha256_final(&ctx), AVB_SHA256_DIGEST_SIZE);
+      provided_hash_ops->finalize(provided_hash_ops, &digest);
+      avb_memcpy(out_digest, digest, AVB_SHA256_DIGEST_SIZE);
       ret = true;
     } break;
 

@@ -23,6 +23,7 @@
  */
 
 #include "avb_cmdline.h"
+
 #include "avb_sha.h"
 #include "avb_util.h"
 #include "avb_version.h"
@@ -270,7 +271,7 @@ AvbSlotVerifyResult avb_append_options(
       size_t n, total_size = 0;
       uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
       avb_slot_verify_data_calculate_vbmeta_digest(
-          slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+          ops->hash_ops, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
       for (n = 0; n < slot_data->num_vbmeta_images; n++) {
         total_size += slot_data->vbmeta_images[n].vbmeta_size;
       }
@@ -293,7 +294,7 @@ AvbSlotVerifyResult avb_append_options(
       size_t n, total_size = 0;
       uint8_t vbmeta_digest[AVB_SHA512_DIGEST_SIZE];
       avb_slot_verify_data_calculate_vbmeta_digest(
-          slot_data, AVB_DIGEST_TYPE_SHA512, vbmeta_digest);
+          ops->hash_ops, slot_data, AVB_DIGEST_TYPE_SHA512, vbmeta_digest);
       for (n = 0; n < slot_data->num_vbmeta_images; n++) {
         total_size += slot_data->vbmeta_images[n].vbmeta_size;
       }
