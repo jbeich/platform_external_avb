@@ -19,8 +19,10 @@
 
 extern crate alloc;
 
-use crate::{error::result_to_io_enum, CertOps, IoError, IoResult, SHA256_DIGEST_SIZE};
-use avb_bindgen::{AvbCertOps, AvbCertPermanentAttributes, AvbIOResult, AvbOps};
+use crate::{error::result_to_io_enum, CertOps, HashOps, IoError, IoResult, SHA256_DIGEST_SIZE};
+use avb_bindgen::{
+    AvbCertOps, AvbCertPermanentAttributes, AvbDigestType, AvbHashOps, AvbIOResult, AvbOps,
+};
 use core::{
     cmp::min,
     ffi::{c_char, c_void, CStr},
@@ -259,6 +261,14 @@ pub trait Ops<'a> {
     fn cert_ops(&mut self) -> Option<&mut dyn CertOps> {
         None
     }
+
+    /// Returns the hash_ops if provided.
+    ///
+    /// # Returns
+    /// The `HashOps` object, or `None` if not supported.
+    fn hash_ops(&mut self) -> Option<&mut dyn HashOps> {
+        None
+    }
 }
 
 /// Info returned from `validate_public_key_for_partition()`.
@@ -299,6 +309,8 @@ pub(crate) struct OpsBridge<'o, 'p> {
     avb_ops: AvbOps,
     /// When using libavb_cert, C `AvbOps`/`AvbCertOps` hold circular pointers to each other.
     cert_ops: AvbCertOps,
+    /// When using libavb hash_ops, C `AvbOps`/`AvbHashOps` hold circular pointers to each other.
+    hash_ops: AvbHashOps,
     /// Rust `Ops` implementation, which may also provide Rust `CertOps`.
     rust_ops: &'o mut dyn Ops<'p>,
     /// Remove the `Unpin` trait to indicate this type has address-sensitive state.
@@ -312,6 +324,7 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
                 user_data: ptr::null_mut(), // Set at the time of use.
                 ab_ops: ptr::null_mut(),    // Deprecated, no need to support.
                 cert_ops: ptr::null_mut(),  // Set at the time of use.
+                hash_ops: ptr::null_mut(),  // Set at the time of use.
                 read_from_partition: Some(read_from_partition),
                 get_preloaded_partition: Some(get_preloaded_partition),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
@@ -331,6 +344,12 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
                 read_permanent_attributes_hash: Some(read_permanent_attributes_hash),
                 set_key_version: Some(set_key_version),
                 get_random: Some(get_random),
+            },
+            hash_ops: AvbHashOps {
+                ops: ptr::null_mut(), // Set at the time of use.
+                init: Some(hash_init),
+                update: Some(hash_update),
+                finalize: Some(hash_finalize),
             },
             rust_ops: ops,
             _pin: PhantomPinned,
@@ -358,6 +377,11 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
         if self_mut.rust_ops.cert_ops().is_some() {
             self_mut.avb_ops.cert_ops = &mut self_mut.cert_ops;
             self_mut.cert_ops.ops = &mut self_mut.avb_ops;
+        }
+
+        if self_mut.rust_ops.hash_ops().is_some() {
+            self_mut.avb_ops.hash_ops = &mut self_mut.hash_ops;
+            self_mut.hash_ops.ops = &mut self_mut.avb_ops;
         }
 
         &mut self_mut.avb_ops
@@ -428,6 +452,23 @@ unsafe fn as_cert_ops<'o>(cert_ops: *mut AvbCertOps) -> IoResult<&'o mut dyn Cer
     // Return the `CertOps` implementation. If it doesn't exist here, it indicates an internal error
     // in this library; somewhere we accepted a non-cert `Ops` into a function that requires cert.
     ops.cert_ops().ok_or(IoError::NotImplemented)
+}
+
+/// Similar to `as_ops()`, but for `HashOps`.
+///
+/// # Safety
+/// Same as `as_ops()`.
+unsafe fn as_hash_ops<'o>(hash_ops: *mut AvbHashOps) -> IoResult<&'o mut dyn HashOps> {
+    // SAFETY: we created this `HashOps` object and passed it to libavb so we know it meets all
+    // the criteria for `as_mut()`.
+    let hash_ops = unsafe { hash_ops.as_mut() }.ok_or(IoError::Io)?;
+
+    // SAFETY: caller must adhere to `as_ops()` safety requirements.
+    let ops = unsafe { as_ops(hash_ops.ops) }?;
+
+    // Return the `HashOps` implementation. If it doesn't exist here, it indicates an internal error
+    // in this library;
+    ops.hash_ops().ok_or(IoError::NotImplemented)
 }
 
 /// Converts a non-NULL `ptr` to `()`, NULL to `Err(IoError::Io)`.
@@ -1340,4 +1381,94 @@ unsafe fn try_get_random(
     // * `cert_ops` is only extracted once and is dropped at the end of the callback.
     let cert_ops = unsafe { as_cert_ops(cert_ops) }?;
     cert_ops.get_random(output)
+}
+
+/// TODO
+/// SAFETY:
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn hash_init(
+    hash_ops: *mut AvbHashOps,
+    digest_type: AvbDigestType,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_hash_init(hash_ops, digest_type) },
+    )
+}
+
+/// TODO
+/// SAFETY:
+/// TODO
+unsafe fn try_hash_init(hash_ops: *mut AvbHashOps, digest_type: AvbDigestType) -> IoResult<()> {
+    // SAFETY:
+    // TODO
+    let hash_ops = unsafe { as_hash_ops(hash_ops) }?;
+    hash_ops.init(digest_type.into())
+}
+
+/// TODO
+/// SAFETY:
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn hash_update(
+    hash_ops: *mut AvbHashOps,
+    data: *const u8,
+    data_size: usize,
+) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_hash_update(hash_ops, data, data_size) },
+    )
+}
+
+/// TODO
+/// SAFETY:
+/// TODO
+unsafe fn try_hash_update(
+    hash_ops: *mut AvbHashOps,
+    data: *const u8,
+    data_size: usize,
+) -> IoResult<()> {
+    if data_size == 0 {
+        return Ok(());
+    }
+    check_nonnull(data)?;
+
+    // SAFETY:
+    // TODO
+    let data_buffer = unsafe { slice::from_raw_parts(data, data_size) };
+
+    // SAFETY:
+    // TODO
+    let hash_ops = unsafe { as_hash_ops(hash_ops) }?;
+
+    hash_ops.update(data_buffer)
+}
+
+/// TODO
+/// SAFETY:
+/// See corresponding `try_*` function docs.
+unsafe extern "C" fn hash_finalize(hash_ops: *mut AvbHashOps, out: *mut *const u8) -> AvbIOResult {
+    result_to_io_enum(
+        // SAFETY: see corresponding `try_*` function safety documentation.
+        unsafe { try_hash_finalize(hash_ops, out) },
+    )
+}
+
+/// TODO
+/// SAFETY:
+/// TODO
+unsafe fn try_hash_finalize(hash_ops: *mut AvbHashOps, out: *mut *const u8) -> IoResult<()> {
+    // SAFETY:
+    // TODO
+    let hash_ops = unsafe { as_hash_ops(hash_ops) }?;
+
+    let result = hash_ops.finalize()?;
+
+    // SAFETY:
+    // TODO
+    unsafe {
+        *out = result.as_ptr();
+    };
+
+    Ok(())
 }

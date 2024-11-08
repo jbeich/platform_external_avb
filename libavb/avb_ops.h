@@ -85,6 +85,36 @@ struct AvbABOps;
 /* Forward-declaration of operations in libavb_cert. */
 struct AvbCertOps;
 
+typedef struct AvbHashOps AvbHashOps;
+
+/* Possible digest types supported by libavb routines. */
+typedef enum {
+  AVB_DIGEST_TYPE_SHA256,
+  AVB_DIGEST_TYPE_SHA512,
+} AvbDigestType;
+
+/*
+ * Platform-dependent hash operations, which can be overridden at runtime.
+ *
+ * Calls must follow this order:
+ * 1. init     - Start a new hash session
+ * 2. update   - Add data to hash (can be called multiple times)
+ * 3. finalize - Complete and output the hash result
+ */
+struct AvbHashOps {
+  // To access user_data
+  AvbOps* ops;
+
+  // Start a new hash session
+  AvbIOResult (*init)(AvbHashOps* ops, AvbDigestType type);
+
+  // Add data to the hash
+  AvbIOResult (*update)(AvbHashOps* ops, const uint8_t* data, size_t len);
+
+  // Complete the hash and output the result
+  AvbIOResult (*finalize)(AvbHashOps* ops, const uint8_t** out_data);
+};
+
 /* High-level operations/functions/methods that are platform
  * dependent.
  *
@@ -108,6 +138,13 @@ struct AvbOps {
    * AvbCertOps. Otherwise it must be set to NULL.
    */
   struct AvbCertOps* cert_ops;
+
+  /*
+   * Allows for run-time override of hash operations. The compile-time
+   * requirements defined in `avb_hash.h` must still be met; however,
+   * they can be set as no-ops if `hash_ops` is provided at run-time.
+   */
+  struct AvbHashOps* hash_ops;
 
   /* Reads |num_bytes| from offset |offset| from partition with name
    * |partition| (NUL-terminated UTF-8 string). If |offset| is
