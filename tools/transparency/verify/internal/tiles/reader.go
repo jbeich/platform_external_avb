@@ -21,7 +21,6 @@ type HashReader struct {
 	URL string
 }
 
-
 // Domain separation prefix for Merkle tree hashing with second preimage
 // resistance similar to that used in RFC 6962.
 const (
@@ -58,19 +57,19 @@ func (h HashReader) ReadHashes(indices []int64) ([]tlog.Hash, error) {
 	return hashes, nil
 }
 
-// ImageInfosIndex returns a map from payload to its index in the
-// transparency log according to the image_info.txt.
-func ImageInfosIndex(logBaseURL string) (map[string]int64, error) {
-	b, err := readFromURL(logBaseURL, "image_info.txt")
+// BinaryInfosIndex returns a map from payload to its index in the
+// transparency log according to the `binary_info_filename` value.
+func BinaryInfosIndex(logBaseURL string, binary_info_filename string) (map[string]int64, error) {
+	b, err := readFromURL(logBaseURL, binary_info_filename)
 	if err != nil {
 		return nil, err
 	}
 
-	imageInfos := string(b)
-	return parseImageInfosIndex(imageInfos)
+	binaryInfos := string(b)
+	return parseBinaryInfosIndex(binaryInfos)
 }
 
-func parseImageInfosIndex(imageInfos string) (map[string]int64, error) {
+func parseBinaryInfosIndex(imageInfos string) (map[string]int64, error) {
 	m := make(map[string]int64)
 
 	infosStr := strings.Split(imageInfos, "\n\n")
