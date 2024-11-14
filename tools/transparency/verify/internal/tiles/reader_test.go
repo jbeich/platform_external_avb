@@ -165,7 +165,7 @@ func TestParseImageInfosIndex(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			got, err := parseImageInfosIndex(tc.imageInfos)
+			got, err := parseBinaryInfosIndex(tc.imageInfos)
 			if err != nil && !tc.wantErr {
 				t.Fatalf("parseImageInfosIndex(%s) received unexpected err %q", tc.imageInfos, err)
 			}
