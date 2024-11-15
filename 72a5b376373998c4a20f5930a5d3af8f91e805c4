@@ -1,0 +1,261 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "1b136f3c_1874f2e7",
+        "filename": "tools/transparency/verify/cmd/verifier/verifier.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2024-11-15T16:24:19Z",
+      "side": 1,
+      "message": "Does this need to be a pointer?",
+      "range": {
+        "startLine": 80,
+        "startChar": 18,
+        "endLine": 80,
+        "endChar": 19
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "2d111175_80d03cdf",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/transparency/verify/cmd/verifier/verifier.go",
+              "range": {
+                "startLine": 80,
+                "startChar": 0,
+                "endLine": 81,
+                "endChar": 0
+              },
+              "replacement": "\tvar logPubKey []byte\n"
+            },
+            {
+              "path": "tools/transparency/verify/cmd/verifier/verifier.go",
+              "range": {
+                "startLine": 87,
+                "startChar": 0,
+                "endLine": 88,
+                "endChar": 0
+              },
+              "replacement": "\t\tlogPubKey \u003d pixelLogPubKey\n"
+            },
+            {
+              "path": "tools/transparency/verify/cmd/verifier/verifier.go",
+              "range": {
+                "startLine": 92,
+                "startChar": 0,
+                "endLine": 93,
+                "endChar": 0
+              },
+              "replacement": "\t\tlogPubKey \u003d googleSystemAppLogPubKey\n"
+            },
+            {
+              "path": "tools/transparency/verify/cmd/verifier/verifier.go",
+              "range": {
+                "startLine": 100,
+                "startChar": 0,
+                "endLine": 101,
+                "endChar": 0
+              },
+              "replacement": "\tv, err :\u003d checkpoint.NewVerifier(logPubKey, keyNameForVerifier)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "acabd653_80f38717",
+        "filename": "tools/transparency/verify/cmd/verifier/verifier.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 136,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2024-11-15T16:24:19Z",
+      "side": 1,
+      "message": "I like the enthusiasm :)",
+      "range": {
+        "startLine": 136,
+        "startChar": 40,
+        "endLine": 136,
+        "endChar": 41
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0f0cff69_b237c0d9",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/transparency/verify/cmd/verifier/verifier.go",
+              "range": {
+                "startLine": 136,
+                "startChar": 0,
+                "endLine": 137,
+                "endChar": 0
+              },
+              "replacement": "\t\tlog.Print(\"OK. inclusion check success\")\n"
+            }
+          ]
+        }
+      ],
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d65b6275_a7a492d6",
+        "filename": "tools/transparency/verify/internal/tiles/reader_test.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2024-11-15T16:24:19Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 145,
+        "startChar": 5,
+        "endLine": 145,
+        "endChar": 24
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "0bb82588_fc5d512f",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader_test.go",
+              "range": {
+                "startLine": 145,
+                "startChar": 0,
+                "endLine": 146,
+                "endChar": 0
+              },
+              "replacement": "func TestParseBinaryInfosIndex(t *testing.T) {\n"
+            },
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader_test.go",
+              "range": {
+                "startLine": 168,
+                "startChar": 0,
+                "endLine": 169,
+                "endChar": 0
+              },
+              "replacement": "\t\t\tgot, err :\u003d parseBinaryInfoIndex(tc.imageInfos)\n"
+            },
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader_test.go",
+              "range": {
+                "startLine": 170,
+                "startChar": 0,
+                "endLine": 171,
+                "endChar": 0
+              },
+              "replacement": "\t\t\t\tt.Fatalf(\"parseBinaryInfoIndex(%s) received unexpected err %q\", tc.imageInfos, err)\n"
+            },
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader_test.go",
+              "range": {
+                "startLine": 174,
+                "startChar": 0,
+                "endLine": 175,
+                "endChar": 0
+              },
+              "replacement": "\t\t\t\tt.Fatalf(\"parseBinaryInfoIndex(%s) did not return err, expected err\", tc.imageInfos)\n"
+            },
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader_test.go",
+              "range": {
+                "startLine": 178,
+                "startChar": 0,
+                "endLine": 179,
+                "endChar": 0
+              },
+              "replacement": "\t\t\t\tt.Errorf(\"parseBinaryInfoIndex returned unexpected diff (-want +got):\\n%s\", diff)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aaae8001_fb802b8e",
+        "filename": "tools/transparency/verify/internal/tiles/reader_test.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2024-11-15T16:24:19Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 148,
+        "startChar": 2,
+        "endLine": 148,
+        "endChar": 12
+      },
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "eea3f1b0_91d3afcd",
+        "filename": "tools/transparency/verify/internal/tiles/reader_test.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2024-11-15T16:24:19Z",
+      "side": 1,
+      "message": "Same here",
+      "range": {
+        "startLine": 170,
+        "startChar": 14,
+        "endLine": 170,
+        "endChar": 29
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "978a7afb_45c2ad33",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader_test.go",
+              "range": {
+                "startLine": 170,
+                "startChar": 0,
+                "endLine": 171,
+                "endChar": 0
+              },
+              "replacement": "\t\t\t\tt.Fatalf(\"parseImageInfosIndex(%s) received unexpected err %v\", tc.imageInfos, err)\n"
+            }
+          ]
+        }
+      ],
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

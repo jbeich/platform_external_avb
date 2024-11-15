@@ -1,0 +1,65 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c3f41272_2fe306cb",
+        "filename": "tools/transparency/verify/internal/tiles/reader.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1943085
+      },
+      "writtenOn": "2024-11-15T16:24:19Z",
+      "side": 0,
+      "message": "Some more in this function (imageInfos -\u003e binaryInfos)",
+      "range": {
+        "startLine": 73,
+        "startChar": 26,
+        "endLine": 73,
+        "endChar": 36
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "ce3c1642_47f9cc66",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader.go",
+              "range": {
+                "startLine": 72,
+                "startChar": 0,
+                "endLine": 73,
+                "endChar": 0
+              },
+              "replacement": "func parseBinaryInfosIndex(binaryInfos string) (map[string]int64, error) {\n"
+            },
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader.go",
+              "range": {
+                "startLine": 75,
+                "startChar": 0,
+                "endLine": 76,
+                "endChar": 0
+              },
+              "replacement": "\tinfosStr :\u003d strings.Split(binaryInfos, \"\\n\\n\")\n"
+            },
+            {
+              "path": "tools/transparency/verify/internal/tiles/reader.go",
+              "range": {
+                "startLine": 79,
+                "startChar": 0,
+                "endLine": 80,
+                "endChar": 0
+              },
+              "replacement": "\t\t\treturn nil, errors.New(\"missing newline, malformed binary_info.txt\")\n"
+            }
+          ]
+        }
+      ],
+      "revId": "c32891f55ee7e8d74bd9cad291ca671b28761d44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
