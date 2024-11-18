@@ -60,6 +60,30 @@
       ],
       "revId": "c32891f55ee7e8d74bd9cad291ca671b28761d44",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "7d233b91_d0bf049f",
+        "filename": "tools/transparency/verify/internal/tiles/reader.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 73,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-11-18T17:19:44Z",
+      "side": 0,
+      "message": "Done",
+      "parentUuid": "c3f41272_2fe306cb",
+      "range": {
+        "startLine": 73,
+        "startChar": 26,
+        "endLine": 73,
+        "endChar": 36
+      },
+      "revId": "c32891f55ee7e8d74bd9cad291ca671b28761d44",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

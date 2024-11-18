@@ -74,6 +74,30 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d5c09069_2cfd33b2",
+        "filename": "tools/transparency/verify/cmd/verifier/verifier.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 80,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-11-18T17:19:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "1b136f3c_1874f2e7",
+      "range": {
+        "startLine": 80,
+        "startChar": 18,
+        "endLine": 80,
+        "endChar": 19
+      },
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "acabd653_80f38717",
         "filename": "tools/transparency/verify/cmd/verifier/verifier.go",
         "patchSetId": 2
@@ -194,6 +218,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9cc0ccf4_e904e67c",
+        "filename": "tools/transparency/verify/internal/tiles/reader_test.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 145,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-11-18T17:19:44Z",
+      "side": 1,
+      "message": "Good catch - but instead of just renaming this - created a new test to test new format instead.",
+      "parentUuid": "d65b6275_a7a492d6",
+      "range": {
+        "startLine": 145,
+        "startChar": 5,
+        "endLine": 145,
+        "endChar": 24
+      },
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "aaae8001_fb802b8e",
@@ -207,6 +255,30 @@
       "writtenOn": "2024-11-15T16:24:19Z",
       "side": 1,
       "message": "Same here",
+      "range": {
+        "startLine": 148,
+        "startChar": 2,
+        "endLine": 148,
+        "endChar": 12
+      },
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "09d80219_d33f1484",
+        "filename": "tools/transparency/verify/internal/tiles/reader_test.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 148,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-11-18T17:19:44Z",
+      "side": 1,
+      "message": "Acknowledged",
+      "parentUuid": "aaae8001_fb802b8e",
       "range": {
         "startLine": 148,
         "startChar": 2,
@@ -254,6 +326,30 @@
           ]
         }
       ],
+      "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b86a1461_81ff2e84",
+        "filename": "tools/transparency/verify/internal/tiles/reader_test.go",
+        "patchSetId": 2
+      },
+      "lineNbr": 170,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-11-18T17:19:44Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "eea3f1b0_91d3afcd",
+      "range": {
+        "startLine": 170,
+        "startChar": 14,
+        "endLine": 170,
+        "endChar": 29
+      },
       "revId": "72a5b376373998c4a20f5930a5d3af8f91e805c4",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
