@@ -16,6 +16,23 @@
       "message": "PTAL with new test added.",
       "revId": "aad7b32e8aa68f02145a14ec5f334c3cec78589c",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "df6c8530_947d5a63",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-11-20T22:38:38Z",
+      "side": 1,
+      "message": "Hi Sami, this set of changes had been +1\u0027d by the original author of the verifier - needed an owner\u0027s +2.",
+      "revId": "aad7b32e8aa68f02145a14ec5f334c3cec78589c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
