@@ -348,7 +348,6 @@ cc_defaults {
         "test/data/*",
     ],
     test_config: "test/libavb_host_unittest.xml",
-    test_suites: ["general-tests"],
     static_libs: [
         "libavb_ab_host",
         "libgmock_host",
