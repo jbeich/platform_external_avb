@@ -104,6 +104,9 @@ pub struct TestOps<'a> {
     /// Rollback indices. Accessing unknown locations will return `IoError::Io`.
     pub rollbacks: HashMap<usize, u64>,
 
+    /// Error type returned in case rollback index hasn't been detected.
+    pub rollbacks_error: IoError,
+
     /// Unlock state. Set an error to simulate IoError during access.
     pub unlock_state: IoResult<bool>,
 
@@ -216,6 +219,7 @@ impl Default for TestOps<'_> {
             default_vbmeta_key: None,
             vbmeta_keys_for_partition: HashMap::new(),
             rollbacks: HashMap::new(),
+            rollbacks_error: IoError::Io,
             unlock_state: Err(IoError::Io),
             persistent_values: HashMap::new(),
             use_cert: false,
@@ -287,11 +291,17 @@ impl<'a> Ops<'a> for TestOps<'a> {
     }
 
     fn read_rollback_index(&mut self, location: usize) -> IoResult<u64> {
-        self.rollbacks.get(&location).ok_or(IoError::Io).copied()
+        self.rollbacks
+            .get(&location)
+            .ok_or(self.rollbacks_error.clone())
+            .copied()
     }
 
     fn write_rollback_index(&mut self, location: usize, index: u64) -> IoResult<()> {
-        *(self.rollbacks.get_mut(&location).ok_or(IoError::Io)?) = index;
+        *(self
+            .rollbacks
+            .get_mut(&location)
+            .ok_or(self.rollbacks_error.clone())?) = index;
         Ok(())
     }
 
