@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "8fe873be_5eea59c6",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-11-22T21:18:24Z",
+      "side": 1,
+      "message": "Rather than split the rollback state into 2 separate fields, WDYT about instead making it:\n\n```\npub rollbacks: HashMap\u003cusize, IoResult\u003cu64\u003e\u003e\n```\n\nthen the user has full control over which rollbacks return a value, which return specific errors, or can leave them unset to default to `IoError::Io`. It also helps readability when state can be represented in a single variable rather than spread across multiple variables.",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 33
+      },
+      "revId": "28ac846734a2d4a7777941f7e23a41a85af454b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
