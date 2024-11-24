@@ -248,7 +248,7 @@ typedef struct {
  *
  *   androidboot.vbmeta.device_state: set to "locked" or "unlocked"
  *   depending on the result of the result of AvbOps's
- *   read_is_unlocked() function.
+ *   read_is_device_unlocked() function.
  *
  *   androidboot.vbmeta.{hash_alg, size, digest}: Will be set to
  *   the digest of all images in |vbmeta_images|.

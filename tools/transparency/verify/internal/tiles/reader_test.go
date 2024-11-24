@@ -165,17 +165,56 @@ func TestParseImageInfosIndex(t *testing.T) {
 		},
 	} {
 		t.Run(tc.desc, func(t *testing.T) {
-			got, err := parseImageInfosIndex(tc.imageInfos)
+			got, err := parseBinaryInfosIndex(tc.imageInfos, "image_info.txt")
 			if err != nil && !tc.wantErr {
-				t.Fatalf("parseImageInfosIndex(%s) received unexpected err %q", tc.imageInfos, err)
+				t.Fatalf("parseBinaryInfosIndex(%s) received unexpected err %q", tc.imageInfos, err)
 			}
 
 			if err == nil && tc.wantErr {
-				t.Fatalf("parseImageInfosIndex(%s) did not return err, expected err", tc.imageInfos)
+				t.Fatalf("parseBinaryInfosIndex(%s) did not return err, expected err", tc.imageInfos)
 			}
 
 			if diff := cmp.Diff(tc.want, got); diff != "" {
-				t.Errorf("parseImageInfosIndex returned unexpected diff (-want +got):\n%s", diff)
+				t.Errorf("parseBinaryInfosIndex returned unexpected diff (-want +got):\n%s", diff)
+			}
+		})
+	}
+}
+
+func TestParsePackageInfosIndex(t *testing.T) {
+	for _, tc := range []struct {
+		desc         string
+		packageInfos string
+		want         map[string]int64
+		wantErr      bool
+	}{
+		{
+			desc:         "size 2",
+			packageInfos: "0\nhash0\nhash_desc0\npackage_name0\npackage_version0\n\n1\nhash1\nhash_desc1\npackage_name1\npackage_version1\n",
+			wantErr:      false,
+			want: map[string]int64{
+				"hash0\nhash_desc0\npackage_name0\npackage_version0\n": 0,
+				"hash1\nhash_desc1\npackage_name1\npackage_version1\n": 1,
+			},
+		},
+		{
+			desc:         "invalid log entry (no newlines)",
+			packageInfos: "0hashhash_descpackage_namepackage_version",
+			wantErr:      true,
+		},
+	} {
+		t.Run(tc.desc, func(t *testing.T) {
+			got, err := parseBinaryInfosIndex(tc.packageInfos, "package_info.txt")
+			if err != nil && !tc.wantErr {
+				t.Fatalf("parseBinaryInfosIndex(%s) received unexpected err %q", tc.packageInfos, err)
+			}
+
+			if err == nil && tc.wantErr {
+				t.Fatalf("parseBinaryInfosIndex(%s) did not return err, expected err", tc.packageInfos)
+			}
+
+			if diff := cmp.Diff(tc.want, got); diff != "" {
+				t.Errorf("parseBinaryInfosIndex returned unexpected diff (-want +got):\n%s", diff)
 			}
 		})
 	}
