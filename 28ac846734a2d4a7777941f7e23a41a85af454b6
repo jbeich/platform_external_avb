@@ -22,6 +22,30 @@
       },
       "revId": "28ac846734a2d4a7777941f7e23a41a85af454b6",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "523d7742_c58ff02d",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-11-25T17:43:17Z",
+      "side": 1,
+      "message": "As I see the same approach is used for `persistent_values`, so I think it makes sense to keep it consistent. Done.",
+      "parentUuid": "8fe873be_5eea59c6",
+      "range": {
+        "startLine": 104,
+        "startChar": 0,
+        "endLine": 108,
+        "endChar": 33
+      },
+      "revId": "28ac846734a2d4a7777941f7e23a41a85af454b6",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
