@@ -22,6 +22,30 @@
       },
       "revId": "66fd393633dab90df2586ef7b7ab604ae2dd474d",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "aec63888_f8a197ca",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-11-25T20:59:15Z",
+      "side": 1,
+      "message": "I think it isn\u0027t the same. Here we ignore the case when key isn\u0027t presented in the hash map. `read_rollback_index` fails in this case. Please correct me if I\u0027m wrong.",
+      "parentUuid": "af014edd_adf94098",
+      "range": {
+        "startLine": 296,
+        "startChar": 7,
+        "endLine": 298,
+        "endChar": 9
+      },
+      "revId": "66fd393633dab90df2586ef7b7ab604ae2dd474d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
