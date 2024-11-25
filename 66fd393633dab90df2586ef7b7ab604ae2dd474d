@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "af014edd_adf94098",
+        "filename": "rust/tests/test_ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 298,
+      "author": {
+        "id": 2029640
+      },
+      "writtenOn": "2024-11-25T18:12:31Z",
+      "side": 1,
+      "message": "Optional: This seems to be the same logic as read_rollback_index(). Does it make sense to use `self.read_rollback_index(\u0026location)?;`",
+      "range": {
+        "startLine": 296,
+        "startChar": 7,
+        "endLine": 298,
+        "endChar": 9
+      },
+      "revId": "66fd393633dab90df2586ef7b7ab604ae2dd474d",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
