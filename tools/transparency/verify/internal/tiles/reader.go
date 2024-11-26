@@ -3,7 +3,6 @@ package tiles
 
 import (
 	"crypto/sha256"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -20,7 +19,6 @@ import (
 type HashReader struct {
 	URL string
 }
-
 
 // Domain separation prefix for Merkle tree hashing with second preimage
 // resistance similar to that used in RFC 6962.
@@ -58,26 +56,26 @@ func (h HashReader) ReadHashes(indices []int64) ([]tlog.Hash, error) {
 	return hashes, nil
 }
 
-// ImageInfosIndex returns a map from payload to its index in the
-// transparency log according to the image_info.txt.
-func ImageInfosIndex(logBaseURL string) (map[string]int64, error) {
-	b, err := readFromURL(logBaseURL, "image_info.txt")
+// BinaryInfosIndex returns a map from payload to its index in the
+// transparency log according to the `binaryInfoFilename` value.
+func BinaryInfosIndex(logBaseURL string, binaryInfoFilename string) (map[string]int64, error) {
+	b, err := readFromURL(logBaseURL, binaryInfoFilename)
 	if err != nil {
 		return nil, err
 	}
 
-	imageInfos := string(b)
-	return parseImageInfosIndex(imageInfos)
+	binaryInfos := string(b)
+	return parseBinaryInfosIndex(binaryInfos, binaryInfoFilename)
 }
 
-func parseImageInfosIndex(imageInfos string) (map[string]int64, error) {
+func parseBinaryInfosIndex(binaryInfos string, binaryInfoFilename string) (map[string]int64, error) {
 	m := make(map[string]int64)
 
-	infosStr := strings.Split(imageInfos, "\n\n")
+	infosStr := strings.Split(binaryInfos, "\n\n")
 	for _, infoStr := range infosStr {
 		pieces := strings.SplitN(infoStr, "\n", 2)
 		if len(pieces) != 2 {
-			return nil, errors.New("missing newline, malformed image_info.txt")
+			return nil, fmt.Errorf("missing newline, malformed %s", binaryInfoFilename)
 		}
 
 		idx, err := strconv.ParseInt(pieces[0], 10, 64)
