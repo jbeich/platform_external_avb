@@ -38,8 +38,10 @@ import (
 )
 
 const (
-	// originID identifies a checkpoint for the Pixel Binary Transparency Log.
-	originID = "developers.google.com/android/binary_transparency/0\n"
+	// originIDPixel identifies a checkpoint for the Pixel Binary Transparency Log.
+	originIDPixel = "developers.google.com/android/binary_transparency/0\n"
+	// originIDG1P identifies a checkpoint for the Google System APK Transparency Log.
+	originIDG1P = "developers.google.com/android/binary_transparency/google1p/0\n"
 )
 
 type verifier interface {
@@ -107,11 +109,16 @@ type Root struct {
 }
 
 func parseCheckpoint(ckpt string) (Root, error) {
-	if !strings.HasPrefix(ckpt, originID) {
-		return Root{}, errors.New(fmt.Sprintf("invalid checkpoint - unknown origin, must be %s", originID))
-	}
+	var body string
 	// Strip the origin ID and parse the rest of the checkpoint.
-	body := ckpt[len(originID):]
+	if strings.HasPrefix(ckpt, originIDPixel) {
+		body = ckpt[len(originIDPixel):]
+	} else if strings.HasPrefix(ckpt, originIDG1P) {
+		body = ckpt[len(originIDG1P):]
+	} else {
+		return Root{}, errors.New(fmt.Sprintf("invalid checkpoint - unknown origin, must be either %s or %s", originIDPixel, originIDG1P))
+	}
+
 	// body must contain exactly 2 lines, size and the root hash.
 	l := strings.SplitN(body, "\n", 3)
 	if len(l) != 3 || len(l[2]) != 0 {
