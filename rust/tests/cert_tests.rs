@@ -58,9 +58,9 @@ fn build_test_cert_ops_one_image_one_vbmeta<'a>() -> TestOps<'a> {
 
     // Add the rollbacks for the cert keys.
     ops.rollbacks
-        .insert(CERT_PIK_VERSION_LOCATION, TEST_CERT_PIK_VERSION);
+        .insert(CERT_PIK_VERSION_LOCATION, Ok(TEST_CERT_PIK_VERSION));
     ops.rollbacks
-        .insert(CERT_PSK_VERSION_LOCATION, TEST_CERT_PSK_VERSION);
+        .insert(CERT_PSK_VERSION_LOCATION, Ok(TEST_CERT_PSK_VERSION));
 
     // It's non-trivial to sign a challenge without `avbtool.py`, so instead we inject the exact RNG
     // used by the pre-generated challenge so that we can use the pre-signed credential.
@@ -130,7 +130,11 @@ fn cert_verify_sets_key_rollbacks() {
 fn cert_verify_fails_with_pik_rollback_violation() {
     let mut ops = build_test_cert_ops_one_image_one_vbmeta();
     // If the image is signed with a lower key version than our rollback, it should fail to verify.
-    *ops.rollbacks.get_mut(&CERT_PIK_VERSION_LOCATION).unwrap() += 1;
+    *ops.rollbacks
+        .get_mut(&CERT_PIK_VERSION_LOCATION)
+        .unwrap()
+        .as_mut()
+        .unwrap() += 1;
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -141,7 +145,11 @@ fn cert_verify_fails_with_pik_rollback_violation() {
 fn cert_verify_fails_with_psk_rollback_violation() {
     let mut ops = build_test_cert_ops_one_image_one_vbmeta();
     // If the image is signed with a lower key version than our rollback, it should fail to verify.
-    *ops.rollbacks.get_mut(&CERT_PSK_VERSION_LOCATION).unwrap() += 1;
+    *ops.rollbacks
+        .get_mut(&CERT_PSK_VERSION_LOCATION)
+        .unwrap()
+        .as_mut()
+        .unwrap() += 1;
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -243,7 +251,11 @@ fn cert_validate_unlock_credential_fails_with_pik_rollback_violation() {
     let mut ops = build_test_cert_ops_one_image_one_vbmeta();
     // Rotating the PIK should invalidate all existing unlock keys, which includes our pre-signed
     // certificate.
-    *ops.rollbacks.get_mut(&CERT_PIK_VERSION_LOCATION).unwrap() += 1;
+    *ops.rollbacks
+        .get_mut(&CERT_PIK_VERSION_LOCATION)
+        .unwrap()
+        .as_mut()
+        .unwrap() += 1;
 
     let _ = cert_generate_unlock_challenge(&mut ops).unwrap();
 
