@@ -459,7 +459,7 @@ fn corrupted_vbmeta_fails_verification() {
 fn rollback_violation_fails_verification() {
     let mut ops = build_test_ops_one_image_one_vbmeta();
     // Device with rollback = 1 should refuse to boot image with rollback = 0.
-    ops.rollbacks.insert(TEST_VBMETA_ROLLBACK_LOCATION, 1);
+    ops.rollbacks.insert(TEST_VBMETA_ROLLBACK_LOCATION, Ok(1));
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -766,7 +766,7 @@ fn verify_chain_partition_descriptor() {
     // Add the rollback index for the chained partition's location.
     ops.rollbacks.insert(
         TEST_CHAINED_PARTITION_ROLLBACK_LOCATION,
-        TEST_CHAINED_PARTITION_ROLLBACK_INDEX,
+        Ok(TEST_CHAINED_PARTITION_ROLLBACK_INDEX),
     );
 
     let result = verify_two_images(&mut ops);
