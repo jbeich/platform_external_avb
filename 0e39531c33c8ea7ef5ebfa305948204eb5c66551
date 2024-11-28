@@ -35,6 +35,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "f729db86_67779120",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 3
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-11-28T17:39:48Z",
+      "side": 1,
+      "message": "Thanks! This commit wasn\u0027t quite done and some config file I can\u0027t find automatically added you as a reviewer :D I\u0027ll add you back when it\u0027s ready for you to look at.",
+      "parentUuid": "66f2eb07_f6d56ef9",
+      "revId": "0e39531c33c8ea7ef5ebfa305948204eb5c66551",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b9df9ff7_8fc26179",
@@ -72,6 +90,30 @@
           ]
         }
       ],
+      "revId": "0e39531c33c8ea7ef5ebfa305948204eb5c66551",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "2ef04969_cfa7b776",
+        "filename": "test/avb_unittest_util.cc",
+        "patchSetId": 3
+      },
+      "lineNbr": 129,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-11-28T17:39:48Z",
+      "side": 1,
+      "message": "Indeed, avbtool doesn\u0027t currently have a function to do what I need, so I\u0027m adding one.",
+      "parentUuid": "b9df9ff7_8fc26179",
+      "range": {
+        "startLine": 129,
+        "startChar": 49,
+        "endLine": 129,
+        "endChar": 50
+      },
       "revId": "0e39531c33c8ea7ef5ebfa305948204eb5c66551",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
