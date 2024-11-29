@@ -27,7 +27,7 @@ use avb::{
 };
 use hex::decode;
 use std::{collections::HashMap, fs, mem::size_of};
-use zerocopy::{AsBytes, FromBytes};
+use zerocopy::{IntoBytes, FromBytes};
 
 /// Initializes a `TestOps` object such that cert verification will succeed on
 /// `TEST_PARTITION_NAME`.
@@ -286,7 +286,7 @@ fn cert_validate_unlock_credential_bytes_api() {
     // Write an unlock challenge to a byte buffer for TX over fastboot.
     let challenge = cert_generate_unlock_challenge(&mut ops).unwrap();
     let mut buffer = vec![0u8; size_of::<CertUnlockChallenge>()];
-    assert_eq!(challenge.write_to(&mut buffer[..]), Some(())); // zerocopy::AsBytes.
+    assert_eq!(challenge.write_to(&mut buffer[..]), Some(())); // zerocopy::IntoBytes.
 
     // Read an unlock credential from a byte buffer for RX from fastboot.
     let buffer = vec![0u8; size_of::<CertUnlockCredential>()];
