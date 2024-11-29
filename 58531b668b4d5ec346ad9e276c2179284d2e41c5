@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3dc3e165_c7b1f5e1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-11-29T18:30:12Z",
+      "side": 1,
+      "message": "@zeuthen@google.com Is an AVB version bump necessary for this change? Looking at the version history (https://android.googlesource.com/platform/external/avb/+/main/README.md#version-history) and the history of other changes to AVB, I would guess not but I want to double-check. Thanks!",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
