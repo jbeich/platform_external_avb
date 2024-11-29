@@ -34,17 +34,17 @@ rust_defaults {
         "--bitfield-enum=Avb.*Flags",
         "--default-enum-style rust",
         "--with-derive-default",
-        "--with-derive-custom=Avb.*Descriptor=FromZeroes,FromBytes",
-        "--with-derive-custom=AvbCertPermanentAttributes=FromZeroes,FromBytes,AsBytes",
-        "--with-derive-custom=AvbCertCertificate.*=FromZeroes,FromBytes,AsBytes",
-        "--with-derive-custom=AvbCertUnlock.*=FromZeroes,FromBytes,AsBytes",
+        "--with-derive-custom=Avb.*Descriptor=FromBytes,Immutable,KnownLayout",
+        "--with-derive-custom=AvbCertPermanentAttributes=FromBytes,IntoBytes",
+        "--with-derive-custom=AvbCertCertificate.*=FromBytes,IntoBytes",
+        "--with-derive-custom=AvbCertUnlock.*=FromBytes,IntoBytes",
         "--allowlist-type=AvbDescriptorTag",
         "--allowlist-type=Avb.*Flags",
         "--allowlist-function=.*",
         "--allowlist-var=AVB.*",
         "--use-core",
         "--raw-line=#![no_std]",
-        "--raw-line=use zerocopy::{AsBytes, FromBytes, FromZeroes};",
+        "--raw-line=use zerocopy::{FromBytes, Immutable, IntoBytes, KnownLayout};",
         "--ctypes-prefix=core::ffi",
     ],
     cflags: ["-DBORINGSSL_NO_CXX"],
@@ -57,7 +57,7 @@ rust_defaults {
     host_supported: true,
     static_libs: ["libavb_cert"],
     shared_libs: ["libcrypto"],
-    rustlibs: ["libzerocopy-0.7.35"],
+    rustlibs: ["libzerocopy"],
     apex_available: ["com.android.virt"],
 }
 
@@ -69,7 +69,7 @@ rust_defaults {
         "libavb_cert_baremetal",
         "libcrypto_baremetal",
     ],
-    rustlibs: ["libzerocopy-0.7.35_nostd_noalloc"],
+    rustlibs: ["libzerocopy_nostd_noalloc"],
     dylib: {
         enabled: false,
     },
@@ -140,7 +140,7 @@ rust_test {
     auto_gen_config: true,
     clippy_lints: "none",
     lints: "none",
-    rustlibs: ["libzerocopy-0.7.35"],
+    rustlibs: ["libzerocopy"],
 }
 
 // Rust library wrapping libavb C implementation.
@@ -164,7 +164,7 @@ rust_defaults {
     no_stdlibs: true,
     rustlibs: [
         "libavb_bindgen_nostd",
-        "libzerocopy-0.7.35_nostd_noalloc",
+        "libzerocopy_nostd_noalloc",
     ],
     whole_static_libs: [
         "libavb_cert_baremetal",
@@ -181,7 +181,7 @@ rust_defaults {
     host_supported: true,
     rustlibs: [
         "libavb_bindgen",
-        "libzerocopy-0.7.35",
+        "libzerocopy",
     ],
     whole_static_libs: [
         "libavb_cert",
@@ -317,7 +317,7 @@ rust_defaults {
     ],
     rustlibs: [
         "libhex",
-        "libzerocopy-0.7.35",
+        "libzerocopy",
     ],
     test_suites: ["general-tests"],
     clippy_lints: "android",

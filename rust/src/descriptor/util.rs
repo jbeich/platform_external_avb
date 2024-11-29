@@ -15,7 +15,7 @@
 //! Descriptor utilities.
 
 use super::{DescriptorError, DescriptorResult};
-use zerocopy::{FromBytes, FromZeroes, Ref};
+use zerocopy::{FromBytes, FromZeros, Immutable, KnownLayout, Ref};
 
 /// Splits `size` bytes off the front of `data`.
 ///
@@ -82,11 +82,11 @@ pub(super) struct ParsedDescriptor<'a, T> {
 /// invalid.
 pub(super) fn parse_descriptor<T>(data: &[u8]) -> DescriptorResult<ParsedDescriptor<T>>
 where
-    T: Default + FromZeroes + FromBytes + ValidateAndByteswap,
+    T: Default + FromBytes + FromZeros + Immutable + KnownLayout + ValidateAndByteswap,
 {
     let (raw_header, body) =
         Ref::<_, T>::new_from_prefix(data).ok_or(DescriptorError::InvalidHeader)?;
-    let raw_header = raw_header.into_ref();
+    let raw_header = Ref::into_ref(raw_header);
 
     let mut header = T::default();
     // SAFETY:
