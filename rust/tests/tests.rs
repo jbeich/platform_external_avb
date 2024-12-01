@@ -34,7 +34,7 @@ fn build_test_ops_one_image_one_vbmeta<'a>() -> TestOps<'a> {
         public_key: fs::read(TEST_PUBLIC_KEY_PATH).unwrap(),
         public_key_metadata: None,
     });
-    ops.rollbacks.insert(TEST_VBMETA_ROLLBACK_LOCATION, 0);
+    ops.rollbacks.insert(TEST_VBMETA_ROLLBACK_LOCATION, Ok(0));
     ops.unlock_state = Ok(false);
     ops
 }

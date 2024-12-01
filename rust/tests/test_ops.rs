@@ -101,8 +101,10 @@ pub struct TestOps<'a> {
     /// not in this map will return `IoError::Io`.
     pub vbmeta_keys_for_partition: HashMap<&'static str, (FakeVbmetaKey, u32)>,
 
-    /// Rollback indices. Accessing unknown locations will return `IoError::Io`.
-    pub rollbacks: HashMap<usize, u64>,
+    /// Rollback indices. Set an error to simulate `IoError` during access. Writing a non-existent
+    /// rollback index value will create it; to simulate `NoSuchValue` instead, create an entry
+    /// with `Err(IoError::NoSuchValue)` as the value.
+    pub rollbacks: HashMap<usize, IoResult<u64>>,
 
     /// Unlock state. Set an error to simulate IoError during access.
     pub unlock_state: IoResult<bool>,
@@ -287,11 +289,15 @@ impl<'a> Ops<'a> for TestOps<'a> {
     }
 
     fn read_rollback_index(&mut self, location: usize) -> IoResult<u64> {
-        self.rollbacks.get(&location).ok_or(IoError::Io).copied()
+        self.rollbacks.get(&location).ok_or(IoError::Io)?.clone()
     }
 
     fn write_rollback_index(&mut self, location: usize, index: u64) -> IoResult<()> {
-        *(self.rollbacks.get_mut(&location).ok_or(IoError::Io)?) = index;
+        if let Some(Err(e)) = self.rollbacks.get(&location) {
+            return Err(e.clone());
+        }
+
+        self.rollbacks.insert(location, Ok(index));
         Ok(())
     }
 
