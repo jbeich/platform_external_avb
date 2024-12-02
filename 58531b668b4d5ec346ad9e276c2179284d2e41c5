@@ -16,6 +16,97 @@
       "message": "@zeuthen@google.com Is an AVB version bump necessary for this change? Looking at the version history (https://android.googlesource.com/platform/external/avb/+/main/README.md#version-history) and the history of other changes to AVB, I would guess not but I want to double-check. Thanks!",
       "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f20b67f_e94427cf",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-02T10:34:51Z",
+      "side": 1,
+      "message": "Does the function cope with `NULL` / 0 here, or are these new parameters always required to be filled in?",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "54173223_d77bb385",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1411,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-02T10:34:51Z",
+      "side": 1,
+      "message": "probably safer to initialize these to `NULL` / 0",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5879b7d0_a2e3b984",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1623,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-02T10:34:51Z",
+      "side": 1,
+      "message": "Can these end up being passed in as uninitialized or `NULL` / 0 values?  (I\u0027m not sure which combinations of options give different paths through the code above...)",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "812bf3da_0fe7f391",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1754,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-02T10:34:51Z",
+      "side": 1,
+      "message": "There\u0027s nothing specific to the input being a public key here, so this is a generic one-shot SHA-256 helper.  Are there any existing helpers that could be re-used?  (e.g. `sha256()` in `libavb_cert/avb_cert_validate.c`?)",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "94fc7aa3_345f2028",
+        "filename": "test/avb_slot_verify_unittest.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-02T10:34:51Z",
+      "side": 1,
+      "message": "nit: drop \"Test\" prefix for consistency with other names; maybe also include the word \"Digest\" ?",
+      "range": {
+        "startLine": 59,
+        "startChar": 26,
+        "endLine": 59,
+        "endChar": 40
+      },
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
