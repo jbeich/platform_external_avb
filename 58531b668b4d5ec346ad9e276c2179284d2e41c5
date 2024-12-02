@@ -20,6 +20,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3b66241d_9d83d7e4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1076971
+      },
+      "writtenOn": "2024-12-02T19:30:51Z",
+      "side": 1,
+      "message": "No version bump necessary, that\u0027s only relevant when changing the file format / data structures which I don\u0027t believe is the case here.",
+      "parentUuid": "3dc3e165_c7b1f5e1",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5f20b67f_e94427cf",
         "filename": "libavb/avb_cmdline.c",
         "patchSetId": 8
