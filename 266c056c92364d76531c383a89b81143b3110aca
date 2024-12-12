@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a4d289fd_6e43dff4",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-12-12T18:58:47Z",
+      "side": 1,
+      "message": "I\u0027ve gotten a +1 from the original code \u0026 documentation author - needed an OWNER\u0027s +2. Thank you!",
+      "revId": "266c056c92364d76531c383a89b81143b3110aca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
