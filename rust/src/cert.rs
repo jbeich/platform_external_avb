@@ -104,6 +104,9 @@ pub use avb_bindgen::AvbCertUnlockCredential as CertUnlockCredential;
 /// Size in bytes of a SHA256 digest.
 pub const SHA256_DIGEST_SIZE: usize = avb_bindgen::AVB_SHA256_DIGEST_SIZE as usize;
 
+/// Size in bytes of a SHA512 digest.
+pub const SHA512_DIGEST_SIZE: usize = avb_bindgen::AVB_SHA512_DIGEST_SIZE as usize;
+
 /// Product intermediate key (PIK) rollback index location.
 ///
 /// If using libavb_cert, make sure no vbmetas use this location, it must be reserved for the PIK.
