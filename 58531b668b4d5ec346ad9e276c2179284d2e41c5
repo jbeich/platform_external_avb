@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "253bbcbb_a4e29e73",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 8
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-16T22:13:23Z",
+      "side": 1,
+      "message": "Great, thanks for confirming!",
+      "parentUuid": "3b66241d_9d83d7e4",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "5f20b67f_e94427cf",
@@ -53,6 +71,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "c6e6ce03_21fa25d2",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-16T22:13:23Z",
+      "side": 1,
+      "message": "Done.",
+      "parentUuid": "5f20b67f_e94427cf",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "54173223_d77bb385",
@@ -66,6 +102,24 @@
       "writtenOn": "2024-12-02T10:34:51Z",
       "side": 1,
       "message": "probably safer to initialize these to `NULL` / 0",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c2d78473_8120ce44",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1411,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-16T22:13:23Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "54173223_d77bb385",
       "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -89,6 +143,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "d6867776_b4eb5656",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1623,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-16T22:13:23Z",
+      "side": 1,
+      "message": "`avb_append_options` now has an explicit null check, so we can pass in anything.",
+      "parentUuid": "5879b7d0_a2e3b984",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "812bf3da_0fe7f391",
         "filename": "libavb/avb_slot_verify.c",
         "patchSetId": 8
@@ -100,6 +172,24 @@
       "writtenOn": "2024-12-02T10:34:51Z",
       "side": 1,
       "message": "There\u0027s nothing specific to the input being a public key here, so this is a generic one-shot SHA-256 helper.  Are there any existing helpers that could be re-used?  (e.g. `sha256()` in `libavb_cert/avb_cert_validate.c`?)",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "53ac485f_40ecf6e8",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1754,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-16T22:13:23Z",
+      "side": 1,
+      "message": "Indeed, this was a remnant of some logic I since deleted that did some key-specific manipulation. Thanks for calling it out. I decided to just inline the logic since it\u0027s short and makes the code easier to read without checking any other files (we could use the function you suggested, but there\u0027s no need for the extra memcpy).",
+      "parentUuid": "812bf3da_0fe7f391",
       "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
@@ -117,6 +207,30 @@
       "writtenOn": "2024-12-02T10:34:51Z",
       "side": 1,
       "message": "nit: drop \"Test\" prefix for consistency with other names; maybe also include the word \"Digest\" ?",
+      "range": {
+        "startLine": 59,
+        "startChar": 26,
+        "endLine": 59,
+        "endChar": 40
+      },
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1d2d5e26_10620053",
+        "filename": "test/avb_slot_verify_unittest.cc",
+        "patchSetId": 8
+      },
+      "lineNbr": 59,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-16T22:13:23Z",
+      "side": 1,
+      "message": "I called it this intentionally since the file it uses as the test input is called `testkey_rsa2048.pem`. But I agree it can sound weird, so I renamed the test to `Rsa2048TestKey`.",
+      "parentUuid": "94fc7aa3_345f2028",
       "range": {
         "startLine": 59,
         "startChar": 26,
