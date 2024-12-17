@@ -196,6 +196,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "6e31df23_f90a3715",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1754,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-17T11:11:27Z",
+      "side": 1,
+      "message": "So can this function be removed now?",
+      "parentUuid": "53ac485f_40ecf6e8",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "94fc7aa3_345f2028",
         "filename": "test/avb_slot_verify_unittest.cc",
         "patchSetId": 8

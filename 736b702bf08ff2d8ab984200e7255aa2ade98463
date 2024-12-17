@@ -1,0 +1,55 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6b47f936_658e5116",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-17T11:11:27Z",
+      "side": 1,
+      "message": "Does `pk_data` live long enough to be passed out to a caller?  \n\nIt looks like `pk_data` is a pointer to somewhere in `vbmeta_buf`, but I\u0027m not sure under what circumstances `vbmeta_buf` gets freed (line 1252/1266 after the `out:` label) before this function returns.",
+      "revId": "736b702bf08ff2d8ab984200e7255aa2ade98463",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4adedaf6_b826e789",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-17T11:11:27Z",
+      "side": 1,
+      "message": "Is this now unneeded?",
+      "revId": "736b702bf08ff2d8ab984200e7255aa2ade98463",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f9ab6db1_ad32dc13",
+        "filename": "test/avb_unittest_util.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-17T11:11:27Z",
+      "side": 1,
+      "message": "Is the return value a hex-string here?",
+      "revId": "736b702bf08ff2d8ab984200e7255aa2ade98463",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
