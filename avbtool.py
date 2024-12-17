@@ -3584,13 +3584,13 @@ class Avb(object):
       image.truncate(original_image_size)
       raise AvbError('Adding hash_footer failed: {}.'.format(e)) from e
 
-  def add_hashtree_footer(self, image_filename, partition_size, partition_name,
+  def add_hashtree_footer(self, image_filename, partition_size: int, partition_name,
                           generate_fec, fec_num_roots, hash_algorithm,
                           block_size, salt, chain_partitions_use_ab,
                           chain_partitions_do_not_use_ab,
                           algorithm_name, key_path,
                           public_key_metadata_path, rollback_index, flags,
-                          rollback_index_location,
+                          rollback_index_location: int,
                           props, props_from_file, kernel_cmdlines,
                           setup_rootfs_from_kernel,
                           setup_as_rootfs_from_kernel,
