@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f2076e50_cefbc980",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 1380243
+      },
+      "writtenOn": "2024-12-17T18:02:04Z",
+      "side": 1,
+      "message": "Please add `Bug: 372549215` on this change too.",
+      "revId": "bab0e4ff074353c5cbe6d1739928766ae5f94b51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
