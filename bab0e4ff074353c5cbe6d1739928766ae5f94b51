@@ -16,6 +16,24 @@
       "message": "Please add `Bug: 372549215` on this change too.",
       "revId": "bab0e4ff074353c5cbe6d1739928766ae5f94b51",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a22692e2_1cf7bd3d",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 2
+      },
+      "lineNbr": 9,
+      "author": {
+        "id": 2029650
+      },
+      "writtenOn": "2024-12-17T22:15:39Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f2076e50_cefbc980",
+      "revId": "bab0e4ff074353c5cbe6d1739928766ae5f94b51",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
