@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "36e9ab72_06826a3d",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-12-18T16:51:54Z",
+      "side": 1,
+      "message": "nit: generalize this for the other types as well.",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 26
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ef824c0a_26538469",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-12-18T16:51:54Z",
+      "side": 1,
+      "message": "Should we require `None` here since data shouldn\u0027t exist when we don\u0027t pass `AllowVerificationError`? (Same below)",
+      "range": {
+        "startLine": 467,
+        "startChar": 59,
+        "endLine": 467,
+        "endChar": 60
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ecd7d9da_9c4dafb5",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-12-18T16:51:54Z",
+      "side": 1,
+      "message": "optional nit: `let else` can be slightly cleaner in cases like this where you want to fail unless we successfully match e.g.:\n\n```\nlet SlotVerifyError::PublicKeyRejected(Some(data)) \u003d error else {\n  panic!(\"Expected PublicKeyRejected with verification data\");\n}\n```\n\n(Same below)",
+      "range": {
+        "startLine": 659,
+        "startChar": 0,
+        "endLine": 662,
+        "endChar": 6
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
