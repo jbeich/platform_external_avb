@@ -218,7 +218,10 @@ cc_library_static {
 // implementation.
 cc_defaults {
     name: "libavb_baremetal_defaults",
-    defaults: ["libavb_base_defaults"],
+    defaults: [
+        "cc_baremetal_defaults",
+        "libavb_base_defaults",
+    ],
     cflags: ["-UAVB_ENABLE_DEBUG"],
     static_libs: [
         "libcrypto_baremetal",
@@ -345,7 +348,6 @@ cc_defaults {
         "test/data/*",
     ],
     test_config: "test/libavb_host_unittest.xml",
-    test_suites: ["general-tests"],
     static_libs: [
         "libavb_ab_host",
         "libgmock_host",
