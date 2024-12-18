@@ -35,6 +35,9 @@ use avb_bindgen::{AvbIOResult, AvbSlotVerifyResult, AvbVBMetaVerifyResult};
 use core::{fmt, str::Utf8Error};
 
 /// `AvbSlotVerifyResult` error wrapper.
+///
+/// Some of the errors can contain the resulting `SlotVerifyData` if the `AllowVerificationError`
+/// flag was passed into `slot_verify()`.
 #[derive(Debug, PartialEq, Eq)]
 pub enum SlotVerifyError<'a> {
     /// `AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_ARGUMENT`
@@ -46,15 +49,12 @@ pub enum SlotVerifyError<'a> {
     /// `AVB_SLOT_VERIFY_RESULT_ERROR_OOM`
     Oom,
     /// `AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED`
-    PublicKeyRejected,
+    PublicKeyRejected(Option<SlotVerifyData<'a>>),
     /// `AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX`
-    RollbackIndex,
+    RollbackIndex(Option<SlotVerifyData<'a>>),
     /// `AVB_SLOT_VERIFY_RESULT_ERROR_UNSUPPORTED_VERSION`
     UnsupportedVersion,
     /// `AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION`
-    ///
-    /// This verification error can contain the resulting `SlotVerifyData` if the
-    /// `AllowVerificationError` flag was passed into `slot_verify()`.
     Verification(Option<SlotVerifyData<'a>>),
     /// Unexpected internal error. This does not have a corresponding libavb error code.
     Internal,
@@ -80,8 +80,8 @@ impl<'a> SlotVerifyError<'a> {
             Self::InvalidMetadata => SlotVerifyError::InvalidMetadata,
             Self::Io => SlotVerifyError::Io,
             Self::Oom => SlotVerifyError::Oom,
-            Self::PublicKeyRejected => SlotVerifyError::PublicKeyRejected,
-            Self::RollbackIndex => SlotVerifyError::RollbackIndex,
+            Self::PublicKeyRejected(_) => SlotVerifyError::PublicKeyRejected(None),
+            Self::RollbackIndex(_) => SlotVerifyError::RollbackIndex(None),
             Self::UnsupportedVersion => SlotVerifyError::UnsupportedVersion,
             Self::Verification(_) => SlotVerifyError::Verification(None),
             Self::Internal => SlotVerifyError::Internal,
@@ -96,8 +96,8 @@ impl<'a> fmt::Display for SlotVerifyError<'a> {
             Self::InvalidMetadata => write!(f, "Invalid metadata"),
             Self::Io => write!(f, "I/O error"),
             Self::Oom => write!(f, "Unable to allocate memory"),
-            Self::PublicKeyRejected => write!(f, "Public key rejected or data not signed"),
-            Self::RollbackIndex => write!(f, "Rollback index violation"),
+            Self::PublicKeyRejected(_) => write!(f, "Public key rejected or data not signed"),
+            Self::RollbackIndex(_) => write!(f, "Rollback index violation"),
             Self::UnsupportedVersion => write!(f, "Unsupported vbmeta version"),
             Self::Verification(_) => write!(f, "Verification failure"),
             Self::Internal => write!(f, "Internal error"),
@@ -109,8 +109,8 @@ impl<'a> fmt::Display for SlotVerifyError<'a> {
 /// `AVB_SLOT_VERIFY_RESULT_OK` to the Rust equivalent `Ok(())` and errors to the corresponding
 /// `Err(SlotVerifyError)`.
 ///
-/// A `Verification` error returned here will always have a `None` `SlotVerifyData`; the data should
-/// be added in later if it exists.
+/// An error returned here will always have a `None` `SlotVerifyData`; the data should be added
+/// in later if it exists.
 ///
 /// This function is also important to serve as a compile-time check that we're handling all the
 /// libavb enums; if a new one is added to (or removed from) the C code, this will fail to compile
@@ -129,10 +129,10 @@ pub(crate) fn slot_verify_enum_to_result(
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_ERROR_IO => Err(SlotVerifyError::Io),
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_ERROR_OOM => Err(SlotVerifyError::Oom),
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_ERROR_PUBLIC_KEY_REJECTED => {
-            Err(SlotVerifyError::PublicKeyRejected)
+            Err(SlotVerifyError::PublicKeyRejected(None))
         }
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_ERROR_ROLLBACK_INDEX => {
-            Err(SlotVerifyError::RollbackIndex)
+            Err(SlotVerifyError::RollbackIndex(None))
         }
         AvbSlotVerifyResult::AVB_SLOT_VERIFY_RESULT_ERROR_UNSUPPORTED_VERSION => {
             Err(SlotVerifyError::UnsupportedVersion)
