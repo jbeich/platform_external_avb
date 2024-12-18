@@ -3,6 +3,29 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "52443f39_585a720d",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-12-18T16:55:51Z",
+      "side": 1,
+      "message": "I wonder if it might be useful to provide a function here to return the verify data if it exists, so that users of this library don\u0027t have to match all the possible variants?",
+      "range": {
+        "startLine": 39,
+        "startChar": 9,
+        "endLine": 39,
+        "endChar": 24
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "36e9ab72_06826a3d",
         "filename": "rust/src/error.rs",
         "patchSetId": 4
