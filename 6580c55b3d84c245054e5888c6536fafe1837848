@@ -26,6 +26,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "ccb61dfb_1dbc14ae",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-12-18T21:27:33Z",
+      "side": 1,
+      "message": "I tried this but it looks not very convinient to match against. So with this implementation:\n\n```\npub fn verification_data(\u0026self) -\u003e Option\u003c\u0026SlotVerifyData\u003c\u0027a\u003e\u003e {\n    match self {\n        SlotVerifyError::PublicKeyRejected(data)\n        | SlotVerifyError::RollbackIndex(data)\n        | SlotVerifyError::Verification(data) \u003d\u003e data.as_ref(),\n        _ \u003d\u003e None,\n    }\n}\n```\n\nWe can try to match using something like this:\n\n```\nlet verify_data \u003d match verify_res {\n    Ok(ref v) \u003d\u003e v,\n    Err(e) if e.verification_data().is_some() \u0026\u0026 unlocked \u003d\u003e {\n        e.verification_data().unwrap()\n    }\n}\n```\n\nBut even this wouldn\u0027t work because of `e` lifetime:\n\n```\ne.verification_data().unwrap()\n^ borrowed value does not live long enough\n```\n\nSo, I think matching 3 error types individually may be a cleaner way, especially taking rust allowes to match them together. Do you think I\u0027m missing something?",
+      "parentUuid": "52443f39_585a720d",
+      "range": {
+        "startLine": 39,
+        "startChar": 9,
+        "endLine": 39,
+        "endChar": 24
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "36e9ab72_06826a3d",
         "filename": "rust/src/error.rs",
         "patchSetId": 4
@@ -37,6 +61,30 @@
       "writtenOn": "2024-12-18T16:51:54Z",
       "side": 1,
       "message": "nit: generalize this for the other types as well.",
+      "range": {
+        "startLine": 111,
+        "startChar": 4,
+        "endLine": 111,
+        "endChar": 26
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e6944d6_63b5c46f",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-12-18T21:27:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "36e9ab72_06826a3d",
       "range": {
         "startLine": 111,
         "startChar": 4,
@@ -70,6 +118,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "098910ad_3a30d767",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 467,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-12-18T21:27:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ef824c0a_26538469",
+      "range": {
+        "startLine": 467,
+        "startChar": 59,
+        "endLine": 467,
+        "endChar": 60
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "ecd7d9da_9c4dafb5",
@@ -83,6 +155,30 @@
       "writtenOn": "2024-12-18T16:51:54Z",
       "side": 1,
       "message": "optional nit: `let else` can be slightly cleaner in cases like this where you want to fail unless we successfully match e.g.:\n\n```\nlet SlotVerifyError::PublicKeyRejected(Some(data)) \u003d error else {\n  panic!(\"Expected PublicKeyRejected with verification data\");\n}\n```\n\n(Same below)",
+      "range": {
+        "startLine": 659,
+        "startChar": 0,
+        "endLine": 662,
+        "endChar": 6
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b9812d34_4430546d",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 662,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-12-18T21:27:33Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "ecd7d9da_9c4dafb5",
       "range": {
         "startLine": 659,
         "startChar": 0,
