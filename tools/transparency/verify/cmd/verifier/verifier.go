@@ -7,7 +7,7 @@
 //     Transparency Log, see:
 //     https://developers.google.com/android/binary_transparency/image_info.txt
 //   - the path to a file containing the payload, see this page for instructions
-//     https://developers.google.com/android/binary_transparency/pixel#construct-the-payload-for-verification.
+//     https://developers.google.com/android/binary_transparency/pixel_verification#construct-the-payload-for-verification.
 //   - the log's base URL, if different from the default provided.
 //
 // Outputs:
@@ -16,7 +16,7 @@
 //
 // Usage: See README.md.
 // For more details on inclusion proofs, see:
-// https://developers.google.com/android/binary_transparency/pixel#verifying-image-inclusion-inclusion-proof
+// https://developers.google.com/android/binary_transparency/pixel_verification#verifying-image-inclusion-inclusion-proof
 package main
 
 import (
@@ -36,17 +36,28 @@ import (
 // Domain separation prefix for Merkle tree hashing with second preimage
 // resistance similar to that used in RFC 6962.
 const (
-	LeafHashPrefix     = 0
-	KeyNameForVerifier = "pixel_transparency_log"
+	LeafHashPrefix          = 0
+	KeyNameForVerifierPixel = "pixel_transparency_log"
+	KeyNameForVerifierG1P   = "developers.google.com/android/binary_transparency/google1p/0"
+	LogBaseURLPixel         = "https://developers.google.com/android/binary_transparency"
+	LogBaseURLG1P           = "https://developers.google.com/android/binary_transparency/google1p"
+	ImageInfoFilename       = "image_info.txt"
+	PackageInfoFilename     = "package_info.txt"
 )
 
-// See https://developers.google.com/android/binary_transparency/pixel#signature-verification.
-//go:embed log_pub_key.pem
-var logPubKey []byte
+// See https://developers.google.com/android/binary_transparency/pixel_tech_details#log_implementation.
+//
+//go:embed log_pub_key.pixel.pem
+var pixelLogPubKey []byte
+
+// See https://developers.google.com/android/binary_transparency/google1p/log_details#log_implementation.
+//
+//go:embed log_pub_key.google_system_apk.pem
+var googleSystemAppLogPubKey []byte
 
 var (
-	payloadPath = flag.String("payload_path", "", "Path to the payload describing the image of interest.")
-	logBaseURL  = flag.String("log_base_url", "https://developers.google.com/android/binary_transparency", "Base url for the verifiable log files.")
+	payloadPath = flag.String("payload_path", "", "Path to the payload describing the binary of interest.")
+	logType     = flag.String("log_type", "", "Which log: 'pixel' or 'google_system_apk'.")
 )
 
 func main() {
@@ -66,31 +77,50 @@ func main() {
 		log.Printf("Reformatted payload content from %q to %q", b, payloadBytes)
 	}
 
+	var logPubKey []byte
+	var logBaseURL string
+	var keyNameForVerifier string
+	var binaryInfoFilename string
+	if *logType == "" {
+		log.Fatal("must specify which log to verify against: 'pixel' or 'google_system_apk'")
+	} else if *logType == "pixel" {
+		logPubKey = pixelLogPubKey
+		logBaseURL = LogBaseURLPixel
+		keyNameForVerifier = KeyNameForVerifierPixel
+		binaryInfoFilename = ImageInfoFilename
+	} else if *logType == "google_system_apk" {
+		logPubKey = googleSystemAppLogPubKey
+		logBaseURL = LogBaseURLG1P
+		keyNameForVerifier = KeyNameForVerifierG1P
+		binaryInfoFilename = PackageInfoFilename
+	} else {
+		log.Fatal("unsupported log type")
+	}
 
-	v, err := checkpoint.NewVerifier(logPubKey, KeyNameForVerifier)
+	v, err := checkpoint.NewVerifier(logPubKey, keyNameForVerifier)
 	if err != nil {
 		log.Fatalf("error creating verifier: %v", err)
 	}
-	root, err := checkpoint.FromURL(*logBaseURL, v)
+	root, err := checkpoint.FromURL(logBaseURL, v)
 	if err != nil {
-		log.Fatalf("error reading checkpoint for log(%s): %v", *logBaseURL, err)
+		log.Fatalf("error reading checkpoint for log(%s): %v", logBaseURL, err)
 	}
 
-	m, err := tiles.ImageInfosIndex(*logBaseURL)
+	m, err := tiles.BinaryInfosIndex(logBaseURL, binaryInfoFilename)
 	if err != nil {
-		log.Fatalf("failed to load image info map to find log index: %v", err)
+		log.Fatalf("failed to load binary info map to find log index: %v", err)
 	}
-	imageInfoIndex, ok := m[string(payloadBytes)]
+	binaryInfoIndex, ok := m[string(payloadBytes)]
 	if !ok {
-		log.Fatalf("failed to find payload %q in %s", string(payloadBytes), filepath.Join(*logBaseURL, "image_info.txt"))
+		log.Fatalf("failed to find payload %q in %s", string(payloadBytes), filepath.Join(logBaseURL, binaryInfoFilename))
 	}
 
 	var th tlog.Hash
 	copy(th[:], root.Hash)
 
 	logSize := int64(root.Size)
-	r := tiles.HashReader{URL: *logBaseURL}
-	rp, err := tlog.ProveRecord(logSize, imageInfoIndex, r)
+	r := tiles.HashReader{URL: logBaseURL}
+	rp, err := tlog.ProveRecord(logSize, binaryInfoIndex, r)
 	if err != nil {
 		log.Fatalf("error in tlog.ProveRecord: %v", err)
 	}
@@ -100,10 +130,9 @@ func main() {
 		log.Fatalf("error hashing payload: %v", err)
 	}
 
-	if err := tlog.CheckRecord(rp, logSize, th, imageInfoIndex, leafHash); err != nil {
+	if err := tlog.CheckRecord(rp, logSize, th, binaryInfoIndex, leafHash); err != nil {
 		log.Fatalf("FAILURE: inclusion check error in tlog.CheckRecord: %v", err)
 	} else {
-		log.Print("OK. inclusion check success")
+		log.Print("OK. inclusion check success!")
 	}
 }
-
