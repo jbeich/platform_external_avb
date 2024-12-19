@@ -212,6 +212,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "eba604df_0d33f7ac",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 1754,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-19T22:53:20Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "6e31df23_f90a3715",
+      "revId": "58531b668b4d5ec346ad9e276c2179284d2e41c5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "94fc7aa3_345f2028",

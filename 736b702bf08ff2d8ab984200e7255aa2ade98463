@@ -18,6 +18,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "1e1f68af_73834451",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-19T22:53:20Z",
+      "side": 1,
+      "message": "Oh wow yes you\u0027re right, `vbmeta_buf`\u0027s memory does indeed get deallocated at the end of the function. I updated this to copy the contents of `pk_data` into the output parameter and then free the memory after the kernel commandline options are added.",
+      "parentUuid": "6b47f936_658e5116",
+      "revId": "736b702bf08ff2d8ab984200e7255aa2ade98463",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4adedaf6_b826e789",
@@ -37,6 +55,24 @@
     {
       "unresolved": false,
       "key": {
+        "uuid": "5755abc5_8af69e7b",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 164,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-19T22:53:20Z",
+      "side": 1,
+      "message": "Weird - somehow my deletions didn\u0027t get uploaded. Fixed.",
+      "parentUuid": "4adedaf6_b826e789",
+      "revId": "736b702bf08ff2d8ab984200e7255aa2ade98463",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
         "uuid": "f9ab6db1_ad32dc13",
         "filename": "test/avb_unittest_util.h",
         "patchSetId": 10
@@ -48,6 +84,24 @@
       "writtenOn": "2024-12-17T11:11:27Z",
       "side": 1,
       "message": "Is the return value a hex-string here?",
+      "revId": "736b702bf08ff2d8ab984200e7255aa2ade98463",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c669cbef_7f71204d",
+        "filename": "test/avb_unittest_util.h",
+        "patchSetId": 10
+      },
+      "lineNbr": 96,
+      "author": {
+        "id": 2035397
+      },
+      "writtenOn": "2024-12-19T22:53:20Z",
+      "side": 1,
+      "message": "Yup - updated the comment to make it explicit.",
+      "parentUuid": "f9ab6db1_ad32dc13",
       "revId": "736b702bf08ff2d8ab984200e7255aa2ade98463",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
