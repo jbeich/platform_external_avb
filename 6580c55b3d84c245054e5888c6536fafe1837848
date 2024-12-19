@@ -72,6 +72,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "08cfb606_90f3c9ea",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2024-12-19T14:58:04Z",
+      "side": 1,
+      "message": "\u003e I think there must be some way to do it, since as long as the verify data still exists we should be able to re-borrow it\n\nYou\u0027re correct, if we match on `ref e` we can actually do the following:\n\n```\nmatch res {\n    // ...\n    Err(ref e) if e.verification_data().is_some() \u0026\u0026 unlocked \u003d\u003e\n        e.verification_data().unwrap(),\n    // ...\n}\n```\n\nContinue with this one.",
+      "parentUuid": "b9d0ba53_af99e803",
+      "range": {
+        "startLine": 39,
+        "startChar": 9,
+        "endLine": 39,
+        "endChar": 24
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "36e9ab72_06826a3d",
