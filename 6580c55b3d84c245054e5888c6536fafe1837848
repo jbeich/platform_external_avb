@@ -50,6 +50,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "b9d0ba53_af99e803",
+        "filename": "rust/src/error.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 39,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2024-12-19T01:01:32Z",
+      "side": 1,
+      "message": "I tried to test it out today but for some reason I don\u0027t think RBE is working for me so the build is taking hours :/ I think there must be *some* way to do it, since as long as the verify data still exists we should be able to re-borrow it, but it\u0027s just a minor thing so if you want we can submit this as-is and I can take a look later.",
+      "parentUuid": "ccb61dfb_1dbc14ae",
+      "range": {
+        "startLine": 39,
+        "startChar": 9,
+        "endLine": 39,
+        "endChar": 24
+      },
+      "revId": "6580c55b3d84c245054e5888c6536fafe1837848",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "36e9ab72_06826a3d",
         "filename": "rust/src/error.rs",
         "patchSetId": 4
