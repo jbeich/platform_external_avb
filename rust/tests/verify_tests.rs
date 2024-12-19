@@ -464,7 +464,7 @@ fn rollback_violation_fails_verification() {
     let result = verify_one_image_one_vbmeta(&mut ops);
 
     let error = result.unwrap_err();
-    assert!(matches!(error, SlotVerifyError::RollbackIndex));
+    assert!(matches!(error, SlotVerifyError::RollbackIndex(None)));
 }
 
 #[test]
@@ -489,7 +489,7 @@ fn untrusted_vbmeta_keys_fails_verification() {
     let result = verify_one_image_one_vbmeta(&mut ops);
 
     let error = result.unwrap_err();
-    assert!(matches!(error, SlotVerifyError::PublicKeyRejected));
+    assert!(matches!(error, SlotVerifyError::PublicKeyRejected(None)));
 }
 
 #[test]
@@ -629,13 +629,62 @@ fn corrupted_image_verification_data_display() {
     );
 
     let error = result.unwrap_err();
-    let data = match error {
-        SlotVerifyError::Verification(Some(data)) => data,
-        _ => panic!("Expected verification data to exist"),
+    let SlotVerifyError::Verification(Some(data)) = error else {
+        panic!("Expected Verification with verification data");
     };
     assert_eq!(
         format!("{data}"),
         r#"slot: "", vbmeta: ["vbmeta": Ok(())], images: ["test_part": Err(Verification(None))]"#
+    );
+}
+
+#[test]
+fn invalid_public_key_verification_data_provided() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.default_vbmeta_key = Some(FakeVbmetaKey::Avb {
+        public_key: b"not_the_key".into(),
+        public_key_metadata: None,
+    });
+
+    let result = slot_verify(
+        &mut ops,
+        &[&CString::new(TEST_PARTITION_NAME).unwrap()],
+        None,
+        SlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR,
+        HashtreeErrorMode::AVB_HASHTREE_ERROR_MODE_EIO,
+    );
+
+    let error = result.unwrap_err();
+    let SlotVerifyError::PublicKeyRejected(Some(data)) = error else {
+        panic!("Expected PublicKeyRejected with verification data");
+    };
+    assert_eq!(
+        format!("{data}"),
+        r#"slot: "", vbmeta: ["vbmeta": Ok(())], images: ["test_part": Ok(())]"#
+    );
+}
+
+#[test]
+fn invalid_rollback_index_verification_data_provided() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    // Device with rollback = 1 should refuse to boot image with rollback = 0.
+    ops.rollbacks.insert(TEST_VBMETA_ROLLBACK_LOCATION, Ok(1));
+
+    let result = slot_verify(
+        &mut ops,
+        &[&CString::new(TEST_PARTITION_NAME).unwrap()],
+        None,
+        SlotVerifyFlags::AVB_SLOT_VERIFY_FLAGS_ALLOW_VERIFICATION_ERROR,
+        HashtreeErrorMode::AVB_HASHTREE_ERROR_MODE_EIO,
+    );
+
+    let error = result.unwrap_err();
+    let SlotVerifyError::RollbackIndex(Some(data)) = error else {
+        panic!("Expected RollbackIndex with verification data");
+    };
+    assert_eq!(
+        format!("{data}"),
+        r#"slot: "", vbmeta: ["vbmeta": Ok(())], images: ["test_part": Ok(())]"#
     );
 }
 
