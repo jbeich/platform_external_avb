@@ -27,7 +27,7 @@ use avb::{
 };
 use hex::decode;
 use std::{collections::HashMap, fs, mem::size_of};
-use zerocopy::{AsBytes, FromBytes};
+use zerocopy::{FromBytes, IntoBytes};
 
 /// Initializes a `TestOps` object such that cert verification will succeed on
 /// `TEST_PARTITION_NAME`.
@@ -49,18 +49,12 @@ fn build_test_cert_ops_one_image_one_vbmeta<'a>() -> TestOps<'a> {
     let perm_attr_bytes = fs::read(TEST_CERT_PERMANENT_ATTRIBUTES_PATH).unwrap();
     ops.cert_permanent_attributes =
         Some(CertPermanentAttributes::read_from(&perm_attr_bytes[..]).unwrap());
-    ops.cert_permanent_attributes_hash = Some(
-        decode(TEST_CERT_PERMANENT_ATTRIBUTES_HASH_HEX)
-            .unwrap()
-            .try_into()
-            .unwrap(),
-    );
+    ops.cert_permanent_attributes_hash =
+        Some(decode(TEST_CERT_PERMANENT_ATTRIBUTES_HASH_HEX).unwrap().try_into().unwrap());
 
     // Add the rollbacks for the cert keys.
-    ops.rollbacks
-        .insert(CERT_PIK_VERSION_LOCATION, Ok(TEST_CERT_PIK_VERSION));
-    ops.rollbacks
-        .insert(CERT_PSK_VERSION_LOCATION, Ok(TEST_CERT_PSK_VERSION));
+    ops.rollbacks.insert(CERT_PIK_VERSION_LOCATION, Ok(TEST_CERT_PIK_VERSION));
+    ops.rollbacks.insert(CERT_PSK_VERSION_LOCATION, Ok(TEST_CERT_PSK_VERSION));
 
     // It's non-trivial to sign a challenge without `avbtool.py`, so instead we inject the exact RNG
     // used by the pre-generated challenge so that we can use the pre-signed credential.
@@ -130,11 +124,7 @@ fn cert_verify_sets_key_rollbacks() {
 fn cert_verify_fails_with_pik_rollback_violation() {
     let mut ops = build_test_cert_ops_one_image_one_vbmeta();
     // If the image is signed with a lower key version than our rollback, it should fail to verify.
-    *ops.rollbacks
-        .get_mut(&CERT_PIK_VERSION_LOCATION)
-        .unwrap()
-        .as_mut()
-        .unwrap() += 1;
+    *ops.rollbacks.get_mut(&CERT_PIK_VERSION_LOCATION).unwrap().as_mut().unwrap() += 1;
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -145,11 +135,7 @@ fn cert_verify_fails_with_pik_rollback_violation() {
 fn cert_verify_fails_with_psk_rollback_violation() {
     let mut ops = build_test_cert_ops_one_image_one_vbmeta();
     // If the image is signed with a lower key version than our rollback, it should fail to verify.
-    *ops.rollbacks
-        .get_mut(&CERT_PSK_VERSION_LOCATION)
-        .unwrap()
-        .as_mut()
-        .unwrap() += 1;
+    *ops.rollbacks.get_mut(&CERT_PSK_VERSION_LOCATION).unwrap().as_mut().unwrap() += 1;
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
@@ -185,10 +171,7 @@ fn cert_generate_unlock_challenge_succeeds() {
     let challenge = cert_generate_unlock_challenge(&mut ops).unwrap();
 
     // Make sure the challenge token used our cert callback data correctly.
-    assert_eq!(
-        challenge.product_id_hash,
-        &decode(TEST_CERT_PRODUCT_ID_HASH_HEX).unwrap()[..]
-    );
+    assert_eq!(challenge.product_id_hash, &decode(TEST_CERT_PRODUCT_ID_HASH_HEX).unwrap()[..]);
     assert_eq!(challenge.challenge, UNLOCK_CHALLENGE_FAKE_RNG);
 }
 
@@ -199,10 +182,7 @@ fn cert_generate_unlock_challenge_fails_without_permanent_attributes() {
     // Challenge generation should fail without the product ID provided by the permanent attributes.
     ops.cert_permanent_attributes = None;
 
-    assert_eq!(
-        cert_generate_unlock_challenge(&mut ops).unwrap_err(),
-        IoError::Io
-    );
+    assert_eq!(cert_generate_unlock_challenge(&mut ops).unwrap_err(), IoError::Io);
 }
 
 #[test]
@@ -212,10 +192,7 @@ fn cert_generate_unlock_challenge_fails_insufficient_rng() {
     // Remove a byte of RNG so there isn't enough.
     ops.cert_fake_rng.pop();
 
-    assert_eq!(
-        cert_generate_unlock_challenge(&mut ops).unwrap_err(),
-        IoError::Io
-    );
+    assert_eq!(cert_generate_unlock_challenge(&mut ops).unwrap_err(), IoError::Io);
 }
 
 #[test]
@@ -226,10 +203,7 @@ fn cert_validate_unlock_credential_success() {
     // call this function so the libavb_cert internal state is ready for the unlock cred.
     let _ = cert_generate_unlock_challenge(&mut ops).unwrap();
 
-    assert_eq!(
-        cert_validate_unlock_credential(&mut ops, &test_unlock_credential()),
-        Ok(true)
-    );
+    assert_eq!(cert_validate_unlock_credential(&mut ops, &test_unlock_credential()), Ok(true));
 }
 
 #[test]
@@ -240,10 +214,7 @@ fn cert_validate_unlock_credential_fails_wrong_rng() {
 
     let _ = cert_generate_unlock_challenge(&mut ops).unwrap();
 
-    assert_eq!(
-        cert_validate_unlock_credential(&mut ops, &test_unlock_credential()),
-        Ok(false)
-    );
+    assert_eq!(cert_validate_unlock_credential(&mut ops, &test_unlock_credential()), Ok(false));
 }
 
 #[test]
@@ -251,18 +222,11 @@ fn cert_validate_unlock_credential_fails_with_pik_rollback_violation() {
     let mut ops = build_test_cert_ops_one_image_one_vbmeta();
     // Rotating the PIK should invalidate all existing unlock keys, which includes our pre-signed
     // certificate.
-    *ops.rollbacks
-        .get_mut(&CERT_PIK_VERSION_LOCATION)
-        .unwrap()
-        .as_mut()
-        .unwrap() += 1;
+    *ops.rollbacks.get_mut(&CERT_PIK_VERSION_LOCATION).unwrap().as_mut().unwrap() += 1;
 
     let _ = cert_generate_unlock_challenge(&mut ops).unwrap();
 
-    assert_eq!(
-        cert_validate_unlock_credential(&mut ops, &test_unlock_credential()),
-        Ok(false)
-    );
+    assert_eq!(cert_validate_unlock_credential(&mut ops, &test_unlock_credential()), Ok(false));
 }
 
 #[test]
@@ -270,10 +234,7 @@ fn cert_validate_unlock_credential_fails_no_challenge() {
     let mut ops = build_test_cert_ops_one_image_one_vbmeta();
 
     // We never called `cert_generate_unlock_challenge()`, so no credentials should validate.
-    assert_eq!(
-        cert_validate_unlock_credential(&mut ops, &test_unlock_credential()),
-        Ok(false)
-    );
+    assert_eq!(cert_validate_unlock_credential(&mut ops, &test_unlock_credential()), Ok(false));
 }
 
 // In practice, devices will usually be passing unlock challenges and credentials over fastboot as
@@ -286,7 +247,7 @@ fn cert_validate_unlock_credential_bytes_api() {
     // Write an unlock challenge to a byte buffer for TX over fastboot.
     let challenge = cert_generate_unlock_challenge(&mut ops).unwrap();
     let mut buffer = vec![0u8; size_of::<CertUnlockChallenge>()];
-    assert_eq!(challenge.write_to(&mut buffer[..]), Some(())); // zerocopy::AsBytes.
+    assert!(challenge.write_to_prefix(&mut buffer[..]).is_ok()); // zerocopy::IntoBytes.
 
     // Read an unlock credential from a byte buffer for RX from fastboot.
     let buffer = vec![0u8; size_of::<CertUnlockCredential>()];
@@ -294,8 +255,5 @@ fn cert_validate_unlock_credential_bytes_api() {
 
     // It shouldn't actually validate since the credential is just zeroes, the important thing
     // is that it compiles.
-    assert_eq!(
-        cert_validate_unlock_credential(&mut ops, credential),
-        Ok(false)
-    );
+    assert_eq!(cert_validate_unlock_credential(&mut ops, credential), Ok(false));
 }
