@@ -36,6 +36,24 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "55d8486d_28189671",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 10
+      },
+      "lineNbr": 781,
+      "author": {
+        "id": 1836235
+      },
+      "writtenOn": "2024-12-20T06:37:07Z",
+      "side": 1,
+      "message": "This has been a good reminder of why I like Rust :-)",
+      "parentUuid": "1e1f68af_73834451",
+      "revId": "736b702bf08ff2d8ab984200e7255aa2ade98463",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "4adedaf6_b826e789",
