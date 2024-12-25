@@ -128,7 +128,7 @@ fn cert_verify_fails_with_pik_rollback_violation() {
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
-    assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected);
+    assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected(None));
 }
 
 #[test]
@@ -139,7 +139,7 @@ fn cert_verify_fails_with_psk_rollback_violation() {
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
-    assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected);
+    assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected(None));
 }
 
 #[test]
@@ -150,7 +150,7 @@ fn cert_verify_fails_with_wrong_vbmeta_key() {
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
-    assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected);
+    assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected(None));
 }
 
 #[test]
@@ -161,7 +161,7 @@ fn cert_verify_fails_with_bad_permanent_attributes_hash() {
 
     let result = verify_one_image_one_vbmeta(&mut ops);
 
-    assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected);
+    assert_eq!(result.unwrap_err(), SlotVerifyError::PublicKeyRejected(None));
 }
 
 #[test]
