@@ -36,6 +36,8 @@ import subprocess
 import sys
 import tempfile
 import time
+from struct import unpack
+from binascii import hexlify
 
 # Keep in sync with libavb/avb_version.h.
 AVB_VERSION_MAJOR = 1
@@ -784,7 +786,7 @@ class ImageHandler(object):
     self.block_size = 4096
     self._file_pos = 0
     if self.skip_missing and not os.path.exists(self.filename):
-        print(os.path.splitext(os.path.basename(self.filename))[0] + ": missing")
+        print(os.path.splitext(os.path.basename(self.filename))[0] + ': missing')
         self._image = None
         return
     if self._read_only:
@@ -2564,7 +2566,7 @@ class Avb(object):
 
     image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
     if image._image is None:
-      sys.stderr.write(os.path.splitext(os.path.basename(image_filename))[0] + ": Partition not found and not verified!\n")
+      sys.stderr.write(os.path.splitext(os.path.basename(image_filename))[0] + ': Partition not found and not verified!\n')
       return None
     (footer, header, descriptors, _) = self._parse_image(image)
     offset = 0
@@ -2600,7 +2602,8 @@ class Avb(object):
 
     verified = True
     for desc in descriptors:
-      if isinstance(desc, AvbChainPartitionDescriptor) and not os.path.exists(os.path.join(image_dir, desc.partition_name + image_ext)):
+      if (isinstance(desc, AvbChainPartitionDescriptor) and
+              not os.path.exists(os.path.join(image_dir, desc.partition_name + image_ext))):
         desc.partition_name = desc.partition_name.upper()
       if (isinstance(desc, AvbChainPartitionDescriptor)
           and follow_chain_partitions
@@ -2616,7 +2619,7 @@ class Avb(object):
       elif not desc.verify(image_dir, image_ext, expected_chain_partitions_map,
                            image, accept_zeroed_hashtree):
           verified = False
-          sys.stderr.write("Error verifying descriptor.\n")
+          sys.stderr.write('Error verifying descriptor.\n')
       # Honor --follow_chain_partitions - add '--' to make the output more
       # readable.
       if (isinstance(desc, AvbChainPartitionDescriptor)
@@ -2696,6 +2699,90 @@ class Avb(object):
         self._print_partition_digests(
             chained_image_filename, output, json_partitions, image_dir,
             image_ext)
+
+  def print_signature_key(self, image_filename, store_test_keys=False):
+    """Implements the 'print_signature_key' command.
+
+    Arguments:
+      image_filename: Image file to get information from (file object).
+      store_test_keys: True, if the key should be stored when a testkey was used to sign the image.
+    """
+    with open(image_filename, 'rb') as f:
+      vbmeta = f.read()
+    if vbmeta[:4] == b'DHTB':
+      print('Detected Spreadtrum special hash header')
+      print('SHA256-Hash :\t\t\t\t' + hexlify(vbmeta[8:0x28]).decode('utf-8'))
+      length = unpack('<I', vbmeta[0x30:0x34])[0]
+      vbmeta = vbmeta[0x200:0x200 + length]
+      calcedhash = hashlib.sha256(vbmeta).digest()
+      print('Calced Hash :\t\t\t\t' + hexlify(calcedhash).decode('utf-8'))
+    else:
+      idx = vbmeta.find(b'AVB0')
+      if idx != -1:
+        vbmeta = vbmeta[idx:]
+
+    avb_meta_content = {}
+    avb_header = AvbVBMetaHeader(vbmeta[:AvbVBMetaHeader.SIZE])
+    if avb_header.magic != b'AVB0':
+      print('Unknown vbmeta data')
+      exit(0)
+
+    auxdata = vbmeta[0x100 + avb_header.authentication_data_block_size:0x100 +
+                     avb_header.authentication_data_block_size + avb_header.auxiliary_data_block_size]
+    auxlen = len(auxdata)
+    i = 0
+    while i < auxlen:
+      desc = AvbDescriptor(auxdata[i:])
+      data = auxdata[i:]
+      if desc.tag == AvbPropertyDescriptor.TAG:
+        avb_property = AvbPropertyDescriptor(data)
+        avb_meta_content['property'] = dict(avbproperty=avb_property)
+      elif desc.tag == AvbHashtreeDescriptor.TAG:
+        avb_hashtree = AvbHashtreeDescriptor(data)
+        partition_name = avb_hashtree.partition_name
+        salt = avb_hashtree.salt
+        root_digest = avb_hashtree.root_digest
+        avb_meta_content[partition_name] = dict(salt=salt, root_digest=root_digest)
+      elif desc.tag == AvbHashDescriptor.TAG:
+        avb_hash = AvbHashDescriptor(data)
+        partition_name = avb_hash.partition_name
+        salt = avb_hash.salt
+        digest = avb_hash.digest
+        avb_meta_content[partition_name] = dict(salt=salt,digest=digest)
+      elif desc.tag == AvbKernelCmdlineDescriptor.TAG:
+        avb_cmdline = AvbKernelCmdlineDescriptor(data)
+        kernel_cmdline = avb_cmdline.kernel_cmdline
+        avb_meta_content['cmdline'] = dict(kernel_cmdline=kernel_cmdline)
+      elif desc.tag == AvbChainPartitionDescriptor.TAG:
+        avb_chain_partition = AvbChainPartitionDescriptor(data)
+        partition_name = avb_chain_partition.partition_name
+        public_key = avb_chain_partition.public_key
+        avb_meta_content[partition_name] = dict(public_key=public_key)
+      i += desc.SIZE + len(desc.data)
+
+    pub_key_data = vbmeta[AvbVBMetaHeader.SIZE+avb_header.authentication_data_block_size + avb_header.public_key_offset:
+                          AvbVBMetaHeader.SIZE+avb_header.authentication_data_block_size + avb_header.public_key_offset
+                          + avb_header.public_key_size]
+    modlen = unpack('>I', pub_key_data[:4])[0] // 4
+    n0inv = unpack('>I', pub_key_data[4:8])[0]
+    modulus = hexlify(pub_key_data[8:8 + modlen]).decode('utf-8')
+    print('Signature-RSA-Modulus (n):\t' + modulus)
+    print('Signature-n0inv: \t\t\t' + str(n0inv))
+    testkey_dir_path = 'test/data'
+    if os.path.exists(testkey_dir_path):
+      for file in os.listdir(testkey_dir_path):
+        file_path = os.path.join(testkey_dir_path, file)
+        if os.path.splitext(file_path)[1] == '.pem':
+          rsa_pub_key = RSAPublicKey(file_path)
+          test_key = format(rsa_pub_key.modulus, 'x')
+          if test_key[:16] == modulus[:16]:
+            print(f'\nKey found: {file}')
+            if store_test_keys:
+              import shutil
+              shutil.copyfile(file_path, './' + file)
+            break
+    else:
+      sys.stderr.write('test/data directory does not exist! Could not compare public key against testkeys.')
 
   def calculate_vbmeta_digest(self, image_filename, hash_algorithm, output):
     """Implements the 'calculate_vbmeta_digest' command.
@@ -4678,6 +4765,18 @@ class AvbTool(object):
     sub_parser.set_defaults(func=self.print_partition_digests)
 
     sub_parser = subparsers.add_parser(
+        'print_signature_key',
+        help='Prints the public key of the vbmeta signature.')
+    sub_parser.add_argument('--image',
+                            help='Image to print public key from',
+                            type=argparse.FileType('rb'),
+                            required=True)
+    sub_parser.add_argument('--store_test_keys',
+                            help='Store testkeys in the current directory, if a testkey was used to sign the image.',
+                            action='store_true')
+    sub_parser.set_defaults(func=self.print_signature_key)
+
+    sub_parser = subparsers.add_parser(
         'calculate_vbmeta_digest',
         help='Calculate vbmeta digest.')
     sub_parser.add_argument('--image',
@@ -5014,11 +5113,15 @@ Please use '--hash_algorithm sha256'.
                           args.accept_zeroed_hashtree,
                           args.allow_missing_partitions)
     if result is False:
-        raise AvbError("Verification failed or no partitions found to be verified.")
+        raise AvbError('Verification failed or no partitions found to be verified.')
 
   def print_partition_digests(self, args):
     """Implements the 'print_partition_digests' sub-command."""
     self.avb.print_partition_digests(args.image.name, args.output, args.json)
+
+  def print_signature_key(self, args):
+    """Implements the 'print_signature_key' sub-command."""
+    self.avb.print_signature_key(args.image.name, args.store_test_keys)
 
   def calculate_vbmeta_digest(self, args):
     """Implements the 'calculate_vbmeta_digest' sub-command."""
