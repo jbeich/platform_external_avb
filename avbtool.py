@@ -348,6 +348,26 @@ def parse_number(string):
   return int(string, 0)
 
 
+def find_partition_file(image_dir, partition_name, image_ext):
+    """Find the filename and extension of a specific partition.
+
+    Arguments:
+      image_dir: directory of the vbmeta image
+      partition_name: the name of the searched partition file
+      image_ext: the extension of the vbmeta image file
+
+    Returns:
+      the path of the searched partition file
+    """
+    image_filename = os.path.join(image_dir, partition_name + image_ext)
+    if not os.path.exists(image_filename):
+      for file in os.listdir(image_dir):
+        file_path = os.path.join(image_dir, file)
+        if os.path.isfile(file_path) and os.path.splitext(file)[0] == partition_name:
+          return file_path
+    return image_filename
+
+
 class RSAPublicKey(object):
   """Data structure used for a RSA public key.
 
@@ -1539,12 +1559,10 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       image_filename = image_containing_descriptor.filename
       image = image_containing_descriptor
     else:
-      image_filename = os.path.join(image_dir, self.partition_name + image_ext)
-      if not os.path.exists(image_filename):
-          image_filename = os.path.join(image_dir, self.partition_name.upper() + image_ext)
+      image_filename = find_partition_file(image_dir, self.partition_name, image_ext)
       image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
     if image._image is None:
-      sys.stderr.write(os.path.splitext(os.path.basename(image_filename))[0] + ': Partition not found and not verified!\n')
+      sys.stderr.write(os.path.splitext(os.path.basename(image_filename.lower()))[0] + ': Partition not found and not verified!\n')
       return None
     # Generate the hashtree and checks that it matches what's in the file.
     digest_size = self._hashtree_digest_size()
@@ -1714,9 +1732,7 @@ class AvbHashDescriptor(AvbDescriptor):
       image_filename = image_containing_descriptor.filename
       image = image_containing_descriptor
     else:
-      image_filename = os.path.join(image_dir, self.partition_name + image_ext)
-      if not os.path.exists(image_filename):
-          image_filename = os.path.join(image_dir, self.partition_name.upper() + image_ext)
+      image_filename = find_partition_file(image_dir, self.partition_name, image_ext)
       image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
     if image._image is None:
       sys.stderr.write(os.path.splitext(os.path.basename(image_filename.lower()))[0] + ': Partition not found and not verified!\n')
@@ -2624,7 +2640,7 @@ class Avb(object):
     for desc in descriptors:
       if (isinstance(desc, AvbChainPartitionDescriptor) and
               not os.path.exists(os.path.join(image_dir, desc.partition_name + image_ext))):
-        desc.partition_name = desc.partition_name.upper()
+        desc.partition_name = os.path.splitext(os.path.basename(find_partition_file(image_dir, desc.partition_name, image_ext)))[0]
       if (isinstance(desc, AvbChainPartitionDescriptor)
           and follow_chain_partitions
           and expected_chain_partitions_map.get(desc.partition_name) is None
@@ -2645,10 +2661,7 @@ class Avb(object):
       if (isinstance(desc, AvbChainPartitionDescriptor)
           and follow_chain_partitions):
         print('--')
-        chained_image_filename = os.path.join(image_dir,
-                                              desc.partition_name + image_ext)
-        if not os.path.exists(chained_image_filename):
-          chained_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
+        chained_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
         res = self.verify_image(chained_image_filename, key_path, None, False,
                                 accept_zeroed_hashtree, allow_missing_partitions)
         if (allow_missing_partitions and not res) or (not res or res is None):
@@ -2712,10 +2725,7 @@ class Avb(object):
         else:
           output.write('{}: {}\n'.format(desc.partition_name, digest))
       elif isinstance(desc, AvbChainPartitionDescriptor):
-        chained_image_filename = os.path.join(image_dir,
-                                              desc.partition_name + image_ext)
-        if not os.path.exists(chained_image_filename):
-            chained_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
+        chained_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
         self._print_partition_digests(
             chained_image_filename, output, json_partitions, image_dir,
             image_ext)
@@ -2831,10 +2841,7 @@ class Avb(object):
 
     for desc in descriptors:
       if isinstance(desc, AvbChainPartitionDescriptor):
-        ch_image_filename = os.path.join(image_dir,
-                                         desc.partition_name + image_ext)
-        if not os.path.exists(ch_image_filename):
-            ch_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
+        ch_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
         ch_image = ImageHandler(ch_image_filename, read_only=True)
         (ch_footer, ch_header, _, _) = self._parse_image(ch_image)
         ch_offset = 0
@@ -2867,10 +2874,7 @@ class Avb(object):
     cmdline_descriptors = []
     for desc in descriptors:
       if isinstance(desc, AvbChainPartitionDescriptor):
-        ch_image_filename = os.path.join(image_dir,
-                                         desc.partition_name + image_ext)
-        if not os.path.exists(ch_image_filename):
-            ch_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
+        ch_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
         ch_image = ImageHandler(ch_image_filename, read_only=True)
         _, _, ch_descriptors, _ = self._parse_image(ch_image)
         for ch_desc in ch_descriptors:
