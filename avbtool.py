@@ -786,7 +786,7 @@ class ImageHandler(object):
     self.block_size = 4096
     self._file_pos = 0
     if self.skip_missing and not os.path.exists(self.filename):
-        print(os.path.splitext(os.path.basename(self.filename))[0] + ': missing')
+        print(os.path.splitext(os.path.basename(self.filename.lower()))[0] + ': missing')
         self._image = None
         return
     if self._read_only:
@@ -1234,7 +1234,7 @@ class AvbDescriptor(object):
     return bytearray(ret)
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1245,13 +1245,15 @@ class AvbDescriptor(object):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
     """
     # Deletes unused parameters to prevent pylint warning unused-argument.
     del image_dir, image_ext, expected_chain_partitions_map
-    del image_containing_descriptor, accept_zeroed_hashtree
+    del image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions
 
     # Nothing to do.
     return True
@@ -1340,7 +1342,7 @@ class AvbPropertyDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1351,6 +1353,8 @@ class AvbPropertyDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -1514,7 +1518,7 @@ class AvbHashtreeDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1525,6 +1529,8 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -1536,7 +1542,10 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       image_filename = os.path.join(image_dir, self.partition_name + image_ext)
       if not os.path.exists(image_filename):
           image_filename = os.path.join(image_dir, self.partition_name.upper() + image_ext)
-      image = ImageHandler(image_filename, read_only=True)
+      image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
+    if image._image is None:
+      sys.stderr.write(os.path.splitext(os.path.basename(image_filename))[0] + ': Partition not found and not verified!\n')
+      return None
     # Generate the hashtree and checks that it matches what's in the file.
     digest_size = self._hashtree_digest_size()
     digest_padding = round_to_pow2(digest_size) - digest_size
@@ -1684,7 +1693,7 @@ class AvbHashDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1695,6 +1704,8 @@ class AvbHashDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -1706,7 +1717,10 @@ class AvbHashDescriptor(AvbDescriptor):
       image_filename = os.path.join(image_dir, self.partition_name + image_ext)
       if not os.path.exists(image_filename):
           image_filename = os.path.join(image_dir, self.partition_name.upper() + image_ext)
-      image = ImageHandler(image_filename, read_only=True)
+      image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
+    if image._image is None:
+      sys.stderr.write(os.path.splitext(os.path.basename(image_filename.lower()))[0] + ': Partition not found and not verified!\n')
+      return True
     data = image.read(self.image_size)
     ha = hashlib.new(self.hash_algorithm)
     ha.update(self.salt)
@@ -1799,7 +1813,7 @@ class AvbKernelCmdlineDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1810,6 +1824,8 @@ class AvbKernelCmdlineDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -1913,7 +1929,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1924,6 +1940,8 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -2534,6 +2552,8 @@ class Avb(object):
           the --expected_chain_partition option
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Raises:
       AvbError: If verification of the image fails.
@@ -2566,7 +2586,7 @@ class Avb(object):
 
     image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
     if image._image is None:
-      sys.stderr.write(os.path.splitext(os.path.basename(image_filename))[0] + ': Partition not found and not verified!\n')
+      sys.stderr.write(os.path.splitext(os.path.basename(image_filename.lower()))[0] + ': Partition not found and not verified!\n')
       return None
     (footer, header, descriptors, _) = self._parse_image(image)
     offset = 0
@@ -2617,7 +2637,7 @@ class Avb(object):
               .format(desc.partition_name, desc.rollback_index_location,
                       hashlib.sha1(desc.public_key).hexdigest()))
       elif not desc.verify(image_dir, image_ext, expected_chain_partitions_map,
-                           image, accept_zeroed_hashtree):
+                           image, accept_zeroed_hashtree, allow_missing_partitions):
           verified = False
           sys.stderr.write('Error verifying descriptor.\n')
       # Honor --follow_chain_partitions - add '--' to make the output more
