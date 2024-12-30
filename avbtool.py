@@ -2727,7 +2727,7 @@ class Avb(object):
       print('Unknown vbmeta data')
       exit(0)
 
-    auxdata = vbmeta[0x100 + avb_header.authentication_data_block_size:0x100 +
+    auxdata = vbmeta[AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size:AvbVBMetaHeader.SIZE +
                      avb_header.authentication_data_block_size + avb_header.auxiliary_data_block_size]
     auxlen = len(auxdata)
     i = 0
@@ -2760,8 +2760,8 @@ class Avb(object):
         avb_meta_content[partition_name] = dict(public_key=public_key)
       i += desc.SIZE + len(desc.data)
 
-    pub_key_data = vbmeta[AvbVBMetaHeader.SIZE+avb_header.authentication_data_block_size + avb_header.public_key_offset:
-                          AvbVBMetaHeader.SIZE+avb_header.authentication_data_block_size + avb_header.public_key_offset
+    pub_key_data = vbmeta[AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size + avb_header.public_key_offset:
+                          AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size + avb_header.public_key_offset
                           + avb_header.public_key_size]
     modlen = unpack('>I', pub_key_data[:4])[0] // 4
     n0inv = unpack('>I', pub_key_data[4:8])[0]
