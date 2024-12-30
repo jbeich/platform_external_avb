@@ -557,7 +557,7 @@ def verify_vbmeta_signature(vbmeta_header, vbmeta_blob):
     public key. Also returns True if the vbmeta blob is not signed.
 
   Raises:
-    AvbError: If there errors calling out to openssl command during
+    AvbError: If there are errors calling out to openssl command during
         signature verification.
   """
   (_, alg) = lookup_algorithm_by_type(vbmeta_header.algorithm_type)
@@ -753,7 +753,7 @@ class ImageHandler(object):
   NUM_CHUNKS_AND_BLOCKS_FORMAT = '<II'
   NUM_CHUNKS_AND_BLOCKS_OFFSET = 16
 
-  def __init__(self, image_filename, read_only=False):
+  def __init__(self, image_filename, read_only=False, skip_missing=False):
     """Initializes an image handler.
 
     Arguments:
@@ -768,6 +768,7 @@ class ImageHandler(object):
     self._num_total_chunks = 0
     self._file_pos = 0
     self._read_only = read_only
+    self.skip_missing = skip_missing
     self._read_header()
 
   def _read_header(self):
@@ -782,6 +783,10 @@ class ImageHandler(object):
     self.is_sparse = False
     self.block_size = 4096
     self._file_pos = 0
+    if self.skip_missing and not os.path.exists(self.filename):
+        print(os.path.splitext(os.path.basename(self.filename))[0] + ": missing")
+        self._image = None
+        return
     if self._read_only:
       self._image = open(self.filename, 'rb')
     else:
@@ -1527,6 +1532,8 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       image = image_containing_descriptor
     else:
       image_filename = os.path.join(image_dir, self.partition_name + image_ext)
+      if not os.path.exists(image_filename):
+          image_filename = os.path.join(image_dir, self.partition_name.upper() + image_ext)
       image = ImageHandler(image_filename, read_only=True)
     # Generate the hashtree and checks that it matches what's in the file.
     digest_size = self._hashtree_digest_size()
@@ -1695,6 +1702,8 @@ class AvbHashDescriptor(AvbDescriptor):
       image = image_containing_descriptor
     else:
       image_filename = os.path.join(image_dir, self.partition_name + image_ext)
+      if not os.path.exists(image_filename):
+          image_filename = os.path.join(image_dir, self.partition_name.upper() + image_ext)
       image = ImageHandler(image_filename, read_only=True)
     data = image.read(self.image_size)
     ha = hashlib.new(self.hash_algorithm)
@@ -1918,6 +1927,8 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
       True if the descriptor verifies, False otherwise.
     """
     value = expected_chain_partitions_map.get(self.partition_name)
+    if value is None:
+        value = expected_chain_partitions_map.get(self.partition_name.upper())
     if not value:
       sys.stderr.write('No expected chain partition for partition {}. Use '
                        '--expected_chain_partition to specify expected '
@@ -2508,7 +2519,7 @@ class Avb(object):
       print_certificate(psk)
 
   def verify_image(self, image_filename, key_path, expected_chain_partitions,
-                   follow_chain_partitions, accept_zeroed_hashtree):
+                   follow_chain_partitions, accept_zeroed_hashtree, allow_missing_partitions=False):
     """Implements the 'verify_image' command.
 
     Arguments:
@@ -2551,7 +2562,10 @@ class Avb(object):
       print('Verifying image {} using embedded public key'.format(
           image_filename))
 
-    image = ImageHandler(image_filename, read_only=True)
+    image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
+    if image._image is None:
+      sys.stderr.write(os.path.splitext(os.path.basename(image_filename))[0] + ": Partition not found and not verified!\n")
+      return None
     (footer, header, descriptors, _) = self._parse_image(image)
     offset = 0
     if footer:
@@ -2584,10 +2598,14 @@ class Avb(object):
       print('vbmeta: Successfully verified {} vbmeta struct in {}'
             .format(alg_name, image.filename))
 
+    verified = True
     for desc in descriptors:
+      if isinstance(desc, AvbChainPartitionDescriptor) and not os.path.exists(os.path.join(image_dir, desc.partition_name + image_ext)):
+        desc.partition_name = desc.partition_name.upper()
       if (isinstance(desc, AvbChainPartitionDescriptor)
           and follow_chain_partitions
-          and expected_chain_partitions_map.get(desc.partition_name) is None):
+          and expected_chain_partitions_map.get(desc.partition_name) is None
+          and expected_chain_partitions_map.get(desc.partition_name.upper()) is None):
         # In this case we're processing a chain descriptor but don't have a
         # --expect_chain_partition ... however --follow_chain_partitions was
         # specified so we shouldn't error out in desc.verify().
@@ -2597,7 +2615,8 @@ class Avb(object):
                       hashlib.sha1(desc.public_key).hexdigest()))
       elif not desc.verify(image_dir, image_ext, expected_chain_partitions_map,
                            image, accept_zeroed_hashtree):
-        raise AvbError('Error verifying descriptor.')
+          verified = False
+          sys.stderr.write("Error verifying descriptor.\n")
       # Honor --follow_chain_partitions - add '--' to make the output more
       # readable.
       if (isinstance(desc, AvbChainPartitionDescriptor)
@@ -2605,8 +2624,13 @@ class Avb(object):
         print('--')
         chained_image_filename = os.path.join(image_dir,
                                               desc.partition_name + image_ext)
-        self.verify_image(chained_image_filename, key_path, None, False,
-                          accept_zeroed_hashtree)
+        if not os.path.exists(chained_image_filename):
+          chained_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
+        res = self.verify_image(chained_image_filename, key_path, None, False,
+                                accept_zeroed_hashtree, allow_missing_partitions)
+        if (allow_missing_partitions and not res) or (not res or res is None):
+            verified = False
+    return verified
 
   def print_partition_digests(self, image_filename, output, as_json):
     """Implements the 'print_partition_digests' command.
@@ -2644,7 +2668,9 @@ class Avb(object):
     Raises:
       AvbError: If getting the partition digests from the image fails.
     """
-    image = ImageHandler(image_filename, read_only=True)
+    image = ImageHandler(image_filename, read_only=True, skip_missing=True)
+    if image._image is None:
+      return
     (_, _, descriptors, _) = self._parse_image(image)
 
     for desc in descriptors:
@@ -2665,6 +2691,8 @@ class Avb(object):
       elif isinstance(desc, AvbChainPartitionDescriptor):
         chained_image_filename = os.path.join(image_dir,
                                               desc.partition_name + image_ext)
+        if not os.path.exists(chained_image_filename):
+            chained_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
         self._print_partition_digests(
             chained_image_filename, output, json_partitions, image_dir,
             image_ext)
@@ -2698,6 +2726,8 @@ class Avb(object):
       if isinstance(desc, AvbChainPartitionDescriptor):
         ch_image_filename = os.path.join(image_dir,
                                          desc.partition_name + image_ext)
+        if not os.path.exists(ch_image_filename):
+            ch_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
         ch_image = ImageHandler(ch_image_filename, read_only=True)
         (ch_footer, ch_header, _, _) = self._parse_image(ch_image)
         ch_offset = 0
@@ -2732,6 +2762,8 @@ class Avb(object):
       if isinstance(desc, AvbChainPartitionDescriptor):
         ch_image_filename = os.path.join(image_dir,
                                          desc.partition_name + image_ext)
+        if not os.path.exists(ch_image_filename):
+            ch_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
         ch_image = ImageHandler(ch_image_filename, read_only=True)
         _, _, ch_descriptors, _ = self._parse_image(ch_image)
         for ch_desc in ch_descriptors:
@@ -4188,6 +4220,8 @@ def generate_hash_tree(image, image_size, block_size, hash_alg_name, salt,
 
       remaining -= len(data)
       if len(data) < block_size:
+        if len(data) == 0:
+          break
         hasher.update(b'\0' * (block_size - len(data)))
       level_output_list.append(hasher.digest())
       if digest_padding > 0:
@@ -4621,6 +4655,10 @@ class AvbTool(object):
         '--accept_zeroed_hashtree',
         help=('Accept images where the hashtree or FEC data is zeroed out'),
         action='store_true')
+    sub_parser.add_argument(
+        '--allow_missing_partitions',
+        help=('Verify images successfully when all found partitions are verified successfully, even with some partitions missing.'),
+        action='store_true')
     sub_parser.set_defaults(func=self.verify_image)
 
     sub_parser = subparsers.add_parser(
@@ -4970,10 +5008,13 @@ Please use '--hash_algorithm sha256'.
 
   def verify_image(self, args):
     """Implements the 'verify_image' sub-command."""
-    self.avb.verify_image(args.image.name, args.key,
+    result = self.avb.verify_image(args.image.name, args.key,
                           args.expected_chain_partition,
                           args.follow_chain_partitions,
-                          args.accept_zeroed_hashtree)
+                          args.accept_zeroed_hashtree,
+                          args.allow_missing_partitions)
+    if result is False:
+        raise AvbError("Verification failed or no partitions found to be verified.")
 
   def print_partition_digests(self, args):
     """Implements the 'print_partition_digests' sub-command."""
