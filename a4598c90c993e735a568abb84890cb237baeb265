@@ -1,0 +1,91 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fefab7f5_45bed4a5",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2730,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-12-30T20:50:35Z",
+      "side": 1,
+      "message": "Would prefer defining this value as a const to describe what this value stands for, and for readability.",
+      "range": {
+        "startLine": 2730,
+        "startChar": 21,
+        "endLine": 2730,
+        "endChar": 26
+      },
+      "revId": "a4598c90c993e735a568abb84890cb237baeb265",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3fe7f629_30ce281c",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2763,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-12-30T20:50:35Z",
+      "side": 1,
+      "message": "add space between operator and operands",
+      "range": {
+        "startLine": 2763,
+        "startChar": 26,
+        "endLine": 2763,
+        "endChar": 88
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "179f0069_9b5d91c7",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "avbtool.py",
+              "range": {
+                "startLine": 2763,
+                "startChar": 0,
+                "endLine": 2765,
+                "endChar": 0
+              },
+              "replacement": "    pub_key_data \u003d vbmeta[AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size + avb_header.public_key_offset:\n                          AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size + avb_header.public_key_offset\n"
+            }
+          ]
+        }
+      ],
+      "revId": "a4598c90c993e735a568abb84890cb237baeb265",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "2cdc5a6f_c253219d",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2764,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2024-12-30T20:50:35Z",
+      "side": 1,
+      "message": "add space between operator and operands",
+      "range": {
+        "startLine": 2764,
+        "startChar": 26,
+        "endLine": 2764,
+        "endChar": 88
+      },
+      "revId": "a4598c90c993e735a568abb84890cb237baeb265",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
