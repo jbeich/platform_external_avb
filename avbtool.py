@@ -363,7 +363,7 @@ def find_partition_file(image_dir, partition_name, image_ext):
     if not os.path.exists(image_filename):
       for file in os.listdir(image_dir):
         file_path = os.path.join(image_dir, file)
-        if os.path.isfile(file_path) and os.path.splitext(file)[0] == partition_name:
+        if os.path.isfile(file_path) and os.path.splitext(file.lower())[0] == partition_name:
           return file_path
     return image_filename
 
@@ -806,9 +806,12 @@ class ImageHandler(object):
     self.block_size = 4096
     self._file_pos = 0
     if self.skip_missing and not os.path.exists(self.filename):
-        print(os.path.splitext(os.path.basename(self.filename.lower()))[0] + ': missing')
-        self._image = None
-        return
+        self.filename = os.path.join(os.path.dirname(self.filename), os.path.splitext(os.path.basename(
+            self.filename).upper())[0] + os.path.splitext(os.path.basename(self.filename))[1])
+        if not os.path.exists(self.filename):
+            print(os.path.splitext(os.path.basename(self.filename.lower()))[0] + ': missing')
+            self._image = None
+            return
     if self._read_only:
       self._image = open(self.filename, 'rb')
     else:
@@ -2652,8 +2655,10 @@ class Avb(object):
               'and KEY (which has sha1 {}) not specified'
               .format(desc.partition_name, desc.rollback_index_location,
                       hashlib.sha1(desc.public_key).hexdigest()))
-      elif not desc.verify(image_dir, image_ext, expected_chain_partitions_map,
-                           image, accept_zeroed_hashtree, allow_missing_partitions):
+      elif (not allow_missing_partitions and not desc.verify(
+              image_dir, image_ext, expected_chain_partitions_map, image, accept_zeroed_hashtree, allow_missing_partitions)) \
+            or (allow_missing_partitions and desc.verify(
+              image_dir, image_ext, expected_chain_partitions_map, image, accept_zeroed_hashtree, allow_missing_partitions) is False):
           verified = False
           sys.stderr.write('Error verifying descriptor.\n')
       # Honor --follow_chain_partitions - add '--' to make the output more
@@ -2664,7 +2669,7 @@ class Avb(object):
         chained_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
         res = self.verify_image(chained_image_filename, key_path, None, False,
                                 accept_zeroed_hashtree, allow_missing_partitions)
-        if (allow_missing_partitions and not res) or (not res or res is None):
+        if (allow_missing_partitions and res is False) or (not allow_missing_partitions and not res):
             verified = False
     return verified
 
