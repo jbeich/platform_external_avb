@@ -465,7 +465,11 @@ pub fn slot_verify<'a>(
     match result {
         // libavb will always provide verification data on success.
         Ok(()) => Ok(data.unwrap()),
-        // Data may also be provided on verification failure, fold it into the error.
+        // Data may also be provided on non-fatal failures, fold it into the error.
+        Err(SlotVerifyError::PublicKeyRejected(None)) => {
+            Err(SlotVerifyError::PublicKeyRejected(data))
+        }
+        Err(SlotVerifyError::RollbackIndex(None)) => Err(SlotVerifyError::RollbackIndex(data)),
         Err(SlotVerifyError::Verification(None)) => Err(SlotVerifyError::Verification(data)),
         // No other error provides verification data.
         Err(e) => Err(e),
