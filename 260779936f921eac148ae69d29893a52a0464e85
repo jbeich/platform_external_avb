@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "3c8b2113_414ea71f",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3796308
+      },
+      "writtenOn": "2025-01-15T06:53:13Z",
+      "side": 1,
+      "message": "I finished testing on something about 20-30 firmware images from many different vendors and fixed all issues I found in the last commit. Please let me know, if there is anything I need to change. Thanks 😊",
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
