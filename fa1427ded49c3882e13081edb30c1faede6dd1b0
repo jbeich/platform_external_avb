@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "cacb939a_d16d81cd",
+        "filename": "rust/src/descriptor/mod.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1074628
+      },
+      "writtenOn": "2025-01-16T01:41:34Z",
+      "side": 1,
+      "message": "nit: update this reference too",
+      "range": {
+        "startLine": 105,
+        "startChar": 55,
+        "endLine": 105,
+        "endChar": 57
+      },
+      "revId": "fa1427ded49c3882e13081edb30c1faede6dd1b0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
