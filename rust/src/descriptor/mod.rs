@@ -91,7 +91,7 @@ impl From<FromBytesUntilNulError> for DescriptorError {
 /// `Result` type for `DescriptorError` errors.
 pub type DescriptorResult<T> = Result<T, DescriptorError>;
 
-impl<'a> Descriptor<'a> {
+impl Descriptor<'_> {
     /// Extracts the fully-typed descriptor from the generic `AvbDescriptor` header.
     ///
     /// # Arguments
