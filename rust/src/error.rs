@@ -100,7 +100,7 @@ impl<'a> SlotVerifyError<'a> {
     }
 }
 
-impl<'a> fmt::Display for SlotVerifyError<'a> {
+impl fmt::Display for SlotVerifyError<'_> {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
             Self::InvalidArgument => write!(f, "Invalid parameters"),

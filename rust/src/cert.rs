@@ -332,7 +332,7 @@ struct CertOnlyOps<'a> {
     cert_ops: &'a mut dyn CertOps,
 }
 
-impl<'a> Ops<'static> for CertOnlyOps<'a> {
+impl Ops<'static> for CertOnlyOps<'_> {
     fn read_from_partition(
         &mut self,
         _partition: &CStr,

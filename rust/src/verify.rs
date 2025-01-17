@@ -237,14 +237,14 @@ pub struct SlotVerifyData<'a> {
 }
 
 // Useful so that `SlotVerifyError`, which may hold a `SlotVerifyData`, can derive `PartialEq`.
-impl<'a> PartialEq for SlotVerifyData<'a> {
+impl PartialEq for SlotVerifyData<'_> {
     fn eq(&self, other: &Self) -> bool {
         // A `SlotVerifyData` uniquely owns the underlying data so is only equal to itself.
         ptr::eq(self, other)
     }
 }
 
-impl<'a> Eq for SlotVerifyData<'a> {}
+impl Eq for SlotVerifyData<'_> {}
 
 impl<'a> SlotVerifyData<'a> {
     /// Creates a `SlotVerifyData` wrapping the given raw `AvbSlotVerifyData`.
@@ -351,7 +351,7 @@ impl<'a> SlotVerifyData<'a> {
 }
 
 /// Frees any internally-allocated and owned data.
-impl<'a> Drop for SlotVerifyData<'a> {
+impl Drop for SlotVerifyData<'_> {
     fn drop(&mut self) {
         // SAFETY:
         // * `raw_data` points to a valid `AvbSlotVerifyData` object owned by us.
@@ -364,7 +364,7 @@ impl<'a> Drop for SlotVerifyData<'a> {
 ///
 /// This implementation will print the slot, partition name, and verification status for all
 /// vbmetadata and images.
-impl<'a> fmt::Display for SlotVerifyData<'a> {
+impl fmt::Display for SlotVerifyData<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
@@ -378,7 +378,7 @@ impl<'a> fmt::Display for SlotVerifyData<'a> {
 
 /// Forwards to `Display` formatting; the default `Debug` formatting implementation isn't very
 /// useful as it's mostly raw pointer addresses.
-impl<'a> fmt::Debug for SlotVerifyData<'a> {
+impl fmt::Debug for SlotVerifyData<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
     }
@@ -428,7 +428,7 @@ pub fn slot_verify<'a>(
 
     // To be more Rust idiomatic we allow `ab_suffix` to be `None`, but libavb requires a valid
     // pointer to an empty string in this case, not NULL.
-    let ab_suffix = ab_suffix.unwrap_or(CStr::from_bytes_with_nul(b"\0").unwrap());
+    let ab_suffix = ab_suffix.unwrap_or(c"");
 
     let ops_bridge = pin!(ops::OpsBridge::new(ops));
     let mut out_data: *mut AvbSlotVerifyData = null_mut();

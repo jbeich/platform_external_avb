@@ -30,7 +30,7 @@ pub enum PartitionContents<'a> {
     Preloaded(&'a [u8]),
 }
 
-impl<'a> PartitionContents<'a> {
+impl PartitionContents<'_> {
     /// Returns the partition data.
     pub fn as_slice(&self) -> &[u8] {
         match self {
@@ -391,7 +391,7 @@ impl<'a> Ops<'a> for TestOps<'a> {
     }
 }
 
-impl<'a> CertOps for TestOps<'a> {
+impl CertOps for TestOps<'_> {
     fn read_permanent_attributes(
         &mut self,
         attributes: &mut CertPermanentAttributes,
