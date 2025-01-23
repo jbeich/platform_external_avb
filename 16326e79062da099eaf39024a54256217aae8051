@@ -204,6 +204,30 @@
       },
       "revId": "16326e79062da099eaf39024a54256217aae8051",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b800d4d1_44296090",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T21:23:31Z",
+      "side": 1,
+      "message": "I discovered a problematic issue with the static `kDefaultAvbHashOps`. GBL runs all tests in parallel using threads, which means all libavb sessions are sharing the same static `kDefaultAvbHashOps` object. This leads to concurrent hash calculations.\n\nThe most straightforward fix would be to continue using stack-allocated `hash_ctx`, ensuring that calculations are isolated. However, the context size must be determined at compile time, which isn\u0027t very convenient for runtime-provided `HashOps`.\n\nAnother potential solution is to make `defaultAvbHashOps` a part of `AvbOps`, isolating it per session. However, this approach feels not very clean.\n\n@dpursell@google.com I feel a bit stuck. Am I overlooking something? Do you have any ideas?",
+      "parentUuid": "fa2854f0_e46e7dee",
+      "range": {
+        "startLine": 404,
+        "startChar": 0,
+        "endLine": 408,
+        "endChar": 42
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
