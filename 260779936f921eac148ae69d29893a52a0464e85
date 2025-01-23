@@ -16,6 +16,115 @@
       "message": "I finished testing on something about 20-30 firmware images from many different vendors and fixed all issues I found in the last commit. Please let me know, if there is anything I need to change. Thanks 😊",
       "revId": "260779936f921eac148ae69d29893a52a0464e85",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f37b7f72_d1f7ceef",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2025-01-23T16:04:21Z",
+      "side": 1,
+      "message": "These are almost entirely style corrections where max line length according to our styles guide was exceeded.",
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "26545732_08fb84c2",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2025-01-23T16:04:21Z",
+      "side": 1,
+      "message": "this now exceeds our style rules\u0027 max line lenth - please restructure.",
+      "range": {
+        "startLine": 809,
+        "startChar": 8,
+        "endLine": 809,
+        "endChar": 103
+      },
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "78f76f2b_cb749dfd",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2025-01-23T16:04:21Z",
+      "side": 1,
+      "message": "we prefer using parenthesis surrounding the conditions and not using the \\ char.",
+      "range": {
+        "startLine": 2659,
+        "startChar": 125,
+        "endLine": 2659,
+        "endChar": 126
+      },
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b8a9ecc4_93f2809e",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2025-01-23T16:04:21Z",
+      "side": 1,
+      "message": "this exceeds max line length now too.",
+      "range": {
+        "startLine": 2659,
+        "startChar": 14,
+        "endLine": 2659,
+        "endChar": 123
+      },
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "404abd8a_dc0ba8ad",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2672,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2025-01-23T16:04:21Z",
+      "side": 1,
+      "message": "this also unfortunately exceeds max line length as well.",
+      "range": {
+        "startLine": 2672,
+        "startChar": 100,
+        "endLine": 2672,
+        "endChar": 101
+      },
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
