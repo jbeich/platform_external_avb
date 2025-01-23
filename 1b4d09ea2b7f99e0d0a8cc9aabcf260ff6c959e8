@@ -52,6 +52,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "8d755d64_df03dc9a",
+        "filename": "libavb/avb_crypto.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 33,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "51acea59_7543f90a",
+      "range": {
+        "startLine": 33,
+        "startChar": 10,
+        "endLine": 33,
+        "endChar": 17
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "e6f5fbf9_f1b8d125",
@@ -65,6 +89,30 @@
       "writtenOn": "2024-11-08T18:00:20Z",
       "side": 1,
       "message": "nit: \"must\" makes it sounds like a requirement on the user, but this is instead a guarantee of libavb to make implementation easier - maybe instead something like \"libavb will always call this interface in this order:\"?",
+      "range": {
+        "startLine": 99,
+        "startChar": 9,
+        "endLine": 99,
+        "endChar": 13
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c219985e_9aa5cdf9",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 99,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e6f5fbf9_f1b8d125",
       "range": {
         "startLine": 99,
         "startChar": 9,
@@ -146,6 +194,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "5512ecfd_644953f4",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 108,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c325eb71_8727ed06",
+      "range": {
+        "startLine": 108,
+        "startChar": 5,
+        "endLine": 108,
+        "endChar": 10
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f1afa8cc_14ef7efc",
@@ -159,6 +231,30 @@
       "writtenOn": "2024-11-08T18:00:20Z",
       "side": 1,
       "message": "We should document the ownership model and lifetime of this data, e.g. I assume the implementation needs to ensure this data stays valid and unchanged until the next call to `init`?\n\nIf we always copy this data to a separate buffer anyway, it might simplify the API to provide a buffer instead and have the `AvbHashOps` do the copy into the destination buffer. That way there\u0027s no leaking of ownership out of this interface and the memory model becomes simpler.",
+      "range": {
+        "startLine": 115,
+        "startChar": 43,
+        "endLine": 115,
+        "endChar": 67
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "b7c7bc24_dd0d95e7",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 115,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "\u003e We should document the ownership model and lifetime of this data\n\nAdded comments about out_data `lifetime` requirements.\n\n\u003e If we always copy this data to a separate buffer anyway\n\nWe don\u0027t always do this. Ensuring it would require additional stack allocations, which I don\u0027t think is worth it.",
+      "parentUuid": "f1afa8cc_14ef7efc",
       "range": {
         "startLine": 115,
         "startChar": 43,
@@ -192,6 +288,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "accd717b_49771bdf",
+        "filename": "libavb/avb_sha.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 42,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "5a3de281_eb33cd78",
+      "range": {
+        "startLine": 37,
+        "startChar": 0,
+        "endLine": 42,
+        "endChar": 73
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "3228c639_99a0908d",
@@ -205,6 +325,30 @@
       "writtenOn": "2024-11-08T18:00:20Z",
       "side": 1,
       "message": "nit: `hash_ops`",
+      "range": {
+        "startLine": 315,
+        "startChar": 3,
+        "endLine": 315,
+        "endChar": 6
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "658eb87a_d21da588",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 315,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "3228c639_99a0908d",
       "range": {
         "startLine": 315,
         "startChar": 3,
@@ -238,6 +382,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "a5c59cdb_ba294cb8",
+        "filename": "libavb/avb_vbmeta_image.h",
+        "patchSetId": 4
+      },
+      "lineNbr": 287,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "8a2a4a92_f55abefb",
+      "range": {
+        "startLine": 287,
+        "startChar": 3,
+        "endLine": 287,
+        "endChar": 6
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "9537564a_701f2d4f",
@@ -261,6 +429,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4dbf3ab0_d04552f0",
+        "filename": "libavb_cert/avb_cert_validate.c",
+        "patchSetId": 4
+      },
+      "lineNbr": 64,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "To keep it compatble with compile-time provided implementations, it\u0027s better to panic. Modified API and mentioned this behaviour requirement in the comments.",
+      "parentUuid": "9537564a_701f2d4f",
+      "range": {
+        "startLine": 62,
+        "startChar": 0,
+        "endLine": 64,
+        "endChar": 58
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "f1022c1a_d6d8b228",
@@ -274,6 +466,30 @@
       "writtenOn": "2024-11-08T18:00:20Z",
       "side": 1,
       "message": "For enums that don\u0027t need particular special handling, so far we\u0027ve just opted to expose them directly even though it results in some slightly non-idiomatic `ALL_CAPS` naming, e.g. https://cs.android.com/android/platform/superproject/main/+/main:external/avb/rust/src/verify.rs;l\u003d43.\n\nSeems worth it to avoid a bunch of unnecessary boilerplate to convert between two mostly-identical types, if it works here.",
+      "range": {
+        "startLine": 22,
+        "startChar": 9,
+        "endLine": 22,
+        "endChar": 17
+      },
+      "revId": "1b4d09ea2b7f99e0d0a8cc9aabcf260ff6c959e8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a6fd31bf_1485d9bd",
+        "filename": "rust/src/hash.rs",
+        "patchSetId": 4
+      },
+      "lineNbr": 22,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "f1022c1a_d6d8b228",
       "range": {
         "startLine": 22,
         "startChar": 9,

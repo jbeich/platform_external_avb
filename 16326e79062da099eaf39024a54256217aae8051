@@ -88,6 +88,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "b60072c0_4eff2a5a",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 1
+      },
+      "lineNbr": 143,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-23T20:54:13Z",
+      "side": 1,
+      "message": "Get rid of this requirement.",
+      "parentUuid": "534f9b04_b51beebf",
+      "range": {
+        "startLine": 141,
+        "startChar": 54,
+        "endLine": 143,
+        "endChar": 71
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "c9c05ed5_99423831",
