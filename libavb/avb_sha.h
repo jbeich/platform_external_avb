@@ -37,6 +37,10 @@
 extern "C" {
 #endif
 
+#include "avb_ops.h"
+
+#ifndef AVB_FORCE_HASH_OPS
+
 #include "avb_crypto.h"
 #include "avb_sysdeps.h"
 
@@ -82,6 +86,11 @@ void avb_sha512_update(AvbSHA512Ctx* ctx, const uint8_t* data, size_t len);
 
 /* Returns the SHA-512 digest. */
 uint8_t* avb_sha512_final(AvbSHA512Ctx* ctx) AVB_ATTR_WARN_UNUSED_RESULT;
+
+#endif /* AVB_FORCE_HASH_OPS */
+
+/* Fallbacks to compile-time provided hash_ops implementation */
+AvbHashOps* or_default_hash_ops(AvbHashOps* ops);
 
 #ifdef __cplusplus
 }
