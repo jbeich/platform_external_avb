@@ -228,6 +228,30 @@
       },
       "revId": "16326e79062da099eaf39024a54256217aae8051",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c746217e_f712fb3b",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 408,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-23T23:29:36Z",
+      "side": 1,
+      "message": "Ah shoot, sorry that didn\u0027t occur to me.\n\nI think if we want this to work in all contexts the old one did (e.g. thread-safe by default) we will need to stack-allocate the default context here. But since we\u0027re already stack-allocating in the current implementation it\u0027s not much different, and we could even possibly make the 256/512 contexts a `union` to optimize it a bit and make it better than the current.\n\nWe could also use the `AVB_FORCE_HASH_OPS` define as an optimization to remove the stack allocation altogether, so maybe something like:\n\n```\ntypedef struct {\n  AvbHashOps ops;\n  AvbDigestType type;\n  union {\n    AvbSHA256Ctx sha256_context;\n    AvbSHA512Ctx sha512_context;\n  };\n} DefaultAvbHashOps;\n```\n\n```\n#ifdef AVB_FORCE_HASH_OPS\nAvbHashOps* hash_ops \u003d ops-\u003ehash_ops;\navb_assert(hash_ops !\u003d NULL);  \n#else\nDefaultAvbHashOps default_ops;\nAvbHashOps* hash_ops \u003d ops-\u003ehash_ops ? ops-\u003ehash_ops : \u0026default_ops;\n#endif\n\nhash_ops-\u003einit(hash_ops, digest_type);\nhash_ops-\u003eupdate(hash_ops, desc_salt, hash_desc.salt_len);\nhash_ops-\u003eupdate(hash_ops, image_buf, image_size_to_hash);\ndigest \u003d hash_ops-\u003efinalize(hash_ops);\n```\n\nDoes it seem like that would work? It is admittedly a bit uglier, but I can\u0027t think of a better way off the top of my head.",
+      "parentUuid": "b800d4d1_44296090",
+      "range": {
+        "startLine": 404,
+        "startChar": 0,
+        "endLine": 408,
+        "endChar": 42
+      },
+      "revId": "16326e79062da099eaf39024a54256217aae8051",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }

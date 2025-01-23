@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c915c5cc_dc4534ea",
+        "filename": "libavb/avb_sha.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-23T23:29:36Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 34,
+        "startChar": 32,
+        "endLine": 34,
+        "endChar": 40
+      },
+      "revId": "543899161802f9c7e1bea95b22a8ec506ea7fc11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
