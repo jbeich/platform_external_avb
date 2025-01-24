@@ -99,6 +99,7 @@ cc_defaults {
         "libavb/avb_kernel_cmdline_descriptor.c",
         "libavb/avb_property_descriptor.c",
         "libavb/avb_rsa.c",
+        "libavb/avb_sha.c",
         "libavb/avb_slot_verify.c",
         "libavb/avb_util.c",
         "libavb/avb_vbmeta_image.c",

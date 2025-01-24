@@ -23,6 +23,7 @@
  */
 
 #include "avb_vbmeta_image.h"
+
 #include "avb_crypto.h"
 #include "avb_rsa.h"
 #include "avb_sha.h"
@@ -30,16 +31,15 @@
 #include "avb_version.h"
 
 AvbVBMetaVerifyResult avb_vbmeta_image_verify(
+    AvbHashOps* hash_ops,
     const uint8_t* data,
     size_t length,
     const uint8_t** out_public_key_data,
     size_t* out_public_key_length) {
   AvbVBMetaVerifyResult ret;
   AvbVBMetaImageHeader h;
-  uint8_t* computed_hash;
+  const uint8_t* computed_hash;
   const AvbAlgorithmData* algorithm;
-  AvbSHA256Ctx sha256_ctx;
-  AvbSHA512Ctx sha512_ctx;
   const uint8_t* header_block;
   const uint8_t* authentication_block;
   const uint8_t* auxiliary_block;
@@ -173,33 +173,31 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
   authentication_block = header_block + sizeof(AvbVBMetaImageHeader);
   auxiliary_block = authentication_block + h.authentication_data_block_size;
 
+  AvbDigestType digest_type;
   switch (h.algorithm_type) {
     /* Explicit fall-through: */
     case AVB_ALGORITHM_TYPE_SHA256_RSA2048:
     case AVB_ALGORITHM_TYPE_SHA256_RSA4096:
     case AVB_ALGORITHM_TYPE_SHA256_RSA8192:
-      avb_sha256_init(&sha256_ctx);
-      avb_sha256_update(
-          &sha256_ctx, header_block, sizeof(AvbVBMetaImageHeader));
-      avb_sha256_update(
-          &sha256_ctx, auxiliary_block, h.auxiliary_data_block_size);
-      computed_hash = avb_sha256_final(&sha256_ctx);
+      digest_type = AVB_DIGEST_TYPE_SHA256;
       break;
     /* Explicit fall-through: */
     case AVB_ALGORITHM_TYPE_SHA512_RSA2048:
     case AVB_ALGORITHM_TYPE_SHA512_RSA4096:
     case AVB_ALGORITHM_TYPE_SHA512_RSA8192:
-      avb_sha512_init(&sha512_ctx);
-      avb_sha512_update(
-          &sha512_ctx, header_block, sizeof(AvbVBMetaImageHeader));
-      avb_sha512_update(
-          &sha512_ctx, auxiliary_block, h.auxiliary_data_block_size);
-      computed_hash = avb_sha512_final(&sha512_ctx);
+      digest_type = AVB_DIGEST_TYPE_SHA512;
       break;
     default:
       avb_error("Unknown algorithm.\n");
       goto out;
   }
+  AvbHashOps* provided_hash_ops = AVB_PREPARE_HASH_OPS(hash_ops);
+  provided_hash_ops->init(provided_hash_ops, digest_type);
+  provided_hash_ops->update(
+      provided_hash_ops, header_block, sizeof(AvbVBMetaImageHeader));
+  provided_hash_ops->update(
+      provided_hash_ops, auxiliary_block, h.auxiliary_data_block_size);
+  computed_hash = provided_hash_ops->finalize(provided_hash_ops);
 
   if (avb_safe_memcmp(authentication_block + h.hash_offset,
                       computed_hash,
