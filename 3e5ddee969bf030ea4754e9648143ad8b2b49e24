@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "46e38aa8_439f318e",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-24T17:29:02Z",
+      "side": 1,
+      "message": "TODO: tests",
+      "revId": "3e5ddee969bf030ea4754e9648143ad8b2b49e24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

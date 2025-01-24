@@ -22,6 +22,30 @@
       },
       "revId": "543899161802f9c7e1bea95b22a8ec506ea7fc11",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "dca881e7_545a8746",
+        "filename": "libavb/avb_sha.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 34,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-24T17:29:02Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "c915c5cc_dc4534ea",
+      "range": {
+        "startLine": 34,
+        "startChar": 32,
+        "endLine": 34,
+        "endChar": 40
+      },
+      "revId": "543899161802f9c7e1bea95b22a8ec506ea7fc11",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
