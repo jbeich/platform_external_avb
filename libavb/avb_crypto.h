@@ -29,6 +29,7 @@
 #ifndef AVB_CRYPTO_H_
 #define AVB_CRYPTO_H_
 
+#include "avb_ops.h"
 #include "avb_sysdeps.h"
 
 #ifdef __cplusplus
@@ -52,12 +53,6 @@ extern "C" {
 
 /* Size in bytes of a SHA-512 digest. */
 #define AVB_SHA512_DIGEST_SIZE 64
-
-/* Possible digest types supported by libavb routines. */
-typedef enum {
-  AVB_DIGEST_TYPE_SHA256,
-  AVB_DIGEST_TYPE_SHA512,
-} AvbDigestType;
 
 /* Algorithms that can be used in the vbmeta image for
  * verification. An algorithm consists of a hash type and a signature

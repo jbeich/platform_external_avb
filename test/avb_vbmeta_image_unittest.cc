@@ -58,7 +58,7 @@ TEST_F(VerifyTest, CheckSHA256RSA2048) {
       "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA256RSA4096) {
@@ -66,7 +66,7 @@ TEST_F(VerifyTest, CheckSHA256RSA4096) {
       "vbmeta.img", "SHA256_RSA4096", 0, "test/data/testkey_rsa4096.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA256RSA8192) {
@@ -74,7 +74,7 @@ TEST_F(VerifyTest, CheckSHA256RSA8192) {
       "vbmeta.img", "SHA256_RSA8192", 0, "test/data/testkey_rsa8192.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA512RSA2048) {
@@ -82,7 +82,7 @@ TEST_F(VerifyTest, CheckSHA512RSA2048) {
       "vbmeta.img", "SHA512_RSA2048", 0, "test/data/testkey_rsa2048.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA512RSA4096) {
@@ -90,7 +90,7 @@ TEST_F(VerifyTest, CheckSHA512RSA4096) {
       "vbmeta.img", "SHA512_RSA4096", 0, "test/data/testkey_rsa4096.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckSHA512RSA8192) {
@@ -98,14 +98,14 @@ TEST_F(VerifyTest, CheckSHA512RSA8192) {
       "vbmeta.img", "SHA512_RSA8192", 0, "test/data/testkey_rsa8192.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckUnsigned) {
   GenerateVBMetaImage("vbmeta.img", "", 0, "");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK_NOT_SIGNED,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, CheckBiggerLength) {
@@ -113,9 +113,10 @@ TEST_F(VerifyTest, CheckBiggerLength) {
       "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
   // Check that it's OK if we pass a bigger length than what the
   // header indicates.
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size() + 8192, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(
+          NULL, vbmeta_image_.data(), vbmeta_image_.size() + 8192, NULL, NULL));
 }
 
 TEST_F(VerifyTest, BadMagic) {
@@ -124,7 +125,7 @@ TEST_F(VerifyTest, BadMagic) {
   vbmeta_image_[0] = 'Z';
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, MajorVersionCheck) {
@@ -137,7 +138,7 @@ TEST_F(VerifyTest, MajorVersionCheck) {
   h->required_libavb_version_major = htobe32(1 + AVB_VERSION_MAJOR);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_UNSUPPORTED_VERSION,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, MinorVersionCheck) {
@@ -149,7 +150,7 @@ TEST_F(VerifyTest, MinorVersionCheck) {
   h->required_libavb_version_minor = htobe32(1 + AVB_VERSION_MINOR);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_UNSUPPORTED_VERSION,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, NulTerminatedReleaseString) {
@@ -163,7 +164,7 @@ TEST_F(VerifyTest, NulTerminatedReleaseString) {
   }
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, BlockSizesAddUpToLessThanLength) {
@@ -182,13 +183,13 @@ TEST_F(VerifyTest, BlockSizesAddUpToLessThanLength) {
   h->authentication_data_block_size = htobe64(size);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
   *h = backup;
 
   h->auxiliary_data_block_size = htobe64(size);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
   *h = backup;
 
   // Overflow checks - choose overflow candidate so it's a multiple of
@@ -198,18 +199,18 @@ TEST_F(VerifyTest, BlockSizesAddUpToLessThanLength) {
   h->authentication_data_block_size = htobe64(size);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
   *h = backup;
 
   h->auxiliary_data_block_size = htobe64(size);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
   *h = backup;
 
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, BlockSizesMultipleOf64) {
@@ -222,21 +223,23 @@ TEST_F(VerifyTest, BlockSizesMultipleOf64) {
 
   h->authentication_data_block_size =
       htobe32(be32toh(h->authentication_data_block_size) - 32);
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
-            avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size() - 32, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
+      avb_vbmeta_image_verify(
+          NULL, vbmeta_image_.data(), vbmeta_image_.size() - 32, NULL, NULL));
   *h = backup;
 
   h->auxiliary_data_block_size =
       htobe32(be32toh(h->auxiliary_data_block_size) - 32);
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
-            avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size() - 32, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
+      avb_vbmeta_image_verify(
+          NULL, vbmeta_image_.data(), vbmeta_image_.size() - 32, NULL, NULL));
   *h = backup;
 
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, HashOutOfBounds) {
@@ -251,14 +254,14 @@ TEST_F(VerifyTest, HashOutOfBounds) {
   h->hash_size = htobe64(be64toh(h->authentication_data_block_size));
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 
   // Overflow checks.
   h->hash_offset = htobe64(4);
   h->hash_size = htobe64(0xfffffffffffffffeUL);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, SignatureOutOfBounds) {
@@ -273,14 +276,14 @@ TEST_F(VerifyTest, SignatureOutOfBounds) {
   h->signature_size = htobe64(be64toh(h->authentication_data_block_size));
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 
   // Overflow checks.
   h->signature_offset = htobe64(4);
   h->signature_size = htobe64(0xfffffffffffffffeUL);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, PublicKeyOutOfBounds) {
@@ -295,14 +298,14 @@ TEST_F(VerifyTest, PublicKeyOutOfBounds) {
   h->public_key_size = htobe64(be64toh(h->auxiliary_data_block_size));
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 
   // Overflow checks.
   h->public_key_offset = htobe64(4);
   h->public_key_size = htobe64(0xfffffffffffffffeUL);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, PublicKeyMetadataOutOfBounds) {
@@ -317,14 +320,14 @@ TEST_F(VerifyTest, PublicKeyMetadataOutOfBounds) {
   h->public_key_metadata_size = htobe64(be64toh(h->auxiliary_data_block_size));
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 
   // Overflow checks.
   h->public_key_metadata_offset = htobe64(4);
   h->public_key_metadata_size = htobe64(0xfffffffffffffffeUL);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, InvalidAlgorithmField) {
@@ -339,11 +342,11 @@ TEST_F(VerifyTest, InvalidAlgorithmField) {
   h->algorithm_type = htobe32(_AVB_ALGORITHM_NUM_TYPES);
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
   *h = backup;
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, PublicKeyBlockTooSmall) {
@@ -357,21 +360,22 @@ TEST_F(VerifyTest, PublicKeyBlockTooSmall) {
   // Check we bail if the auxiliary data block is too small.
   uint64_t change = be64toh(h->auxiliary_data_block_size) - 64;
   h->auxiliary_data_block_size = htobe64(change);
-  EXPECT_EQ(
-      AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
-      avb_vbmeta_image_verify(
-          vbmeta_image_.data(), vbmeta_image_.size() - change, NULL, NULL));
+  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
+            avb_vbmeta_image_verify(NULL,
+                                    vbmeta_image_.data(),
+                                    vbmeta_image_.size() - change,
+                                    NULL,
+                                    NULL));
   *h = backup;
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 }
 
 TEST_F(VerifyTest, VbmetaImageSmallerThanMagic) {
   uint8_t vbmeta_onebyte[1] = {0};
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER,
-            avb_vbmeta_image_verify(
-                vbmeta_onebyte, 1, NULL, NULL));
+            avb_vbmeta_image_verify(NULL, vbmeta_onebyte, 1, NULL, NULL));
 }
 
 bool VerifyTest::test_modification(AvbVBMetaVerifyResult expected_result,
@@ -386,7 +390,7 @@ bool VerifyTest::test_modification(AvbVBMetaVerifyResult expected_result,
     size_t o = std::min(length * n / kNumCheckpoints, length - 1) + offset;
     d[o] ^= 0x80;
     AvbVBMetaVerifyResult result = avb_vbmeta_image_verify(
-        vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL);
+        NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL);
     d[o] ^= 0x80;
     if (result != expected_result) {
       return false;
@@ -402,7 +406,7 @@ TEST_F(VerifyTest, ModificationDetection) {
 
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
             avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
+                NULL, vbmeta_image_.data(), vbmeta_image_.size(), NULL, NULL));
 
   AvbVBMetaImageHeader h;
   avb_vbmeta_image_header_to_host_byte_order(
