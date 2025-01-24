@@ -37,7 +37,19 @@
 extern "C" {
 #endif
 
+#ifdef AVB_FORCE_HASH_OPS
+
+/* HashOps are requred to be provided at run-time. Ensure it before return. */
+#define AVB_PREPARE_HASH_OPS(hash_ops) \
+  ({                                   \
+    avb_assert(hash_ops != NULL);      \
+    hash_ops;                          \
+  })
+
+#else
+
 #include "avb_crypto.h"
+#include "avb_ops.h"
 #include "avb_sysdeps.h"
 
 /* The following defines must be set to something appropriate
@@ -65,6 +77,33 @@ typedef struct {
   uint8_t buf[AVB_SHA512_DIGEST_SIZE]; /* Used for storing the final digest. */
 } AvbSHA512Ctx;
 
+/* AvbHashOps using compile-time provided implementation.
+ * AvbCompileTimeHashOps.ops must be initialized by `or_default_hash_ops` before
+ * use. Pointer to AvbCompileTimeHashOps is binary compatible with AvbHashOps
+ * from avb_ops.h.
+ */
+typedef struct {
+  AvbHashOps ops;
+  AvbDigestType type;
+  union {
+    AvbSHA256Ctx sha256_context;
+    AvbSHA512Ctx sha512_context;
+  };
+} AvbCompileTimeHashOps;
+
+/* Check run-time provided hash ops and fall-back to compile-time provided in
+ * case it's not */
+AvbHashOps* or_default_hash_ops(AvbHashOps* ops,
+                                AvbCompileTimeHashOps* default_ops);
+
+/* HashOps may not be available, check this and use compile-time provided hash
+ * implementation. */
+#define AVB_PREPARE_HASH_OPS(hash_ops)           \
+  ({                                             \
+    AvbCompileTimeHashOps default_ops;           \
+    or_default_hash_ops(hash_ops, &default_ops); \
+  })
+
 /* Initializes the SHA-256 context. */
 void avb_sha256_init(AvbSHA256Ctx* ctx);
 
@@ -82,6 +121,8 @@ void avb_sha512_update(AvbSHA512Ctx* ctx, const uint8_t* data, size_t len);
 
 /* Returns the SHA-512 digest. */
 uint8_t* avb_sha512_final(AvbSHA512Ctx* ctx) AVB_ATTR_WARN_UNUSED_RESULT;
+
+#endif /* AVB_FORCE_HASH_OPS */
 
 #ifdef __cplusplus
 }

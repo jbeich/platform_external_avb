@@ -52,29 +52,30 @@ static uint8_t last_unlock_challenge[AVB_CERT_UNLOCK_CHALLENGE_SIZE];
 static bool last_unlock_challenge_set = false;
 
 /* Computes the SHA256 |hash| of |length| bytes of |data|. */
-static void sha256(const uint8_t* data,
-                   uint32_t length,
+static void sha256(AvbHashOps* hash_ops,
+                   const uint8_t* data,
+                   size_t length,
                    uint8_t hash[AVB_SHA256_DIGEST_SIZE]) {
-  AvbSHA256Ctx context;
-  avb_sha256_init(&context);
-  avb_sha256_update(&context, data, length);
-  uint8_t* tmp = avb_sha256_final(&context);
-  avb_memcpy(hash, tmp, AVB_SHA256_DIGEST_SIZE);
+  hash_ops->init(hash_ops, AVB_DIGEST_TYPE_SHA256);
+  hash_ops->update(hash_ops, data, length);
+  const uint8_t* result = hash_ops->finalize(hash_ops);
+  avb_memcpy(hash, result, AVB_SHA256_DIGEST_SIZE);
 }
 
 /* Computes the SHA512 |hash| of |length| bytes of |data|. */
-static void sha512(const uint8_t* data,
+static void sha512(AvbHashOps* hash_ops,
+                   const uint8_t* data,
                    uint32_t length,
                    uint8_t hash[AVB_SHA512_DIGEST_SIZE]) {
-  AvbSHA512Ctx context;
-  avb_sha512_init(&context);
-  avb_sha512_update(&context, data, length);
-  uint8_t* tmp = avb_sha512_final(&context);
-  avb_memcpy(hash, tmp, AVB_SHA512_DIGEST_SIZE);
+  hash_ops->init(hash_ops, AVB_DIGEST_TYPE_SHA512);
+  hash_ops->update(hash_ops, data, length);
+  const uint8_t* result = hash_ops->finalize(hash_ops);
+  avb_memcpy(hash, result, AVB_SHA512_DIGEST_SIZE);
 }
 
 /* Verifies structure and |expected_hash| of permanent |attributes|. */
 static bool verify_permanent_attributes(
+    AvbHashOps* hash_ops,
     const AvbCertPermanentAttributes* attributes,
     const uint8_t expected_hash[AVB_SHA256_DIGEST_SIZE]) {
   uint8_t hash[AVB_SHA256_DIGEST_SIZE];
@@ -83,7 +84,10 @@ static bool verify_permanent_attributes(
     avb_error("Unsupported permanent attributes version.\n");
     return false;
   }
-  sha256((const uint8_t*)attributes, sizeof(AvbCertPermanentAttributes), hash);
+  sha256(hash_ops,
+         (const uint8_t*)attributes,
+         sizeof(AvbCertPermanentAttributes),
+         hash);
   if (0 != avb_safe_memcmp(hash, expected_hash, AVB_SHA256_DIGEST_SIZE)) {
     avb_error("Invalid permanent attributes.\n");
     return false;
@@ -93,6 +97,7 @@ static bool verify_permanent_attributes(
 
 /* Verifies the format, key version, usage, and signature of a certificate. */
 static bool verify_certificate(
+    AvbHashOps* hash_ops,
     const AvbCertCertificate* certificate,
     const uint8_t authority[AVB_CERT_PUBLIC_KEY_SIZE],
     uint64_t minimum_key_version,
@@ -105,7 +110,8 @@ static bool verify_certificate(
     return false;
   }
   algorithm_data = avb_get_algorithm_data(AVB_ALGORITHM_TYPE_SHA512_RSA4096);
-  sha512((const uint8_t*)&certificate->signed_data,
+  sha512(hash_ops,
+         (const uint8_t*)&certificate->signed_data,
          sizeof(AvbCertCertificateSignedData),
          certificate_hash);
   if (!avb_rsa_verify(authority,
@@ -134,10 +140,12 @@ static bool verify_certificate(
 
 /* Verifies signature and fields of a PIK certificate. */
 static bool verify_pik_certificate(
+    AvbHashOps* hash_ops,
     const AvbCertCertificate* certificate,
     const uint8_t authority[AVB_CERT_PUBLIC_KEY_SIZE],
     uint64_t minimum_version) {
-  if (!verify_certificate(certificate,
+  if (!verify_certificate(hash_ops,
+                          certificate,
                           authority,
                           minimum_version,
                           CERT_USAGE_HASH_INTERMEDIATE_AUTHORITY)) {
@@ -149,18 +157,22 @@ static bool verify_pik_certificate(
 
 /* Verifies signature and fields of a PSK certificate. */
 static bool verify_psk_certificate(
+    AvbHashOps* hash_ops,
     const AvbCertCertificate* certificate,
     const uint8_t authority[AVB_CERT_PUBLIC_KEY_SIZE],
     uint64_t minimum_version,
     const uint8_t product_id[AVB_CERT_PRODUCT_ID_SIZE]) {
   uint8_t expected_subject[AVB_SHA256_DIGEST_SIZE];
 
-  if (!verify_certificate(
-          certificate, authority, minimum_version, CERT_USAGE_HASH_SIGNING)) {
+  if (!verify_certificate(hash_ops,
+                          certificate,
+                          authority,
+                          minimum_version,
+                          CERT_USAGE_HASH_SIGNING)) {
     avb_error("Invalid PSK certificate.\n");
     return false;
   }
-  sha256(product_id, AVB_CERT_PRODUCT_ID_SIZE, expected_subject);
+  sha256(hash_ops, product_id, AVB_CERT_PRODUCT_ID_SIZE, expected_subject);
   if (0 != avb_safe_memcmp(certificate->signed_data.subject,
                            expected_subject,
                            AVB_SHA256_DIGEST_SIZE)) {
@@ -172,18 +184,22 @@ static bool verify_psk_certificate(
 
 /* Verifies signature and fields of a PUK certificate. */
 static bool verify_puk_certificate(
+    AvbHashOps* hash_ops,
     const AvbCertCertificate* certificate,
     const uint8_t authority[AVB_CERT_PUBLIC_KEY_SIZE],
     uint64_t minimum_version,
     const uint8_t product_id[AVB_CERT_PRODUCT_ID_SIZE]) {
   uint8_t expected_subject[AVB_SHA256_DIGEST_SIZE];
 
-  if (!verify_certificate(
-          certificate, authority, minimum_version, CERT_USAGE_HASH_UNLOCK)) {
+  if (!verify_certificate(hash_ops,
+                          certificate,
+                          authority,
+                          minimum_version,
+                          CERT_USAGE_HASH_UNLOCK)) {
     avb_error("Invalid PUK certificate.\n");
     return false;
   }
-  sha256(product_id, AVB_CERT_PRODUCT_ID_SIZE, expected_subject);
+  sha256(hash_ops, product_id, AVB_CERT_PRODUCT_ID_SIZE, expected_subject);
   if (0 != avb_safe_memcmp(certificate->signed_data.subject,
                            expected_subject,
                            AVB_SHA256_DIGEST_SIZE)) {
@@ -206,6 +222,8 @@ AvbIOResult avb_cert_validate_vbmeta_public_key(
   AvbCertPublicKeyMetadata metadata;
   uint64_t minimum_version;
 
+  AvbHashOps* hash_ops = AVB_PREPARE_HASH_OPS(ops->hash_ops);
+
   /* Be pessimistic so we can exit early without having to remember to clear.
    */
   *out_is_trusted = false;
@@ -223,8 +241,8 @@ AvbIOResult avb_cert_validate_vbmeta_public_key(
     avb_error("Failed to read permanent attributes hash.\n");
     return result;
   }
-  if (!verify_permanent_attributes(&permanent_attributes,
-                                   permanent_attributes_hash)) {
+  if (!verify_permanent_attributes(
+          hash_ops, &permanent_attributes, permanent_attributes_hash)) {
     return AVB_IO_RESULT_OK;
   }
 
@@ -246,7 +264,8 @@ AvbIOResult avb_cert_validate_vbmeta_public_key(
     avb_error("Failed to read PIK minimum version.\n");
     return result;
   }
-  if (!verify_pik_certificate(&metadata.product_intermediate_key_certificate,
+  if (!verify_pik_certificate(hash_ops,
+                              &metadata.product_intermediate_key_certificate,
                               permanent_attributes.product_root_public_key,
                               minimum_version)) {
     return AVB_IO_RESULT_OK;
@@ -260,6 +279,7 @@ AvbIOResult avb_cert_validate_vbmeta_public_key(
     return result;
   }
   if (!verify_psk_certificate(
+          hash_ops,
           &metadata.product_signing_key_certificate,
           metadata.product_intermediate_key_certificate.signed_data.public_key,
           minimum_version,
@@ -299,6 +319,8 @@ AvbIOResult avb_cert_generate_unlock_challenge(
   AvbIOResult result = AVB_IO_RESULT_OK;
   AvbCertPermanentAttributes permanent_attributes;
 
+  AvbHashOps* hash_ops = AVB_PREPARE_HASH_OPS(cert_ops->ops->hash_ops);
+
   /* We need the permanent attributes to compute the product_id_hash. */
   result = cert_ops->read_permanent_attributes(cert_ops, &permanent_attributes);
   if (result != AVB_IO_RESULT_OK) {
@@ -313,7 +335,8 @@ AvbIOResult avb_cert_generate_unlock_challenge(
   }
   last_unlock_challenge_set = true;
   out_unlock_challenge->version = 1;
-  sha256(permanent_attributes.product_id,
+  sha256(hash_ops,
+         permanent_attributes.product_id,
          AVB_CERT_PRODUCT_ID_SIZE,
          out_unlock_challenge->product_id_hash);
   avb_memcpy(out_unlock_challenge->challenge,
@@ -337,6 +360,8 @@ AvbIOResult avb_cert_validate_unlock_credential(
    */
   *out_is_trusted = false;
 
+  AvbHashOps* hash_ops = AVB_PREPARE_HASH_OPS(cert_ops->ops->hash_ops);
+
   /* Sanity check the credential. */
   if (unlock_credential->version != 1) {
     avb_error("Unsupported unlock credential format.\n");
@@ -355,8 +380,8 @@ AvbIOResult avb_cert_validate_unlock_credential(
     avb_error("Failed to read permanent attributes hash.\n");
     return result;
   }
-  if (!verify_permanent_attributes(&permanent_attributes,
-                                   permanent_attributes_hash)) {
+  if (!verify_permanent_attributes(
+          hash_ops, &permanent_attributes, permanent_attributes_hash)) {
     return AVB_IO_RESULT_OK;
   }
 
@@ -368,6 +393,7 @@ AvbIOResult avb_cert_validate_unlock_credential(
     return result;
   }
   if (!verify_pik_certificate(
+          hash_ops,
           &unlock_credential->product_intermediate_key_certificate,
           permanent_attributes.product_root_public_key,
           minimum_version)) {
@@ -382,6 +408,7 @@ AvbIOResult avb_cert_validate_unlock_credential(
     return result;
   }
   if (!verify_puk_certificate(
+          hash_ops,
           &unlock_credential->product_unlock_key_certificate,
           unlock_credential->product_intermediate_key_certificate.signed_data
               .public_key,
@@ -395,7 +422,10 @@ AvbIOResult avb_cert_validate_unlock_credential(
     avb_error("Challenge does not exist.\n");
     return AVB_IO_RESULT_OK;
   }
-  sha512(last_unlock_challenge, AVB_CERT_UNLOCK_CHALLENGE_SIZE, challenge_hash);
+  sha512(hash_ops,
+         last_unlock_challenge,
+         AVB_CERT_UNLOCK_CHALLENGE_SIZE,
+         challenge_hash);
   last_unlock_challenge_set = false;
 
   /* Verify the challenge signature. */

@@ -94,7 +94,7 @@ TEST_F(AvbSlotVerifyTest, Basic) {
       std::string(slot_data->cmdline));
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
   avb_slot_verify_data_free(slot_data);
@@ -137,7 +137,7 @@ TEST_F(AvbSlotVerifyTest, BasicSha512) {
       std::string(slot_data->cmdline));
   uint8_t vbmeta_digest[AVB_SHA512_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA512, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA512, vbmeta_digest);
   EXPECT_EQ(
       "cb913d2f1a884f4e04c1db5bb181f3133fd16ac02fb367a20ef0776c0b07b3656ad1f081"
       "e01932cf70f38b8960877470b448f1588dff022808387cc52fa77e77",
@@ -1138,7 +1138,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
   }
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("4a45faa9adfeb94e9154fe682c11fef1a1a3d829b67cbf1a12ac7f0aa4f8e2e4",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
   avb_slot_verify_data_free(slot_data);
@@ -1297,7 +1297,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
 
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("40adb9e4d7a21cbba5c48ce540c370405e83af3355588aa108db5347b8459d71",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
 
@@ -1611,7 +1611,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
   }
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("232447e92370ed31c2b6c5fb7328eb5d828a9819b3e6f6c10d96b9ca6fd209a1",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
   avb_slot_verify_data_free(slot_data);
