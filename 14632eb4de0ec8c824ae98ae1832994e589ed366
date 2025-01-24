@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b669b1f5_4c131690",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 152,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-24T18:27:07Z",
+      "side": 1,
+      "message": "nit: this wording may be slightly confusing, it kind of sounds like the user must provide this, because internally we may be setting AVB_FORCE_HASH_OPS and they need to be prepared for it.\n\nIt may help to expand this description a little bit, e.g. something like:\n\n```\nAllows AvbOps-specific hash backends.\n\nIf this pointer is NULL, hashing is done via the global functions in avb_sha.h.\nIf this pointer is set, all hashing will instead use these functions.\n\nAVB_FORCE_HASH_OPS can optionally be defined to make `hash_ops` mandatory.\nSee avb_sha.h for details.\n```",
+      "range": {
+        "startLine": 151,
+        "startChar": 57,
+        "endLine": 152,
+        "endChar": 61
+      },
+      "revId": "14632eb4de0ec8c824ae98ae1832994e589ed366",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d60324f_302d057f",
+        "filename": "libavb/avb_sha.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-24T18:27:07Z",
+      "side": 1,
+      "message": "We should provide some documentation for this define, explaining why a user might want to use it e.g.:\n\n1. Removes the need to define the global hash functions\n2. Reduces stack usage (? maybe not worth mentioning, it\u0027s just ~64 bytes for the 512 context)",
+      "range": {
+        "startLine": 40,
+        "startChar": 7,
+        "endLine": 40,
+        "endChar": 25
+      },
+      "revId": "14632eb4de0ec8c824ae98ae1832994e589ed366",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "50830d72_d454df95",
+        "filename": "libavb/avb_sha.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 105,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-24T18:27:07Z",
+      "side": 1,
+      "message": "This is pretty wild, I had no idea something like this was supported in C!\n\nUnfortunately I don\u0027t *think* it will work here. Reading the docs at https://gcc.gnu.org/onlinedocs/gcc/Statement-Exprs.html:\n\n1. It seems to be a compiler extension, not part of the C language, and libavb needs to be as portable as possible so shouldn\u0027t rely on compiler extensions unless absolutely necessary\n\n2. I don\u0027t think `default_ops` lives long enough here, the docs say:\n\n   \u003e In a statement expression, any temporaries created within a statement are destroyed at that statement’s end\n   \n   I think what that means is that `default_ops` no longer exists once this block exits, so the pointer is dangling. It might happen to work if that stack area retains the raw bits of `default_ops`, but it\u0027s undefined behavior and if anything comes along and re-uses that part of the stack it\u0027s going to cause problems\n\nSo if we want to use a macro here I think we\u0027ll have to do the entire line, e.g. something like:\n\n```\n#define AVB_PREPARE_HASH_OPS(var_name, hash_ops) \\\n  AvbCompileTimeHashOps default_ops; \\\n  AvbHashOps* var_name \u003d hash_ops ? hash_ops : \u0026default_ops;\n```\n\nThen the usage looks like this, which isn\u0027t quite as clear but maybe still worth it:\n\n```\nAVB_PREPARE_HASH_OPS(hash_ops, ops-\u003ehash_ops);\n```",
+      "range": {
+        "startLine": 102,
+        "startChar": 0,
+        "endLine": 105,
+        "endChar": 4
+      },
+      "revId": "14632eb4de0ec8c824ae98ae1832994e589ed366",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
