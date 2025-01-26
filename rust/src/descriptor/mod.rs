@@ -91,7 +91,7 @@ impl From<FromBytesUntilNulError> for DescriptorError {
 /// `Result` type for `DescriptorError` errors.
 pub type DescriptorResult<T> = Result<T, DescriptorError>;
 
-impl<'a> Descriptor<'a> {
+impl Descriptor<'_> {
     /// Extracts the fully-typed descriptor from the generic `AvbDescriptor` header.
     ///
     /// # Arguments
@@ -102,7 +102,7 @@ impl<'a> Descriptor<'a> {
     ///
     /// # Safety
     /// `raw_descriptor` must point to a valid `AvbDescriptor`, including the `num_bytes_following`
-    /// data contents, that lives at least as long as `'a`.
+    /// data contents, that lives at least as long as `'_`.
     unsafe fn new(raw_descriptor: *const AvbDescriptor) -> DescriptorResult<Self> {
         // Transform header to host-endian.
         let mut descriptor = AvbDescriptor {
