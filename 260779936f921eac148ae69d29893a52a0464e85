@@ -35,6 +35,23 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "7548472e_d7f48e84",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3796308
+      },
+      "writtenOn": "2025-01-27T08:16:46Z",
+      "side": 1,
+      "message": "fixed style issues and checked for other potential style issues.\nUsed a max line lenght of 100.",
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "26545732_08fb84c2",
@@ -48,6 +65,30 @@
       "writtenOn": "2025-01-23T16:04:21Z",
       "side": 1,
       "message": "this now exceeds our style rules\u0027 max line lenth - please restructure.",
+      "range": {
+        "startLine": 809,
+        "startChar": 8,
+        "endLine": 809,
+        "endChar": 103
+      },
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a8fc590c_7ed63c9b",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 809,
+      "author": {
+        "id": 3796308
+      },
+      "writtenOn": "2025-01-27T08:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "26545732_08fb84c2",
       "range": {
         "startLine": 809,
         "startChar": 8,
@@ -104,6 +145,54 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "22502ff2_121db169",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 3796308
+      },
+      "writtenOn": "2025-01-27T08:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "b8a9ecc4_93f2809e",
+      "range": {
+        "startLine": 2659,
+        "startChar": 14,
+        "endLine": 2659,
+        "endChar": 123
+      },
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a67a070d_d3e79e1c",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2659,
+      "author": {
+        "id": 3796308
+      },
+      "writtenOn": "2025-01-27T08:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "78f76f2b_cb749dfd",
+      "range": {
+        "startLine": 2659,
+        "startChar": 125,
+        "endLine": 2659,
+        "endChar": 126
+      },
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "404abd8a_dc0ba8ad",
@@ -117,6 +206,30 @@
       "writtenOn": "2025-01-23T16:04:21Z",
       "side": 1,
       "message": "this also unfortunately exceeds max line length as well.",
+      "range": {
+        "startLine": 2672,
+        "startChar": 100,
+        "endLine": 2672,
+        "endChar": 101
+      },
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "84dc908f_89a9dc00",
+        "filename": "avbtool.py",
+        "patchSetId": 1
+      },
+      "lineNbr": 2672,
+      "author": {
+        "id": 3796308
+      },
+      "writtenOn": "2025-01-27T08:16:46Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "404abd8a_dc0ba8ad",
       "range": {
         "startLine": 2672,
         "startChar": 100,
