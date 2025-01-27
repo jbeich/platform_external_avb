@@ -806,8 +806,9 @@ class ImageHandler(object):
     self.block_size = 4096
     self._file_pos = 0
     if self.skip_missing and not os.path.exists(self.filename):
-        self.filename = os.path.join(os.path.dirname(self.filename), os.path.splitext(os.path.basename(
-            self.filename).upper())[0] + os.path.splitext(os.path.basename(self.filename))[1])
+        self.filename = os.path.join(os.path.dirname(self.filename), os.path.splitext(
+            os.path.basename(self.filename).upper())[0] + os.path.splitext(
+            os.path.basename(self.filename))[1])
         if not os.path.exists(self.filename):
             print(os.path.splitext(os.path.basename(self.filename.lower()))[0] + ': missing')
             self._image = None
@@ -1565,7 +1566,8 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       image_filename = find_partition_file(image_dir, self.partition_name, image_ext)
       image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
     if image._image is None:
-      sys.stderr.write(os.path.splitext(os.path.basename(image_filename.lower()))[0] + ': Partition not found and not verified!\n')
+      sys.stderr.write(os.path.splitext(os.path.basename(
+          image_filename.lower()))[0] + ': Partition not found and not verified!\n')
       return None
     # Generate the hashtree and checks that it matches what's in the file.
     digest_size = self._hashtree_digest_size()
@@ -1738,7 +1740,8 @@ class AvbHashDescriptor(AvbDescriptor):
       image_filename = find_partition_file(image_dir, self.partition_name, image_ext)
       image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
     if image._image is None:
-      sys.stderr.write(os.path.splitext(os.path.basename(image_filename.lower()))[0] + ': Partition not found and not verified!\n')
+      sys.stderr.write(os.path.splitext(os.path.basename(
+          image_filename.lower()))[0] + ': Partition not found and not verified!\n')
       return True
     data = image.read(self.image_size)
     ha = hashlib.new(self.hash_algorithm)
@@ -2605,7 +2608,8 @@ class Avb(object):
 
     image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
     if image._image is None:
-      sys.stderr.write(os.path.splitext(os.path.basename(image_filename.lower()))[0] + ': Partition not found and not verified!\n')
+      sys.stderr.write(os.path.splitext(os.path.basename(
+          image_filename.lower()))[0] + ': Partition not found and not verified!\n')
       return None
     (footer, header, descriptors, _) = self._parse_image(image)
     offset = 0
@@ -2643,7 +2647,8 @@ class Avb(object):
     for desc in descriptors:
       if (isinstance(desc, AvbChainPartitionDescriptor) and
               not os.path.exists(os.path.join(image_dir, desc.partition_name + image_ext))):
-        desc.partition_name = os.path.splitext(os.path.basename(find_partition_file(image_dir, desc.partition_name, image_ext)))[0]
+        desc.partition_name = os.path.splitext(os.path.basename(find_partition_file(
+            image_dir, desc.partition_name, image_ext)))[0]
       if (isinstance(desc, AvbChainPartitionDescriptor)
           and follow_chain_partitions
           and expected_chain_partitions_map.get(desc.partition_name) is None
@@ -2656,9 +2661,10 @@ class Avb(object):
               .format(desc.partition_name, desc.rollback_index_location,
                       hashlib.sha1(desc.public_key).hexdigest()))
       elif (not allow_missing_partitions and not desc.verify(
-              image_dir, image_ext, expected_chain_partitions_map, image, accept_zeroed_hashtree, allow_missing_partitions)) \
-            or (allow_missing_partitions and desc.verify(
-              image_dir, image_ext, expected_chain_partitions_map, image, accept_zeroed_hashtree, allow_missing_partitions) is False):
+              image_dir, image_ext, expected_chain_partitions_map, image, accept_zeroed_hashtree,
+              allow_missing_partitions)) or (allow_missing_partitions and desc.verify(
+              image_dir, image_ext, expected_chain_partitions_map, image, accept_zeroed_hashtree,
+              allow_missing_partitions) is False):
           verified = False
           sys.stderr.write('Error verifying descriptor.\n')
       # Honor --follow_chain_partitions - add '--' to make the output more
@@ -2667,9 +2673,10 @@ class Avb(object):
           and follow_chain_partitions):
         print('--')
         chained_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
-        res = self.verify_image(chained_image_filename, key_path, None, False,
+        res = self.verify_image(chained_image_filename, key_path, None,False,
                                 accept_zeroed_hashtree, allow_missing_partitions)
-        if (allow_missing_partitions and res is False) or (not allow_missing_partitions and not res):
+        if (allow_missing_partitions and res is False) or (
+                not allow_missing_partitions and not res):
             verified = False
     return verified
 
@@ -2762,8 +2769,10 @@ class Avb(object):
       print('Unknown vbmeta data')
       exit(0)
 
-    auxdata = vbmeta[AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size:AvbVBMetaHeader.SIZE +
-                     avb_header.authentication_data_block_size + avb_header.auxiliary_data_block_size]
+    auxdata = vbmeta[AvbVBMetaHeader.SIZE +
+                     avb_header.authentication_data_block_size:AvbVBMetaHeader.SIZE +
+                     avb_header.authentication_data_block_size +
+                     avb_header.auxiliary_data_block_size]
     auxlen = len(auxdata)
     i = 0
     while i < auxlen:
@@ -2795,8 +2804,9 @@ class Avb(object):
         avb_meta_content[partition_name] = dict(public_key=public_key)
       i += desc.SIZE + len(desc.data)
 
-    pub_key_data = vbmeta[AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size + avb_header.public_key_offset:
-                          AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size + avb_header.public_key_offset
+    pub_key_data = vbmeta[AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size +
+                          avb_header.public_key_offset: AvbVBMetaHeader.SIZE +
+                          avb_header.authentication_data_block_size + avb_header.public_key_offset
                           + avb_header.public_key_size]
     modlen = unpack('>I', pub_key_data[:4])[0] // 4
     n0inv = unpack('>I', pub_key_data[4:8])[0]
@@ -2817,7 +2827,8 @@ class Avb(object):
               shutil.copyfile(file_path, './' + file)
             break
     else:
-      sys.stderr.write('test/data directory does not exist! Could not compare public key against testkeys.')
+      sys.stderr.write(
+          'test/data directory does not exist! Could not compare public key against testkeys.')
 
   def calculate_vbmeta_digest(self, image_filename, hash_algorithm, output):
     """Implements the 'calculate_vbmeta_digest' command.
@@ -4773,7 +4784,8 @@ class AvbTool(object):
         action='store_true')
     sub_parser.add_argument(
         '--allow_missing_partitions',
-        help=('Verify images successfully when all found partitions are verified successfully, even with some partitions missing.'),
+        help=('Verify images successfully when all found partitions are verified successfully,'
+              ' even with some partitions missing.'),
         action='store_true')
     sub_parser.set_defaults(func=self.verify_image)
 
@@ -4801,7 +4813,8 @@ class AvbTool(object):
                             type=argparse.FileType('rb'),
                             required=True)
     sub_parser.add_argument('--store_test_keys',
-                            help='Store testkeys in the current directory, if a testkey was used to sign the image.',
+                            help='Store testkeys in the current directory, if a testkey was used'
+                                 ' to sign the image.',
                             action='store_true')
     sub_parser.set_defaults(func=self.print_signature_key)
 
