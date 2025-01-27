@@ -29,7 +29,9 @@ use crate::{
 };
 use alloc::vec::Vec;
 use avb_bindgen::{
-    avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
+    avb_slot_verify, avb_slot_verify_data_calculate_vbmeta_digest, avb_slot_verify_data_free,
+    AvbDigestType, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData, AVB_SHA256_DIGEST_SIZE,
+    AVB_SHA512_DIGEST_SIZE,
 };
 use core::{
     ffi::{c_char, CStr},
@@ -347,6 +349,41 @@ impl<'a> SlotVerifyData<'a> {
     pub fn resolved_hashtree_error_mode(&self) -> HashtreeErrorMode {
         // SAFETY: `raw_data` points to a valid `AvbSlotVerifyData` object owned by us.
         unsafe { self.raw_data.as_ref() }.resolved_hashtree_error_mode
+    }
+
+    /// Calculates the SHA-256 digest of all vbmeta images in this `SlotVerifyData`.
+    pub fn calculate_sha256_digest(&self) -> [u8; 32] {
+        let mut digest = [0; AVB_SHA256_DIGEST_SIZE as usize];
+        // SAFETY:
+        // * `digest` is of size AVB_SHA256_DIGEST_SIZE, as needed by AVB_DIGEST_TYPE_SHA256.
+        unsafe { self.calculate_digest(AvbDigestType::AVB_DIGEST_TYPE_SHA256, &mut digest) };
+        digest
+    }
+
+    /// Calculates the SHA-512 digest of all vbmeta images in this `SlotVerifyData`.
+    pub fn calculate_sha512_digest(&self) -> [u8; 64] {
+        let mut digest = [0; AVB_SHA512_DIGEST_SIZE as usize];
+        // SAFETY:
+        // * `digest` is of size AVB_SHA512_DIGEST_SIZE, as needed by AVB_DIGEST_TYPE_SHA512.
+        unsafe { self.calculate_digest(AvbDigestType::AVB_DIGEST_TYPE_SHA512, &mut digest) };
+        digest
+    }
+
+    /// Calculates the requested digest of all vbmeta images in this `SlotVerifyData`.
+    ///
+    /// # Safety
+    /// * `out` must be large enough to hold a digest of the requested type.
+    unsafe fn calculate_digest(&self, digest_type: AvbDigestType, out: &mut [u8]) {
+        // SAFETY:
+        // * `raw_data` points to a valid `AvbSlotVerifyData` object owned by us.
+        // * `out` is mutable, owned by the caller who ensured it is large enough.
+        unsafe {
+            avb_slot_verify_data_calculate_vbmeta_digest(
+                self.raw_data.as_ptr(),
+                digest_type,
+                out.as_mut_ptr(),
+            )
+        };
     }
 }
 
