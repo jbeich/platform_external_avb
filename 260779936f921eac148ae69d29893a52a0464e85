@@ -54,6 +54,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "4a5174a1_81545e74",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1069095
+      },
+      "writtenOn": "2025-01-28T00:34:33Z",
+      "side": 1,
+      "message": "Oh, sorry if I didn\u0027t make it clear the last time - the changes that were requested in previous comments should be resubmitted as patchset changes, by doing git commit --amend, which should preserve the `Change-Id`, such that it does not become a different CL.",
+      "revId": "260779936f921eac148ae69d29893a52a0464e85",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "26545732_08fb84c2",
         "filename": "avbtool.py",
         "patchSetId": 1
