@@ -2440,7 +2440,9 @@ class Avb(object):
     key_offset = (header.SIZE +
                   header.authentication_data_block_size +
                   header.public_key_offset)
+    hash_offset = header.SIZE + header.hash_offset
     key_blob = vbmeta_blob[key_offset:key_offset + header.public_key_size]
+    hash_blob = vbmeta_blob[hash_offset:hash_offset + header.hash_size]
 
     if footer:
       o.write('Footer version:           {}.{}\n'.format(footer.version_major,
@@ -2467,6 +2469,8 @@ class Avb(object):
       hexdig = hashlib.sha1(key_blob).hexdigest()
       o.write('Public key (sha1):        {}\n'.format(hexdig))
     o.write('Algorithm:                {}\n'.format(alg_name))
+    if hash_blob:
+      o.write('Authentication hash:      {}\n'.format(hash_blob.hex()))
     o.write('Rollback Index:           {}\n'.format(header.rollback_index))
     o.write('Flags:                    {}\n'.format(header.flags))
     o.write('Rollback Index Location:  {}\n'.format(
