@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "01622f8e_58e00988",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 11
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-29T01:05:35Z",
+      "side": 1,
+      "message": "In this revision:\n\n1. Fixed hash_ops macro.\n2. Covered hash_ops logic with unittests\n3. Moved out rust logic (is going to be submitted as a separate CL)",
+      "revId": "7fa6f9bd0b92eb264d6ba6b5512bd2fbf53dacbb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}

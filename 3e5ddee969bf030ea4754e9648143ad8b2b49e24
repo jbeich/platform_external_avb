@@ -16,6 +16,24 @@
       "message": "TODO: tests",
       "revId": "3e5ddee969bf030ea4754e9648143ad8b2b49e24",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "c7432814_a353faff",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 6
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-29T01:05:35Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "46e38aa8_439f318e",
+      "revId": "3e5ddee969bf030ea4754e9648143ad8b2b49e24",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
