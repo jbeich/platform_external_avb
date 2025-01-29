@@ -95,6 +95,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "4493cbbf_04010ac5",
+        "filename": "libavb/avb_sha.h",
+        "patchSetId": 7
+      },
+      "lineNbr": 40,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-29T17:48:32Z",
+      "side": 1,
+      "message": "Perfect thanks!",
+      "parentUuid": "c3674de0_e741c442",
+      "range": {
+        "startLine": 40,
+        "startChar": 7,
+        "endLine": 40,
+        "endChar": 25
+      },
+      "revId": "14632eb4de0ec8c824ae98ae1832994e589ed366",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "50830d72_d454df95",
@@ -138,6 +162,23 @@
         "endLine": 105,
         "endChar": 4
       },
+      "revId": "14632eb4de0ec8c824ae98ae1832994e589ed366",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "3634bb91_deaa48be",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 1389,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-29T17:48:32Z",
+      "side": 1,
+      "message": "Was all the Rust code removed from the latest patchset intentionally? We can definitely put it in a followup CL instead if that seems cleaner, just wanted to double-check.",
       "revId": "14632eb4de0ec8c824ae98ae1832994e589ed366",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

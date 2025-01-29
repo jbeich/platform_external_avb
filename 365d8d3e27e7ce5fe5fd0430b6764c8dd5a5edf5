@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d7f55320_7b626d81",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-29T17:48:32Z",
+      "side": 1,
+      "message": "This looks great, thank you for all your hard work here!",
+      "revId": "365d8d3e27e7ce5fe5fd0430b6764c8dd5a5edf5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9d80d68e_cb557626",
+        "filename": "libavb/avb_vbmeta_image.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-29T17:48:32Z",
+      "side": 1,
+      "message": "optional: there are a lot more callers of this API than I had expected, both in libavb and in external projects. WDYT about splitting the version with `hash_ops` into a separate function entirely e.g. `avb_vbmeta_image_verify_with_ops`? This would also prevent breaking any external users who uprev libavb.",
+      "range": {
+        "startLine": 291,
+        "startChar": 4,
+        "endLine": 291,
+        "endChar": 25
+      },
+      "revId": "365d8d3e27e7ce5fe5fd0430b6764c8dd5a5edf5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e77d5e66_c919b01b",
+        "filename": "test/avb_slot_verify_unittest.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-29T17:48:32Z",
+      "side": 1,
+      "message": "optional: it may be helpful to provide a quick comment or commandline for how these values were generated, in case some of the test files ever change and these need to be updated.",
+      "revId": "365d8d3e27e7ce5fe5fd0430b6764c8dd5a5edf5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
