@@ -155,7 +155,7 @@ AvbSlotVerifyResult avb_cert_slot_verify(
 
   /* Compute the vbmeta digest. */
   avb_slot_verify_data_calculate_vbmeta_digest(
-      *verify_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, *verify_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
 
   /* Increase rollback index values to match the verified slot. */
   if (slot_state == AVB_CERT_SLOT_MARKED_SUCCESSFUL) {

@@ -37,6 +37,7 @@ extern "C" {
 
 #include "avb_crypto.h"
 #include "avb_descriptor.h"
+#include "avb_ops.h"
 
 /* Size of the vbmeta image header. */
 #define AVB_VBMETA_IMAGE_HEADER_SIZE 256
@@ -282,8 +283,12 @@ const char* avb_vbmeta_verify_result_to_string(AvbVBMetaVerifyResult result);
  * This is a low-level function to only verify the vbmeta data - you
  * are likely looking for avb_slot_verify() instead for verifying
  * integrity data for a whole set of partitions.
+ *
+ * hash_ops - in case of null compile-time provided implementation
+ * will be used.
  */
 AvbVBMetaVerifyResult avb_vbmeta_image_verify(
+    AvbHashOps* hash_ops,
     const uint8_t* data,
     size_t length,
     const uint8_t** out_public_key_data,

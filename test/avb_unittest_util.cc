@@ -26,6 +26,20 @@
 
 #include <android-base/file.h>
 
+// Helper function to convert a single hex character to its numerical value
+// (0-15).
+static inline uint8_t hex_char_to_value(char c) {
+  if (c >= '0' && c <= '9') {
+    return static_cast<uint8_t>(c - '0');
+  } else if (c >= 'a' && c <= 'f') {
+    return static_cast<uint8_t>(c - 'a' + 10);
+  } else if (c >= 'A' && c <= 'F') {
+    return static_cast<uint8_t>(c - 'A' + 10);
+  } else {
+    abort();
+  }
+}
+
 std::string mem_to_hexstring(const uint8_t* data, size_t len) {
   std::string ret;
   char digits[17] = "0123456789abcdef";
@@ -34,6 +48,20 @@ std::string mem_to_hexstring(const uint8_t* data, size_t len) {
     ret.push_back(digits[data[n] & 0x0f]);
   }
   return ret;
+}
+
+std::vector<uint8_t> hexstring_to_mem(std::string_view hex) {
+  if (hex.size() % 2 != 0) {
+    abort();
+  }
+  std::vector<uint8_t> bytes;
+  bytes.reserve(hex.size() / 2);
+  for (size_t i = 0; i < hex.size(); i += 2) {
+    uint8_t high = hex_char_to_value(hex[i]) << 4;
+    uint8_t low = hex_char_to_value(hex[i + 1]);
+    bytes.push_back(high | low);
+  }
+  return bytes;
 }
 
 std::string string_trim(const std::string& str) {

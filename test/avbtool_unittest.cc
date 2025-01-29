@@ -124,9 +124,10 @@ TEST_F(AvbToolTest, ReleaseStringAppendTruncated) {
       std::string("--append_to_release_string \"") + append_str + "\"");
 
   // This checks that it ends with a NUL byte.
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), nullptr, nullptr));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(
+          NULL, vbmeta_image_.data(), vbmeta_image_.size(), nullptr, nullptr));
 
   // For good measure we also check here.
   AvbVBMetaImageHeader h;
@@ -177,9 +178,10 @@ TEST_F(AvbToolTest, CheckDescriptors) {
   avb_vbmeta_image_header_to_host_byte_order(
       reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data()), &h);
 
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(
-                vbmeta_image_.data(), vbmeta_image_.size(), nullptr, nullptr));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(
+          NULL, vbmeta_image_.data(), vbmeta_image_.size(), nullptr, nullptr));
 
   const char* s;
   size_t len;
@@ -356,10 +358,12 @@ TEST_F(AvbToolTest, CheckPubkeyReturned) {
   const uint8_t* pubkey = NULL;
   size_t pubkey_length = 0;
 
-  EXPECT_EQ(
-      AVB_VBMETA_VERIFY_RESULT_OK,
-      avb_vbmeta_image_verify(
-          vbmeta_image_.data(), vbmeta_image_.size(), &pubkey, &pubkey_length));
+  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
+            avb_vbmeta_image_verify(NULL,
+                                    vbmeta_image_.data(),
+                                    vbmeta_image_.size(),
+                                    &pubkey,
+                                    &pubkey_length));
 
   AvbVBMetaImageHeader h;
   avb_vbmeta_image_header_to_host_byte_order(
@@ -607,8 +611,9 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
   // Check that the vbmeta image at |f.vbmeta_offset| checks out.
   const uint8_t* vbmeta_data =
       reinterpret_cast<const uint8_t*>(part_data.data() + f.vbmeta_offset);
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(vbmeta_data, f.vbmeta_size, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(NULL, vbmeta_data, f.vbmeta_size, NULL, NULL));
 
   // Collect all descriptors.
   std::vector<const AvbDescriptor*> descriptors;
@@ -1145,8 +1150,9 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
   // Check that the vbmeta image at |f.vbmeta_offset| checks out.
   const uint8_t* vbmeta_data =
       reinterpret_cast<const uint8_t*>(part_data.data() + f.vbmeta_offset);
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(vbmeta_data, f.vbmeta_size, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(NULL, vbmeta_data, f.vbmeta_size, NULL, NULL));
 
   // Collect all descriptors.
   std::vector<const AvbDescriptor*> descriptors;
@@ -1431,8 +1437,9 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
   // Check that the vbmeta image at |f.vbmeta_offset| checks out.
   const uint8_t* vbmeta_data =
       reinterpret_cast<const uint8_t*>(part_data.data() + f.vbmeta_offset);
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(vbmeta_data, f.vbmeta_size, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(NULL, vbmeta_data, f.vbmeta_size, NULL, NULL));
 
   // Collect all descriptors.
   std::vector<const AvbDescriptor*> descriptors;
@@ -2123,8 +2130,9 @@ TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
   const uint8_t* vbmeta_data =
       reinterpret_cast<const uint8_t*>(image_data.data());
   const size_t vbmeta_size = image_data.length();
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(vbmeta_data, vbmeta_size, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(NULL, vbmeta_data, vbmeta_size, NULL, NULL));
 
   // Collect all descriptors.
   std::vector<const AvbDescriptor*> descriptors;
@@ -2474,8 +2482,9 @@ TEST_F(AvbToolTest, ChainedPartition) {
   const uint8_t* vbmeta_data =
       reinterpret_cast<const uint8_t*>(image_data.data());
   const size_t vbmeta_size = image_data.length();
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(vbmeta_data, vbmeta_size, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(NULL, vbmeta_data, vbmeta_size, NULL, NULL));
 
   // Collect all descriptors.
   std::vector<const AvbDescriptor*> descriptors;
@@ -2558,8 +2567,9 @@ TEST_F(AvbToolTest, ChainedPartitionNoAB) {
   const uint8_t* vbmeta_data =
       reinterpret_cast<const uint8_t*>(image_data.data());
   const size_t vbmeta_size = image_data.length();
-  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
-            avb_vbmeta_image_verify(vbmeta_data, vbmeta_size, NULL, NULL));
+  EXPECT_EQ(
+      AVB_VBMETA_VERIFY_RESULT_OK,
+      avb_vbmeta_image_verify(NULL, vbmeta_data, vbmeta_size, NULL, NULL));
 
   // Collect all descriptors.
   std::vector<const AvbDescriptor*> descriptors;
