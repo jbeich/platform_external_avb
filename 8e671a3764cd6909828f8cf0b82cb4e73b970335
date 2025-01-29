@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4b1faca5_df5eb743",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 1
+      },
+      "lineNbr": 10,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-29T12:55:06Z",
+      "side": 1,
+      "message": "fyi: [have in-progress stack](https://android-review.git.corp.google.com/c/platform/external/avb/+/3332914) to allow run-time override of libavb hash operations, so `AvbDigestType` is going to be exposed anyway.",
+      "revId": "8e671a3764cd6909828f8cf0b82cb4e73b970335",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
