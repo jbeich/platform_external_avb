@@ -421,6 +421,16 @@ AvbIOResult FakeAvbOps::get_random(size_t num_bytes, uint8_t* output) {
   return AVB_IO_RESULT_OK;
 }
 
+const uint8_t* FakeAvbOps::hash_finalize() {
+  if (sha_results_.empty()) {
+    abort();
+  }
+  const uint8_t* result = sha_results_.front();
+  sha_results_.pop();
+
+  return result;
+}
+
 static AvbIOResult my_ops_read_from_partition(AvbOps* ops,
                                               const char* partition,
                                               int64_t offset,
@@ -581,6 +591,18 @@ static AvbIOResult my_ops_get_random(AvbCertOps* cert_ops,
       ->get_random(num_bytes, output);
 }
 
+static void my_ops_hash_init(AvbHashOps* hash_ops, AvbDigestType type) {}
+
+static void my_ops_hash_update(AvbHashOps* hash_ops,
+                               const uint8_t* data,
+                               size_t len) {}
+
+static const uint8_t* my_ops_hash_finalize(AvbHashOps* hash_ops) {
+  return FakeAvbOps::GetInstanceFromAvbOps(hash_ops->ops)
+      ->delegate()
+      ->hash_finalize();
+}
+
 FakeAvbOps::FakeAvbOps() {
   memset(&avb_ops_, 0, sizeof(avb_ops_));
   avb_ops_.ab_ops = &avb_ab_ops_;
@@ -610,6 +632,11 @@ FakeAvbOps::FakeAvbOps() {
       my_ops_read_permanent_attributes_hash;
   avb_cert_ops_.set_key_version = my_ops_set_key_version;
   avb_cert_ops_.get_random = my_ops_get_random;
+
+  avb_hash_ops_.ops = &avb_ops_;
+  avb_hash_ops_.init = my_ops_hash_init;
+  avb_hash_ops_.update = my_ops_hash_update;
+  avb_hash_ops_.finalize = my_ops_hash_finalize;
 
   delegate_ = this;
 }
