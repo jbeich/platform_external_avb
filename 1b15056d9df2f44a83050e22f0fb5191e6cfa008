@@ -1,0 +1,73 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0a6bef64_913066de",
+        "filename": "rust/src/hash.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 45,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-30T18:11:23Z",
+      "side": 1,
+      "message": "Hmm I didn\u0027t think of this before, but I think this comment meant we need to make this trait `unsafe` in Rust unfortunately :(\n\nThe reason is that the caller has to do this lifetime management manually - the Rust compiler will not be able to enforce it. So they could trigger undefined behavior if they e.g. modify or deallocate the return bytes. i.e. telling the caller they have to manually ensure data stays alive is by definition a safety requirement that the trait implementor has to adhere to.\n\nUnless we can somehow solve this in our Rust code here, e.g. take ownership of these bytes and only release them on the next call to `init()` - I\u0027m not sure how that would work though. Maybe some sort of transactional mechanism where an entire init-update-finalize flow creates a new scoped object?",
+      "range": {
+        "startLine": 45,
+        "startChar": 40,
+        "endLine": 45,
+        "endChar": 45
+      },
+      "revId": "1b15056d9df2f44a83050e22f0fb5191e6cfa008",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "7f5cb158_0136f7a1",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 1409,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-30T18:11:23Z",
+      "side": 1,
+      "message": "nit: I think this is the old name, should this be `OpsBridge` now?\n\noptional: as long as we\u0027re here, may be worth cleaning up other uses of this old name as well",
+      "range": {
+        "startLine": 1409,
+        "startChar": 53,
+        "endLine": 1409,
+        "endChar": 65
+      },
+      "revId": "1b15056d9df2f44a83050e22f0fb5191e6cfa008",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ce6f5c38_69d7ff2d",
+        "filename": "rust/tests/verify_tests.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-01-30T18:11:23Z",
+      "side": 1,
+      "message": "We already have `hex::decode` that we\u0027re using in some tests (e.g. `verify_hash_descriptor` in this file) which I think should do the trick here as well",
+      "range": {
+        "startLine": 35,
+        "startChar": 3,
+        "endLine": 35,
+        "endChar": 15
+      },
+      "revId": "1b15056d9df2f44a83050e22f0fb5191e6cfa008",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
