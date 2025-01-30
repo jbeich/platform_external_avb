@@ -33,6 +33,23 @@
 
 namespace avb {
 
+// Expected values for generated `vbmeta_a`.
+
+// Hash value is derived from the generated image using either method:
+// 1. avbtool extract_public_key_digest --key test/data/testkey_rsa2048.pem
+// 2. PublicKeyAVBDigest("test/data/testkey_rsa2048.pem")
+inline constexpr std::string_view kPublicKeyDigest =
+    "22de3994532196f61c039e90260d78a93a4c57362c7e789be928036e80b77c8c";
+
+// Both hash values are derived from the generated image using either method:
+// 1. avbtool calculate_vbmeta_digest --image test_vbmeta.img --hash_algorithm
+// 2. CalcVBMetaDigest("vbmeta_a.img", hash_type)
+inline constexpr std::string_view kSha256VbmetaDigest =
+    "4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d";
+inline constexpr std::string_view kSha512VbmetaDigest =
+    "cb913d2f1a884f4e04c1db5bb181f3133fd16ac02fb367a20ef0776c0b07b3656ad1f081"
+    "e01932cf70f38b8960877470b448f1588dff022808387cc52fa77e77";
+
 class AvbSlotVerifyTest : public BaseAvbToolTest,
                           public FakeAvbOpsDelegateWithDefaults {
  public:
@@ -94,13 +111,103 @@ TEST_F(AvbSlotVerifyTest, Basic) {
       std::string(slot_data->cmdline));
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
   avb_slot_verify_data_free(slot_data);
 
   EXPECT_EQ("4161a7e655eabe16c3fe714de5d43736e7c0a190cf08d36c946d2509ce071e4d",
             CalcVBMetaDigest("vbmeta_a.img", "sha256"));
+}
+
+TEST_F(AvbSlotVerifyTest, BasicHashOps) {
+  // Hash value is derived from the generated image using either method:
+  // 1. avbtool info_image --image vbmeta_a.img
+  // 2. InfoImage("vbmeta_a.img")
+  auto vbmeta_header_hash_digest = hexstring_to_mem(
+      "87510db265f21ad21d0319d4529af834f884b957d219889edac472bfc79ee6e3");
+  auto public_key_digest = hexstring_to_mem(kPublicKeyDigest);
+  auto vbmeta_digest = hexstring_to_mem(kSha256VbmetaDigest);
+
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      "--internal_release_string \"\"");
+
+  // Building the hash result queue. Ordering is important.
+  ops_.push_sha_result(vbmeta_header_hash_digest.data());
+  ops_.push_sha_result(public_key_digest.data());
+  ops_.push_sha_result(vbmeta_digest.data());
+  ops_.use_hash_ops(true);
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
+
+  AvbSlotVerifyData* slot_data = NULL;
+  const char* requested_partitions[] = {"boot", NULL};
+  EXPECT_EQ(avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            AVB_SLOT_VERIFY_FLAGS_NONE,
+                            AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                            &slot_data),
+            AVB_SLOT_VERIFY_RESULT_OK);
+  EXPECT_NE(slot_data, nullptr);
+  std::string expected_command_line = std::format(
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
+      "androidboot.vbmeta.public_key_digest={} "
+      "androidboot.vbmeta.avb_version=1.3 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=1152 "
+      "androidboot.vbmeta.digest={} "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing",
+      kPublicKeyDigest,
+      kSha256VbmetaDigest);
+  EXPECT_EQ(std::string(slot_data->cmdline), expected_command_line);
+
+  EXPECT_EQ(ops_.remains_sha_results(), 0UL)
+      << "Expected all sha results got requested";
+
+  ops_.push_sha_result(vbmeta_digest.data());
+
+  uint8_t result_digest[AVB_SHA256_DIGEST_SIZE];
+  avb_slot_verify_data_calculate_vbmeta_digest(
+      ops_.avb_hash_ops(), slot_data, AVB_DIGEST_TYPE_SHA256, result_digest);
+
+  EXPECT_EQ(ops_.remains_sha_results(), 0UL)
+      << "Expected all sha results got requested";
+  EXPECT_EQ(kSha256VbmetaDigest,
+            mem_to_hexstring(result_digest, AVB_SHA256_DIGEST_SIZE));
+
+  avb_slot_verify_data_free(slot_data);
+}
+
+TEST_F(AvbSlotVerifyTest, BasicHashOpsMismatch) {
+  auto not_expected_hash = hexstring_to_mem(
+      "0000000000000000000000000000000000000000000000000000000000000000");
+
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      "--internal_release_string \"\"");
+
+  ops_.push_sha_result(not_expected_hash.data());
+  ops_.use_hash_ops(true);
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
+
+  AvbSlotVerifyData* slot_data = NULL;
+  const char* requested_partitions[] = {"boot", NULL};
+  EXPECT_EQ(avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            AVB_SLOT_VERIFY_FLAGS_NONE,
+                            AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                            &slot_data),
+            AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION);
+
+  EXPECT_EQ(ops_.remains_sha_results(), 0UL)
+      << "Expected all sha results got requested";
 }
 
 TEST_F(AvbSlotVerifyTest, BasicSha512) {
@@ -137,7 +244,7 @@ TEST_F(AvbSlotVerifyTest, BasicSha512) {
       std::string(slot_data->cmdline));
   uint8_t vbmeta_digest[AVB_SHA512_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA512, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA512, vbmeta_digest);
   EXPECT_EQ(
       "cb913d2f1a884f4e04c1db5bb181f3133fd16ac02fb367a20ef0776c0b07b3656ad1f081"
       "e01932cf70f38b8960877470b448f1588dff022808387cc52fa77e77",
@@ -148,6 +255,93 @@ TEST_F(AvbSlotVerifyTest, BasicSha512) {
       "cb913d2f1a884f4e04c1db5bb181f3133fd16ac02fb367a20ef0776c0b07b3656ad1f081"
       "e01932cf70f38b8960877470b448f1588dff022808387cc52fa77e77",
       CalcVBMetaDigest("vbmeta_a.img", "sha512"));
+}
+
+TEST_F(AvbSlotVerifyTest, BasicSha512HashOps) {
+  // Hash value is derived from the generated image using either method:
+  // 1. avbtool info_image --image vbmeta_a.img
+  // 2. InfoImage("vbmeta_a.img")
+  auto vbmeta_hash = hexstring_to_mem(
+      "0111232c42aba5b1dba4c9588424794c2403d10500de45afc3ac44db3b5485798082bcde"
+      "f38531a5003f0b877c67329fe9e0ee1e80ee79d9e8b0f3369100572d");
+  auto public_key_digest = hexstring_to_mem(kPublicKeyDigest);
+  auto vbmeta_digest = hexstring_to_mem(kSha512VbmetaDigest);
+
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA512_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      "--internal_release_string \"\"");
+
+  // Building the hash result queue. Ordering is important.
+  ops_.push_sha_result(vbmeta_hash.data());
+  ops_.push_sha_result(public_key_digest.data());
+  ops_.push_sha_result(vbmeta_digest.data());
+  ops_.use_hash_ops(true);
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
+
+  AvbSlotVerifyData* slot_data = NULL;
+  const char* requested_partitions[] = {"boot", NULL};
+  EXPECT_EQ(avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            AVB_SLOT_VERIFY_FLAGS_NONE,
+                            AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                            &slot_data),
+            AVB_SLOT_VERIFY_RESULT_OK);
+  EXPECT_NE(nullptr, slot_data);
+  std::string expected_command_line = std::format(
+      "androidboot.vbmeta.device=PARTUUID=1234-fake-guid-for:vbmeta_a "
+      "androidboot.vbmeta.public_key_digest={} "
+      "androidboot.vbmeta.avb_version=1.3 "
+      "androidboot.vbmeta.device_state=locked "
+      "androidboot.vbmeta.hash_alg=sha512 androidboot.vbmeta.size=1152 "
+      "androidboot.vbmeta.digest={} "
+      "androidboot.vbmeta.invalidate_on_error=yes "
+      "androidboot.veritymode=enforcing",
+      kPublicKeyDigest,
+      kSha512VbmetaDigest);
+  EXPECT_EQ(std::string(slot_data->cmdline), expected_command_line);
+  EXPECT_EQ(ops_.remains_sha_results(), 0UL)
+      << "Expected all sha results got requested";
+
+  uint8_t result_digest[AVB_SHA512_DIGEST_SIZE];
+  avb_slot_verify_data_calculate_vbmeta_digest(
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA512, result_digest);
+  EXPECT_EQ(mem_to_hexstring(result_digest, AVB_SHA512_DIGEST_SIZE),
+            kSha512VbmetaDigest);
+  EXPECT_EQ(ops_.remains_sha_results(), 0UL)
+      << "Expected all sha results got requested";
+
+  avb_slot_verify_data_free(slot_data);
+}
+
+TEST_F(AvbSlotVerifyTest, BasicSha512HashOpsMismatch) {
+  auto not_expected_hash = hexstring_to_mem(
+      "000000000000000000000000000000000000000000000000000000000000000000000000"
+      "00000000000000000000000000000000000000000000000000000000");
+
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA512_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      "--internal_release_string \"\"");
+
+  ops_.push_sha_result(not_expected_hash.data());
+  ops_.use_hash_ops(true);
+  ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
+
+  AvbSlotVerifyData* slot_data = NULL;
+  const char* requested_partitions[] = {"boot", NULL};
+  EXPECT_EQ(avb_slot_verify(ops_.avb_ops(),
+                            requested_partitions,
+                            "_a",
+                            AVB_SLOT_VERIFY_FLAGS_NONE,
+                            AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
+                            &slot_data),
+            AVB_SLOT_VERIFY_RESULT_ERROR_VERIFICATION);
+  EXPECT_EQ(ops_.remains_sha_results(), 0UL)
+      << "Expected all sha results got requested";
 }
 
 TEST_F(AvbSlotVerifyTest, BasicUnlocked) {
@@ -1138,7 +1332,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
   }
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("4a45faa9adfeb94e9154fe682c11fef1a1a3d829b67cbf1a12ac7f0aa4f8e2e4",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
   avb_slot_verify_data_free(slot_data);
@@ -1297,7 +1491,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
 
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("40adb9e4d7a21cbba5c48ce540c370405e83af3355588aa108db5347b8459d71",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
 
@@ -1611,7 +1805,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
   }
   uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
   avb_slot_verify_data_calculate_vbmeta_digest(
-      slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+      NULL, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
   EXPECT_EQ("232447e92370ed31c2b6c5fb7328eb5d828a9819b3e6f6c10d96b9ca6fd209a1",
             mem_to_hexstring(vbmeta_digest, AVB_SHA256_DIGEST_SIZE));
   avb_slot_verify_data_free(slot_data);

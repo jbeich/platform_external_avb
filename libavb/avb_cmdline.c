@@ -23,6 +23,7 @@
  */
 
 #include "avb_cmdline.h"
+
 #include "avb_sha.h"
 #include "avb_util.h"
 #include "avb_version.h"
@@ -236,12 +237,12 @@ AvbSlotVerifyResult avb_append_options(
      * public key used to verify the vbmeta image. */
     if (toplevel_vbmeta_public_key_data != NULL &&
         toplevel_vbmeta_public_key_length > 0) {
-      AvbSHA256Ctx ctx;
-      avb_sha256_init(&ctx);
-      avb_sha256_update(&ctx,
-                        toplevel_vbmeta_public_key_data,
-                        toplevel_vbmeta_public_key_length);
-      uint8_t* vbmeta_public_key_digest = avb_sha256_final(&ctx);
+      AVB_PREPARE_HASH_OPS(hash_ops, ops->hash_ops);
+      hash_ops->init(hash_ops, AVB_DIGEST_TYPE_SHA256);
+      hash_ops->update(hash_ops,
+                       toplevel_vbmeta_public_key_data,
+                       toplevel_vbmeta_public_key_length);
+      const uint8_t* vbmeta_public_key_digest = hash_ops->finalize(hash_ops);
       if (!cmdline_append_hex(slot_data,
                               "androidboot.vbmeta.public_key_digest",
                               vbmeta_public_key_digest,
@@ -290,7 +291,7 @@ AvbSlotVerifyResult avb_append_options(
       size_t n, total_size = 0;
       uint8_t vbmeta_digest[AVB_SHA256_DIGEST_SIZE];
       avb_slot_verify_data_calculate_vbmeta_digest(
-          slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
+          ops->hash_ops, slot_data, AVB_DIGEST_TYPE_SHA256, vbmeta_digest);
       for (n = 0; n < slot_data->num_vbmeta_images; n++) {
         total_size += slot_data->vbmeta_images[n].vbmeta_size;
       }
@@ -313,7 +314,7 @@ AvbSlotVerifyResult avb_append_options(
       size_t n, total_size = 0;
       uint8_t vbmeta_digest[AVB_SHA512_DIGEST_SIZE];
       avb_slot_verify_data_calculate_vbmeta_digest(
-          slot_data, AVB_DIGEST_TYPE_SHA512, vbmeta_digest);
+          ops->hash_ops, slot_data, AVB_DIGEST_TYPE_SHA512, vbmeta_digest);
       for (n = 0; n < slot_data->num_vbmeta_images; n++) {
         total_size += slot_data->vbmeta_images[n].vbmeta_size;
       }
