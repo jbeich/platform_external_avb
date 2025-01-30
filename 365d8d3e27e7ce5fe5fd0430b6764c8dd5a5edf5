@@ -43,6 +43,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "1fde4d29_1b5084f1",
+        "filename": "libavb/avb_vbmeta_image.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-30T02:16:08Z",
+      "side": 1,
+      "message": "I agree that we need to discuss this, but I\u0027m not sure about providing a compatibility layer. My main concern is that it would make it too easy to forget to pass `hash_ops` (including within `libavb`), causing the default implementation (which may not exist) to be used unexpectedly. Explicitly passing `NULL` could help keep API users aware of this issue.  \n\n@zeuthen@google.com @dkrahn@google.com, based on your experience maintaining libavb, how much of a problem are these API changes usually for external users? Should we avoid them?",
+      "parentUuid": "9d80d68e_cb557626",
+      "range": {
+        "startLine": 291,
+        "startChar": 4,
+        "endLine": 291,
+        "endChar": 25
+      },
+      "revId": "365d8d3e27e7ce5fe5fd0430b6764c8dd5a5edf5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e77d5e66_c919b01b",
         "filename": "test/avb_slot_verify_unittest.cc",
         "patchSetId": 12
@@ -54,6 +78,24 @@
       "writtenOn": "2025-01-29T17:48:32Z",
       "side": 1,
       "message": "optional: it may be helpful to provide a quick comment or commandline for how these values were generated, in case some of the test files ever change and these need to be updated.",
+      "revId": "365d8d3e27e7ce5fe5fd0430b6764c8dd5a5edf5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "92d6d464_b2500b0f",
+        "filename": "test/avb_slot_verify_unittest.cc",
+        "patchSetId": 12
+      },
+      "lineNbr": 35,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-30T02:16:08Z",
+      "side": 1,
+      "message": "Added here and made sure I do the same thing for rust tests in the next CL as well.",
+      "parentUuid": "e77d5e66_c919b01b",
       "revId": "365d8d3e27e7ce5fe5fd0430b6764c8dd5a5edf5",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }

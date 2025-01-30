@@ -181,6 +181,24 @@
       "message": "Was all the Rust code removed from the latest patchset intentionally? We can definitely put it in a followup CL instead if that seems cleaner, just wanted to double-check.",
       "revId": "14632eb4de0ec8c824ae98ae1832994e589ed366",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d2fc561e_d23d6535",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 7
+      },
+      "lineNbr": 1389,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-30T02:16:08Z",
+      "side": 1,
+      "message": "Since this CL is already big enough, decided to keep rust related discussion separate.",
+      "parentUuid": "3634bb91_deaa48be",
+      "revId": "14632eb4de0ec8c824ae98ae1832994e589ed366",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
