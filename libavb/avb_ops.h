@@ -85,6 +85,44 @@ struct AvbABOps;
 /* Forward-declaration of operations in libavb_cert. */
 struct AvbCertOps;
 
+typedef struct AvbHashOps AvbHashOps;
+
+/* Possible digest types supported by libavb routines. */
+typedef enum {
+  AVB_DIGEST_TYPE_SHA256,
+  AVB_DIGEST_TYPE_SHA512,
+} AvbDigestType;
+
+/*
+ * Platform-dependent hash operations that can be overridden at runtime.
+ *
+ * If an error occurs, all methods must panic using the appropriate libavb
+ * functions (e.g., `avb_abort` or `avb_fatal`).
+ *
+ * It is the responsibility of the HashOps implementation to ensure that the
+ * pointer returned by `finalize` remains valid and accessible until `init` is
+ * called again.
+ *
+ * Libavb will always call these functions in the following order:
+ * 1. init
+ * 2. update (may be called multiple times)
+ * 3. finalize
+ */
+struct AvbHashOps {
+  AvbOps* ops;
+
+  /* Starts a new hashing session using the specified digest type. */
+  void (*init)(AvbHashOps* ops, AvbDigestType type);
+
+  /* Updates the ongoing hash with the specified data block. */
+  void (*update)(AvbHashOps* ops, const uint8_t* data, size_t len);
+
+  /* Finalizes the hash calculation for the type provided to `init`.
+   * The returned pointer must remain valid until the next call to `init`.
+   */
+  const uint8_t* (*finalize)(AvbHashOps* ops);
+};
+
 /* High-level operations/functions/methods that are platform
  * dependent.
  *
@@ -108,6 +146,17 @@ struct AvbOps {
    * AvbCertOps. Otherwise it must be set to NULL.
    */
   struct AvbCertOps* cert_ops;
+
+  /* Allows AvbOps-specific hash backends.
+   *
+   * If this pointer is NULL, hashing is done via the global functions in
+   * avb_sha.h.
+   * If this pointer is set, all hashing will instead use these functions.
+   *
+   * AVB_FORCE_HASH_OPS can optionally be defined to make `hash_ops` mandatory.
+   * See avb_sha.h for details.
+   */
+  struct AvbHashOps* hash_ops;
 
   /* Reads |num_bytes| from offset |offset| from partition with name
    * |partition| (NUL-terminated UTF-8 string). If |offset| is

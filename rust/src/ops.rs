@@ -312,6 +312,7 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
                 user_data: ptr::null_mut(), // Set at the time of use.
                 ab_ops: ptr::null_mut(),    // Deprecated, no need to support.
                 cert_ops: ptr::null_mut(),  // Set at the time of use.
+                hash_ops: ptr::null_mut(),  // Set at the time of use.
                 read_from_partition: Some(read_from_partition),
                 get_preloaded_partition: Some(get_preloaded_partition),
                 write_to_partition: None, // Not needed, only used for deprecated A/B.
