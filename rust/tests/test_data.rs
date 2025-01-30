@@ -48,8 +48,21 @@ pub const TEST_CHAINED_PARTITION_ROLLBACK_INDEX: u64 = 7;
 
 // Expected values determined by examining the vbmeta image with `avbtool info_image`.
 // Images can be found in <out>/soong/.intermediates/external/avb/rust/.
+
+// avbtool info_image --image test_vbmeta.img
 pub const TEST_IMAGE_DIGEST_HEX: &str =
     "89e6fd3142917b8c34ac7d30897a907a71bd3bf5d9b39d00bf938b41dcf3b84f";
+// avbtool info_image --image test_vbmeta.img
+pub const TEST_IMAGE_VBMETA_HEADER_HASH_HEX: &str =
+    "8548cdea3e765074356ea393aea2043a2d15911a1b015813da1cb8bb5fd8850f\
+    00726a6ed56cef5991280f1c7527d4f4dacd620bd06ced881fb40584068f16a5";
+// avbtool calculate_vbmeta_digest --image test_vbmeta.img --hash_algorithm sha512
+pub const TEST_IMAGE_VBMETA_DIGEST_HEX: &str =
+    "16fa2f3315b8ccf0ab2b3f6ecce3d38fa02e50da0d3cffe39bd30cf542683688\
+    ac5da799cb12726262168d589ca6197e38c31ea31b20d4379ee7e17108ab90c4";
+// avbtool extract_public_key_digest --key testkey_rsa4096.pem
+pub const TEST_IMAGE_PUBLIC_KEY_DIGEST_HEX: &str =
+    "7728e30f50bfa5cea165f473175a08803f6a8346642b5aa10913e9d9e6defef6";
 pub const TEST_IMAGE_HASH_ALGO: &str = "sha256";
 pub const TEST_HASHTREE_DIGEST_HEX: &str = "5373fc4ee3dd898325eeeffb5a1dbb041900c5f1";
 pub const TEST_HASHTREE_ALGORITHM: &str = "sha1";
@@ -71,3 +84,7 @@ pub const TEST_CERT_PERMANENT_ATTRIBUTES_HASH_HEX: &str =
 // $ sha256sum external/avb/test/data/cert_product_id.bin
 pub const TEST_CERT_PRODUCT_ID_HASH_HEX: &str =
     "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb";
+
+// Zero sha512
+pub const ZERO_SHA512: &str = "0000000000000000000000000000000000000000000000000000000000000000\
+    0000000000000000000000000000000000000000000000000000000000000000";
