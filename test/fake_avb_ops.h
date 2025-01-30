@@ -31,6 +31,7 @@
 
 #include <filesystem>
 #include <map>
+#include <queue>
 #include <set>
 #include <string>
 
@@ -116,6 +117,8 @@ class FakeAvbOpsDelegate {
                                uint64_t key_version) = 0;
 
   virtual AvbIOResult get_random(size_t num_bytes, uint8_t* output) = 0;
+
+  virtual const uint8_t* hash_finalize() = 0;
 };
 
 // Provides fake implementations of AVB ops. All instances of this class must be
@@ -144,6 +147,10 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
     return &avb_cert_ops_;
   }
 
+  AvbHashOps* avb_hash_ops() {
+    return &avb_hash_ops_;
+  }
+
   FakeAvbOpsDelegate* delegate() {
     return delegate_;
   }
@@ -151,6 +158,10 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
   // Does not take ownership of |delegate|.
   void set_delegate(FakeAvbOpsDelegate* delegate) {
     delegate_ = delegate;
+  }
+
+  void use_hash_ops(bool use) {
+    avb_ops_.hash_ops = use ? &avb_hash_ops_ : nullptr;
   }
 
   void set_partition_dir(const std::filesystem::path& partition_dir) {
@@ -191,6 +202,14 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   void set_stored_is_device_unlocked(bool stored_is_device_unlocked) {
     stored_is_device_unlocked_ = stored_is_device_unlocked;
+  }
+
+  void push_sha_result(const uint8_t* data) {
+    sha_results_.push(data);
+  }
+
+  size_t remains_sha_results() {
+    return sha_results_.size();
   }
 
   void set_permanent_attributes(const AvbCertPermanentAttributes& attributes) {
@@ -294,10 +313,13 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
 
   AvbIOResult get_random(size_t num_bytes, uint8_t* output) override;
 
+  const uint8_t* hash_finalize() override;
+
  private:
   AvbOps avb_ops_;
   AvbABOps avb_ab_ops_;
   AvbCertOps avb_cert_ops_;
+  AvbHashOps avb_hash_ops_;
 
   FakeAvbOpsDelegate* delegate_;
 
@@ -314,6 +336,9 @@ class FakeAvbOps : public FakeAvbOpsDelegate {
   std::map<size_t, uint64_t> verified_rollback_indexes_;
 
   bool stored_is_device_unlocked_;
+
+  // Used only if hash_ops is initialized using `ops.use_hash_ops(true)`
+  std::queue<const uint8_t*> sha_results_;
 
   AvbCertPermanentAttributes permanent_attributes_;
   std::string permanent_attributes_hash_;
@@ -451,6 +476,10 @@ class FakeAvbOpsDelegateWithDefaults : public FakeAvbOpsDelegate {
 
   AvbIOResult get_random(size_t num_bytes, uint8_t* output) override {
     return ops_.get_random(num_bytes, output);
+  }
+
+  const uint8_t* hash_finalize() override {
+    return ops_.hash_finalize();
   }
 
  protected:
