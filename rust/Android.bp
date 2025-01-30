@@ -35,6 +35,7 @@ rust_defaults {
         "--default-enum-style rust",
         "--with-derive-default",
         "--with-derive-custom=Avb.*Descriptor=FromBytes,Immutable,KnownLayout",
+        "--with-derive-custom=AvbVBMetaImageHeader=FromBytes,Immutable,KnownLayout",
         "--with-derive-custom=AvbCertPermanentAttributes=FromBytes,Immutable,IntoBytes,KnownLayout",
         "--with-derive-custom=AvbCertCertificate.*=FromBytes,Immutable,IntoBytes,KnownLayout",
         "--with-derive-custom=AvbCertUnlock.*=FromBytes,Immutable,IntoBytes,KnownLayout",

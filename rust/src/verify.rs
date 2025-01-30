@@ -30,6 +30,7 @@ use crate::{
 use alloc::vec::Vec;
 use avb_bindgen::{
     avb_slot_verify, avb_slot_verify_data_free, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
+    AvbVBMetaImageHeader,
 };
 use core::{
     ffi::{c_char, CStr},
@@ -39,6 +40,7 @@ use core::{
     ptr::{self, null, null_mut, NonNull},
     slice,
 };
+use zerocopy::{FromBytes, KnownLayout, Immutable};
 
 /// `AvbHashtreeErrorMode`; see libavb docs for descriptions of each mode.
 pub use avb_bindgen::AvbHashtreeErrorMode as HashtreeErrorMode;
@@ -51,6 +53,35 @@ fn check_nonnull<T>(ptr: *const T) -> SlotVerifyNoDataResult<()> {
         true => Err(SlotVerifyError::Internal),
         false => Ok(()),
     }
+}
+
+/// Wraps a raw C `AvbVBMetaImageHeader` struct.
+///
+/// This provides a Rust safe view over the raw data; no copies are made.
+#[derive(FromBytes, KnownLayout, Immutable)]
+#[repr(transparent)]
+struct VbmetaImageHeader(AvbVBMetaImageHeader);
+
+impl VbmetaImageHeader {
+  /// The size of the signature block.
+  fn authentication_data_block_size(&self) -> u64 {
+      u64::from_be(self.0.authentication_data_block_size)
+  }
+
+  /// The size of the auxiliary data block.
+  fn auxiliary_data_block_size(&self) -> u64 {
+      u64::from_be(self.0.auxiliary_data_block_size)
+  }
+
+  /// Offset into the "Auxiliary data" block of public key data.
+  fn public_key_offset(&self) -> u64 {
+      u64::from_be(self.0.public_key_offset)
+  }
+
+  /// Length of the public key data.
+  fn public_key_size(&self) -> u64 {
+      u64::from_be(self.0.public_key_size)
+  }
 }
 
 /// Wraps a raw C `AvbVBMetaData` struct.
@@ -74,6 +105,7 @@ impl VbmetaData {
     fn validate(&self) -> SlotVerifyNoDataResult<()> {
         check_nonnull(self.0.partition_name)?;
         check_nonnull(self.0.vbmeta_data)?;
+        let _ = self.get_public_key().ok_or(SlotVerifyError::Internal)?;
         Ok(())
     }
 
@@ -91,6 +123,12 @@ impl VbmetaData {
         // * libavb gives us a properly-allocated byte array.
         // * the returned contents remain valid and unmodified while we exist.
         unsafe { slice::from_raw_parts(self.0.vbmeta_data, self.0.vbmeta_size) }
+    }
+
+    /// Returns the vbmeta image public key.
+    pub fn public_key(&self) -> &[u8] {
+        // Self::validate() checked that self.get_public_key().is_some().
+        self.get_public_key().unwrap()
     }
 
     /// Returns the vbmeta verification result.
@@ -121,6 +159,31 @@ impl VbmetaData {
             Descriptor::Property(p) if p.key == key => Some(p.value),
             _ => None,
         })
+    }
+
+    /// Returns the vbmeta image public key, or None on ill-formed fields.
+    fn get_public_key(&self) -> Option<&[u8]> {
+        let (header, _, aux_block) = self.get_blocks()?;
+        let offset = usize::try_from(header.public_key_offset()).ok()?;
+        let size = header.public_key_size().try_into().ok()?;
+        aux_block.get(offset..offset.checked_add(size)?)
+    }
+
+    /// Returns the vbmeta blocks, or None on ill-formed fields.
+    fn get_blocks(&self) -> Option<(&VbmetaImageHeader, &[u8], &[u8])> {
+        let (header, rest) = VbmetaImageHeader::ref_from_prefix(self.data()).ok()?;
+        let auth_size = header.authentication_data_block_size().try_into().ok()?;
+        let aux_size = header.auxiliary_data_block_size().try_into().ok()?;
+        let (auth, rest) = rest.split_at_checked(auth_size)?;
+        let (aux, rest) = rest.split_at_checked(aux_size)?;
+        // "The size of [...] blocks must be divisible by 64 [...] to ensure proper alignment"
+        let blocks_aligned = (auth.len() % 64) == 0 || (aux.len() % 64) == 0;
+
+        if blocks_aligned && rest.is_empty() {
+            Some((header, auth, aux))
+        } else {
+            None
+        }
     }
 }
 
