@@ -15,10 +15,14 @@
 //! Provides `avb::Ops` test fixtures.
 
 use avb::{
-    cert_validate_vbmeta_public_key, CertOps, CertPermanentAttributes, IoError, IoResult, Ops,
-    PublicKeyForPartitionInfo, SHA256_DIGEST_SIZE,
+    cert_validate_vbmeta_public_key, CertOps, CertPermanentAttributes, HashOps, HashType, IoError,
+    IoResult, Ops, PublicKeyForPartitionInfo, SHA256_DIGEST_SIZE,
 };
-use std::{cmp::min, collections::HashMap, ffi::CStr};
+use std::{
+    cmp::min,
+    collections::{HashMap, VecDeque},
+    ffi::CStr,
+};
 #[cfg(feature = "uuid")]
 use uuid::Uuid;
 
@@ -128,6 +132,12 @@ pub struct TestOps<'a> {
 
     /// Fake RNG values to provide, or `IoError` if there aren't enough.
     pub cert_fake_rng: Vec<u8>,
+
+    /// Set to true to enable `HashOps`; defaults to false.
+    pub use_hash_ops: bool,
+
+    /// Mock hash results queue; only has effect if hash ops are enabled i.e `use_hash_ops` is true.
+    pub hash_results: VecDeque<&'a [u8]>,
 }
 
 impl<'a> TestOps<'a> {
@@ -225,6 +235,8 @@ impl Default for TestOps<'_> {
             cert_permanent_attributes_hash: None,
             cert_key_versions: HashMap::new(),
             cert_fake_rng: Vec::new(),
+            use_hash_ops: false,
+            hash_results: VecDeque::new(),
         }
     }
 }
@@ -389,6 +401,13 @@ impl<'a> Ops<'a> for TestOps<'a> {
             false => None,
         }
     }
+
+    fn hash_ops(&mut self) -> Option<&mut dyn HashOps> {
+        match self.use_hash_ops {
+            true => Some(self),
+            false => None,
+        }
+    }
 }
 
 impl CertOps for TestOps<'_> {
@@ -418,5 +437,19 @@ impl CertOps for TestOps<'_> {
         bytes.copy_from_slice(&self.cert_fake_rng[..]);
         self.cert_fake_rng = leftover;
         Ok(())
+    }
+}
+
+impl HashOps for TestOps<'_> {
+    fn init(&mut self, _hash_type: HashType) -> IoResult<()> {
+        Ok(())
+    }
+
+    fn update(&mut self, _data: &[u8]) -> IoResult<()> {
+        Ok(())
+    }
+
+    fn finalize(&mut self) -> IoResult<&[u8]> {
+        self.hash_results.pop_front().ok_or(IoError::NoSuchValue)
     }
 }

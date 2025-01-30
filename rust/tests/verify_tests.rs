@@ -31,6 +31,20 @@ use std::{ffi::CString, fs};
 #[cfg(feature = "uuid")]
 use uuid::uuid;
 
+/// Generates bytes array from provided `hex_str`. Panics in case of invalid hex input.
+fn hex_to_bytes(hex_str: &str) -> Vec<u8> {
+    if hex_str.len() % 2 != 0 {
+        panic!("Hex string must have an even length");
+    }
+    let mut bytes = Vec::with_capacity(hex_str.len() / 2);
+    for i in (0..hex_str.len()).step_by(2) {
+        let byte_str = &hex_str[i..i + 2];
+        let byte = u8::from_str_radix(byte_str, 16).unwrap();
+        bytes.push(byte);
+    }
+    bytes
+}
+
 /// Initializes a `TestOps` object such that verification will succeed on `TEST_PARTITION_NAME` and
 /// `TEST_PARTITION_2_NAME`.
 fn build_test_ops_two_images_one_vbmeta<'a>() -> TestOps<'a> {
@@ -870,4 +884,51 @@ fn verify_get_property_value_not_found() {
         None,
         "Expected property not found for not existing key"
     );
+}
+
+#[test]
+fn one_image_one_vbmeta_passes_verification_hash_ops() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+
+    let vbmeta_header_hash_bytes = hex_to_bytes(TEST_IMAGE_VBMETA_HEADER_HASH_HEX);
+    let test_image_digest_hash_bytes = hex_to_bytes(TEST_IMAGE_DIGEST_HEX);
+    let test_image_public_key_digest_hash_bytes = hex_to_bytes(TEST_IMAGE_PUBLIC_KEY_DIGEST_HEX);
+    let vbmeta_digest_bytes = hex_to_bytes(TEST_IMAGE_VBMETA_DIGEST_HEX);
+
+    ops.use_hash_ops = true;
+    // Results ordering is important
+    ops.hash_results.push_back(&vbmeta_header_hash_bytes);
+    ops.hash_results.push_back(&test_image_digest_hash_bytes);
+    ops.hash_results
+        .push_back(&test_image_public_key_digest_hash_bytes);
+    ops.hash_results.push_back(&vbmeta_digest_bytes);
+
+    let data = verify_one_image_one_vbmeta(&mut ops).unwrap();
+    let cmdline = data.cmdline().to_str().unwrap();
+
+    // Verify all hash results are got requested.
+    assert!(ops.hash_results.is_empty());
+    assert!(cmdline.contains(&format!(
+        "androidboot.vbmeta.public_key_digest={TEST_IMAGE_PUBLIC_KEY_DIGEST_HEX}"
+    )));
+    assert!(cmdline.contains(&format!(
+        "androidboot.vbmeta.digest={TEST_IMAGE_VBMETA_DIGEST_HEX}"
+    )));
+}
+
+#[test]
+fn one_image_one_vbmeta_passes_verification_hash_ops_mismatch() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+
+    let invalid_vbmeta_header_hash_bytes = hex_to_bytes(ZERO_SHA512);
+
+    ops.use_hash_ops = true;
+    ops.hash_results
+        .push_back(&invalid_vbmeta_header_hash_bytes);
+
+    let result = verify_one_image_one_vbmeta(&mut ops);
+
+    // Verify all hash results are got requested.
+    assert!(ops.hash_results.is_empty());
+    assert_eq!(result, Err(SlotVerifyError::Verification(None)));
 }
