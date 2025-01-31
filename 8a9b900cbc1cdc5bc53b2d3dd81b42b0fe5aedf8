@@ -39,6 +39,30 @@
       },
       "revId": "8a9b900cbc1cdc5bc53b2d3dd81b42b0fe5aedf8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4566c12e_5b782d28",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-01-31T15:19:48Z",
+      "side": 1,
+      "message": "I assume here: https://cs.android.com/android/platform/superproject/main/+/main:bootable/libbootloader/gbl/libavb/BUILD.avb.bazel;l\u003d139",
+      "parentUuid": "82a68ff7_a0d9ae58",
+      "range": {
+        "startLine": 38,
+        "startChar": 8,
+        "endLine": 38,
+        "endChar": 84
+      },
+      "revId": "8a9b900cbc1cdc5bc53b2d3dd81b42b0fe5aedf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
