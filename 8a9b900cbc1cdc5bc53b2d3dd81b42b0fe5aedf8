@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "9a0a1b48_59b6607c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2025-01-31T08:28:34Z",
+      "side": 1,
+      "message": "Hi Pierre-Clément, could we first align on the overall plan as discussed in [Andrey\u0027s doc](https://docs.google.com/document/d/1usKjyf11_1AodpsoStnpWGa-fe3eeafdl2YZGy8h84I/edit?disco\u003dAAABdCJydss) before proceeding ? I\u0027m still unsure about the precise flow and how we want to handle the public key.",
+      "revId": "8a9b900cbc1cdc5bc53b2d3dd81b42b0fe5aedf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "82a68ff7_a0d9ae58",
