@@ -67,6 +67,30 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "08069bd8_8c48af56",
+        "filename": "libavb/avb_vbmeta_image.h",
+        "patchSetId": 12
+      },
+      "lineNbr": 291,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2025-02-03T20:57:36Z",
+      "side": 1,
+      "message": "See my comments on the PREPARE macro, I\u0027d prefer that ops-\u003ehash_ops be always safe to use.",
+      "parentUuid": "1fde4d29_1b5084f1",
+      "range": {
+        "startLine": 291,
+        "startChar": 4,
+        "endLine": 291,
+        "endChar": 25
+      },
+      "revId": "365d8d3e27e7ce5fe5fd0430b6764c8dd5a5edf5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "e77d5e66_c919b01b",
         "filename": "test/avb_slot_verify_unittest.cc",
         "patchSetId": 12

@@ -1,0 +1,113 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "5f2b7586_e79e2681",
+        "filename": "libavb/avb_ops.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 111,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2025-02-03T20:57:36Z",
+      "side": 1,
+      "message": "It looks like this precludes a thread-safe implementation. Is that intentional? Probably ok?",
+      "range": {
+        "startLine": 111,
+        "startChar": 7,
+        "endLine": 111,
+        "endChar": 17
+      },
+      "revId": "ead3da694b821df57ea8833abf1fba8c8e2d85a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d5957a86_71a849e2",
+        "filename": "libavb/avb_sha.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 53,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2025-02-03T20:57:36Z",
+      "side": 1,
+      "message": "Is there an alternative that doesn\u0027t involve this macro? Why not force the integrator to choose at compile time and offer a default they can choose?",
+      "range": {
+        "startLine": 53,
+        "startChar": 8,
+        "endLine": 53,
+        "endChar": 28
+      },
+      "revId": "ead3da694b821df57ea8833abf1fba8c8e2d85a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "bf520994_5a5c691f",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 406,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2025-02-03T20:57:36Z",
+      "side": 1,
+      "message": "This is why I don\u0027t like this macro. It\u0027s not clear what\u0027s happening here without inspecting the macro, and using ops-\u003ehash_ops directly seems like an easy mistake that might work in some but not all cases.",
+      "range": {
+        "startLine": 406,
+        "startChar": 2,
+        "endLine": 406,
+        "endChar": 22
+      },
+      "revId": "ead3da694b821df57ea8833abf1fba8c8e2d85a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "10040b07_9934391b",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 15
+      },
+      "lineNbr": 772,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2025-02-03T20:57:36Z",
+      "side": 1,
+      "message": "Another example: Is it ok to use this here without the PREPARE macro? How would one know without carefully analyzing the code?",
+      "range": {
+        "startLine": 772,
+        "startChar": 6,
+        "endLine": 772,
+        "endChar": 19
+      },
+      "revId": "ead3da694b821df57ea8833abf1fba8c8e2d85a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "debb4602_9ae5947a",
+        "filename": "libavb/avb_slot_verify.h",
+        "patchSetId": 15
+      },
+      "lineNbr": 320,
+      "author": {
+        "id": 1079236
+      },
+      "writtenOn": "2025-02-03T20:57:36Z",
+      "side": 1,
+      "message": "nit: confusing sentence -- could remove this bit and say \"... using |hash_ops| and the digest indicated...\" in the text above instead.",
+      "revId": "ead3da694b821df57ea8833abf1fba8c8e2d85a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
