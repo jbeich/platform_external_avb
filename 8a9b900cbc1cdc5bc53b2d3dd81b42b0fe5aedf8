@@ -38,6 +38,24 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "deaf64db_fd0b82fb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1958315
+      },
+      "writtenOn": "2025-02-03T12:19:58Z",
+      "side": 1,
+      "message": "Thanks for addressing the ordering issue. I\u0027m also unsure about the VbMeta signing . I\u0027ve added a comment[1] to the doc hoping for clarification, especially since this cl stack mostly focuses on the VbMeta signing key.\n\n[1] https://docs.google.com/document/d/1usKjyf11_1AodpsoStnpWGa-fe3eeafdl2YZGy8h84I/edit?disco\u003dAAABdCJydss",
+      "parentUuid": "36ece6b8_eb0225d1",
+      "revId": "8a9b900cbc1cdc5bc53b2d3dd81b42b0fe5aedf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "82a68ff7_a0d9ae58",
         "filename": "rust/Android.bp",
         "patchSetId": 1
