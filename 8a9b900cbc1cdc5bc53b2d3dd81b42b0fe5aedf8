@@ -63,6 +63,30 @@
       },
       "revId": "8a9b900cbc1cdc5bc53b2d3dd81b42b0fe5aedf8",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f4680ef3_5f09d23f",
+        "filename": "rust/Android.bp",
+        "patchSetId": 1
+      },
+      "lineNbr": 38,
+      "author": {
+        "id": 1882526
+      },
+      "writtenOn": "2025-02-03T09:51:05Z",
+      "side": 1,
+      "message": "Thanks; should be fixed by aosp/3471718.",
+      "parentUuid": "4566c12e_5b782d28",
+      "range": {
+        "startLine": 38,
+        "startChar": 8,
+        "endLine": 38,
+        "endChar": 84
+      },
+      "revId": "8a9b900cbc1cdc5bc53b2d3dd81b42b0fe5aedf8",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
