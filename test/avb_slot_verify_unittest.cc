@@ -911,7 +911,12 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--include_descriptors_from_image %s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   boot_path.c_str()));
+||||||| BASE
+=======
+                                  boot_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
@@ -995,7 +1000,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+                         pk_path.value().c_str()));
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1180,7 +1191,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+                         pk_path.value().c_str()));
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.3\n"
@@ -1344,7 +1361,13 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --rollback_index_location 1"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+                         pk_path.value().c_str()));
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.2\n"
@@ -1473,7 +1496,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       android::base::StringPrintf("--chain_partition vbmeta_google:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+                         pk_path.value().c_str()));
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1652,7 +1681,12 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1732,7 +1766,12 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1788,7 +1827,12 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1878,7 +1922,13 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+                         pk_path.value().c_str()));
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1996,8 +2046,15 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
       android::base::StringPrintf("--include_descriptors_from_image %s"
                                   " --include_descriptors_from_image %s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   foo_path.c_str(),
                                   bar_path.c_str()));
+||||||| BASE
+                                         bar_path.value().c_str()));
+=======
+                                  foo_path.value().c_str(),
+                                  bar_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -2111,8 +2168,15 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
       android::base::StringPrintf("--include_descriptors_from_image %s"
                                   " --include_descriptors_from_image %s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   foo_path.c_str(),
                                   bar_path.c_str()));
+||||||| BASE
+                                         bar_path.value().c_str()));
+=======
+                                  foo_path.value().c_str(),
+                                  bar_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -2283,7 +2347,12 @@ TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--public_key_metadata %s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   md_path.c_str()));
+||||||| BASE
+=======
+                                  md_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2356,7 +2425,13 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
           "--algorithm SHA256_RSA2048 "
           "--flags %d "
           "--internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
           rootfs_path.c_str(),
+||||||| BASE
+                         hashtree_verification_on
+=======
+          rootfs_path.value().c_str(),
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
           hashtree_verification_on ? 0
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED));
 
@@ -2546,7 +2621,13 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
           "--internal_release_string \"\"",
           hashtree_verification_on ? 0
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED,
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
           pk_path.c_str()));
+||||||| BASE
+                         pk_path.value().c_str()));
+=======
+          pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_EQ(
       android::base::StringPrintf(
@@ -2573,7 +2654,13 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
           "      Kernel Cmdline:        'should_be_in_both=1'\n",
           hashtree_verification_on ? 0
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_.value()));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3059,7 +3146,13 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+                         pk_path.value().c_str()));
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3113,7 +3206,13 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceNoChainPartitions) {
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk_path.c_str()));
+||||||| BASE
+                         pk_path.value().c_str()));
+=======
+                                  pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3152,8 +3251,15 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
       android::base::StringPrintf("--setup_rootfs_from_kernel %s "
                                   "--include_descriptors_from_image %s"
                                   " --internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   system_path.c_str(),
                                   system_path.c_str()));
+||||||| BASE
+                                         system_path.value().c_str()));
+=======
+                                  system_path.value().c_str(),
+                                  system_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3308,8 +3414,15 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
                                   "--include_descriptors_from_image %s "
                                   "--set_hashtree_disabled_flag "
                                   "--internal_release_string \"\"",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   system_path.c_str(),
                                   system_path.c_str()));
+||||||| BASE
+                                         system_path.value().c_str()));
+=======
+                                  system_path.value().c_str(),
+                                  system_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
   for (int n = 0; n < 4; n++) {
     AvbHashtreeErrorMode modes[4] = {
         AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
@@ -3367,7 +3480,13 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "test/data/testkey_rsa2048.pem",
         android::base::StringPrintf("--internal_release_string \"\" "
                                     "--include_descriptors_from_image %s ",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                     factory_path.c_str()));
+||||||| BASE
+                           factory_path.value().c_str()));
+=======
+                                    factory_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
     EXPECT_EQ(android::base::StringPrintf(
                   "Minimum libavb version:   1.1\n"
@@ -3390,7 +3509,12 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                   "      Digest:                \n"
                   "      Flags:                 %d\n",
                   do_not_use_ab ? 1 : 0),
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
               InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+=======
+              InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }
@@ -3424,7 +3548,13 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "test/data/testkey_rsa2048.pem",
         android::base::StringPrintf("--internal_release_string \"\" "
                                     "--include_descriptors_from_image %s ",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                     factory_path.c_str()));
+||||||| BASE
+                           factory_path.value().c_str()));
+=======
+                                    factory_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
     int expected_tree_size =
         (verity_hash_algorithm_ == "sha512") ? 86016 : 45056;
@@ -3467,7 +3597,12 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                   expected_fec_offset,
                   verity_hash_algorithm_.c_str(),
                   do_not_use_ab ? 1 : 0),
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
               InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+=======
+              InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }

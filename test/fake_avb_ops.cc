@@ -37,7 +37,17 @@
 #include <sys/types.h>
 #include <unistd.h>
 
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
 #include <filesystem>
+||||||| BASE
+#include <base/files/file_util.h>
+#include <base/strings/string_util.h>
+#include <base/strings/stringprintf.h>
+#include <openssl/rand.h>
+#include <openssl/sha.h>
+
+=======
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 #include <iostream>
 
 namespace avb {

@@ -1055,7 +1055,12 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                   sparse_image ? " (Sparse)" : "",
                   hash_algorithm.c_str(),
                   root_digest.c_str()),
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
               InfoImage(rootfs_path.string()));
+||||||| BASE
+=======
+              InfoImage(rootfs_path.value()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
     ASSERT_EQ(android::base::StringPrintf(
                   "Minimum libavb version:   1.0\n"
@@ -1088,7 +1093,12 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                   "      Flags:                 0\n",
                   hash_algorithm.c_str(),
                   root_digest.c_str()),
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
               InfoImage(external_vbmeta_path.string()));
+||||||| BASE
+=======
+              InfoImage(external_vbmeta_path.value()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
     // Check that the extracted vbmeta matches the externally generally one.
     EXPECT_COMMAND(0,
@@ -1412,7 +1422,12 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                   "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
                   "      Flags:                 0\n",
                   sparse_image ? " (Sparse)" : ""),
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
               InfoImage(rootfs_path.string()));
+||||||| BASE
+=======
+              InfoImage(rootfs_path.value()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
   }
 
   /* Zero the hashtree and FEC on a copy of the image. */
@@ -2906,8 +2921,15 @@ void AvbToolTest::GenerateImageWithHashAndHashtreeSetup() {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--include_descriptors_from_image %s "
                                   "--include_descriptors_from_image %s",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   boot_path.c_str(),
                                   system_path.c_str()));
+||||||| BASE
+                                         system_path.value().c_str()));
+=======
+                                  boot_path.value().c_str(),
+                                  system_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 }
 
 TEST_F(AvbToolTest, VerifyImageWithHashAndHashtree) {
@@ -2950,7 +2972,20 @@ TEST_F(AvbToolTest, VerifyImageWithHashAndZeroedHashtree) {
       0,
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--include_descriptors_from_image %s ",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   system_path.c_str()));
+||||||| BASE
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image --image %s --accept_zeroed_hashtree",
+                 vbmeta_image_path_.value().c_str());
+=======
+                                  system_path.value().c_str()));
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image --image %s --accept_zeroed_hashtree",
+                 vbmeta_image_path_.value().c_str());
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_COMMAND(
       0,
@@ -2987,7 +3022,12 @@ TEST_F(AvbToolTest, VerifyImageWithNoHashtree) {
       0,
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--include_descriptors_from_image %s ",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   system_path.c_str()));
+||||||| BASE
+=======
+                                  system_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   EXPECT_COMMAND(
       1, "./avbtool.py verify_image --image %s", vbmeta_image_path_.c_str());
@@ -3069,7 +3109,12 @@ TEST_F(AvbToolTest, VerifyImageChainPartition) {
       0,
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition system:1:%s ",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk4096_path.c_str()));
+||||||| BASE
+=======
+                                  pk4096_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   // Should not fail (name, rollback_index, contents all correct).
   EXPECT_COMMAND(0,
@@ -3124,7 +3169,12 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionWithFollow) {
       0,
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition system:1:%s ",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk4096_path.c_str()));
+||||||| BASE
+=======
+                                  pk4096_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   const size_t system_partition_size = 10 * 1024 * 1024;
   const size_t system_image_size = 8 * 1024 * 1024;
@@ -3218,7 +3268,13 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionOtherVBMeta) {
       0,
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition vbmeta_google:1:%s ",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk4096_path.c_str()));
+||||||| BASE
+                         pk4096_path.value().c_str()));
+=======
+                                  pk4096_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   // Should not fail (name, rollback_index, contents all correct).
   EXPECT_COMMAND(0,
@@ -3286,8 +3342,15 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition system:1:%s "
                                   "--include_descriptors_from_image %s",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                   pk4096_path.c_str(),
                                   boot_path.c_str()));
+||||||| BASE
+                                         boot_path.value().c_str()));
+=======
+                                  pk4096_path.value().c_str(),
+                                  boot_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
   const size_t system_partition_size = 10 * 1024 * 1024;
   const size_t system_image_size = 8 * 1024 * 1024;
@@ -3411,7 +3474,13 @@ class AvbToolTest_PrintRequiredVersion : public AvbToolTest {
                      image_path.c_str(),
                      (int)boot_partition_size);
       extra_args = android::base::StringPrintf(
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
           "--include_descriptors_from_image %s", image_path.c_str());
+||||||| BASE
+                                      image_path.value().c_str());
+=======
+          "--include_descriptors_from_image %s", image_path.value().c_str());
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
     } else if (target_required_minor_version == 2) {
       extra_args = "--rollback_index_location 2";
     }
@@ -3432,7 +3501,12 @@ class AvbToolTest_PrintRequiredVersion : public AvbToolTest {
   void CheckVersion(int expected_required_minor_version) {
     std::filesystem::path output_path = testdir_ / kOutputFile;
     std::string output;
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
     ASSERT_TRUE(android::base::ReadFileToString(output_path.string(), &output));
+||||||| BASE
+=======
+    ASSERT_TRUE(base::ReadFileToString(output_path, &output));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
     EXPECT_EQ(
         output,
         android::base::StringPrintf("1.%d\n", expected_required_minor_version));

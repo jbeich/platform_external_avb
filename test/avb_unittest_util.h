@@ -29,8 +29,14 @@
 #include <base/files/file_util.h>
 #include <gtest/gtest.h>
 #include <inttypes.h>
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
 
 #include <filesystem>
+||||||| BASE
+#include <base/files/file_util.h>
+#include <base/strings/stringprintf.h>
+=======
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
 
 // Encodes |len| bytes of |data| as a lower-case hex-string.
 std::string mem_to_hexstring(const uint8_t* data, size_t len);

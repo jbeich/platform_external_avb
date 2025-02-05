@@ -226,8 +226,15 @@ class AvbABFlowTest : public BaseAvbToolTest {
         "test/data/testkey_rsa2048.pem",
         android::base::StringPrintf("--include_descriptors_from_image %s"
                                     " --chain_partition odm:1:%s",
+<<<<<<< HEAD   (7c9eb0 [automerger skipped] Remove usage of libchrome's base::FileP)
                                     boot_path.c_str(),
                                     pk_path.c_str()));
+||||||| BASE
+                                           pk_path.value().c_str()));
+=======
+                                    boot_path.value().c_str(),
+                                    pk_path.value().c_str()));
+>>>>>>> BRANCH (f6a9ed Remove usage of libchrome's base::StringPrintf)
   }
 
   void SetMD(int a_pri,
