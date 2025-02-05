@@ -22,7 +22,16 @@
  * SOFTWARE.
  */
 
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
 #include <android-base/file.h>
+||||||| BASE
+#include <iostream>
+
+#include <endian.h>
+#include <inttypes.h>
+#include <string.h>
+=======
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
 #include <android-base/stringprintf.h>
 #include <base/files/file_util.h>
 #include <base/strings/string_split.h>
@@ -2676,7 +2685,13 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
                  (int)boot_partition_size,
                  vbmeta_image_path_.c_str());
 
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
   std::string vbmeta_contents = InfoImage(vbmeta_image_path_.string());
+||||||| BASE
+  std::string vbmeta_contents = InfoImage(vbmeta_image_path_.value());
+=======
+  std::string vbmeta_contents = InfoImage(vbmeta_image_path_.value());
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
   std::string boot_contents = InfoImage(boot_path);
 
   // Check that boot.img has the same vbmeta blob as from vbmeta.img -
@@ -2951,11 +2966,29 @@ TEST_F(AvbToolTest, VerifyImageWithHashAndZeroedHashtree) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--include_descriptors_from_image %s ",
                                   system_path.c_str()));
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
+||||||| BASE
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image --image %s --accept_zeroed_hashtree",
+                 vbmeta_image_path_.value().c_str());
+=======
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image --image %s --accept_zeroed_hashtree",
+                 vbmeta_image_path_.value().c_str());
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
 
   EXPECT_COMMAND(
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
       0,
       "./avbtool.py verify_image --image %s --accept_zeroed_hashtree",
       vbmeta_image_path_.c_str());
+||||||| BASE
+      0, "./avbtool.py zero_hashtree --image %s", system_path.value().c_str());
+=======
+      0, "./avbtool.py zero_hashtree --image %s", system_path.c_str());
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
 
   EXPECT_COMMAND(
       0, "./avbtool.py zero_hashtree --image %s", system_path.c_str());
@@ -3286,7 +3319,13 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition system:1:%s "
                                   "--include_descriptors_from_image %s",
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
                                   pk4096_path.c_str(),
+||||||| BASE
+                                  pk4096_path.value().c_str(),
+=======
+                                  pk4096_path.value().c_str(),
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
                                   boot_path.c_str()));
 
   const size_t system_partition_size = 10 * 1024 * 1024;

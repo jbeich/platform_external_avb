@@ -205,7 +205,13 @@ class AvbABFlowTest : public BaseAvbToolTest {
                    rollback_odm,
                    odm_partition_size);
 
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
     std::string pk_path = (testdir_ / "testkey_rsa4096.avbpubkey").string();
+||||||| BASE
+    base::FilePath pk_path = testdir_.Append("testkey_rsa4096.avbpubkey");
+=======
+    std::string pk_path = testdir_.Append("testkey_rsa4096.avbpubkey").value();
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
     EXPECT_COMMAND(
         0,
         "./avbtool.py extract_public_key --key test/data/testkey_rsa4096.pem"

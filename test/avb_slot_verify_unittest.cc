@@ -1428,7 +1428,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
   size_t boot_partition_size = 16 * 1024 * 1024;
   const size_t boot_image_size = 5 * 1024 * 1024;
   std::string boot_path = GenerateImage("boot.img", boot_image_size);
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
   std::filesystem::path other_vbmeta_path = testdir_ / "vbmeta_google.img";
+||||||| BASE
+  base::FilePath other_vbmeta_path = testdir_.Append("vbmeta_google.img");
+=======
+  base::FilePath other_vbmeta_path = testdir_.Append("vbmeta_google.img");
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
   const char* requested_partitions[] = {"boot", NULL};
 
   EXPECT_COMMAND(0,
@@ -1452,7 +1458,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
                  " --image %s"
                  " --output %s",
                  boot_path.c_str(),
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
                  other_vbmeta_path.c_str());
+||||||| BASE
+                 other_vbmeta_path.value().c_str());
+=======
+                 other_vbmeta_path.value().c_str());
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
                  " --image %s",
@@ -2908,7 +2920,13 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
                  system_path.c_str(),
                  foobar_path.c_str(),
                  system_path.c_str(),
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
                  pk_path.c_str());
+||||||| BASE
+                 pk_path.value().c_str());
+=======
+                 pk_path.value().c_str());
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
 
   ASSERT_EQ(
       "Footer version:           1.0\n"

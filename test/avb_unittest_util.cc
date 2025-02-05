@@ -129,7 +129,13 @@ void BaseAvbToolTest::GenerateVBMetaImage(
 std::string BaseAvbToolTest::GenerateImage(const std::string file_name,
                                            size_t image_size,
                                            uint8_t start_byte) {
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
   std::filesystem::path image_path = testdir_ / file_name;
+||||||| BASE
+  base::FilePath image_path = testdir_.Append(file_name);
+=======
+  base::FilePath image_path = testdir_.Append(file_name);
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
   EXPECT_COMMAND(0,
                  "./avbtool.py generate_test_image "
                  "--image_size %d "
@@ -141,7 +147,13 @@ std::string BaseAvbToolTest::GenerateImage(const std::string file_name,
   base::File::Info stats;
   EXPECT_TRUE(base::GetFileInfo(base::FilePath(image_path.c_str()), &stats));
   EXPECT_EQ((size_t)stats.size, image_size);
+<<<<<<< HEAD   (f71b3f [automerger skipped] Remove usage of libchrome's base::Strin)
   return image_path.string();
+||||||| BASE
+  return image_path;
+=======
+  return image_path.value();
+>>>>>>> BRANCH (16223b Remove usage of libchrome's base::FilePath from GenerateImag)
 }
 
 std::string BaseAvbToolTest::InfoImage(const std::string& image_path) {
