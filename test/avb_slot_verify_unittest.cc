@@ -688,7 +688,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "      Digest:                "
       "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d\n"
       "      Flags:                 0\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
@@ -1018,7 +1024,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   EXPECT_EQ(
       "Footer version:           1.0\n"
@@ -1049,7 +1061,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
-      InfoImage(boot_path));
+      InfoImage(boot_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1200,7 +1212,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "      Public key (sha1):       "
       "2597c218aae470a130f61162feaae70afd97f011\n"
       "      Flags:                   1\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   EXPECT_EQ(
       "Footer version:           1.0\n"
@@ -1229,7 +1247,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "      Digest:                "
       "e54d3d497d1cb01bd9b0a2ebda4a305b12b4f5ba084c9cc588690d33ae1e9940\n"
       "      Flags:                 1\n",
-      InfoImage(boot_path));
+      InfoImage(boot_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1367,7 +1385,13 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   EXPECT_EQ(
       "Footer version:           1.0\n"
@@ -1398,7 +1422,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
-      InfoImage(boot_path));
+      InfoImage(boot_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1496,7 +1520,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1521,7 +1551,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in hash footer'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(other_vbmeta_path.string()));
+||||||| BASE
+      InfoImage(other_vbmeta_path));
+=======
+      InfoImage(other_vbmeta_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1901,7 +1937,13 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'cmdline2 in vbmeta'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2027,7 +2069,13 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
       "      Digest:                "
       "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d\n"
       "      Flags:                 0\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2142,7 +2190,13 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
       "      Digest:                "
       "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d\n"
       "      Flags:                 0\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   AvbSlotVerifyData* slot_data = NULL;
@@ -2389,7 +2443,13 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
           "      Kernel Cmdline:        'should_be_in_both=1'\n",
           hashtree_verification_on ? 0
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2524,7 +2584,13 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
       "      Flags:                 2\n"
       "      Kernel Cmdline:        "
       "'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(system_path.string()));
+||||||| BASE
+      InfoImage(system_path));
+=======
+      InfoImage(system_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   std::filesystem::path pk_path = testdir_ / "testkey_rsa2048.avbpubkey";
   EXPECT_COMMAND(
@@ -2549,6 +2615,7 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
           pk_path.c_str()));
 
   EXPECT_EQ(
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
           "Minimum libavb version:   1.0\n"
           "Header Block:             256 bytes\n"
@@ -2574,6 +2641,59 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
           hashtree_verification_on ? 0
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      base::StringPrintf("Minimum libavb version:   1.0\n"
+                         "Header Block:             256 bytes\n"
+                         "Authentication Block:     320 bytes\n"
+                         "Auxiliary Block:          1216 bytes\n"
+                         "Public key (sha1):        "
+                         "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                         "Algorithm:                SHA256_RSA2048\n"
+                         "Rollback Index:           4\n"
+                         "Flags:                    %d\n"
+                         "Rollback Index Location:  0\n"
+                         "Release String:           ''\n"
+                         "Descriptors:\n"
+                         "    Chain Partition descriptor:\n"
+                         "      Partition Name:          system\n"
+                         "      Rollback Index Location: 1\n"
+                         "      Public key (sha1):       "
+                         "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                         "      Flags:                   0\n"
+                         "    Kernel Cmdline descriptor:\n"
+                         "      Flags:                 0\n"
+                         "      Kernel Cmdline:        'should_be_in_both=1'\n",
+                         hashtree_verification_on
+                             ? 0
+                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
+      InfoImage(vbmeta_image_path_));
+=======
+      base::StringPrintf("Minimum libavb version:   1.0\n"
+                         "Header Block:             256 bytes\n"
+                         "Authentication Block:     320 bytes\n"
+                         "Auxiliary Block:          1216 bytes\n"
+                         "Public key (sha1):        "
+                         "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                         "Algorithm:                SHA256_RSA2048\n"
+                         "Rollback Index:           4\n"
+                         "Flags:                    %d\n"
+                         "Rollback Index Location:  0\n"
+                         "Release String:           ''\n"
+                         "Descriptors:\n"
+                         "    Chain Partition descriptor:\n"
+                         "      Partition Name:          system\n"
+                         "      Rollback Index Location: 1\n"
+                         "      Public key (sha1):       "
+                         "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                         "      Flags:                   0\n"
+                         "    Kernel Cmdline descriptor:\n"
+                         "      Flags:                 0\n"
+                         "      Kernel Cmdline:        'should_be_in_both=1'\n",
+                         hashtree_verification_on
+                             ? 0
+                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED),
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2718,7 +2838,13 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
           "      Flags:                 0\n"
           "      Kernel Cmdline:        'should_be_in_both=1'\n",
           use_avbctl ? 0 : AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED),
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2982,7 +3108,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           c9ffc3bfae5000269a55a56621547fd1fcf819df\n"
       "      Flags:                 0\n",
-      InfoImage(boot_path));
+      InfoImage(boot_path.value()));
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3369,6 +3495,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                                     "--include_descriptors_from_image %s ",
                                     factory_path.c_str()));
 
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
     EXPECT_EQ(android::base::StringPrintf(
                   "Minimum libavb version:   1.1\n"
                   "Header Block:             256 bytes\n"
@@ -3391,6 +3518,51 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                   "      Flags:                 %d\n",
                   do_not_use_ab ? 1 : 0),
               InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+    EXPECT_EQ(base::StringPrintf("Minimum libavb version:   1.1\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          704 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Hash descriptor:\n"
+                                 "      Image Size:            5242880 bytes\n"
+                                 "      Hash Algorithm:        sha256\n"
+                                 "      Partition Name:        factory\n"
+                                 "      Salt:                  \n"
+                                 "      Digest:                \n"
+                                 "      Flags:                 %d\n",
+                                 do_not_use_ab ? 1 : 0),
+              InfoImage(vbmeta_image_path_));
+=======
+    EXPECT_EQ(base::StringPrintf("Minimum libavb version:   1.1\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          704 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Hash descriptor:\n"
+                                 "      Image Size:            5242880 bytes\n"
+                                 "      Hash Algorithm:        sha256\n"
+                                 "      Partition Name:        factory\n"
+                                 "      Salt:                  \n"
+                                 "      Digest:                \n"
+                                 "      Flags:                 %d\n",
+                                 do_not_use_ab ? 1 : 0),
+              InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }
@@ -3430,6 +3602,7 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         (verity_hash_algorithm_ == "sha512") ? 86016 : 45056;
     int expected_fec_offset =
         (verity_hash_algorithm_ == "sha512") ? 5328896 : 5287936;
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
     EXPECT_EQ(android::base::StringPrintf(
                   "Minimum libavb version:   1.1\n"
                   "Header Block:             256 bytes\n"
@@ -3468,6 +3641,83 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
                   verity_hash_algorithm_.c_str(),
                   do_not_use_ab ? 1 : 0),
               InfoImage(vbmeta_image_path_.string()));
+||||||| BASE
+    EXPECT_EQ(base::StringPrintf("Minimum libavb version:   1.1\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          832 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Kernel Cmdline descriptor:\n"
+                                 "      Flags:                 0\n"
+                                 "      Kernel Cmdline:        "
+                                 "'androidboot.vbmeta.root_digest.factory=$("
+                                 "AVB_FACTORY_ROOT_DIGEST)'\n"
+                                 "    Hashtree descriptor:\n"
+                                 "      Version of dm-verity:  1\n"
+                                 "      Image Size:            5242880 bytes\n"
+                                 "      Tree Offset:           5242880\n"
+                                 "      Tree Size:             %d bytes\n"
+                                 "      Data Block Size:       4096 bytes\n"
+                                 "      Hash Block Size:       4096 bytes\n"
+                                 "      FEC num roots:         2\n"
+                                 "      FEC offset:            %d\n"
+                                 "      FEC size:              49152 bytes\n"
+                                 "      Hash Algorithm:        %s\n"
+                                 "      Partition Name:        factory\n"
+                                 "      Salt:                  \n"
+                                 "      Root Digest:           \n"
+                                 "      Flags:                 %d\n",
+                                 expected_tree_size,
+                                 expected_fec_offset,
+                                 verity_hash_algorithm_.c_str(),
+                                 do_not_use_ab ? 1 : 0),
+              InfoImage(vbmeta_image_path_));
+=======
+    EXPECT_EQ(base::StringPrintf("Minimum libavb version:   1.1\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          832 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Kernel Cmdline descriptor:\n"
+                                 "      Flags:                 0\n"
+                                 "      Kernel Cmdline:        "
+                                 "'androidboot.vbmeta.root_digest.factory=$("
+                                 "AVB_FACTORY_ROOT_DIGEST)'\n"
+                                 "    Hashtree descriptor:\n"
+                                 "      Version of dm-verity:  1\n"
+                                 "      Image Size:            5242880 bytes\n"
+                                 "      Tree Offset:           5242880\n"
+                                 "      Tree Size:             %d bytes\n"
+                                 "      Data Block Size:       4096 bytes\n"
+                                 "      Hash Block Size:       4096 bytes\n"
+                                 "      FEC num roots:         2\n"
+                                 "      FEC offset:            %d\n"
+                                 "      FEC size:              49152 bytes\n"
+                                 "      Hash Algorithm:        %s\n"
+                                 "      Partition Name:        factory\n"
+                                 "      Salt:                  \n"
+                                 "      Root Digest:           \n"
+                                 "      Flags:                 %d\n",
+                                 expected_tree_size,
+                                 expected_fec_offset,
+                                 verity_hash_algorithm_.c_str(),
+                                 do_not_use_ab ? 1 : 0),
+              InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
     ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
   }

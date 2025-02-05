@@ -145,11 +145,23 @@ std::string BaseAvbToolTest::GenerateImage(const std::string file_name,
 }
 
 std::string BaseAvbToolTest::InfoImage(const std::string& image_path) {
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
   std::filesystem::path tmp_path = testdir_ / "info_output.txt";
+||||||| BASE
+  base::FilePath tmp_path = testdir_.Append("info_output.txt");
+=======
+  base::FilePath tmp_path = testdir_.Append("info_output.txt");
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
   EXPECT_COMMAND(0,
                  "./avbtool.py info_image --image %s --output %s",
                  image_path.c_str(),
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
                  tmp_path.c_str());
+||||||| BASE
+                 tmp_path.value().c_str());
+=======
+                 tmp_path.value().c_str());
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
   std::string info_data;
   EXPECT_TRUE(android::base::ReadFileToString(tmp_path.string(), &info_data));
   return info_data;

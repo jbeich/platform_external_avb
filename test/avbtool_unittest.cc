@@ -413,6 +413,7 @@ TEST_F(AvbToolTest, Info) {
       "    Prop: blob -> '\\x00\\x00brillo "
       "ftw!\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\n'\n"
       "    Prop: large_blob -> (2048 bytes)\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_image_path_.string()));
 }
 
@@ -450,6 +451,11 @@ TEST_F(AvbToolTest, InfoWithPublicKey) {
 
   // Compare the extracted public key with the original key.
   EXPECT_EQ(key_data, output_pubkey_data);
+||||||| BASE
+      InfoImage(vbmeta_image_path_));
+=======
+      InfoImage(vbmeta_image_path_.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 }
 
 static bool collect_descriptors(const AvbDescriptor* descriptor,
@@ -545,7 +551,13 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                    external_vbmeta_path.c_str());
 
     ASSERT_EQ(AddHashFooterGetExpectedVBMetaInfo(sparse_image, partition_size),
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
               InfoImage(rootfs_path.string()));
+||||||| BASE
+              InfoImage(rootfs_path));
+=======
+              InfoImage(rootfs_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
     ASSERT_EQ(
         "Minimum libavb version:   1.0\n"
@@ -568,7 +580,13 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
         "9a58cc996d405e08a1e00f96dbfe9104fedf41cb83b1f"
         "5e4ed357fbcf58d88d9\n"
         "      Flags:                 0\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
         InfoImage(external_vbmeta_path.string()));
+||||||| BASE
+        InfoImage(external_vbmeta_path));
+=======
+        InfoImage(external_vbmeta_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
     // Check that the extracted vbmeta matches the externally generally one.
     EXPECT_COMMAND(0,
@@ -599,7 +617,13 @@ void AvbToolTest::AddHashFooterTest(bool sparse_image) {
                  (int)resized_partition_size);
   ASSERT_EQ(
       AddHashFooterGetExpectedVBMetaInfo(sparse_image, resized_partition_size),
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(rootfs_path.string()));
+||||||| BASE
+      InfoImage(rootfs_path));
+=======
+      InfoImage(rootfs_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   if (sparse_image) {
     EXPECT_COMMAND(
@@ -763,7 +787,13 @@ TEST_F(AvbToolTest, DISABLED_AddHashFooterSparseWithHoleAtTheEnd) {
   // (because of different branches) the contents of the resulting
   // disk image may slightly change. It's enough to just remove the
   // "Digest:" line from the output to work around this.
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
   std::string info = RemoveLinesStartingWith(InfoImage(partition_path.string()),
+||||||| BASE
+  std::string info =
+=======
+  std::string info = RemoveLinesStartingWith(InfoImage(partition_path.value()),
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
                                              "      Digest:");
   ASSERT_EQ(
       "Footer version:           1.0\n"
@@ -876,7 +906,7 @@ TEST_F(AvbToolTest, AddHashFooterWithPersistentDigest) {
       "      Salt:                  \n"
       "      Digest:                \n"
       "      Flags:                 0\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashFooterWithNoAB) {
@@ -921,7 +951,7 @@ TEST_F(AvbToolTest, AddHashFooterWithNoAB) {
       "      Digest:                "
       "91386fea3e251ad0c2cb6859e4f4772f37fdb69f17d46636ddc9e7fbfd3bf3d0\n"
       "      Flags:                 1\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashFooterWithPersistentDigestAndNoAB) {
@@ -966,7 +996,7 @@ TEST_F(AvbToolTest, AddHashFooterWithPersistentDigestAndNoAB) {
       "      Salt:                  \n"
       "      Digest:                \n"
       "      Flags:                 1\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 void AvbToolTest::CreateRootfsWithHashtreeFooter(
@@ -1017,6 +1047,7 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
         (int)partition_size,
         external_vbmeta_path.c_str());
 
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
     ASSERT_EQ(android::base::StringPrintf(
                   "Footer version:           1.0\n"
                   "Image size:               1572864 bytes\n"
@@ -1056,7 +1087,87 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                   hash_algorithm.c_str(),
                   root_digest.c_str()),
               InfoImage(rootfs_path.string()));
+||||||| BASE
+    ASSERT_EQ(base::StringPrintf("Footer version:           1.0\n"
+                                 "Image size:               1572864 bytes\n"
+                                 "Original image size:      1052672 bytes\n"
+                                 "VBMeta offset:            1069056\n"
+                                 "VBMeta size:              1344 bytes\n"
+                                 "--\n"
+                                 "Minimum libavb version:   1.0%s\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          768 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Hashtree descriptor:\n"
+                                 "      Version of dm-verity:  1\n"
+                                 "      Image Size:            1052672 bytes\n"
+                                 "      Tree Offset:           1052672\n"
+                                 "      Tree Size:             16384 bytes\n"
+                                 "      Data Block Size:       4096 bytes\n"
+                                 "      Hash Block Size:       4096 bytes\n"
+                                 "      FEC num roots:         0\n"
+                                 "      FEC offset:            0\n"
+                                 "      FEC size:              0 bytes\n"
+                                 "      Hash Algorithm:        %s\n"
+                                 "      Partition Name:        foobar\n"
+                                 "      Salt:                  d00df00d\n"
+                                 "      Root Digest:           "
+                                 "%s\n"
+                                 "      Flags:                 0\n",
+                                 sparse_image ? " (Sparse)" : "",
+                                 hash_algorithm.c_str(),
+                                 root_digest.c_str()),
+              InfoImage(rootfs_path));
+=======
+    ASSERT_EQ(base::StringPrintf("Footer version:           1.0\n"
+                                 "Image size:               1572864 bytes\n"
+                                 "Original image size:      1052672 bytes\n"
+                                 "VBMeta offset:            1069056\n"
+                                 "VBMeta size:              1344 bytes\n"
+                                 "--\n"
+                                 "Minimum libavb version:   1.0%s\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          768 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Hashtree descriptor:\n"
+                                 "      Version of dm-verity:  1\n"
+                                 "      Image Size:            1052672 bytes\n"
+                                 "      Tree Offset:           1052672\n"
+                                 "      Tree Size:             16384 bytes\n"
+                                 "      Data Block Size:       4096 bytes\n"
+                                 "      Hash Block Size:       4096 bytes\n"
+                                 "      FEC num roots:         0\n"
+                                 "      FEC offset:            0\n"
+                                 "      FEC size:              0 bytes\n"
+                                 "      Hash Algorithm:        %s\n"
+                                 "      Partition Name:        foobar\n"
+                                 "      Salt:                  d00df00d\n"
+                                 "      Root Digest:           "
+                                 "%s\n"
+                                 "      Flags:                 0\n",
+                                 sparse_image ? " (Sparse)" : "",
+                                 hash_algorithm.c_str(),
+                                 root_digest.c_str()),
+              InfoImage(rootfs_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
     ASSERT_EQ(android::base::StringPrintf(
                   "Minimum libavb version:   1.0\n"
                   "Header Block:             256 bytes\n"
@@ -1089,6 +1200,71 @@ void AvbToolTest::CreateRootfsWithHashtreeFooter(
                   hash_algorithm.c_str(),
                   root_digest.c_str()),
               InfoImage(external_vbmeta_path.string()));
+||||||| BASE
+    ASSERT_EQ(base::StringPrintf("Minimum libavb version:   1.0\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          768 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Hashtree descriptor:\n"
+                                 "      Version of dm-verity:  1\n"
+                                 "      Image Size:            1052672 bytes\n"
+                                 "      Tree Offset:           1052672\n"
+                                 "      Tree Size:             16384 bytes\n"
+                                 "      Data Block Size:       4096 bytes\n"
+                                 "      Hash Block Size:       4096 bytes\n"
+                                 "      FEC num roots:         0\n"
+                                 "      FEC offset:            0\n"
+                                 "      FEC size:              0 bytes\n"
+                                 "      Hash Algorithm:        %s\n"
+                                 "      Partition Name:        foobar\n"
+                                 "      Salt:                  d00df00d\n"
+                                 "      Root Digest:           "
+                                 "%s\n"
+                                 "      Flags:                 0\n",
+                                 hash_algorithm.c_str(),
+                                 root_digest.c_str()),
+              InfoImage(external_vbmeta_path));
+=======
+    ASSERT_EQ(base::StringPrintf("Minimum libavb version:   1.0\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          768 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Hashtree descriptor:\n"
+                                 "      Version of dm-verity:  1\n"
+                                 "      Image Size:            1052672 bytes\n"
+                                 "      Tree Offset:           1052672\n"
+                                 "      Tree Size:             16384 bytes\n"
+                                 "      Data Block Size:       4096 bytes\n"
+                                 "      Hash Block Size:       4096 bytes\n"
+                                 "      FEC num roots:         0\n"
+                                 "      FEC offset:            0\n"
+                                 "      FEC size:              0 bytes\n"
+                                 "      Hash Algorithm:        %s\n"
+                                 "      Partition Name:        foobar\n"
+                                 "      Salt:                  d00df00d\n"
+                                 "      Root Digest:           "
+                                 "%s\n"
+                                 "      Flags:                 0\n",
+                                 hash_algorithm.c_str(),
+                                 root_digest.c_str()),
+              InfoImage(external_vbmeta_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
     // Check that the extracted vbmeta matches the externally generally one.
     EXPECT_COMMAND(0,
@@ -1282,7 +1458,13 @@ void AvbToolTest::AddHashtreeFooterTest(bool sparse_image) {
       "      Flags:                 2\n"
       "      Kernel Cmdline:        "
       "'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_dmv_path.string()));
+||||||| BASE
+      InfoImage(vbmeta_dmv_path));
+=======
+      InfoImage(vbmeta_dmv_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   // Check that the footer is correctly erased and the hashtree
   // remains - see above for why the constant 1069056 is used.
@@ -1376,6 +1558,7 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
         rootfs_path.c_str(),
         (int)partition_size);
 
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
     ASSERT_EQ(android::base::StringPrintf(
                   "Footer version:           1.0\n"
                   "Image size:               1572864 bytes\n"
@@ -1413,6 +1596,81 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
                   "      Flags:                 0\n",
                   sparse_image ? " (Sparse)" : ""),
               InfoImage(rootfs_path.string()));
+||||||| BASE
+    ASSERT_EQ(base::StringPrintf("Footer version:           1.0\n"
+                                 "Image size:               1572864 bytes\n"
+                                 "Original image size:      1052672 bytes\n"
+                                 "VBMeta offset:            1085440\n"
+                                 "VBMeta size:              1344 bytes\n"
+                                 "--\n"
+                                 "Minimum libavb version:   1.0%s\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          768 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Hashtree descriptor:\n"
+                                 "      Version of dm-verity:  1\n"
+                                 "      Image Size:            1052672 bytes\n"
+                                 "      Tree Offset:           1052672\n"
+                                 "      Tree Size:             16384 bytes\n"
+                                 "      Data Block Size:       4096 bytes\n"
+                                 "      Hash Block Size:       4096 bytes\n"
+                                 "      FEC num roots:         2\n"
+                                 "      FEC offset:            1069056\n"
+                                 "      FEC size:              16384 bytes\n"
+                                 "      Hash Algorithm:        sha1\n"
+                                 "      Partition Name:        foobar\n"
+                                 "      Salt:                  d00df00d\n"
+                                 "      Root Digest:           "
+                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
+                                 "      Flags:                 0\n",
+                                 sparse_image ? " (Sparse)" : ""),
+              InfoImage(rootfs_path));
+=======
+    ASSERT_EQ(base::StringPrintf("Footer version:           1.0\n"
+                                 "Image size:               1572864 bytes\n"
+                                 "Original image size:      1052672 bytes\n"
+                                 "VBMeta offset:            1085440\n"
+                                 "VBMeta size:              1344 bytes\n"
+                                 "--\n"
+                                 "Minimum libavb version:   1.0%s\n"
+                                 "Header Block:             256 bytes\n"
+                                 "Authentication Block:     320 bytes\n"
+                                 "Auxiliary Block:          768 bytes\n"
+                                 "Public key (sha1):        "
+                                 "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+                                 "Algorithm:                SHA256_RSA2048\n"
+                                 "Rollback Index:           0\n"
+                                 "Flags:                    0\n"
+                                 "Rollback Index Location:  0\n"
+                                 "Release String:           ''\n"
+                                 "Descriptors:\n"
+                                 "    Hashtree descriptor:\n"
+                                 "      Version of dm-verity:  1\n"
+                                 "      Image Size:            1052672 bytes\n"
+                                 "      Tree Offset:           1052672\n"
+                                 "      Tree Size:             16384 bytes\n"
+                                 "      Data Block Size:       4096 bytes\n"
+                                 "      Hash Block Size:       4096 bytes\n"
+                                 "      FEC num roots:         2\n"
+                                 "      FEC offset:            1069056\n"
+                                 "      FEC size:              16384 bytes\n"
+                                 "      Hash Algorithm:        sha1\n"
+                                 "      Partition Name:        foobar\n"
+                                 "      Salt:                  d00df00d\n"
+                                 "      Root Digest:           "
+                                 "e811611467dcd6e8dc4324e45f706c2bdd51db67\n"
+                                 "      Flags:                 0\n",
+                                 sparse_image ? " (Sparse)" : ""),
+              InfoImage(rootfs_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
   }
 
   /* Zero the hashtree and FEC on a copy of the image. */
@@ -1573,7 +1831,13 @@ void AvbToolTest::AddHashtreeFooterFECTest(bool sparse_image) {
       "      Flags:                 2\n"
       "      Kernel Cmdline:        "
       "'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_dmv_path.string()));
+||||||| BASE
+      InfoImage(vbmeta_dmv_path));
+=======
+      InfoImage(vbmeta_dmv_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   // Check that the footer is correctly erased and the hashtree and
   // FEC data remains. The constant 1085440 is used because it's where
@@ -1735,7 +1999,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterCalcMaxImageSizeWithNoHashtree) {
       "      Salt:                  deadbeef\n"
       "      Root Digest:           4215bd42bcc99636f42956ce3d2c7884d6a8093b\n"
       "      Flags:                 0\n",
-      InfoImage(system_path));
+      InfoImage(system_path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigest) {
@@ -1787,7 +2051,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigest) {
       "      Salt:                  \n"
       "      Root Digest:           \n"
       "      Flags:                 0\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterWithNoAB) {
@@ -1840,7 +2104,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithNoAB) {
       "      Root Digest:           "
       "d0e31526f5a3f8e3f59acf726bd31ae7861ee78f9baa9195356bf479c6f9119d\n"
       "      Flags:                 1\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigestAndNoAB) {
@@ -1893,7 +2157,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithPersistentDigestAndNoAB) {
       "      Salt:                  \n"
       "      Root Digest:           \n"
       "      Flags:                 1\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, AddHashtreeFooterNoSizeOrName) {
@@ -1943,7 +2207,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterNoSizeOrName) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           2f73fb340e982794643e1121d82d5195677c2b31\n"
       "      Flags:                 0\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 
   // Check that at least avbtool can verify the image and hashtree.
   EXPECT_COMMAND(0,
@@ -1999,7 +2263,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterSingleBlock) {
       "      Salt:                  d00df00d\n"
       "      Root Digest:           4bd1e1f0aa1c2c793bb9f3e52de6ae7393889e61\n"
       "      Flags:                 0\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 
   // Check that at least avbtool can verify the image and hashtree.
   EXPECT_COMMAND(0,
@@ -2114,7 +2378,7 @@ TEST_F(AvbToolTest, AddHashtreeFooterWithCheckAtMostOnce) {
       "      Root Digest:           "
       "d0e31526f5a3f8e3f59acf726bd31ae7861ee78f9baa9195356bf479c6f9119d\n"
       "      Flags:                 2\n",
-      InfoImage(path));
+      InfoImage(path.value()));
 }
 
 TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
@@ -2149,7 +2413,13 @@ TEST_F(AvbToolTest, KernelCmdlineDescriptor) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'second cmdline'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_path.string()));
+||||||| BASE
+      InfoImage(vbmeta_path));
+=======
+      InfoImage(vbmeta_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   // Now check the VBMeta image.
   std::string image_data;
@@ -2297,7 +2567,13 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
       "      Flags:                 2\n"
       "      Kernel Cmdline:        "
       "'root=PARTUUID=$(ANDROID_SYSTEM_PARTUUID)'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(rootfs_path.string()));
+||||||| BASE
+      InfoImage(rootfs_path));
+=======
+      InfoImage(rootfs_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   // Chain to the rootfs.img and include two cmdline descriptors.
   std::filesystem::path vbmeta_path = testdir_ / "vbmeta.bin";
@@ -2336,7 +2612,13 @@ TEST_F(AvbToolTest, CalculateKernelCmdlineChainedAndWithFlags) {
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
       "      Kernel Cmdline:        'second cmdline'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_path.string()));
+||||||| BASE
+      InfoImage(vbmeta_path));
+=======
+      InfoImage(vbmeta_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   std::filesystem::path out_path = testdir_ / "out.txt";
   std::string out;
@@ -2458,7 +2740,13 @@ TEST_F(AvbToolTest, IncludeDescriptor) {
       "      Kernel Cmdline:        'something'\n"
       "    Prop: name2 -> 'value2'\n"
       "    Prop: name3 -> 'value3'\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta3_path.string()));
+||||||| BASE
+      InfoImage(vbmeta3_path));
+=======
+      InfoImage(vbmeta3_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 }
 
 TEST_F(AvbToolTest, ChainedPartition) {
@@ -2500,7 +2788,13 @@ TEST_F(AvbToolTest, ChainedPartition) {
       "      Public key (sha1):       "
       "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
       "      Flags:                   0\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_path.string()));
+||||||| BASE
+      InfoImage(vbmeta_path));
+=======
+      InfoImage(vbmeta_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   // Now check the VBMeta image.
   std::string image_data;
@@ -2584,7 +2878,13 @@ TEST_F(AvbToolTest, ChainedPartitionNoAB) {
       "      Public key (sha1):       "
       "cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
       "      Flags:                   1\n",
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
       InfoImage(vbmeta_path.string()));
+||||||| BASE
+      InfoImage(vbmeta_path));
+=======
+      InfoImage(vbmeta_path.value()));
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   // Now check the VBMeta image.
   std::string image_data;
@@ -2676,8 +2976,16 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
                  (int)boot_partition_size,
                  vbmeta_image_path_.c_str());
 
+<<<<<<< HEAD   (52bbb8 [automerger skipped] Remove usage of libchrome's base::FileP)
   std::string vbmeta_contents = InfoImage(vbmeta_image_path_.string());
   std::string boot_contents = InfoImage(boot_path);
+||||||| BASE
+  std::string vbmeta_contents = InfoImage(vbmeta_image_path_);
+  std::string boot_contents = InfoImage(boot_path);
+=======
+  std::string vbmeta_contents = InfoImage(vbmeta_image_path_.value());
+  std::string boot_contents = InfoImage(boot_path.value());
+>>>>>>> BRANCH (d28f48 Remove usage of libchrome's base::FilePath from InfoImage)
 
   // Check that boot.img has the same vbmeta blob as from vbmeta.img -
   // we do this by inspecting 'avbtool info_image' output combined
