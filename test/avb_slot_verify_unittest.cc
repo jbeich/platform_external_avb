@@ -474,6 +474,7 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationSpecified) {
 
 TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInvalid) {
   uint32_t rollback_index_location = AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS;
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta_a.img",
       "SHA256_RSA2048",
@@ -481,6 +482,21 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInvalid) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--rollback_index_location %d",
                                   rollback_index_location));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      42,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--rollback_index_location %d",
+                                         rollback_index_location));
+=======
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      42,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--rollback_index_location %d",
+                                         rollback_index_location));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -526,7 +542,13 @@ TEST_F(AvbSlotVerifyTest, LoadEntirePartitionIfAllowingVerificationError) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
+||||||| BASE
+      base::StringPrintf(
+=======
+      base::StringPrintf(
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -593,7 +615,13 @@ TEST_F(AvbSlotVerifyTest, LoadSmallerPartitionIfAllowingVerificationError) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
+||||||| BASE
+      base::StringPrintf(
+=======
+      base::StringPrintf(
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -654,7 +682,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
+||||||| BASE
+      base::StringPrintf(
+=======
+      base::StringPrintf(
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -778,7 +812,13 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaWithPreloadedPartition) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
+||||||| BASE
+      base::StringPrintf(
+=======
+      base::StringPrintf(
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -860,7 +900,13 @@ TEST_F(AvbSlotVerifyTest, SmallPreallocatedPreloadedPartitionFailGracefully) {
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
+||||||| BASE
+      base::StringPrintf(
+=======
+      base::StringPrintf(
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
           "--include_descriptors_from_image %s"
           " --kernel_cmdline 'cmdline in vbmeta $(ANDROID_BOOT_PARTUUID)'"
           " --internal_release_string \"\"",
@@ -904,6 +950,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
                  boot_path.c_str(),
                  boot_partition_size);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta_a.img",
       "SHA256_RSA2048",
@@ -912,6 +959,23 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMetaCorruptBoot) {
       android::base::StringPrintf("--include_descriptors_from_image %s"
                                   " --internal_release_string \"\"",
                                   boot_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--include_descriptors_from_image %s"
+                                         " --internal_release_string \"\"",
+                                         boot_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--include_descriptors_from_image %s"
+                                         " --internal_release_string \"\"",
+                                         boot_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_COMMAND(0,
                  "./avbtool.py erase_footer"
@@ -992,10 +1056,22 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--chain_partition boot:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+=======
+      base::StringPrintf("--chain_partition boot:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1178,9 +1254,19 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionNoAB) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+=======
+      base::StringPrintf("--chain_partition_do_not_use_ab boot:1:%s"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.3\n"
@@ -1340,11 +1426,25 @@ TEST_F(AvbSlotVerifyTest, RollbackIndexLocationInChainedPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf("--chain_partition boot:2:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --rollback_index_location 1"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--chain_partition boot:2:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --rollback_index_location 1"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+=======
+      base::StringPrintf("--chain_partition boot:2:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --rollback_index_location 1"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.2\n"
@@ -1470,10 +1570,22 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf("--chain_partition vbmeta_google:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--chain_partition vbmeta_google:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+=======
+      base::StringPrintf("--chain_partition vbmeta_google:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1645,6 +1757,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
       " --output %s",
       pk_path.c_str());
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta_a.img",
       "SHA256_RSA2048",
@@ -1653,6 +1766,23 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionCorruptBoot) {
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--chain_partition boot:1:%s"
+                                         " --internal_release_string \"\"",
+                                         pk_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--chain_partition boot:1:%s"
+                                         " --internal_release_string \"\"",
+                                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1725,6 +1855,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
       " --output %s",
       pk_path.c_str());
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta_a.img",
       "SHA256_RSA2048",
@@ -1733,6 +1864,23 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionKeyMismatch) {
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--chain_partition boot:1:%s"
+                                         " --internal_release_string \"\"",
+                                         pk_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--chain_partition boot:1:%s"
+                                         " --internal_release_string \"\"",
+                                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1781,6 +1929,7 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
       " --output %s",
       pk_path.c_str());
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta_a.img",
       "SHA256_RSA2048",
@@ -1789,6 +1938,23 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartitionRollbackIndexFail) {
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      110,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--chain_partition boot:1:%s"
+                                         " --internal_release_string \"\"",
+                                         pk_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      110,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--chain_partition boot:1:%s"
+                                         " --internal_release_string \"\"",
+                                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -1875,10 +2041,22 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--chain_partition boot:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+=======
+      base::StringPrintf("--chain_partition boot:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -1988,6 +2166,7 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
                  bar_path.c_str(),
                  bar_partition_size);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta_a.img",
       "SHA256_RSA2048",
@@ -1998,6 +2177,27 @@ TEST_F(AvbSlotVerifyTest, PartitionsOtherThanBoot) {
                                   " --internal_release_string \"\"",
                                   foo_path.c_str(),
                                   bar_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      4,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--include_descriptors_from_image %s"
+                                         " --include_descriptors_from_image %s"
+                                         " --internal_release_string \"\"",
+                                         foo_path.value().c_str(),
+                                         bar_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      4,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--include_descriptors_from_image %s"
+                                         " --include_descriptors_from_image %s"
+                                         " --internal_release_string \"\"",
+                                         foo_path.value().c_str(),
+                                         bar_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -2103,6 +2303,7 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
                  bar_path.c_str(),
                  bar_partition_size);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta_a.img",
       "SHA256_RSA2048",
@@ -2113,6 +2314,27 @@ TEST_F(AvbSlotVerifyTest, OnlyLoadWhatHasBeenRequested) {
                                   " --internal_release_string \"\"",
                                   foo_path.c_str(),
                                   bar_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      4,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--include_descriptors_from_image %s"
+                                         " --include_descriptors_from_image %s"
+                                         " --internal_release_string \"\"",
+                                         foo_path.value().c_str(),
+                                         bar_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      4,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--include_descriptors_from_image %s"
+                                         " --include_descriptors_from_image %s"
+                                         " --internal_release_string \"\"",
+                                         foo_path.value().c_str(),
+                                         bar_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       "Minimum libavb version:   1.0\n"
@@ -2276,6 +2498,7 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
 TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
   std::string md_path = GenerateImage("md.bin", 1536);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta_a.img",
       "SHA256_RSA2048",
@@ -2284,6 +2507,23 @@ TEST_F(AvbSlotVerifyTest, PublicKeyMetadata) {
       android::base::StringPrintf("--public_key_metadata %s"
                                   " --internal_release_string \"\"",
                                   md_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--public_key_metadata %s"
+                                         " --internal_release_string \"\"",
+                                         md_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta_a.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--public_key_metadata %s"
+                                         " --internal_release_string \"\"",
+                                         md_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -2350,6 +2590,7 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
           "--setup_rootfs_from_kernel %s "
           "--kernel_cmdline should_be_in_both=1 "
@@ -2359,6 +2600,27 @@ void AvbSlotVerifyTest::CmdlineWithHashtreeVerification(
           rootfs_path.c_str(),
           hashtree_verification_on ? 0
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED));
+||||||| BASE
+      base::StringPrintf("--setup_rootfs_from_kernel %s "
+                         "--kernel_cmdline should_be_in_both=1 "
+                         "--algorithm SHA256_RSA2048 "
+                         "--flags %d "
+                         "--internal_release_string \"\"",
+                         rootfs_path.value().c_str(),
+                         hashtree_verification_on
+                             ? 0
+                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED));
+=======
+      base::StringPrintf("--setup_rootfs_from_kernel %s "
+                         "--kernel_cmdline should_be_in_both=1 "
+                         "--algorithm SHA256_RSA2048 "
+                         "--flags %d "
+                         "--internal_release_string \"\"",
+                         rootfs_path.value().c_str(),
+                         hashtree_verification_on
+                             ? 0
+                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       android::base::StringPrintf(
@@ -2538,6 +2800,7 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
           "--kernel_cmdline should_be_in_both=1 "
           "--algorithm SHA256_RSA2048 "
@@ -2547,6 +2810,27 @@ void AvbSlotVerifyTest::CmdlineWithChainedHashtreeVerification(
           hashtree_verification_on ? 0
                                    : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED,
           pk_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--kernel_cmdline should_be_in_both=1 "
+                         "--algorithm SHA256_RSA2048 "
+                         "--flags %d "
+                         "--chain_partition system:1:%s "
+                         "--internal_release_string \"\"",
+                         hashtree_verification_on
+                             ? 0
+                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED,
+                         pk_path.value().c_str()));
+=======
+      base::StringPrintf("--kernel_cmdline should_be_in_both=1 "
+                         "--algorithm SHA256_RSA2048 "
+                         "--flags %d "
+                         "--chain_partition system:1:%s "
+                         "--internal_release_string \"\"",
+                         hashtree_verification_on
+                             ? 0
+                             : AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED,
+                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_EQ(
       android::base::StringPrintf(
@@ -2681,7 +2965,13 @@ void AvbSlotVerifyTest::VerificationDisabled(bool use_avbctl,
       "SHA256_RSA2048",
       4,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf(
+||||||| BASE
+      base::StringPrintf(
+=======
+      base::StringPrintf(
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
           "--setup_rootfs_from_kernel %s "
           "--kernel_cmdline should_be_in_both=1 "
           "--algorithm SHA256_RSA2048 "
@@ -3056,10 +3346,22 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceFlagsZero) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--chain_partition boot:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+=======
+      base::StringPrintf("--chain_partition boot:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3110,10 +3412,22 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionEnforceNoChainPartitions) {
       "SHA256_RSA2048",
       11,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf("--chain_partition boot:1:%s"
                                   " --kernel_cmdline 'cmdline2 in vbmeta'"
                                   " --internal_release_string \"\"",
                                   pk_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--chain_partition boot:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+=======
+      base::StringPrintf("--chain_partition boot:1:%s"
+                         " --kernel_cmdline 'cmdline2 in vbmeta'"
+                         " --internal_release_string \"\"",
+                         pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3144,6 +3458,7 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
                  system_path.c_str(),
                  (int)system_part_size);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -3154,6 +3469,27 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
                                   " --internal_release_string \"\"",
                                   system_path.c_str(),
                                   system_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--setup_rootfs_from_kernel %s "
+                                         "--include_descriptors_from_image %s"
+                                         " --internal_release_string \"\"",
+                                         system_path.value().c_str(),
+                                         system_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--setup_rootfs_from_kernel %s "
+                                         "--include_descriptors_from_image %s"
+                                         " --internal_release_string \"\"",
+                                         system_path.value().c_str(),
+                                         system_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   ops_.set_expected_public_key(PublicKeyAVB("test/data/testkey_rsa2048.pem"));
 
@@ -3299,6 +3635,7 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
 
   // Check we'll get androidboot.veritymode=disabled for any
   // |hashtree_error_mode| if dm-verity is disabled.
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -3310,6 +3647,29 @@ TEST_F(AvbSlotVerifyTest, HashtreeErrorModes) {
                                   "--internal_release_string \"\"",
                                   system_path.c_str(),
                                   system_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--setup_rootfs_from_kernel %s "
+                                         "--include_descriptors_from_image %s "
+                                         "--set_hashtree_disabled_flag "
+                                         "--internal_release_string \"\"",
+                                         system_path.value().c_str(),
+                                         system_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--setup_rootfs_from_kernel %s "
+                                         "--include_descriptors_from_image %s "
+                                         "--set_hashtree_disabled_flag "
+                                         "--internal_release_string \"\"",
+                                         system_path.value().c_str(),
+                                         system_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
   for (int n = 0; n < 4; n++) {
     AvbHashtreeErrorMode modes[4] = {
         AVB_HASHTREE_ERROR_MODE_RESTART_AND_INVALIDATE,
@@ -3365,9 +3725,19 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "SHA256_RSA2048",
         0,
         "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
         android::base::StringPrintf("--internal_release_string \"\" "
                                     "--include_descriptors_from_image %s ",
                                     factory_path.c_str()));
+||||||| BASE
+        base::StringPrintf("--internal_release_string \"\" "
+                           "--include_descriptors_from_image %s ",
+                           factory_path.value().c_str()));
+=======
+        base::StringPrintf("--internal_release_string \"\" "
+                           "--include_descriptors_from_image %s ",
+                           factory_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
     EXPECT_EQ(android::base::StringPrintf(
                   "Minimum libavb version:   1.1\n"
@@ -3422,9 +3792,19 @@ class AvbSlotVerifyTestWithPersistentDigest : public AvbSlotVerifyTest {
         "SHA256_RSA2048",
         0,
         "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
         android::base::StringPrintf("--internal_release_string \"\" "
                                     "--include_descriptors_from_image %s ",
                                     factory_path.c_str()));
+||||||| BASE
+        base::StringPrintf("--internal_release_string \"\" "
+                           "--include_descriptors_from_image %s ",
+                           factory_path.value().c_str()));
+=======
+        base::StringPrintf("--internal_release_string \"\" "
+                           "--include_descriptors_from_image %s ",
+                           factory_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
     int expected_tree_size =
         (verity_hash_algorithm_ == "sha512") ? 86016 : 45056;

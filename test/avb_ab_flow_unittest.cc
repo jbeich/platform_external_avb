@@ -219,6 +219,7 @@ class AvbABFlowTest : public BaseAvbToolTest {
       pk_path = GenerateImage("dummy.avbpubkey", 32);
     }
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
     GenerateVBMetaImage(
         vbmeta_name,
         "SHA256_RSA2048",
@@ -228,6 +229,25 @@ class AvbABFlowTest : public BaseAvbToolTest {
                                     " --chain_partition odm:1:%s",
                                     boot_path.c_str(),
                                     pk_path.c_str()));
+||||||| BASE
+    GenerateVBMetaImage(vbmeta_name,
+                        "SHA256_RSA2048",
+                        rollback_boot,
+                        base::FilePath("test/data/testkey_rsa2048.pem"),
+                        base::StringPrintf("--include_descriptors_from_image %s"
+                                           " --chain_partition odm:1:%s",
+                                           boot_path.value().c_str(),
+                                           pk_path.value().c_str()));
+=======
+    GenerateVBMetaImage(vbmeta_name,
+                        "SHA256_RSA2048",
+                        rollback_boot,
+                        "test/data/testkey_rsa2048.pem",
+                        base::StringPrintf("--include_descriptors_from_image %s"
+                                           " --chain_partition odm:1:%s",
+                                           boot_path.value().c_str(),
+                                           pk_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
   }
 
   void SetMD(int a_pri,

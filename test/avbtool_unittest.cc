@@ -329,6 +329,7 @@ TEST_F(AvbToolTest, CheckRollbackIndexLocationOmitted) {
 
 TEST_F(AvbToolTest, CheckRollbackIndexLocation) {
   uint32_t rollback_index_location = 42;
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -336,6 +337,21 @@ TEST_F(AvbToolTest, CheckRollbackIndexLocation) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--rollback_index_location %d",
                                   rollback_index_location));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--rollback_index_location %d",
+                                         rollback_index_location));
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--rollback_index_location %d",
+                                         rollback_index_location));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   AvbVBMetaImageHeader h;
   avb_vbmeta_image_header_to_host_byte_order(
@@ -2899,6 +2915,7 @@ void AvbToolTest::GenerateImageWithHashAndHashtreeSetup() {
                  system_path.c_str(),
                  system_partition_size);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -2908,6 +2925,25 @@ void AvbToolTest::GenerateImageWithHashAndHashtreeSetup() {
                                   "--include_descriptors_from_image %s",
                                   boot_path.c_str(),
                                   system_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--include_descriptors_from_image %s "
+                                         "--include_descriptors_from_image %s",
+                                         boot_path.value().c_str(),
+                                         system_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--include_descriptors_from_image %s "
+                                         "--include_descriptors_from_image %s",
+                                         boot_path.value().c_str(),
+                                         system_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 }
 
 TEST_F(AvbToolTest, VerifyImageWithHashAndHashtree) {
@@ -2944,6 +2980,7 @@ TEST_F(AvbToolTest, VerifyImageWithHashAndZeroedHashtree) {
                  system_path.c_str(),
                  system_partition_size);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -2951,6 +2988,29 @@ TEST_F(AvbToolTest, VerifyImageWithHashAndZeroedHashtree) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--include_descriptors_from_image %s ",
                                   system_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--include_descriptors_from_image %s ",
+                                         system_path.value().c_str()));
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image --image %s --accept_zeroed_hashtree",
+                 vbmeta_image_path_.value().c_str());
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--include_descriptors_from_image %s ",
+                                         system_path.value().c_str()));
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image --image %s --accept_zeroed_hashtree",
+                 vbmeta_image_path_.value().c_str());
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_COMMAND(
       0,
@@ -2981,6 +3041,7 @@ TEST_F(AvbToolTest, VerifyImageWithNoHashtree) {
                  system_path.c_str(),
                  system_partition_size);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -2988,6 +3049,21 @@ TEST_F(AvbToolTest, VerifyImageWithNoHashtree) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--include_descriptors_from_image %s ",
                                   system_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--include_descriptors_from_image %s ",
+                                         system_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--include_descriptors_from_image %s ",
+                                         system_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   EXPECT_COMMAND(
       1, "./avbtool.py verify_image --image %s", vbmeta_image_path_.c_str());
@@ -3063,6 +3139,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartition) {
       " --output %s",
       pk8192_path.c_str());
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -3070,6 +3147,21 @@ TEST_F(AvbToolTest, VerifyImageChainPartition) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition system:1:%s ",
                                   pk4096_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--chain_partition system:1:%s ",
+                                         pk4096_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--chain_partition system:1:%s ",
+                                         pk4096_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   // Should not fail (name, rollback_index, contents all correct).
   EXPECT_COMMAND(0,
@@ -3118,6 +3210,7 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionWithFollow) {
       " --output %s",
       pk4096_path.c_str());
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -3125,6 +3218,21 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionWithFollow) {
       "test/data/testkey_rsa2048.pem",
       android::base::StringPrintf("--chain_partition system:1:%s ",
                                   pk4096_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--chain_partition system:1:%s ",
+                                         pk4096_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--chain_partition system:1:%s ",
+                                         pk4096_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   const size_t system_partition_size = 10 * 1024 * 1024;
   const size_t system_image_size = 8 * 1024 * 1024;
@@ -3217,8 +3325,16 @@ TEST_F(AvbToolTest, VerifyImageChainPartitionOtherVBMeta) {
       "SHA256_RSA2048",
       0,
       "test/data/testkey_rsa2048.pem",
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
       android::base::StringPrintf("--chain_partition vbmeta_google:1:%s ",
                                   pk4096_path.c_str()));
+||||||| BASE
+      base::StringPrintf("--chain_partition vbmeta_google:1:%s ",
+                         pk4096_path.value().c_str()));
+=======
+      base::StringPrintf("--chain_partition vbmeta_google:1:%s ",
+                         pk4096_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   // Should not fail (name, rollback_index, contents all correct).
   EXPECT_COMMAND(0,
@@ -3279,6 +3395,7 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
                  boot_path.c_str(),
                  boot_partition_size);
 
+<<<<<<< HEAD   (e0534b [automerger skipped] Remove usage of libchrome's base::FileP)
   GenerateVBMetaImage(
       "vbmeta.img",
       "SHA256_RSA2048",
@@ -3288,6 +3405,25 @@ TEST_F(AvbToolTest, PrintPartitionDigests) {
                                   "--include_descriptors_from_image %s",
                                   pk4096_path.c_str(),
                                   boot_path.c_str()));
+||||||| BASE
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      base::FilePath("test/data/testkey_rsa2048.pem"),
+                      base::StringPrintf("--chain_partition system:1:%s "
+                                         "--include_descriptors_from_image %s",
+                                         pk4096_path.value().c_str(),
+                                         boot_path.value().c_str()));
+=======
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      base::StringPrintf("--chain_partition system:1:%s "
+                                         "--include_descriptors_from_image %s",
+                                         pk4096_path.value().c_str(),
+                                         boot_path.value().c_str()));
+>>>>>>> BRANCH (115040 Remove usage of libchrome's base::FilePath from GenerateVBMe)
 
   const size_t system_partition_size = 10 * 1024 * 1024;
   const size_t system_image_size = 8 * 1024 * 1024;
