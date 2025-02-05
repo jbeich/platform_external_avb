@@ -414,6 +414,7 @@ TEST_F(AvbToolTest, Info) {
       "ftw!\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\n'\n"
       "    Prop: large_blob -> (2048 bytes)\n",
       InfoImage(vbmeta_image_path_.string()));
+<<<<<<< HEAD   (20b715 [automerger skipped] Remove usage of libchrome's base::FileP)
 }
 
 TEST_F(AvbToolTest, InfoWithPublicKey) {
@@ -450,6 +451,9 @@ TEST_F(AvbToolTest, InfoWithPublicKey) {
 
   // Compare the extracted public key with the original key.
   EXPECT_EQ(key_data, output_pubkey_data);
+||||||| BASE
+=======
+>>>>>>> BRANCH (e16192 [1/N] Remove usage of libchrome's base::FilePath from avb te)
 }
 
 static bool collect_descriptors(const AvbDescriptor* descriptor,
