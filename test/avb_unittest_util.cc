@@ -156,12 +156,24 @@ std::string BaseAvbToolTest::InfoImage(const std::string& image_path) {
 }
 
 std::string BaseAvbToolTest::PublicKeyAVB(const std::string& key_path) {
+<<<<<<< HEAD   (259926 avbtool: Add option to extract public key from vbmeta image)
   std::filesystem::path tmp_path = testdir_ / "public_key.bin";
+||||||| BASE
+  base::FilePath tmp_path = testdir_.Append("public_key.bin");
+=======
+  base::FilePath tmp_path = testdir_.Append("public_key.bin");
+>>>>>>> BRANCH (d51833 Remove usage of libchrome's base::FilePath from PublicKeyAVB)
   EXPECT_COMMAND(0,
                  "./avbtool.py extract_public_key --key %s"
                  " --output %s",
                  key_path.c_str(),
+<<<<<<< HEAD   (259926 avbtool: Add option to extract public key from vbmeta image)
                  tmp_path.c_str());
+||||||| BASE
+                 tmp_path.value().c_str());
+=======
+                 tmp_path.value().c_str());
+>>>>>>> BRANCH (d51833 Remove usage of libchrome's base::FilePath from PublicKeyAVB)
   std::string key_data;
   EXPECT_TRUE(android::base::ReadFileToString(tmp_path.string(), &key_data));
   return key_data;

@@ -92,11 +92,15 @@ class BaseAvbToolTest : public ::testing::Test {
 
   /* Returns public key in AVB format for a .pem key */
   std::string PublicKeyAVB(const std::string& key_path);
+<<<<<<< HEAD   (259926 avbtool: Add option to extract public key from vbmeta image)
 
   /* Returns a hex string containing the SHA-256 digest of the public key in AVB
    * format for a .pem key.
    */
   std::string PublicKeyAVBDigest(const std::string& key_path);
+||||||| BASE
+=======
+>>>>>>> BRANCH (d51833 Remove usage of libchrome's base::FilePath from PublicKeyAVB)
 
   void SetUp() override;
   void TearDown() override;
