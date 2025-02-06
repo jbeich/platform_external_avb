@@ -33,6 +33,24 @@
       "message": "Needs to backport a series of changes from main to android15-tests-dev:\n\nhttps://android-review.git.corp.google.com/c/platform/external/avb/+/3477356",
       "revId": "0cf0b65074a0610e056a94b63826deea3f1a25ca",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a2f1de93_f7227ac0",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2025-02-06T02:52:43Z",
+      "side": 1,
+      "message": "This is merged in the latest build on CI.\nWe can restart presubmit here.",
+      "parentUuid": "bb7b08cf_00d1e123",
+      "revId": "0cf0b65074a0610e056a94b63826deea3f1a25ca",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
