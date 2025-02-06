@@ -452,6 +452,42 @@ TEST_F(AvbToolTest, InfoWithPublicKey) {
   EXPECT_EQ(key_data, output_pubkey_data);
 }
 
+TEST_F(AvbToolTest, InfoWithPublicKey) {
+  GenerateVBMetaImage("vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      "--internal_release_string \"\"");
+
+  std::string key_data = PublicKeyAVB("test/data/testkey_rsa2048.pem");
+
+  AvbVBMetaImageHeader h;
+  avb_vbmeta_image_header_to_host_byte_order(
+      reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data()), &h);
+  uint8_t* d = reinterpret_cast<uint8_t*>(vbmeta_image_.data());
+  size_t auxiliary_data_block_offset =
+      sizeof(AvbVBMetaImageHeader) + h.authentication_data_block_size;
+  EXPECT_GT(h.auxiliary_data_block_size, key_data.size());
+  EXPECT_EQ(0,
+            memcmp(key_data.data(),
+                   d + auxiliary_data_block_offset + h.public_key_offset,
+                   key_data.size()));
+
+  // Extracts the public key of vbmeta.img into vbmeta_pubkey.bin.
+  std::filesystem::path output_pubkey = testdir_ / "vbmeta_pubkey.bin";
+  EXPECT_COMMAND(0,
+                 "./avbtool.py info_image --image %s "
+                 "--output_pubkey %s",
+                 vbmeta_image_path_.c_str(),
+                 output_pubkey.c_str());
+  std::string output_pubkey_data;
+  ASSERT_TRUE(android::base::ReadFileToString(
+      output_pubkey.string(), &output_pubkey_data));
+
+  // Compare the extracted public key with the original key.
+  EXPECT_EQ(key_data, output_pubkey_data);
+}
+
 static bool collect_descriptors(const AvbDescriptor* descriptor,
                                 void* user_data) {
   std::vector<const AvbDescriptor*>* descriptors =
