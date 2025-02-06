@@ -2423,13 +2423,14 @@ class Avb(object):
     misc_image.seek(self.AB_MISC_METADATA_OFFSET)
     misc_image.write(ab_data)
 
-  def info_image(self, image_filename, output, cert):
+  def info_image(self, image_filename, output, cert, output_pubkey=None):
     """Implements the 'info_image' command.
 
     Arguments:
       image_filename: Image file to get information from (file object).
       output: Output file to write human-readable information to (file object).
       cert: If True, show information about the avb_cert certificates.
+      output_pubkey: Optional file to write the public key to (file object).
     """
     image = ImageHandler(image_filename, read_only=True)
     o = output
@@ -2466,6 +2467,9 @@ class Avb(object):
     if key_blob:
       hexdig = hashlib.sha1(key_blob).hexdigest()
       o.write('Public key (sha1):        {}\n'.format(hexdig))
+      if output_pubkey is not None:
+        output_pubkey.write(key_blob)
+
     o.write('Algorithm:                {}\n'.format(alg_name))
     o.write('Rollback Index:           {}\n'.format(header.rollback_index))
     o.write('Flags:                    {}\n'.format(header.flags))
@@ -4565,6 +4569,10 @@ class AvbTool(object):
                             help=('Show information about the avb_cert '
                                   'extension certificate.'),
                             action='store_true')
+    sub_parser.add_argument('--output_pubkey',
+                            help='Write public key to file',
+                            type=argparse.FileType('wb'),
+                            required=False)
     sub_parser.set_defaults(func=self.info_image)
 
     sub_parser = subparsers.add_parser(
@@ -4922,7 +4930,8 @@ class AvbTool(object):
 
   def info_image(self, args):
     """Implements the 'info_image' sub-command."""
-    self.avb.info_image(args.image.name, args.output, args.cert)
+    self.avb.info_image(args.image.name, args.output,
+                        args.cert, args.output_pubkey)
 
   def verify_image(self, args):
     """Implements the 'verify_image' sub-command."""
