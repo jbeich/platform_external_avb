@@ -55,7 +55,7 @@ rust_defaults {
     name: "libavb_bindgen.std.defaults",
     defaults: ["libavb_bindgen.common.defaults"],
     host_supported: true,
-    static_libs: ["libavb_cert"],
+    whole_static_libs: ["libavb_cert"],
     shared_libs: ["libcrypto"],
     rustlibs: ["libzerocopy"],
     apex_available: ["com.android.virt"],
@@ -65,7 +65,7 @@ rust_defaults {
 rust_defaults {
     name: "libavb_bindgen.nostd.defaults",
     defaults: ["libavb_bindgen.common.defaults"],
-    static_libs: [
+    whole_static_libs: [
         "libavb_cert_baremetal",
         "libcrypto_baremetal",
     ],
