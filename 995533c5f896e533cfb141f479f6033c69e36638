@@ -16,6 +16,41 @@
       "message": "Hello, Could you please give more context about this change, especially what problem it is aiming to solve?",
       "revId": "995533c5f896e533cfb141f479f6033c69e36638",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d6fa1e4d_1d7cfda9",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3796308
+      },
+      "writtenOn": "2025-02-10T16:17:27Z",
+      "side": 1,
+      "message": "Hello Alice,\nsorry for the late response. We are researching the security of Android firmware images on a large-scale using existing static analysis tools. One of the tools verifies the image using the avbtool.\nHowever, some images are not full updates and thus do not contain all relevant partitions for the avbtool verification.\nWe are still interested if the existing partition images can be verified, even though the full vmbeta.img hashtree can obviously not be verified.\nThis can be achieved using the new --allow_missing_partitions argument.\nWhile by default the full verification still fails, it does not fail if this argument is used.\nThe result is that the verification fails only if there are hash missmatches within the image files. Also the avbtool prints an output if a partition is missing, so an automated process can pick up which partitions are expected and which of them are missing.\n\nThis merge request also tests if the partition files are stored in uppercase, because the avbtool uses lowercase partition names by default. Therefore, the new version also detects SYSTEM.img, while the old version does not.\nThis is no big deal for testing one image, but it is important for large-scale automation.\nThe method find_partition_file does this.\n\nprint_signature_key prints the public key of the vbmeta file, which then can be checked against weak/leaked databases.\n\nI tried to write up the main changes within the commit messages, but feel free to contact me again.\nI just sent you some sample results from our analysis pipeline.",
+      "parentUuid": "d835fbbd_a2cacf0d",
+      "revId": "995533c5f896e533cfb141f479f6033c69e36638",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "99f408b4_363d3665",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3796308
+      },
+      "writtenOn": "2025-02-10T16:17:27Z",
+      "side": 1,
+      "message": "Hello Alice,\nsorry for the late response. We are researching the security of Android firmware images on a large-scale using existing static analysis tools. One of the tools verifies the image using the avbtool.\nHowever, some images are not full updates and thus do not contain all relevant partitions for the avbtool verification.\nWe are still interested if the existing partition images can be verified, even though the full vmbeta.img hashtree can obviously not be verified.\nThis can be achieved using the new --allow_missing_partitions argument.\nWhile by default the full verification still fails, it does not fail if this argument is used.\nThe result is that the verification fails only if there are hash missmatches within the image files. Also the avbtool prints an output if a partition is missing, so an automated process can pick up which partitions are expected and which of them are missing.\n\nThis merge request also tests if the partition files are stored in uppercase, because the avbtool uses lowercase partition names by default. Therefore, the new version also detects SYSTEM.img, while the old version does not.\nThis is no big deal for testing one image, but it is important for large-scale automation.\nThe method find_partition_file does this.\n\nprint_signature_key prints the public key of the vbmeta file, which then can be checked against weak/leaked databases.\n\nI tried to write up the main changes within the commit messages, but feel free to contact me again.\nI just sent you some sample results from our analysis pipeline.",
+      "revId": "995533c5f896e533cfb141f479f6033c69e36638",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
