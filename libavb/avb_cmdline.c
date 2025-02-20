@@ -221,6 +221,8 @@ AvbSlotVerifyResult avb_append_options(
   const char* verity_mode;
   bool is_device_unlocked;
   AvbIOResult io_ret;
+  char* requested_partition_hash_alg = NULL;
+  char* requested_partition_digest = NULL;
 
   /* Add options that only make sense if there is a vbmeta partition. */
   if (!(flags & AVB_SLOT_VERIFY_FLAGS_NO_VBMETA_PARTITION)) {
@@ -400,10 +402,62 @@ AvbSlotVerifyResult avb_append_options(
     }
   }
 
+  size_t i;
+  for (i = 0; i < slot_data->num_loaded_partitions; i++) {
+    if (slot_data->loaded_partitions[i].partition_name != NULL &&
+        slot_data->loaded_partitions[i].digest != NULL) {
+      requested_partition_hash_alg =
+          avb_strdupv("androidboot.vbmeta.",
+                      slot_data->loaded_partitions[i].partition_name,
+                      ".hash_alg",
+                      NULL);
+      if (requested_partition_hash_alg == NULL) {
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+        goto out;
+      }
+
+      requested_partition_digest =
+          avb_strdupv("androidboot.vbmeta.",
+                      slot_data->loaded_partitions[i].partition_name,
+                      ".digest",
+                      NULL);
+      if (requested_partition_digest == NULL) {
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+        goto out;
+      }
+
+      if (!cmdline_append_option(slot_data,
+                                 requested_partition_hash_alg,
+                                 slot_data->loaded_partitions[i].digest_type ==
+                                         AVB_DIGEST_TYPE_SHA256
+                                     ? "sha256"
+                                     : "sha512") ||
+          !cmdline_append_hex(slot_data,
+                              requested_partition_digest,
+                              slot_data->loaded_partitions[i].digest,
+                              slot_data->loaded_partitions[i].digest_size)) {
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+        goto out;
+      }
+
+      avb_free(requested_partition_hash_alg);
+      requested_partition_hash_alg = NULL;
+      avb_free(requested_partition_digest);
+      requested_partition_digest = NULL;
+    }
+  }
+
   ret = AVB_SLOT_VERIFY_RESULT_OK;
 
 out:
-
+  if (requested_partition_hash_alg != NULL) {
+    avb_free(requested_partition_hash_alg);
+    requested_partition_hash_alg = NULL;
+  }
+  if (requested_partition_digest != NULL) {
+    avb_free(requested_partition_digest);
+    requested_partition_digest = NULL;
+  }
   return ret;
 }
 
