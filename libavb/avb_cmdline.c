@@ -207,6 +207,26 @@ static int cmdline_append_hex(AvbSlotVerifyData* slot_data,
   return ret;
 }
 
+static bool cmdline_concat_str(
+    char* buf, size_t buf_size, char* str1, char* str2, char* str3) {
+  char tmp_buf[buf_size];
+  if (!avb_str_concat(
+          tmp_buf, buf_size, str1, avb_strlen(str1), str2, avb_strlen(str2))) {
+    return false;
+  }
+
+  if (!avb_str_concat(buf,
+                      buf_size,
+                      tmp_buf,
+                      avb_strlen(tmp_buf),
+                      str3,
+                      avb_strlen(str3))) {
+    return false;
+  }
+
+  return true;
+}
+
 AvbSlotVerifyResult avb_append_options(
     AvbOps* ops,
     AvbSlotVerifyFlags flags,
@@ -395,6 +415,44 @@ AvbSlotVerifyResult avb_append_options(
   if (hashtree_error_mode == AVB_HASHTREE_ERROR_MODE_MANAGED_RESTART_AND_EIO) {
     if (!cmdline_append_option(
             slot_data, "androidboot.veritymode.managed", "yes")) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto out;
+    }
+  }
+
+  size_t i;
+  for (i = 0; i < slot_data->num_loaded_partitions; i++) {
+    const int prop_buf_size = 512;
+    char prop_hash_alg[prop_buf_size];
+    if (!cmdline_concat_str(prop_hash_alg,
+                            prop_buf_size,
+                            "androidboot.vbmeta.",
+                            slot_data->loaded_partitions[i].partition_name,
+                            ".hash_alg")) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto out;
+    }
+
+    char prop_digest[prop_buf_size];
+    if (!cmdline_concat_str(prop_digest,
+                            prop_buf_size,
+                            "androidboot.vbmeta.",
+                            slot_data->loaded_partitions[i].partition_name,
+                            ".digest")) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto out;
+    }
+
+    if (!cmdline_append_option(slot_data,
+                               prop_hash_alg,
+                               slot_data->loaded_partitions[i].digest_type ==
+                                       AVB_DIGEST_TYPE_SHA256
+                                   ? "sha256"
+                                   : "sha512") ||
+        !cmdline_append_hex(slot_data,
+                            prop_digest,
+                            slot_data->loaded_partitions[i].digest,
+                            slot_data->loaded_partitions[i].digest_size)) {
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
       goto out;
     }
