@@ -207,6 +207,29 @@ static int cmdline_append_hex(AvbSlotVerifyData* slot_data,
   return ret;
 }
 
+static bool cmdline_concat_str(char* buf,
+                               size_t buf_size,
+                               const char* str1,
+                               const char* str2,
+                               const char* str3) {
+  char tmp_buf[buf_size];
+  if (!avb_str_concat(
+          tmp_buf, buf_size, str1, avb_strlen(str1), str2, avb_strlen(str2))) {
+    return false;
+  }
+
+  if (!avb_str_concat(buf,
+                      buf_size,
+                      tmp_buf,
+                      avb_strlen(tmp_buf),
+                      str3,
+                      avb_strlen(str3))) {
+    return false;
+  }
+
+  return true;
+}
+
 AvbSlotVerifyResult avb_append_options(
     AvbOps* ops,
     AvbSlotVerifyFlags flags,
@@ -397,6 +420,50 @@ AvbSlotVerifyResult avb_append_options(
             slot_data, "androidboot.veritymode.managed", "yes")) {
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
       goto out;
+    }
+  }
+
+  size_t i;
+  for (i = 0; i < slot_data->num_loaded_partitions; i++) {
+    if (slot_data->loaded_partitions[i].partition_name != NULL &&
+        slot_data->loaded_partitions[i].digest != NULL) {
+      // 512 should be large enough to hold names like
+      // androidboot.vbmeta.<partition_name>.hash_alg <partition_name> length is
+      // already enforced by AVB_PART_NAME_MAX_SIZE
+      const int prop_buf_size = 512;
+      char prop_hash_alg[prop_buf_size];
+      if (!cmdline_concat_str(prop_hash_alg,
+                              prop_buf_size,
+                              "androidboot.vbmeta.",
+                              slot_data->loaded_partitions[i].partition_name,
+                              ".hash_alg")) {
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+        goto out;
+      }
+
+      char prop_digest[prop_buf_size];
+      if (!cmdline_concat_str(prop_digest,
+                              prop_buf_size,
+                              "androidboot.vbmeta.",
+                              slot_data->loaded_partitions[i].partition_name,
+                              ".digest")) {
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+        goto out;
+      }
+
+      if (!cmdline_append_option(slot_data,
+                                 prop_hash_alg,
+                                 slot_data->loaded_partitions[i].digest_type ==
+                                         AVB_DIGEST_TYPE_SHA256
+                                     ? "sha256"
+                                     : "sha512") ||
+          !cmdline_append_hex(slot_data,
+                              prop_digest,
+                              slot_data->loaded_partitions[i].digest,
+                              slot_data->loaded_partitions[i].digest_size)) {
+        ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+        goto out;
+      }
     }
   }
 
