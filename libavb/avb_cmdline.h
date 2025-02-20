@@ -41,6 +41,11 @@
  */
 #define AVB_PART_NAME_MAX_SIZE 32
 
+// 512 should be large enough to hold names like
+// androidboot.vbmeta.<partition_name>.hash_alg, <partition_name> length is
+// already enforced by AVB_PART_NAME_MAX_SIZE
+#define AVB_CMDLINE_PART_PROP_BUFFER_SIZE 512
+
 #define AVB_MAX_NUM_CMDLINE_SUBST 10
 
 /* Holds information about command-line substitutions. */
