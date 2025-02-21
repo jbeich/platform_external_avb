@@ -56,6 +56,24 @@
       "message": "How about using snprintf()? so we don\u0027t have to add cmdline_concat_str()\n\n```\nsnprintf(prop_hash_alg, prop_buf_size, \"androidboot.vbmeta.%s.hash_alg\", slot_data-\u003eloaded_partitions[i].partition_name);\n\nsnprintf(prop_digest, prop_buf_size, \"androidboot.vbmeta.%s.digest\", slot_data-\u003eloaded_partitions[i].partition_name);\n```",
       "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "904840ac_1c347666",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 3130918
+      },
+      "writtenOn": "2025-02-21T20:15:46Z",
+      "side": 1,
+      "message": "Thanks for the suggestion. Since  libavb supports the utf8 partition names, I was trying to use avb_str_concat from within cmdline_concat_str. avb_str_concat is using memcpy internally. However I also realized that I am using avb_strlen to get string length which is not going to work for utf8 strings. These loaded partition names should be matching the requested_partitions that are passed in avb_slot_verify. I am not sure but it seems utf8 strings are probably not supported for the requested_partitions parameter in avb_slot_verify.\n\nMaybe @zeuthen@google.com can provide direction here. Whether utf8 strings are supported for requested_partitions parameter in avb_slot_verify method. And should we use snprintf instead. Thanks!",
+      "parentUuid": "b3a3b25a_24db84d5",
+      "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
