@@ -41,6 +41,30 @@
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     },
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "bd7ce3ed_1cd9d968",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 3130918
+      },
+      "writtenOn": "2025-02-21T20:44:58Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "fc32aff1_ce3abe97",
+      "range": {
+        "startLine": 433,
+        "startChar": 32,
+        "endLine": 433,
+        "endChar": 35
+      },
+      "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "b3a3b25a_24db84d5",
