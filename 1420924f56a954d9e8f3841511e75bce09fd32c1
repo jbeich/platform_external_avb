@@ -1,0 +1,61 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d9ddfaaf_c0ffed96",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 5
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2025-02-21T11:42:21Z",
+      "side": 1,
+      "message": "Thank you Zarian for the patch, overall LGTM!",
+      "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "fc32aff1_ce3abe97",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 433,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2025-02-21T11:42:21Z",
+      "side": 1,
+      "message": "how about adding a define for it?\n\n#define AVB_CMDLINE_PART_PROP_MAX_SIZE 512",
+      "range": {
+        "startLine": 433,
+        "startChar": 32,
+        "endLine": 433,
+        "endChar": 35
+      },
+      "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b3a3b25a_24db84d5",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2025-02-21T11:42:21Z",
+      "side": 1,
+      "message": "How about using snprintf()? so we don\u0027t have to add cmdline_concat_str()\n\n```\nsnprintf(prop_hash_alg, prop_buf_size, \"androidboot.vbmeta.%s.hash_alg\", slot_data-\u003eloaded_partitions[i].partition_name);\n\nsnprintf(prop_digest, prop_buf_size, \"androidboot.vbmeta.%s.digest\", slot_data-\u003eloaded_partitions[i].partition_name);\n```",
+      "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
