@@ -98,6 +98,24 @@
       "parentUuid": "b3a3b25a_24db84d5",
       "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0c8dfc51_fb9e9cba",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 3130918
+      },
+      "writtenOn": "2025-02-22T00:51:50Z",
+      "side": 1,
+      "message": "Did some more reading on this. So bascially no valid UTF-8 character will contain a null byte, except the null character itself. This means that avb_strlen will return the number of bytes (not characters) and avb_str_concat will copy those many bytes using memcpy. So It seems the combination of avb_strlen and avb_str_concat should work for utf8 strings as well.",
+      "parentUuid": "904840ac_1c347666",
+      "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
