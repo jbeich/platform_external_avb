@@ -116,6 +116,24 @@
       "parentUuid": "904840ac_1c347666",
       "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "a432a828_175b14ba",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 5
+      },
+      "lineNbr": 435,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2025-02-25T08:25:43Z",
+      "side": 1,
+      "message": "ic, good point.\n\nThen please ignore my comments above, using avb_str_concat() is probably the right way for supporting utf-8.\n\n+1, it will be great if David could help to review the change as well.",
+      "parentUuid": "0c8dfc51_fb9e9cba",
+      "revId": "1420924f56a954d9e8f3841511e75bce09fd32c1",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
