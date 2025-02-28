@@ -1,0 +1,107 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "ba66640d_11b99672",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 210,
+      "author": {
+        "id": 1137063
+      },
+      "writtenOn": "2025-02-28T20:51:23Z",
+      "side": 1,
+      "message": "This function isn\u0027t directly related to the command line, but rather is a helper function to concatenate 3 strings.  Maybe put it in `libavb/avb_util.c` next to `avb_str_concat()` and call it something like `avb_str_concat3()`?\n\nAlso wondering if you considered using `avb_strdupv()`?",
+      "revId": "77ba5d6fa42f7464f709128943ee9f7ed904ed73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "4e490d15_36d1d978",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 215,
+      "author": {
+        "id": 1137063
+      },
+      "writtenOn": "2025-02-28T20:51:23Z",
+      "side": 1,
+      "message": "Does this codebase allow variable-length arrays?",
+      "revId": "77ba5d6fa42f7464f709128943ee9f7ed904ed73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b9c24b2f_986ff328",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 430,
+      "author": {
+        "id": 1137063
+      },
+      "writtenOn": "2025-02-28T20:51:23Z",
+      "side": 1,
+      "message": "This is 512 bytes which seems a bit large to put on the stack.  I think something like 128 would be more than sufficient?",
+      "range": {
+        "startLine": 430,
+        "startChar": 25,
+        "endLine": 430,
+        "endChar": 58
+      },
+      "revId": "77ba5d6fa42f7464f709128943ee9f7ed904ed73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "9df5b0ae_054c57cd",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 455,
+      "author": {
+        "id": 1137063
+      },
+      "writtenOn": "2025-02-28T20:51:23Z",
+      "side": 1,
+      "message": "If someone adds another digest type, this would return sha512 for it.  How about reporting an error for digest types other than sha256 and sha512, so that people will be reminded to update this if a new digest type is added?",
+      "range": {
+        "startLine": 452,
+        "startChar": 33,
+        "endLine": 455,
+        "endChar": 46
+      },
+      "revId": "77ba5d6fa42f7464f709128943ee9f7ed904ed73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "0d4ce4de_3bfc9774",
+        "filename": "libavb/avb_slot_verify.c",
+        "patchSetId": 6
+      },
+      "lineNbr": 1734,
+      "author": {
+        "id": 1137063
+      },
+      "writtenOn": "2025-02-28T20:51:23Z",
+      "side": 1,
+      "message": "I see this is just matching the existing code, but normally `free()` like functions are supposed to accept NULL.",
+      "range": {
+        "startLine": 1732,
+        "startChar": 0,
+        "endLine": 1734,
+        "endChar": 7
+      },
+      "revId": "77ba5d6fa42f7464f709128943ee9f7ed904ed73",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
