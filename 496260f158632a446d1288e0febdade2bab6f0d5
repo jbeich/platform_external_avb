@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "0f03ca56_e0d0e8b5",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 8
+      },
+      "lineNbr": 218,
+      "author": {
+        "id": 1137063
+      },
+      "writtenOn": "2025-03-06T23:56:36Z",
+      "side": 1,
+      "message": "No need for the braces and the `break`s here.",
+      "range": {
+        "startLine": 212,
+        "startChar": 0,
+        "endLine": 218,
+        "endChar": 12
+      },
+      "revId": "496260f158632a446d1288e0febdade2bab6f0d5",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
