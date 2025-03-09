@@ -227,6 +227,12 @@ cc_defaults {
         "libcrypto_baremetal",
     ],
     srcs: ["libavb/avb_sysdeps_posix.c"],
+
+    // b/336916369: This library gets linked into a rust rlib.  Disable LTO
+    // until cross-language lto is supported.
+    lto: {
+        never: true,
+    },
 }
 
 // Baremetal libavb
