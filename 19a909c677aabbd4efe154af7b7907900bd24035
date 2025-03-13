@@ -16,6 +16,24 @@
       "message": "As written, and without a default case this code has a code path that does not return a value(Neither case is hit in the switch).  Please fix",
       "revId": "19a909c677aabbd4efe154af7b7907900bd24035",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "9038272e_d35b608f",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 9
+      },
+      "lineNbr": 216,
+      "author": {
+        "id": 3130918
+      },
+      "writtenOn": "2025-03-13T20:32:54Z",
+      "side": 1,
+      "message": "Created https://android-review.git.corp.google.com/c/platform/external/avb/+/3543099 with the fix",
+      "parentUuid": "1b9fe3bf_77d35308",
+      "revId": "19a909c677aabbd4efe154af7b7907900bd24035",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ],
   "submitRequirementResults": [
