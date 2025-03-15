@@ -291,6 +291,7 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
   bool image_preloaded = false;
   uint8_t* digest;
   size_t digest_len;
+  AvbDigestType digest_type;
   const char* found;
   uint64_t image_size;
   size_t expected_digest_len = 0;
@@ -400,12 +401,14 @@ static AvbSlotVerifyResult load_and_verify_hash_partition(
     avb_sha256_update(&sha256_ctx, image_buf, image_size_to_hash);
     digest = avb_sha256_final(&sha256_ctx);
     digest_len = AVB_SHA256_DIGEST_SIZE;
+    digest_type = AVB_DIGEST_TYPE_SHA256;
   } else if (avb_strcmp((const char*)hash_desc.hash_algorithm, "sha512") == 0) {
     avb_sha512_init(&sha512_ctx);
     avb_sha512_update(&sha512_ctx, desc_salt, hash_desc.salt_len);
     avb_sha512_update(&sha512_ctx, image_buf, image_size_to_hash);
     digest = avb_sha512_final(&sha512_ctx);
     digest_len = AVB_SHA512_DIGEST_SIZE;
+    digest_type = AVB_DIGEST_TYPE_SHA512;
   } else {
     avb_error(part_name, ": Unsupported hash algorithm.\n");
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_INVALID_METADATA;
@@ -460,6 +463,14 @@ out:
     }
     loaded_partition =
         &slot_data->loaded_partitions[slot_data->num_loaded_partitions++];
+    loaded_partition->digest = avb_calloc(digest_len);
+    if (loaded_partition->digest == NULL) {
+      ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
+      goto fail;
+    }
+    avb_memcpy(loaded_partition->digest, digest, digest_len);
+    loaded_partition->digest_size = digest_len;
+    loaded_partition->digest_type = digest_type;
     loaded_partition->partition_name = avb_strdup(found);
     loaded_partition->data_size = image_size;
     loaded_partition->data = image_buf;
@@ -1717,6 +1728,9 @@ void avb_slot_verify_data_free(AvbSlotVerifyData* data) {
       }
       if (loaded_partition->data != NULL && !loaded_partition->preloaded) {
         avb_free(loaded_partition->data);
+      }
+      if (loaded_partition->digest != NULL) {
+        avb_free(loaded_partition->digest);
       }
     }
     avb_free(data->loaded_partitions);
