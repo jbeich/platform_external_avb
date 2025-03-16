@@ -746,7 +746,11 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInVBMeta) {
       "androidboot.vbmeta.digest="
       "99e84e34697a77414f0d7dd7896e98ac4da2d26bdd3756ef59ec79918de2adbe "
       "androidboot.vbmeta.invalidate_on_error=yes "
-      "androidboot.veritymode=enforcing",
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.boot.hash_alg=sha256 "
+      "androidboot.vbmeta.boot.digest="
+      "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d",
+
       std::string(slot_data->cmdline));
   EXPECT_EQ(4UL, slot_data->rollback_indexes[0]);
   for (size_t n = 1; n < AVB_MAX_NUMBER_OF_ROLLBACK_INDEX_LOCATIONS; n++) {
@@ -1129,7 +1133,10 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInChainedPartition) {
       "androidboot.vbmeta.digest="
       "4a45faa9adfeb94e9154fe682c11fef1a1a3d829b67cbf1a12ac7f0aa4f8e2e4 "
       "androidboot.vbmeta.invalidate_on_error=yes "
-      "androidboot.veritymode=enforcing",
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.boot.hash_alg=sha256 "
+      "androidboot.vbmeta.boot.digest="
+      "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d",
       std::string(slot_data->cmdline));
   EXPECT_EQ(11UL, slot_data->rollback_indexes[0]);
   EXPECT_EQ(12UL, slot_data->rollback_indexes[1]);
@@ -1602,7 +1609,10 @@ TEST_F(AvbSlotVerifyTest, HashDescriptorInOtherVBMetaPartition) {
       "androidboot.vbmeta.digest="
       "232447e92370ed31c2b6c5fb7328eb5d828a9819b3e6f6c10d96b9ca6fd209a1 "
       "androidboot.vbmeta.invalidate_on_error=yes "
-      "androidboot.veritymode=enforcing",
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.boot.hash_alg=sha256 "
+      "androidboot.vbmeta.boot.digest="
+      "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d",
       std::string(slot_data->cmdline));
   EXPECT_EQ(11UL, slot_data->rollback_indexes[0]);
   EXPECT_EQ(12UL, slot_data->rollback_indexes[1]);
@@ -1950,7 +1960,10 @@ TEST_F(AvbSlotVerifyTest, ChainedPartitionNoSlots) {
       "androidboot.vbmeta.digest="
       "4a45faa9adfeb94e9154fe682c11fef1a1a3d829b67cbf1a12ac7f0aa4f8e2e4 "
       "androidboot.vbmeta.invalidate_on_error=yes "
-      "androidboot.veritymode=enforcing",
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.boot.hash_alg=sha256 "
+      "androidboot.vbmeta.boot.digest="
+      "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d",
       std::string(slot_data->cmdline));
   EXPECT_EQ(11UL, slot_data->rollback_indexes[0]);
   EXPECT_EQ(12UL, slot_data->rollback_indexes[1]);
@@ -2247,7 +2260,13 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartitionFlag) {
       "androidboot.vbmeta.digest="
       "b5dbfb1743073f9a4cb45f94d1d849f89ca9777d158a2a06d09517c79ffd86cd "
       "androidboot.vbmeta.invalidate_on_error=yes "
-      "androidboot.veritymode=enforcing",
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.foo.hash_alg=sha256 "
+      "androidboot.vbmeta.foo.digest="
+      "184cb36243adb8b87d2d8c4802de32125fe294ec46753d732144ee65df68a23d "
+      "androidboot.vbmeta.bar.hash_alg=sha256 "
+      "androidboot.vbmeta.bar.digest="
+      "baea4bbd261d0edf4d1fe5e6e5a36976c291eeba66b6a46fa81dba691327a727",
       std::string(slot_data->cmdline));
   avb_slot_verify_data_free(slot_data);
 
@@ -3016,7 +3035,10 @@ TEST_F(AvbSlotVerifyTest, NoVBMetaPartition) {
       "androidboot.vbmeta.digest="
       "b297d90aa92a5d49725d1206ff1301b054c5a0214f1cb2fc12b809b317d943e4 "
       "androidboot.vbmeta.invalidate_on_error=yes "
-      "androidboot.veritymode=enforcing",
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.boot.hash_alg=sha256 "
+      "androidboot.vbmeta.boot.digest="
+      "4c109399b20e476bab15363bff55740add83e1c1e97e0b132f5c713ddd8c7868",
       std::string(slot_data->cmdline));
   avb_slot_verify_data_free(slot_data);
 }
@@ -3528,7 +3550,10 @@ TEST_F(AvbSlotVerifyTestWithPersistentDigest, Basic) {
       "androidboot.vbmeta.digest="
       "f7a4ce48092379fe0e913ffda10d859cd5fc19fa721c9e81f05f8bfea14b9873 "
       "androidboot.vbmeta.invalidate_on_error=yes "
-      "androidboot.veritymode=enforcing",
+      "androidboot.veritymode=enforcing "
+      "androidboot.vbmeta.factory.hash_alg=sha256 "
+      "androidboot.vbmeta.factory.digest="
+      "2e7cab6314e9614b6f2da12630661c3038e5592025f6534ba5823c3b340a1cb6",
       last_cmdline_);
 }
 
