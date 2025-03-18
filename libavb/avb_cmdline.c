@@ -208,13 +208,23 @@ static int cmdline_append_hex(AvbSlotVerifyData* slot_data,
 }
 
 static const char* cmdline_get_digest_name(AvbDigestType avb_digest_type) {
+  const char* ret = NULL;
   switch (avb_digest_type) {
     case AVB_DIGEST_TYPE_SHA256:
-      return "sha256";
+      ret = "sha256";
+      break;
     case AVB_DIGEST_TYPE_SHA512:
-      return "sha512";
+      ret = "sha512";
+      break;
       /* Do not add a 'default:' case here because of -Wswitch. */
   }
+
+  if (ret == NULL) {
+    avb_error("Unknown AvbDigestType.\n");
+    ret = "unknown";
+  }
+
+  return ret;
 }
 
 AvbSlotVerifyResult avb_append_options(
