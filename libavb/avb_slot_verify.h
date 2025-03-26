@@ -159,9 +159,6 @@ typedef struct {
   size_t data_size;
   bool preloaded;
   AvbSlotVerifyResult verify_result;
-  uint8_t* digest;
-  size_t digest_size;
-  AvbDigestType digest_type;
 } AvbPartitionData;
 
 /* AvbVBMetaData contains a vbmeta struct loaded from a partition when
