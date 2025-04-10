@@ -3,6 +3,23 @@
     {
       "unresolved": true,
       "key": {
+        "uuid": "3250b6c7_e6eeb0f1",
+        "filename": "/COMMIT_MSG",
+        "patchSetId": 15
+      },
+      "lineNbr": 7,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-04-10T02:18:29Z",
+      "side": 1,
+      "message": "The complication (an alternative way to provide the hash implementation) this change introduces to libavb isn\u0027t justified by the value it adds. So, we\u0027re not moving forward with this approach. GBL will follow an existing approach and provide a statically linked hash implementation.",
+      "revId": "ead3da694b821df57ea8833abf1fba8c8e2d85a3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
         "uuid": "5f2b7586_e79e2681",
         "filename": "libavb/avb_ops.h",
         "patchSetId": 15
