@@ -3087,6 +3087,7 @@ class Avb(object):
 
     if len(all_chain_partitions) > 0:
       used_locations = {rollback_index_location: True}
+      all_chain_partitions.sort()
       for cp in all_chain_partitions:
         cp_tokens = cp.split(':')
         if len(cp_tokens) != 3:
