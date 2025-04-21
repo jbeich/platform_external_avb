@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-#pragma once
+#ifndef _RUST_BINDGEN_AVB_H_
+#define _RUST_BINDGEN_AVB_H_
 
 #include <libavb/libavb.h>
 #include <libavb_cert/libavb_cert.h>
+
+#endif  // _RUST_BINDGEN_AVB_H_
