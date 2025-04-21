@@ -85,7 +85,7 @@ where
     T: Default + FromBytes + Immutable + KnownLayout + ValidateAndByteswap,
 {
     let (raw_header, body) =
-        Ref::<_, T>::new_from_prefix(data).ok_or(DescriptorError::InvalidHeader)?;
+        Ref::<_, T>::from_prefix(data).map_err(|_| DescriptorError::InvalidHeader)?;
     let raw_header = Ref::into_ref(raw_header);
 
     let mut header = T::default();
@@ -97,7 +97,11 @@ where
         return Err(DescriptorError::InvalidHeader);
     }
 
-    Ok(ParsedDescriptor { raw_header, header, body })
+    Ok(ParsedDescriptor {
+        raw_header,
+        header,
+        body,
+    })
 }
 
 #[cfg(test)]
