@@ -114,7 +114,7 @@ static const uint32_t sha256_k[64] = {
 
 /* SHA-256 implementation */
 void avb_sha256_init(AvbSHA256Ctx* avb_ctx) {
-  AvbSHA256ImplCtx* ctx = (AvbSHA256ImplCtx*)avb_ctx->reserved;
+  AvbSHA256ImplCtx* ctx = &avb_ctx->impl;
 #ifndef UNROLL_LOOPS
   int i;
   for (i = 0; i < 8; i++) {
@@ -335,7 +335,7 @@ static void SHA256_transform(AvbSHA256ImplCtx* ctx,
 }
 
 void avb_sha256_update(AvbSHA256Ctx* avb_ctx, const uint8_t* data, size_t len) {
-  AvbSHA256ImplCtx* ctx = (AvbSHA256ImplCtx*)avb_ctx->reserved;
+  AvbSHA256ImplCtx* ctx = &avb_ctx->impl;
   size_t block_nb;
   size_t new_len, rem_len, tmp_len;
   const uint8_t* shifted_data;
@@ -367,7 +367,7 @@ void avb_sha256_update(AvbSHA256Ctx* avb_ctx, const uint8_t* data, size_t len) {
 }
 
 uint8_t* avb_sha256_final(AvbSHA256Ctx* avb_ctx) {
-  AvbSHA256ImplCtx* ctx = (AvbSHA256ImplCtx*)avb_ctx->reserved;
+  AvbSHA256ImplCtx* ctx = &avb_ctx->impl;
   size_t block_nb;
   size_t pm_len;
   uint64_t len_b;
