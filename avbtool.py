@@ -36,6 +36,8 @@ import subprocess
 import sys
 import tempfile
 import time
+from struct import unpack
+from binascii import hexlify
 
 # Keep in sync with libavb/avb_version.h.
 AVB_VERSION_MAJOR = 1
@@ -47,6 +49,7 @@ AVB_FOOTER_VERSION_MAJOR = 1
 AVB_FOOTER_VERSION_MINOR = 0
 
 AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED = 1
+AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED = 2
 
 # Configuration for enabling logging of calls to avbtool.
 AVB_INVOCATION_LOGFILE = os.environ.get('AVB_INVOCATION_LOGFILE')
@@ -344,6 +347,26 @@ def parse_number(string):
     ValueError: If the number could not be parsed.
   """
   return int(string, 0)
+
+
+def find_partition_file(image_dir, partition_name, image_ext):
+    """Find the filename and extension of a specific partition.
+
+    Arguments:
+      image_dir: directory of the vbmeta image
+      partition_name: the name of the searched partition file
+      image_ext: the extension of the vbmeta image file
+
+    Returns:
+      the path of the searched partition file
+    """
+    image_filename = os.path.join(image_dir, partition_name + image_ext)
+    if not os.path.exists(image_filename):
+      for file in os.listdir(image_dir):
+        file_path = os.path.join(image_dir, file)
+        if os.path.isfile(file_path) and os.path.splitext(file.lower())[0] == partition_name:
+          return file_path
+    return image_filename
 
 
 class RSAPublicKey(object):
@@ -784,9 +807,13 @@ class ImageHandler(object):
     self.block_size = 4096
     self._file_pos = 0
     if self.skip_missing and not os.path.exists(self.filename):
-        print(os.path.splitext(os.path.basename(self.filename))[0] + ": missing")
-        self._image = None
-        return
+        self.filename = os.path.join(os.path.dirname(self.filename), os.path.splitext(
+            os.path.basename(self.filename).upper())[0] + os.path.splitext(
+            os.path.basename(self.filename))[1])
+        if not os.path.exists(self.filename):
+            print(os.path.splitext(os.path.basename(self.filename.lower()))[0] + ': missing')
+            self._image = None
+            return
     if self._read_only:
       self._image = open(self.filename, 'rb')
     else:
@@ -1232,7 +1259,7 @@ class AvbDescriptor(object):
     return bytearray(ret)
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1243,13 +1270,15 @@ class AvbDescriptor(object):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
     """
     # Deletes unused parameters to prevent pylint warning unused-argument.
     del image_dir, image_ext, expected_chain_partitions_map
-    del image_containing_descriptor, accept_zeroed_hashtree
+    del image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions
 
     # Nothing to do.
     return True
@@ -1338,7 +1367,7 @@ class AvbPropertyDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1349,6 +1378,8 @@ class AvbPropertyDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -1512,7 +1543,7 @@ class AvbHashtreeDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1523,6 +1554,8 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -1531,10 +1564,12 @@ class AvbHashtreeDescriptor(AvbDescriptor):
       image_filename = image_containing_descriptor.filename
       image = image_containing_descriptor
     else:
-      image_filename = os.path.join(image_dir, self.partition_name + image_ext)
-      if not os.path.exists(image_filename):
-          image_filename = os.path.join(image_dir, self.partition_name.upper() + image_ext)
-      image = ImageHandler(image_filename, read_only=True)
+      image_filename = find_partition_file(image_dir, self.partition_name, image_ext)
+      image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
+    if image._image is None:
+      sys.stderr.write(os.path.splitext(os.path.basename(
+          image_filename.lower()))[0] + ': Partition not found and not verified!\n')
+      return None
     # Generate the hashtree and checks that it matches what's in the file.
     digest_size = self._hashtree_digest_size()
     digest_padding = round_to_pow2(digest_size) - digest_size
@@ -1682,7 +1717,7 @@ class AvbHashDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1693,6 +1728,8 @@ class AvbHashDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -1701,10 +1738,12 @@ class AvbHashDescriptor(AvbDescriptor):
       image_filename = image_containing_descriptor.filename
       image = image_containing_descriptor
     else:
-      image_filename = os.path.join(image_dir, self.partition_name + image_ext)
-      if not os.path.exists(image_filename):
-          image_filename = os.path.join(image_dir, self.partition_name.upper() + image_ext)
-      image = ImageHandler(image_filename, read_only=True)
+      image_filename = find_partition_file(image_dir, self.partition_name, image_ext)
+      image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
+    if image._image is None:
+      sys.stderr.write(os.path.splitext(os.path.basename(
+          image_filename.lower()))[0] + ': Partition not found and not verified!\n')
+      return True
     data = image.read(self.image_size)
     ha = hashlib.new(self.hash_algorithm)
     ha.update(self.salt)
@@ -1797,7 +1836,7 @@ class AvbKernelCmdlineDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1808,6 +1847,8 @@ class AvbKernelCmdlineDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -1911,7 +1952,7 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
     return ret
 
   def verify(self, image_dir, image_ext, expected_chain_partitions_map,
-             image_containing_descriptor, accept_zeroed_hashtree):
+             image_containing_descriptor, accept_zeroed_hashtree, allow_missing_partitions):
     """Verifies contents of the descriptor - used in verify_image sub-command.
 
     Arguments:
@@ -1922,6 +1963,8 @@ class AvbChainPartitionDescriptor(AvbDescriptor):
       image_containing_descriptor: The image the descriptor is in.
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Returns:
       True if the descriptor verifies, False otherwise.
@@ -2434,13 +2477,14 @@ class Avb(object):
     misc_image.seek(self.AB_MISC_METADATA_OFFSET)
     misc_image.write(ab_data)
 
-  def info_image(self, image_filename, output, cert):
+  def info_image(self, image_filename, output, cert, output_pubkey=None):
     """Implements the 'info_image' command.
 
     Arguments:
       image_filename: Image file to get information from (file object).
       output: Output file to write human-readable information to (file object).
       cert: If True, show information about the avb_cert certificates.
+      output_pubkey: Optional file to write the public key to (file object).
     """
     image = ImageHandler(image_filename, read_only=True)
     o = output
@@ -2477,6 +2521,9 @@ class Avb(object):
     if key_blob:
       hexdig = hashlib.sha1(key_blob).hexdigest()
       o.write('Public key (sha1):        {}\n'.format(hexdig))
+      if output_pubkey is not None:
+        output_pubkey.write(key_blob)
+
     o.write('Algorithm:                {}\n'.format(alg_name))
     o.write('Rollback Index:           {}\n'.format(header.rollback_index))
     o.write('Flags:                    {}\n'.format(header.flags))
@@ -2532,6 +2579,8 @@ class Avb(object):
           the --expected_chain_partition option
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      allow_missing_partitions: Verify images successfully when all found
+          partitions are verified successfully, even with some partitions missing.
 
     Raises:
       AvbError: If verification of the image fails.
@@ -2564,7 +2613,8 @@ class Avb(object):
 
     image = ImageHandler(image_filename, read_only=True, skip_missing=allow_missing_partitions)
     if image._image is None:
-      sys.stderr.write(os.path.splitext(os.path.basename(image_filename))[0] + ": Partition not found and not verified!\n")
+      sys.stderr.write(os.path.splitext(os.path.basename(
+          image_filename.lower()))[0] + ': Partition not found and not verified!\n')
       return None
     (footer, header, descriptors, _) = self._parse_image(image)
     offset = 0
@@ -2600,8 +2650,10 @@ class Avb(object):
 
     verified = True
     for desc in descriptors:
-      if isinstance(desc, AvbChainPartitionDescriptor) and not os.path.exists(os.path.join(image_dir, desc.partition_name + image_ext)):
-        desc.partition_name = desc.partition_name.upper()
+      if (isinstance(desc, AvbChainPartitionDescriptor) and
+              not os.path.exists(os.path.join(image_dir, desc.partition_name + image_ext))):
+        desc.partition_name = os.path.splitext(os.path.basename(find_partition_file(
+            image_dir, desc.partition_name, image_ext)))[0]
       if (isinstance(desc, AvbChainPartitionDescriptor)
           and follow_chain_partitions
           and expected_chain_partitions_map.get(desc.partition_name) is None
@@ -2613,22 +2665,23 @@ class Avb(object):
               'and KEY (which has sha1 {}) not specified'
               .format(desc.partition_name, desc.rollback_index_location,
                       hashlib.sha1(desc.public_key).hexdigest()))
-      elif not desc.verify(image_dir, image_ext, expected_chain_partitions_map,
-                           image, accept_zeroed_hashtree):
+      elif (not allow_missing_partitions and not desc.verify(
+              image_dir, image_ext, expected_chain_partitions_map, image, accept_zeroed_hashtree,
+              allow_missing_partitions)) or (allow_missing_partitions and desc.verify(
+              image_dir, image_ext, expected_chain_partitions_map, image, accept_zeroed_hashtree,
+              allow_missing_partitions) is False):
           verified = False
-          sys.stderr.write("Error verifying descriptor.\n")
+          sys.stderr.write('Error verifying descriptor.\n')
       # Honor --follow_chain_partitions - add '--' to make the output more
       # readable.
       if (isinstance(desc, AvbChainPartitionDescriptor)
           and follow_chain_partitions):
         print('--')
-        chained_image_filename = os.path.join(image_dir,
-                                              desc.partition_name + image_ext)
-        if not os.path.exists(chained_image_filename):
-          chained_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
-        res = self.verify_image(chained_image_filename, key_path, None, False,
+        chained_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
+        res = self.verify_image(chained_image_filename, key_path, None,False,
                                 accept_zeroed_hashtree, allow_missing_partitions)
-        if (allow_missing_partitions and not res) or (not res or res is None):
+        if (allow_missing_partitions and res is False) or (
+                not allow_missing_partitions and not res):
             verified = False
     return verified
 
@@ -2689,13 +2742,98 @@ class Avb(object):
         else:
           output.write('{}: {}\n'.format(desc.partition_name, digest))
       elif isinstance(desc, AvbChainPartitionDescriptor):
-        chained_image_filename = os.path.join(image_dir,
-                                              desc.partition_name + image_ext)
-        if not os.path.exists(chained_image_filename):
-            chained_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
+        chained_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
         self._print_partition_digests(
             chained_image_filename, output, json_partitions, image_dir,
             image_ext)
+
+  def print_signature_key(self, image_filename, store_test_keys=False):
+    """Implements the 'print_signature_key' command.
+
+    Arguments:
+      image_filename: Image file to get information from (file object).
+      store_test_keys: True, if the key should be stored when a testkey was used to sign the image.
+    """
+    with open(image_filename, 'rb') as f:
+      vbmeta = f.read()
+    if vbmeta[:4] == b'DHTB':
+      print('Detected Spreadtrum special hash header')
+      print('SHA256-Hash :\t\t\t\t' + hexlify(vbmeta[8:0x28]).decode('utf-8'))
+      length = unpack('<I', vbmeta[0x30:0x34])[0]
+      vbmeta = vbmeta[0x200:0x200 + length]
+      calcedhash = hashlib.sha256(vbmeta).digest()
+      print('Calced Hash :\t\t\t\t' + hexlify(calcedhash).decode('utf-8'))
+    else:
+      idx = vbmeta.find(b'AVB0')
+      if idx != -1:
+        vbmeta = vbmeta[idx:]
+
+    avb_meta_content = {}
+    avb_header = AvbVBMetaHeader(vbmeta[:AvbVBMetaHeader.SIZE])
+    if avb_header.magic != b'AVB0':
+      print('Unknown vbmeta data')
+      exit(0)
+
+    auxdata = vbmeta[AvbVBMetaHeader.SIZE +
+                     avb_header.authentication_data_block_size:AvbVBMetaHeader.SIZE +
+                     avb_header.authentication_data_block_size +
+                     avb_header.auxiliary_data_block_size]
+    auxlen = len(auxdata)
+    i = 0
+    while i < auxlen:
+      desc = AvbDescriptor(auxdata[i:])
+      data = auxdata[i:]
+      if desc.tag == AvbPropertyDescriptor.TAG:
+        avb_property = AvbPropertyDescriptor(data)
+        avb_meta_content['property'] = dict(avbproperty=avb_property)
+      elif desc.tag == AvbHashtreeDescriptor.TAG:
+        avb_hashtree = AvbHashtreeDescriptor(data)
+        partition_name = avb_hashtree.partition_name
+        salt = avb_hashtree.salt
+        root_digest = avb_hashtree.root_digest
+        avb_meta_content[partition_name] = dict(salt=salt, root_digest=root_digest)
+      elif desc.tag == AvbHashDescriptor.TAG:
+        avb_hash = AvbHashDescriptor(data)
+        partition_name = avb_hash.partition_name
+        salt = avb_hash.salt
+        digest = avb_hash.digest
+        avb_meta_content[partition_name] = dict(salt=salt,digest=digest)
+      elif desc.tag == AvbKernelCmdlineDescriptor.TAG:
+        avb_cmdline = AvbKernelCmdlineDescriptor(data)
+        kernel_cmdline = avb_cmdline.kernel_cmdline
+        avb_meta_content['cmdline'] = dict(kernel_cmdline=kernel_cmdline)
+      elif desc.tag == AvbChainPartitionDescriptor.TAG:
+        avb_chain_partition = AvbChainPartitionDescriptor(data)
+        partition_name = avb_chain_partition.partition_name
+        public_key = avb_chain_partition.public_key
+        avb_meta_content[partition_name] = dict(public_key=public_key)
+      i += desc.SIZE + len(desc.data)
+
+    pub_key_data = vbmeta[AvbVBMetaHeader.SIZE + avb_header.authentication_data_block_size +
+                          avb_header.public_key_offset: AvbVBMetaHeader.SIZE +
+                          avb_header.authentication_data_block_size + avb_header.public_key_offset
+                          + avb_header.public_key_size]
+    modlen = unpack('>I', pub_key_data[:4])[0] // 4
+    n0inv = unpack('>I', pub_key_data[4:8])[0]
+    modulus = hexlify(pub_key_data[8:8 + modlen]).decode('utf-8')
+    print('Signature-RSA-Modulus (n):\t' + modulus)
+    print('Signature-n0inv: \t\t\t' + str(n0inv))
+    testkey_dir_path = 'test/data'
+    if os.path.exists(testkey_dir_path):
+      for file in os.listdir(testkey_dir_path):
+        file_path = os.path.join(testkey_dir_path, file)
+        if os.path.splitext(file_path)[1] == '.pem':
+          rsa_pub_key = RSAPublicKey(file_path)
+          test_key = format(rsa_pub_key.modulus, 'x')
+          if test_key[:16] == modulus[:16]:
+            print(f'\nKey found: {file}')
+            if store_test_keys:
+              import shutil
+              shutil.copyfile(file_path, './' + file)
+            break
+    else:
+      sys.stderr.write(
+          'test/data directory does not exist! Could not compare public key against testkeys.')
 
   def calculate_vbmeta_digest(self, image_filename, hash_algorithm, output):
     """Implements the 'calculate_vbmeta_digest' command.
@@ -2724,10 +2862,7 @@ class Avb(object):
 
     for desc in descriptors:
       if isinstance(desc, AvbChainPartitionDescriptor):
-        ch_image_filename = os.path.join(image_dir,
-                                         desc.partition_name + image_ext)
-        if not os.path.exists(ch_image_filename):
-            ch_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
+        ch_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
         ch_image = ImageHandler(ch_image_filename, read_only=True)
         (ch_footer, ch_header, _, _) = self._parse_image(ch_image)
         ch_offset = 0
@@ -2760,10 +2895,7 @@ class Avb(object):
     cmdline_descriptors = []
     for desc in descriptors:
       if isinstance(desc, AvbChainPartitionDescriptor):
-        ch_image_filename = os.path.join(image_dir,
-                                         desc.partition_name + image_ext)
-        if not os.path.exists(ch_image_filename):
-            ch_image_filename = os.path.join(image_dir, desc.partition_name.upper() + image_ext)
+        ch_image_filename = find_partition_file(image_dir, desc.partition_name, image_ext)
         ch_image = ImageHandler(ch_image_filename, read_only=True)
         _, _, ch_descriptors, _ = self._parse_image(ch_image)
         for ch_desc in ch_descriptors:
@@ -4342,6 +4474,9 @@ class AvbTool(object):
     sub_parser.add_argument('--set_hashtree_disabled_flag',
                             help='Set the HASHTREE_DISABLED flag',
                             action='store_true')
+    sub_parser.add_argument('--set_verification_disabled_flag',
+                            help='Set the VERIFICATION_DISABLED flag',
+                            action='store_true')
 
   def _add_common_footer_args(self, sub_parser):
     """Adds arguments used by add_*_footer sub-commands.
@@ -4373,6 +4508,8 @@ class AvbTool(object):
     """
     if args.set_hashtree_disabled_flag:
       args.flags |= AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED
+    if args.set_verification_disabled_flag:
+      args.flags |= AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED
     return args
 
   def run(self, argv):
@@ -4629,6 +4766,10 @@ class AvbTool(object):
                             help=('Show information about the avb_cert '
                                   'extension certificate.'),
                             action='store_true')
+    sub_parser.add_argument('--output_pubkey',
+                            help='Write public key to file',
+                            type=argparse.FileType('wb'),
+                            required=False)
     sub_parser.set_defaults(func=self.info_image)
 
     sub_parser = subparsers.add_parser(
@@ -4657,7 +4798,8 @@ class AvbTool(object):
         action='store_true')
     sub_parser.add_argument(
         '--allow_missing_partitions',
-        help=('Verify images successfully when all found partitions are verified successfully, even with some partitions missing.'),
+        help=('Verify images successfully when all found partitions are verified successfully,'
+              ' even with some partitions missing.'),
         action='store_true')
     sub_parser.set_defaults(func=self.verify_image)
 
@@ -4676,6 +4818,19 @@ class AvbTool(object):
                             help=('Print output as JSON'),
                             action='store_true')
     sub_parser.set_defaults(func=self.print_partition_digests)
+
+    sub_parser = subparsers.add_parser(
+        'print_signature_key',
+        help='Prints the public key of the vbmeta signature.')
+    sub_parser.add_argument('--image',
+                            help='Image to print public key from',
+                            type=argparse.FileType('rb'),
+                            required=True)
+    sub_parser.add_argument('--store_test_keys',
+                            help='Store testkeys in the current directory, if a testkey was used'
+                                 ' to sign the image.',
+                            action='store_true')
+    sub_parser.set_defaults(func=self.print_signature_key)
 
     sub_parser = subparsers.add_parser(
         'calculate_vbmeta_digest',
@@ -5004,7 +5159,8 @@ Please use '--hash_algorithm sha256'.
 
   def info_image(self, args):
     """Implements the 'info_image' sub-command."""
-    self.avb.info_image(args.image.name, args.output, args.cert)
+    self.avb.info_image(args.image.name, args.output,
+                        args.cert, args.output_pubkey)
 
   def verify_image(self, args):
     """Implements the 'verify_image' sub-command."""
@@ -5014,11 +5170,15 @@ Please use '--hash_algorithm sha256'.
                           args.accept_zeroed_hashtree,
                           args.allow_missing_partitions)
     if result is False:
-        raise AvbError("Verification failed or no partitions found to be verified.")
+        raise AvbError('Verification failed or no partitions found to be verified.')
 
   def print_partition_digests(self, args):
     """Implements the 'print_partition_digests' sub-command."""
     self.avb.print_partition_digests(args.image.name, args.output, args.json)
+
+  def print_signature_key(self, args):
+    """Implements the 'print_signature_key' sub-command."""
+    self.avb.print_signature_key(args.image.name, args.store_test_keys)
 
   def calculate_vbmeta_digest(self, args):
     """Implements the 'calculate_vbmeta_digest' sub-command."""
