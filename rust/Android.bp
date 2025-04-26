@@ -389,7 +389,7 @@ genrule {
     out: ["avbrs_test_image_descriptor_hashtree.img"],
     // Generating FEC values requires the `fec` tool to be on $PATH, which does
     // not seems to be possible here. For now pass `--do_not_generate_fec`.
-    cmd: "$(location avbtool) add_hashtree_footer --image $(location :avbrs_test_image) --partition_name test_part_hashtree --partition_size 0 --salt B000 --do_not_append_vbmeta_image --output_vbmeta_image $(out) --do_not_generate_fec",
+    cmd: "$(location avbtool) add_hashtree_footer --image $(location :avbrs_test_image) --partition_name test_part_hashtree --partition_size 0 --hash_algorithm sha1 --salt B000 --do_not_append_vbmeta_image --output_vbmeta_image $(out) --do_not_generate_fec",
 }
 
 // Standalone vbmeta image signing the test image descriptor.
