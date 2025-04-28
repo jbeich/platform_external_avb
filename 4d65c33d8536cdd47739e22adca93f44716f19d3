@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20ceeca2_e1370ee7",
+        "filename": "rust/src/descriptor/chain.rs",
+        "patchSetId": 1
+      },
+      "lineNbr": 75,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-04-28T17:27:40Z",
+      "side": 1,
+      "message": "nit: typo",
+      "range": {
+        "startLine": 75,
+        "startChar": 51,
+        "endLine": 75,
+        "endChar": 62
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "c33c2d6f_7dcaf20e",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "rust/src/descriptor/chain.rs",
+              "range": {
+                "startLine": 75,
+                "startChar": 0,
+                "endLine": 76,
+                "endChar": 0
+              },
+              "replacement": "            // (std::underlying_type_t\u003cEnum\u003e). But descriptor.header.flags is always u32. Since we\n"
+            }
+          ]
+        }
+      ],
+      "revId": "4d65c33d8536cdd47739e22adca93f44716f19d3",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
