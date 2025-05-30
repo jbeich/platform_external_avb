@@ -1,5 +1,23 @@
 {
-  "comments": [],
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "eb814d1f_2e8afaf5",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 3506243
+      },
+      "writtenOn": "2025-05-30T02:51:22Z",
+      "side": 1,
+      "message": "3543099: Fixing the compiler error on gcc, error: control reaches end of non-void function [-Werror\u003dreturn-type] | https://android-review.googlesource.com/c/platform/external/avb/+/3543099",
+      "revId": "761178607206f4cb2af79ed9eec52d8cbd814adb",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ],
   "submitRequirementResults": [
     {
       "submitRequirement": {
