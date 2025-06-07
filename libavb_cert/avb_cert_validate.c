@@ -97,25 +97,22 @@ static bool verify_certificate(
     const uint8_t authority[AVB_CERT_PUBLIC_KEY_SIZE],
     uint64_t minimum_key_version,
     const uint8_t expected_usage[AVB_SHA256_DIGEST_SIZE]) {
-  const AvbAlgorithmData* algorithm_data;
   uint8_t certificate_hash[AVB_SHA512_DIGEST_SIZE];
 
   if (certificate->signed_data.version != 1) {
     avb_error("Unsupported certificate format.\n");
     return false;
   }
-  algorithm_data = avb_get_algorithm_data(AVB_ALGORITHM_TYPE_SHA512_RSA4096);
   sha512((const uint8_t*)&certificate->signed_data,
          sizeof(AvbCertCertificateSignedData),
          certificate_hash);
-  if (!avb_rsa_verify(authority,
+  if (!avb_rsa_verify(AVB_ALGORITHM_TYPE_SHA512_RSA4096,
+                      authority,
                       AVB_CERT_PUBLIC_KEY_SIZE,
                       certificate->signature,
                       AVB_RSA4096_NUM_BYTES,
                       certificate_hash,
-                      AVB_SHA512_DIGEST_SIZE,
-                      algorithm_data->padding,
-                      algorithm_data->padding_len)) {
+                      AVB_SHA512_DIGEST_SIZE)) {
     avb_error("Invalid certificate signature.\n");
     return false;
   }
@@ -330,7 +327,6 @@ AvbIOResult avb_cert_validate_unlock_credential(
   AvbCertPermanentAttributes permanent_attributes;
   uint8_t permanent_attributes_hash[AVB_SHA256_DIGEST_SIZE];
   uint64_t minimum_version;
-  const AvbAlgorithmData* algorithm_data;
   uint8_t challenge_hash[AVB_SHA512_DIGEST_SIZE];
 
   /* Be pessimistic so we can exit early without having to remember to clear.
@@ -399,16 +395,14 @@ AvbIOResult avb_cert_validate_unlock_credential(
   last_unlock_challenge_set = false;
 
   /* Verify the challenge signature. */
-  algorithm_data = avb_get_algorithm_data(AVB_ALGORITHM_TYPE_SHA512_RSA4096);
-  if (!avb_rsa_verify(unlock_credential->product_unlock_key_certificate
+  if (!avb_rsa_verify(AVB_ALGORITHM_TYPE_SHA512_RSA4096,
+                      unlock_credential->product_unlock_key_certificate
                           .signed_data.public_key,
                       AVB_CERT_PUBLIC_KEY_SIZE,
                       unlock_credential->challenge_signature,
                       AVB_RSA4096_NUM_BYTES,
                       challenge_hash,
-                      AVB_SHA512_DIGEST_SIZE,
-                      algorithm_data->padding,
-                      algorithm_data->padding_len)) {
+                      AVB_SHA512_DIGEST_SIZE)) {
     avb_error("Invalid unlock challenge signature.\n");
     return AVB_IO_RESULT_OK;
   }

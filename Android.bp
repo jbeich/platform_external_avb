@@ -117,13 +117,13 @@ cc_defaults {
 }
 
 cc_defaults {
-    name: "avb_crypto_ops_impl_sha",
+    name: "avb_crypto_ops_impl_crypto",
     srcs: [
-        "libavb/sha/sha256_impl.c",
-        "libavb/sha/sha512_impl.c",
+        "libavb/crypto/sha256_impl.c",
+        "libavb/crypto/sha512_impl.c",
     ],
     local_include_dirs: [
-        "libavb/sha",
+        "libavb/crypto",
     ],
 }
 
@@ -397,9 +397,9 @@ cc_test_host {
 }
 
 cc_test_host {
-    name: "libavb_host_unittest_sha",
+    name: "libavb_host_unittest_crypto",
     defaults: [
-        "avb_crypto_ops_impl_sha",
+        "avb_crypto_ops_impl_crypto",
         "libavb_host_unittest_core",
     ],
     data: [
