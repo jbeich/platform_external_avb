@@ -37,7 +37,7 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
   AvbVBMetaVerifyResult ret;
   AvbVBMetaImageHeader h;
   uint8_t* computed_hash;
-  const AvbAlgorithmData* algorithm;
+  size_t algorithm_hash_size;
   AvbSHA256Ctx sha256_ctx;
   AvbSHA512Ctx sha512_ctx;
   const uint8_t* header_block;
@@ -153,14 +153,14 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
   }
 
   /* Ensure algorithm field is supported. */
-  algorithm = avb_get_algorithm_data(h.algorithm_type);
-  if (!algorithm) {
+  algorithm_hash_size = avb_get_algorithm_hash_size(h.algorithm_type);
+  if (algorithm_hash_size == SIZE_MAX) {
     avb_error("Invalid or unknown algorithm.\n");
     goto out;
   }
 
   /* Bail if the embedded hash size doesn't match the chosen algorithm. */
-  if (h.hash_size != algorithm->hash_len) {
+  if (h.hash_size != algorithm_hash_size) {
     avb_error("Embedded hash has wrong size.\n");
     goto out;
   }
@@ -210,14 +210,13 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
   }
 
   verification_result =
-      avb_rsa_verify(auxiliary_block + h.public_key_offset,
+      avb_rsa_verify(h.algorithm_type,
+                     auxiliary_block + h.public_key_offset,
                      h.public_key_size,
                      authentication_block + h.signature_offset,
                      h.signature_size,
                      authentication_block + h.hash_offset,
-                     h.hash_size,
-                     algorithm->padding,
-                     algorithm->padding_len);
+                     h.hash_size);
 
   if (verification_result == 0) {
     ret = AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH;
