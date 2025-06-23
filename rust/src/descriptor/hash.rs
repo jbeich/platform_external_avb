@@ -85,7 +85,10 @@ impl<'a> HashDescriptor<'a> {
         Ok(Self {
             image_size: descriptor.header.image_size,
             hash_algorithm,
-            flags: HashDescriptorFlags(descriptor.header.flags),
+            // rust bindgen may generate i32 or u32 for enum type depending on platform
+            // (std::underlying_type_t<Enum>). But descriptor.header.flags is always u32. Since we
+            // only care about the bit values, a cast is ok.
+            flags: HashDescriptorFlags(descriptor.header.flags as _),
             partition_name: from_utf8(partition_name)?,
             salt,
             digest,

@@ -114,7 +114,10 @@ impl<'a> HashtreeDescriptor<'a> {
             partition_name: from_utf8(partition_name)?,
             salt,
             root_digest,
-            flags: HashtreeDescriptorFlags(descriptor.header.flags),
+            // rust bindgen may generate i32 or u32 for enum type depending on platform
+            // (std::underlying_type_t<Enum>). But descriptor.header.flags is always u32. Since we
+            // only care about the bit values, a cast is ok.
+            flags: HashtreeDescriptorFlags(descriptor.header.flags as _),
         })
     }
 }
