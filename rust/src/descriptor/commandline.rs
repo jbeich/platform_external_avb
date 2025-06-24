@@ -58,7 +58,10 @@ impl<'a> KernelCommandlineDescriptor<'a> {
             split_slice(descriptor.body, descriptor.header.kernel_cmdline_length)?;
 
         Ok(Self {
-            flags: KernelCommandlineDescriptorFlags(descriptor.header.flags),
+            // rust bindgen may generate i32 or u32 for enum type depending on platform
+            // (std::underlying_type_t<Enum>). But descriptor.header.flags is always u32. Since we
+            // only care about the bit values, a cast is ok.
+            flags: KernelCommandlineDescriptorFlags(descriptor.header.flags as _),
             commandline: from_utf8(commandline)?,
         })
     }

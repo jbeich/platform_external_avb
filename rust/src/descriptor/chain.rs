@@ -71,7 +71,10 @@ impl<'a> ChainPartitionDescriptor<'a> {
         let (public_key, _) = split_slice(remainder, descriptor.header.public_key_len)?;
 
         Ok(Self {
-            flags: ChainPartitionDescriptorFlags(descriptor.header.flags),
+            // rust bindgen may generate i32 or u32 for enum type depending on platform
+            // (std::underlying_type_t<Enum>). But descriptor.header.flags is always u32. Since we
+            // only care about the bit values, a cast is ok.
+            flags: ChainPartitionDescriptorFlags(descriptor.header.flags as _),
             partition_name: from_utf8(partition_name)?,
             rollback_index_location: descriptor.header.rollback_index_location,
             public_key,
