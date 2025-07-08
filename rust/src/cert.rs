@@ -127,7 +127,7 @@ pub trait CertOps {
     ///
     /// # Arguments
     /// * `attributes`: permanent attributes to update; passed as an output parameter rather than a
-    ///                 return value due to the size (>1KiB).
+    ///   return value due to the size (>1KiB).
     ///
     /// # Returns
     /// Unit on success, error on failure.
