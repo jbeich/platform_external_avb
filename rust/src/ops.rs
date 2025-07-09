@@ -52,8 +52,8 @@ pub trait Ops<'a> {
     /// # Arguments
     /// * `partition`: partition name to read from.
     /// * `offset`: offset in bytes within the partition to read from; a positive value indicates an
-    ///             offset from the partition start, a negative value indicates a backwards offset
-    ///             from the partition end.
+    ///   offset from the partition start, a negative value indicates a backwards offset
+    ///   from the partition end.
     /// * `buffer`: buffer to read data into.
     ///
     /// # Returns
@@ -92,7 +92,7 @@ pub trait Ops<'a> {
     /// # Arguments
     /// * `public_key`: the public key.
     /// * `public_key_metadata`: public key metadata set by the `--public_key_metadata` arg in
-    ///                          `avbtool`, or None if no metadata was provided.
+    ///   `avbtool`, or None if no metadata was provided.
     ///
     /// # Returns
     /// True if the given key is valid, false if it is not, `IoError` on error.
@@ -166,9 +166,9 @@ pub trait Ops<'a> {
     /// # Arguments
     /// * `name`: persistent value name.
     /// * `value`: buffer to read persistent value into; if too small to hold the persistent value,
-    ///            `IoError::InsufficientSpace` should be returned and this function will be called
-    ///            again with an appropriately-sized buffer. This may be an empty slice if the
-    ///            caller only wants to query the persistent value size.
+    ///   `IoError::InsufficientSpace` should be returned and this function will be called
+    ///   again with an appropriately-sized buffer. This may be an empty slice if the
+    ///   caller only wants to query the persistent value size.
     ///
     /// # Returns
     /// * The number of bytes written into `value` on success.
@@ -226,7 +226,7 @@ pub trait Ops<'a> {
     /// * `partition`: partition name.
     /// * `public_key`: the public key.
     /// * `public_key_metadata`: public key metadata set by the `--public_key_metadata` arg in
-    ///                          `avbtool`, or None if no metadata was provided.
+    ///   `avbtool`, or None if no metadata was provided.
     ///
     /// # Returns
     /// On success, returns a `PublicKeyForPartitionInfo` object indicating whether the given
@@ -347,7 +347,7 @@ impl<'o, 'p> OpsBridge<'o, 'p> {
     ///
     /// # Returns
     /// The C `AvbOps` struct to make libavb calls with.
-    pub(crate) fn init_and_get_c_ops<'a>(self: Pin<&'a mut Self>) -> &'a mut AvbOps {
+    pub(crate) fn init_and_get_c_ops(self: Pin<&mut Self>) -> &mut AvbOps {
         // SAFETY: we do not move out of `self_mut`, but only set pointers to pinned addresses.
         let self_mut = unsafe { self.get_unchecked_mut() };
 

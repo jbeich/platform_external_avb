@@ -259,7 +259,7 @@ impl<'a> SlotVerifyData<'a> {
     /// # Arguments
     /// * `data`: a `AvbSlotVerifyData` object created by libavb using `ops`.
     /// * `ops`: the user-provided `Ops` object that was used for verification; only used here to
-    ///          grab the preloaded data lifetime.
+    ///   grab the preloaded data lifetime.
     ///
     /// # Returns
     /// The new object, or `Err(SlotVerifyError::Internal)` if the data looks invalid.
