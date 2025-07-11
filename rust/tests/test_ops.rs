@@ -270,7 +270,7 @@ impl<'a> Ops<'a> for TestOps<'a> {
         Ok(bytes_read)
     }
 
-    fn get_preloaded_partition(&mut self, partition: &CStr) -> IoResult<&'a [u8]> {
+    fn get_preloaded_partition(&mut self, partition: &CStr, _: usize) -> IoResult<&'a [u8]> {
         match self.partitions.get(partition.to_str()?) {
             Some(FakePartition {
                 contents: PartitionContents::Preloaded(preloaded),
