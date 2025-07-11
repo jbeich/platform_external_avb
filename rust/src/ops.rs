@@ -81,7 +81,7 @@ pub trait Ops<'a> {
     /// * `Err<IoError::NotImplemented>` if the requested partition has not been preloaded;
     ///   verification will next attempt to load the partition via `read_from_partition()`.
     /// * Any other `Err<IoError>` if an error occurred; verification will exit immediately.
-    fn get_preloaded_partition(&mut self, _partition: &CStr) -> IoResult<&'a [u8]> {
+    fn get_preloaded_partition(&mut self, _partition: &CStr, _num_bytes: usize) -> IoResult<&'a [u8]> {
         Err(IoError::NotImplemented)
     }
 
@@ -573,7 +573,7 @@ unsafe fn try_get_preloaded_partition(
     // * the returned `&CStr` is not held past the scope of this callback.
     let partition = unsafe { CStr::from_ptr(partition) };
 
-    match ops.get_preloaded_partition(partition) {
+    match ops.get_preloaded_partition(partition, num_bytes) {
         // SAFETY:
         // * we've checked that the pointers are non-NULL.
         // * libavb gives us properly-aligned and sized `out` vars.
