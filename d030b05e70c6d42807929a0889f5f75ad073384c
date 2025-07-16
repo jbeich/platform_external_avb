@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b87fc2bb_e27d2d44",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 1
+      },
+      "lineNbr": 402,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-07-16T20:51:57Z",
+      "side": 1,
+      "message": "```\n  default:\n    avb_assert_not_reached();\n    break;\n```\nmight be safer, if anyone ever adds another value to the enum?",
+      "revId": "d030b05e70c6d42807929a0889f5f75ad073384c",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
