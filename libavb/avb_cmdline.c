@@ -360,7 +360,7 @@ AvbSlotVerifyResult avb_append_options(
   if (toplevel_vbmeta->flags & AVB_VBMETA_IMAGE_FLAGS_HASHTREE_DISABLED) {
     verity_mode = "disabled";
   } else {
-    const char* dm_verity_mode;
+    const char* dm_verity_mode = NULL;
     char* new_ret;
 
     switch (resolved_hashtree_error_mode) {
@@ -398,6 +398,9 @@ AvbSlotVerifyResult avb_append_options(
       case AVB_HASHTREE_ERROR_MODE_PANIC:
         verity_mode = "panicking";
         dm_verity_mode = "panic_on_corruption";
+        break;
+      default:
+        avb_assert_not_reached();
         break;
     }
     new_ret = avb_replace(
