@@ -399,6 +399,9 @@ AvbSlotVerifyResult avb_append_options(
         verity_mode = "panicking";
         dm_verity_mode = "panic_on_corruption";
         break;
+      default:
+        avb_assert_not_reached();
+        break;
     }
     new_ret = avb_replace(
         slot_data->cmdline, "$(ANDROID_VERITY_MODE)", dm_verity_mode);
