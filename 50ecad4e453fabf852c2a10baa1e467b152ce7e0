@@ -70,6 +70,24 @@
       "parentUuid": "535e1484_07f94cab",
       "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "e70cba87_966514e4",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1727050
+      },
+      "writtenOn": "2025-07-17T16:42:52Z",
+      "side": 1,
+      "message": "oh, the default is still an issue, nvm on the abandon. I\u0027ll update acordingly.",
+      "parentUuid": "044ef671_cb6b12c5",
+      "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
