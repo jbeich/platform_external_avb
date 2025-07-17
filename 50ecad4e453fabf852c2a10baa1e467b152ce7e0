@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "20ab1763_d9e238d8",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-07-17T13:03:21Z",
+      "side": 1,
+      "message": "leave this out, so the compiler will catch any _actual_ mistake?",
+      "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
