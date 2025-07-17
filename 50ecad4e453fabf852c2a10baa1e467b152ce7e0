@@ -52,6 +52,24 @@
       "parentUuid": "b2d3e84f_124ce719",
       "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "044ef671_cb6b12c5",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1727050
+      },
+      "writtenOn": "2025-07-17T16:41:02Z",
+      "side": 1,
+      "message": "\u003e two different bugs: 1. the default makes sure that if you add an enum value, you add a case\n\nYeah, sorry, that\u0027s what I meant when I said \"an additonal layer\". Should have worded that better.\n\n\u003e ..but that\u0027s stupid, and we should just fix that nonsense before it bites anyone. https://googleplex-android-review.git.corp.google.com/c/platform/external/avb/+/34640720\n\nWell, then I think we can abandon this patch. If we add `__builtin_trap()` then there\u0027s no more confusion for the compiler. I thought about adding this initially, but I also assumed (maybe naively) that it was defined that way for a good reason.",
+      "parentUuid": "535e1484_07f94cab",
+      "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
