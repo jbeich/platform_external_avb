@@ -399,6 +399,10 @@ AvbSlotVerifyResult avb_append_options(
         verity_mode = "panicking";
         dm_verity_mode = "panic_on_corruption";
         break;
+      default:
+        // dm_verity_mode is left uninitialized on this path, and will generate
+        // a compiler error if the enum is extended, but not handled above.
+        break;
     }
     new_ret = avb_replace(
         slot_data->cmdline, "$(ANDROID_VERITY_MODE)", dm_verity_mode);
