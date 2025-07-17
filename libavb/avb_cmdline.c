@@ -352,7 +352,7 @@ AvbSlotVerifyResult avb_append_options(
       }
     } break;
     case _AVB_ALGORITHM_NUM_TYPES:
-      avb_assert_not_reached();
+      __builtin_trap();
       break;
   }
 
@@ -393,7 +393,7 @@ AvbSlotVerifyResult avb_append_options(
       case AVB_HASHTREE_ERROR_MODE_MANAGED_RESTART_AND_EIO:
         // Should never get here because MANAGED_RESTART_AND_EIO is
         // remapped by avb_manage_hashtree_error_mode().
-        avb_assert_not_reached();
+        __builtin_trap();
         break;
       case AVB_HASHTREE_ERROR_MODE_PANIC:
         verity_mode = "panicking";
