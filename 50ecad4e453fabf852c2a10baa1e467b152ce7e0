@@ -34,6 +34,24 @@
       "parentUuid": "20ab1763_d9e238d8",
       "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "535e1484_07f94cab",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-07-17T16:18:56Z",
+      "side": 1,
+      "message": "two different bugs: 1. the default makes sure that if you add an enum value, you add a case. 2. not default-initializing dm_verity_mode makes sure that if you add a case, you assign to dm_verity_mode (since that\u0027s effectively what this code is doing --- translating the enum to a string).\n\n\u003e avb_assert_not_reached() seems to only be defined in debug builds (otherwise its an empty statement)\n\n...but that\u0027s stupid, and we should just fix that nonsense before it bites anyone. https://googleplex-android-review.git.corp.google.com/c/platform/external/avb/+/34640720",
+      "parentUuid": "b2d3e84f_124ce719",
+      "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
