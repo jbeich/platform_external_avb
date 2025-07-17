@@ -394,10 +394,17 @@ AvbSlotVerifyResult avb_append_options(
         // Should never get here because MANAGED_RESTART_AND_EIO is
         // remapped by avb_manage_hashtree_error_mode().
         avb_assert_not_reached();
+        // avb_assert_not_reached() is only defined under AVB_ENABLE_DEBUG, so
+        // we need to set dm_verity_mode to avoid an uninitialized variable
+        // error when it is not defined.
+        dm_verity_mode = NULL;
         break;
       case AVB_HASHTREE_ERROR_MODE_PANIC:
         verity_mode = "panicking";
         dm_verity_mode = "panic_on_corruption";
+        break;
+      default:
+        avb_assert_not_reached();
         break;
     }
     new_ret = avb_replace(
