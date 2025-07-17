@@ -16,6 +16,24 @@
       "message": "leave this out, so the compiler will catch any _actual_ mistake?",
       "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b2d3e84f_124ce719",
+        "filename": "libavb/avb_cmdline.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 363,
+      "author": {
+        "id": 1727050
+      },
+      "writtenOn": "2025-07-17T15:31:58Z",
+      "side": 1,
+      "message": "Not sure I follow. I thought the `default` case was just for potential new enum members, and was an additional layer you wanted here.`avb_assert_not_reached()` seems to only be defined in debug builds (otherwise its an empty statement), which is fine, but the use of `dm_verity_mode` on line 407 will be uninitialized in release builds.\n\nIf you don\u0027t want the default value, then I guess we can initialize it on the `AVB_HASHTREE_ERROR_MODE_MANAGED_RESTART_AND_EIO` arm, that way you\u0027d still catch bugs of this nature. WDYT?",
+      "parentUuid": "20ab1763_d9e238d8",
+      "revId": "50ecad4e453fabf852c2a10baa1e467b152ce7e0",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
