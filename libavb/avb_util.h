@@ -85,15 +85,6 @@ extern "C" {
     }                                        \
   } while (0)
 
-/* Aborts the program if reached.
- *
- * This has no effect unless AVB_ENABLE_DEBUG is defined.
- */
-#define avb_assert_not_reached()         \
-  do {                                   \
-    avb_fatal("assert_not_reached()\n"); \
-  } while (0)
-
 /* Print functions, used for diagnostics.
  *
  * These have no effect unless AVB_ENABLE_DEBUG is defined.
@@ -104,7 +95,6 @@ extern "C" {
   } while (0)
 #else
 #define avb_assert(expr)
-#define avb_assert_not_reached()
 #define avb_debug(message, ...)
 #endif
 
