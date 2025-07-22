@@ -57,6 +57,30 @@
       ],
       "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "86485a73_9f8f1a92",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1893074
+      },
+      "writtenOn": "2025-07-22T18:42:28Z",
+      "side": 1,
+      "message": "Since we explicitly pass the expected size, my opinion we should avoid auto truncate the buffer on rust bindings side and allow libavb to fail in case buffer with wrong size is returned",
+      "parentUuid": "6ef609ba_321778d8",
+      "range": {
+        "startLine": 78,
+        "startChar": 23,
+        "endLine": 78,
+        "endChar": 48
+      },
+      "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
