@@ -153,6 +153,30 @@
       },
       "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "c94a1da0_c72cf138",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-07-22T22:51:39Z",
+      "side": 1,
+      "message": "Thanks, that makes sense.\n\nOne problem is that I think this CL as-is will cause some breakages. For example pvmfw at least uses this interface (https://cs.android.com/android/platform/superproject/main/+/main:packages/modules/Virtualization/guest/pvmfw/avb/src/ops.rs;l\u003d93), and I\u0027m not sure who else. I think that one might be able to be updated at the same time when posting this CL on internal main, but when this automerges out to GBL it will cause a breakage there as well which I don\u0027t think we can easily prevent.\n\nIf you want to babysit this CL a bit and fix the breakages as they come up that\u0027s probably OK, but a soft-transition might be simpler, such as adding this as a new optional API for now:\n\n```\nfn get_preloaded_partition_with_size(...) {\n  // Default implementation falls back to get_preloaded_partition(), ignoring\n  // the size parameter.\n  self.get_preloaded_partition(...);\n}\n```\n\nBut this will take more steps to transition clients then remove the temporary API. Up to you which way to go.",
+      "parentUuid": "89b1f232_115f55a2",
+      "range": {
+        "startLine": 78,
+        "startChar": 23,
+        "endLine": 78,
+        "endChar": 48
+      },
+      "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
