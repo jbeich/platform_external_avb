@@ -1,0 +1,45 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ef609ba_321778d8",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-07-22T17:53:10Z",
+      "side": 1,
+      "message": "Are short reads allowed here like they are in libavb (e.g. if there\u0027s less preloaded data than asked for)? What should the backend do if they have more data than `num_bytes`, return an error?",
+      "range": {
+        "startLine": 78,
+        "startChar": 23,
+        "endLine": 78,
+        "endChar": 48
+      },
+      "fixSuggestions": [
+        {
+          "fixId": "cfc58379_7242f7b2",
+          "description": "prompt_to_edit API",
+          "replacements": [
+            {
+              "path": "rust/src/ops.rs",
+              "range": {
+                "startLine": 78,
+                "startChar": 0,
+                "endLine": 79,
+                "endChar": 0
+              },
+              "replacement": "    /// * `num_bytes`: Number of bytes expected. If the preloaded partition is larger than this\n    ///   value, the returned slice will be truncated to this size. If the preloaded partition is\n    ///   smaller than this value, the verification will fail.\n"
+            }
+          ]
+        }
+      ],
+      "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
