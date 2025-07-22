@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "2d564e3e_49b85bde",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1078119
+      },
+      "writtenOn": "2025-07-22T17:55:08Z",
+      "side": 1,
+      "message": "Oops didn\u0027t realize this was in libavb. These changes should land in internal first now and then will automerge out (for example http://ag/33177691)",
+      "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "6ef609ba_321778d8",
