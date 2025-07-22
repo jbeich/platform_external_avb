@@ -129,6 +129,30 @@
       },
       "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "89b1f232_115f55a2",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2029640
+      },
+      "writtenOn": "2025-07-22T21:26:56Z",
+      "side": 1,
+      "message": "The idea is to allow backend to lazily fill preloaded buffer when this interface is called, as a way to achieve loading partition to designated buffer. This parameter tells backend how much data is enough to read\n\nThe CL for this approach is at https://r.android.com/3706006",
+      "parentUuid": "79056457_833ae38c",
+      "range": {
+        "startLine": 78,
+        "startChar": 23,
+        "endLine": 78,
+        "endChar": 48
+      },
+      "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
