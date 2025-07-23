@@ -177,6 +177,30 @@
       },
       "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "d63dd4db_82bcc5fb",
+        "filename": "rust/src/ops.rs",
+        "patchSetId": 2
+      },
+      "lineNbr": 78,
+      "author": {
+        "id": 2029640
+      },
+      "writtenOn": "2025-07-23T17:18:14Z",
+      "side": 1,
+      "message": "Thanks for the information. I\u0027ll try how hard it is to change directly from internal branch.",
+      "parentUuid": "c94a1da0_c72cf138",
+      "range": {
+        "startLine": 78,
+        "startChar": 23,
+        "endLine": 78,
+        "endChar": 48
+      },
+      "revId": "160c69e2de476d16378ef756c36725ce40d3e761",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
