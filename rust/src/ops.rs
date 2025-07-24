@@ -22,7 +22,6 @@ extern crate alloc;
 use crate::{error::result_to_io_enum, CertOps, IoError, IoResult, SHA256_DIGEST_SIZE};
 use avb_bindgen::{AvbCertOps, AvbCertPermanentAttributes, AvbIOResult, AvbOps};
 use core::{
-    cmp::min,
     ffi::{c_char, c_void, CStr},
     marker::PhantomPinned,
     pin::Pin,
@@ -75,13 +74,18 @@ pub trait Ops<'a> {
     ///
     /// # Arguments
     /// * `partition`: partition name to read from.
+    /// * `num_bytes`: Number of bytes expected to read.
     ///
     /// # Returns
     /// * A reference to the entire partition contents if the partition has been preloaded.
     /// * `Err<IoError::NotImplemented>` if the requested partition has not been preloaded;
     ///   verification will next attempt to load the partition via `read_from_partition()`.
     /// * Any other `Err<IoError>` if an error occurred; verification will exit immediately.
-    fn get_preloaded_partition(&mut self, _partition: &CStr) -> IoResult<&'a [u8]> {
+    fn get_preloaded_partition(
+        &mut self,
+        _partition: &CStr,
+        _num_bytes: usize,
+    ) -> IoResult<&'a [u8]> {
         Err(IoError::NotImplemented)
     }
 
@@ -573,7 +577,7 @@ unsafe fn try_get_preloaded_partition(
     // * the returned `&CStr` is not held past the scope of this callback.
     let partition = unsafe { CStr::from_ptr(partition) };
 
-    match ops.get_preloaded_partition(partition) {
+    match ops.get_preloaded_partition(partition, num_bytes) {
         // SAFETY:
         // * we've checked that the pointers are non-NULL.
         // * libavb gives us properly-aligned and sized `out` vars.
@@ -585,11 +589,7 @@ unsafe fn try_get_preloaded_partition(
                 // TODO: can we change the libavb API to take a const*?
                 contents.as_ptr() as *mut u8,
             );
-            ptr::write(
-                out_num_bytes_preloaded,
-                // Truncate here if necessary, we may have more preloaded data than libavb needs.
-                min(contents.len(), num_bytes),
-            );
+            ptr::write(out_num_bytes_preloaded, contents.len());
         },
         // No-op if this partition is not preloaded, we've already reset the out variables to
         // indicate preloaded data is not available.
