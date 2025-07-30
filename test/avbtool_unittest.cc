@@ -3606,4 +3606,343 @@ TEST_F(AvbToolTest, MakeCertUnlockCredential) {
       0, "diff test/data/cert_unlock_credential.bin %s", output_path.c_str());
 }
 
+class AvbToolTest_UpdatePartitionDescriptor : public AvbToolTest {
+ protected:
+  std::string GeneratePartitionImageWithHashFooter(
+      const std::string file_name,
+      const std::string partition_name,
+      size_t image_size) {
+    std::string path = GenerateImage(file_name, image_size);
+    size_t partition_size = 1024 * 1024;
+    EXPECT_COMMAND(0,
+                   "./avbtool.py add_hash_footer"
+                   " --image %s"
+                   " --partition_name %s"
+                   " --partition_size %zd"
+                   " --salt deadbeef"
+                   " --algorithm SHA512_RSA4096 "
+                   " --key test/data/testkey_rsa4096.pem",
+                   path.c_str(),
+                   partition_name.c_str(),
+                   partition_size);
+    return path;
+  }
+
+  std::string GeneratePartitionImageWithHashtreeFooter(
+      const std::string file_name,
+      const std::string partition_name,
+      size_t image_size) {
+    std::string path = GenerateImage(file_name, image_size);
+    size_t partition_size = 1024 * 1024;
+    EXPECT_COMMAND(0,
+                   "./avbtool.py add_hashtree_footer"
+                   " --image %s"
+                   " --partition_name %s"
+                   " --partition_size %zd"
+                   " --hash_algorithm sha256"
+                   " --salt deadbeef"
+                   " --algorithm SHA512_RSA4096 "
+                   " --key test/data/testkey_rsa4096.pem",
+                   path.c_str(),
+                   partition_name.c_str(),
+                   partition_size);
+    return path;
+  }
+};
+
+TEST_F(AvbToolTest_UpdatePartitionDescriptor, HashDescriptor) {
+  std::string boot_path =
+      GeneratePartitionImageWithHashFooter("boot.img", "boot", 1024);
+  std::string boot_new_path =
+      GeneratePartitionImageWithHashFooter("boot_new.img", "boot", 2048);
+  std::string system_dlkm_path = GeneratePartitionImageWithHashtreeFooter(
+      "system_dlkm.img", "system_dlkm", 1024);
+
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s "
+                                  "--include_descriptors_from_image %s",
+                                  boot_path.c_str(),
+                                  system_dlkm_path.c_str()));
+
+  std::filesystem::path updated_vbmeta_path = testdir_ / "updated-vbmeta.img";
+  EXPECT_COMMAND(0,
+                 "./avbtool.py update_partition_descriptor"
+                 " --image %s"
+                 " --partition_image %s"
+                 " --output %s"
+                 " --algorithm SHA512_RSA4096"
+                 " --key test/data/testkey_rsa4096.pem",
+                 vbmeta_image_path_.c_str(),
+                 boot_new_path.c_str(),
+                 updated_vbmeta_path.c_str());
+
+  // Before the update.
+  ASSERT_EQ(
+      "Minimum libavb version:   1.0\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          960 bytes\n"
+      "Public key (sha1):        cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Rollback Index Location:  0\n"
+      "Release String:           'avbtool 1.3.0'\n"
+      "Descriptors:\n"
+      "    Hash descriptor:\n"
+      "      Image Size:            1024 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        boot\n"
+      "      Salt:                  deadbeef\n"
+      "      Digest:                "
+      "49eac946ae3d0f9f86a4f19b5098bc6c4a57f5adc0f8f74ee1b1736846eae1ea\n"
+      "      Flags:                 0\n"
+      "    Hashtree descriptor:\n"
+      "      Version of dm-verity:  1\n"
+      "      Image Size:            4096 bytes\n"
+      "      Tree Offset:           4096\n"
+      "      Tree Size:             0 bytes\n"
+      "      Data Block Size:       4096 bytes\n"
+      "      Hash Block Size:       4096 bytes\n"
+      "      FEC num roots:         2\n"
+      "      FEC offset:            4096\n"
+      "      FEC size:              8192 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        system_dlkm\n"
+      "      Salt:                  deadbeef\n"
+      "      Root Digest:           "
+      "3b7f978a5a9f0d993840605033e2dec3ddc446d3630d4b26906419798881ca87\n"
+      "      Flags:                 0\n",
+      InfoImage(vbmeta_image_path_.string()));
+
+  // After the update.
+  ASSERT_EQ(
+      "Minimum libavb version:   1.0\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     576 bytes\n"
+      "Auxiliary Block:          1472 bytes\n"
+      "Public key (sha1):        2597c218aae470a130f61162feaae70afd97f011\n"
+      "Algorithm:                SHA512_RSA4096\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Rollback Index Location:  0\n"
+      "Release String:           'avbtool 1.3.0'\n"
+      "Descriptors:\n"
+      "    Hash descriptor:\n"
+      "      Image Size:            2048 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        boot\n"
+      "      Salt:                  deadbeef\n"
+      "      Digest:                "
+      "35a5458011ccc1cfdf750547d5238cd7ad4d2aae9f868f9455ac140493a29c9d\n"
+      "      Flags:                 0\n"
+      "    Hashtree descriptor:\n"
+      "      Version of dm-verity:  1\n"
+      "      Image Size:            4096 bytes\n"
+      "      Tree Offset:           4096\n"
+      "      Tree Size:             0 bytes\n"
+      "      Data Block Size:       4096 bytes\n"
+      "      Hash Block Size:       4096 bytes\n"
+      "      FEC num roots:         2\n"
+      "      FEC offset:            4096\n"
+      "      FEC size:              8192 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        system_dlkm\n"
+      "      Salt:                  deadbeef\n"
+      "      Root Digest:           "
+      "3b7f978a5a9f0d993840605033e2dec3ddc446d3630d4b26906419798881ca87\n"
+      "      Flags:                 0\n",
+      InfoImage(updated_vbmeta_path.string()));
+}
+
+TEST_F(AvbToolTest_UpdatePartitionDescriptor, HashtreeDescriptor) {
+  std::string boot_path =
+      GeneratePartitionImageWithHashFooter("boot.img", "boot", 1024);
+  std::string system_dlkm_path = GeneratePartitionImageWithHashtreeFooter(
+      "system_dlkm.img", "system_dlkm", 1024);
+  std::string system_dlkm_new_path = GeneratePartitionImageWithHashtreeFooter(
+      "system_dlkm_new.img", "system_dlkm", 2048);
+
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s "
+                                  "--include_descriptors_from_image %s",
+                                  boot_path.c_str(),
+                                  system_dlkm_path.c_str()));
+
+  std::filesystem::path updated_vbmeta_path = testdir_ / "updated-vbmeta.img";
+  EXPECT_COMMAND(0,
+                 "./avbtool.py update_partition_descriptor"
+                 " --image %s"
+                 " --partition_image %s"
+                 " --output %s"
+                 " --algorithm SHA512_RSA4096"
+                 " --key test/data/testkey_rsa4096.pem",
+                 vbmeta_image_path_.c_str(),
+                 system_dlkm_new_path.c_str(),
+                 updated_vbmeta_path.c_str());
+
+  // Before the update.
+  ASSERT_EQ(
+      "Minimum libavb version:   1.0\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     320 bytes\n"
+      "Auxiliary Block:          960 bytes\n"
+      "Public key (sha1):        cdbb77177f731920bbe0a0f94f84d9038ae0617d\n"
+      "Algorithm:                SHA256_RSA2048\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Rollback Index Location:  0\n"
+      "Release String:           'avbtool 1.3.0'\n"
+      "Descriptors:\n"
+      "    Hash descriptor:\n"
+      "      Image Size:            1024 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        boot\n"
+      "      Salt:                  deadbeef\n"
+      "      Digest:                "
+      "49eac946ae3d0f9f86a4f19b5098bc6c4a57f5adc0f8f74ee1b1736846eae1ea\n"
+      "      Flags:                 0\n"
+      "    Hashtree descriptor:\n"
+      "      Version of dm-verity:  1\n"
+      "      Image Size:            4096 bytes\n"
+      "      Tree Offset:           4096\n"
+      "      Tree Size:             0 bytes\n"
+      "      Data Block Size:       4096 bytes\n"
+      "      Hash Block Size:       4096 bytes\n"
+      "      FEC num roots:         2\n"
+      "      FEC offset:            4096\n"
+      "      FEC size:              8192 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        system_dlkm\n"
+      "      Salt:                  deadbeef\n"
+      "      Root Digest:           "
+      "3b7f978a5a9f0d993840605033e2dec3ddc446d3630d4b26906419798881ca87\n"
+      "      Flags:                 0\n",
+      InfoImage(vbmeta_image_path_.string()));
+
+  // After the update.
+  ASSERT_EQ(
+      "Minimum libavb version:   1.0\n"
+      "Header Block:             256 bytes\n"
+      "Authentication Block:     576 bytes\n"
+      "Auxiliary Block:          1472 bytes\n"
+      "Public key (sha1):        2597c218aae470a130f61162feaae70afd97f011\n"
+      "Algorithm:                SHA512_RSA4096\n"
+      "Rollback Index:           0\n"
+      "Flags:                    0\n"
+      "Rollback Index Location:  0\n"
+      "Release String:           'avbtool 1.3.0'\n"
+      "Descriptors:\n"
+      "    Hash descriptor:\n"
+      "      Image Size:            1024 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        boot\n"
+      "      Salt:                  deadbeef\n"
+      "      Digest:                "
+      "49eac946ae3d0f9f86a4f19b5098bc6c4a57f5adc0f8f74ee1b1736846eae1ea\n"
+      "      Flags:                 0\n"
+      "    Hashtree descriptor:\n"
+      "      Version of dm-verity:  1\n"
+      "      Image Size:            4096 bytes\n"
+      "      Tree Offset:           4096\n"
+      "      Tree Size:             0 bytes\n"
+      "      Data Block Size:       4096 bytes\n"
+      "      Hash Block Size:       4096 bytes\n"
+      "      FEC num roots:         2\n"
+      "      FEC offset:            4096\n"
+      "      FEC size:              8192 bytes\n"
+      "      Hash Algorithm:        sha256\n"
+      "      Partition Name:        system_dlkm\n"
+      "      Salt:                  deadbeef\n"
+      "      Root Digest:           "
+      "0a94df194b3dbccd01b44a1a9056425dbb4c526a70f2bf9622ced97919c4fc28\n"
+      "      Flags:                 0\n",
+      InfoImage(updated_vbmeta_path.string()));
+}
+
+TEST_F(AvbToolTest_UpdatePartitionDescriptor,
+       NoDescriptorMatchesPartitionName) {
+  std::string boot_path =
+      GeneratePartitionImageWithHashFooter("boot.img", "boot", 1024);
+
+  std::string vendor_boot_path = GeneratePartitionImageWithHashFooter(
+      "vendor_boot.img", "vendor_boot", 1024);
+
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s",
+                                  vendor_boot_path.c_str()));
+
+  std::filesystem::path updated_vbmeta_path = testdir_ / "updated-vbmeta.img";
+  std::filesystem::path out_path = testdir_ / "out.txt";
+  std::string out;
+
+  EXPECT_COMMAND(1,
+                 "./avbtool.py update_partition_descriptor"
+                 " --image %s"
+                 " --partition_image %s"
+                 " --output %s"
+                 " --algorithm SHA512_RSA4096"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " > %s 2>&1",
+                 vbmeta_image_path_.c_str(),
+                 boot_path.c_str(),
+                 updated_vbmeta_path.c_str(),
+                 out_path.c_str());
+  ASSERT_TRUE(android::base::ReadFileToString(out_path.string(), &out));
+  EXPECT_EQ(
+      "./avbtool.py: Given image does not contain a hash or hashtree descriptor"
+      " matching the given partition image.\n",
+      out);
+}
+
+TEST_F(AvbToolTest_UpdatePartitionDescriptor, FoundDescriptorOfTheWrongKind) {
+  std::string boot_hash_path = GeneratePartitionImageWithHashFooter(
+      "boot_with_hash_descriptor.img", "boot", 1024);
+
+  std::string boot_hashtree_path = GeneratePartitionImageWithHashtreeFooter(
+      "boot_with_hashtree_descriptor.img", "boot", 1024);
+
+  GenerateVBMetaImage(
+      "vbmeta.img",
+      "SHA256_RSA2048",
+      0,
+      "test/data/testkey_rsa2048.pem",
+      android::base::StringPrintf("--include_descriptors_from_image %s",
+                                  boot_hash_path.c_str()));
+
+  std::filesystem::path updated_vbmeta_path = testdir_ / "updated-vbmeta.img";
+  std::filesystem::path out_path = testdir_ / "out.txt";
+  std::string out;
+
+  EXPECT_COMMAND(1,
+                 "./avbtool.py update_partition_descriptor"
+                 " --image %s"
+                 " --partition_image %s"
+                 " --output %s"
+                 " --algorithm SHA512_RSA4096"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " > %s 2>&1",
+                 vbmeta_image_path_.c_str(),
+                 boot_hashtree_path.c_str(),
+                 updated_vbmeta_path.c_str(),
+                 out_path.c_str());
+  ASSERT_TRUE(android::base::ReadFileToString(out_path.string(), &out));
+  EXPECT_EQ(
+      "./avbtool.py: Given image does not contain a hash or hashtree descriptor"
+      " matching the given partition image.\n",
+      out);
+}
+
 }  // namespace avb

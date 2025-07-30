@@ -4046,6 +4046,123 @@ class Avb(object):
                                signing_helper_with_files)
       output.write(signature)
 
+  def update_partition_descriptor(self, image, partition_image, output,
+                                  chain_partitions_use_ab,
+                                  chain_partitions_do_not_use_ab,
+                                  algorithm_name, key_path,
+                                  public_key_metadata_path, rollback_index,
+                                  flags, rollback_index_location, props,
+                                  props_from_file, kernel_cmdlines,
+                                  setup_rootfs_from_kernel,
+                                  include_descriptors_from_image,
+                                  signing_helper, signing_helper_with_files,
+                                  release_string, append_to_release_string,
+                                  print_required_libavb_version):
+    """Implements the 'update_partition_descriptor' command.
+
+    This command supports the use case where only a subset of a device's
+    partitions are flashed. This requires updating the device's vbmeta
+    partition in order to prevent AVB errors when booting in normal
+    (i.e. non-developer) mode. Specifically, the hash or hashtree descriptors
+    corresponding to the partitions being flashed must be updated.
+
+    Said use case is common in kernel development, where building only the
+    kernel-related partitions can be much faster than building a full OS image.
+
+    Arguments:
+      image: The VBMeta image to update.
+      partition_image: The partition image to get the hash or hashtree descriptor from.
+      output: Output file name.
+      chain_partitions_use_ab: List of partitions to chain or None.
+      chain_partitions_do_not_use_ab: List of partitions to chain which does not use A/B or None.
+      algorithm_name: Name of algorithm to use.
+      key_path: Path to key to use or None.
+      public_key_metadata_path: Path to public key metadata or None.
+      rollback_index: The rollback index to use.
+      flags: Flags value to use in the image.
+      rollback_index_location: Location of the main vbmeta rollback index.
+      props: Properties to insert (list of strings of the form 'key:value').
+      props_from_file: Properties to insert (list of strings 'key:<path>').
+      kernel_cmdlines: Kernel cmdlines to insert (list of strings).
+      setup_rootfs_from_kernel: None or file to generate from.
+      include_descriptors_from_image: List of file objects with descriptors.
+      signing_helper: Program which signs a hash and return signature.
+      signing_helper_with_files: Same as signing_helper but uses files instead.
+      release_string: None or avbtool release string to use instead of default.
+      append_to_release_string: None or string to append.
+      print_required_libavb_version: True to only print required libavb version.
+    """
+
+    partition_image_handler = ImageHandler(partition_image.name, read_only=True)
+    (_, partition_image_header, partition_image_descriptors, _) = (
+      self._parse_image(partition_image_handler)
+    )
+
+    # Extract descriptor from partition image.
+    partition_descriptors = [
+        d for d in partition_image_descriptors
+        if isinstance(d, AvbHashDescriptor) or isinstance(d, AvbHashtreeDescriptor)
+    ]
+    if not partition_descriptors:
+      raise AvbError('Given partition image does not contain a hash or '
+                     'hashtree descriptor.')
+    if len(partition_descriptors) > 1:
+          raise AvbError('Given partition image contains more than one hash '
+                        'or hashtree descriptor.')
+    partition_descriptor = partition_descriptors[0]
+
+    image_handler = ImageHandler(image.name, read_only=True)
+    (_, header, descriptors, _) = self._parse_image(image_handler)
+
+    # Get the indexes of the descriptors to replace.
+    descriptor_indexes_to_replace = [
+        i for i, d in enumerate(descriptors)
+        if type(d) == type(partition_descriptor) and
+        d.partition_name == partition_descriptor.partition_name
+    ]
+
+    if len(descriptor_indexes_to_replace) == 0:
+      raise AvbError('Given image does not contain a hash or hashtree '
+                     'descriptor matching the given partition image.')
+    if len(descriptor_indexes_to_replace) > 1:
+      raise AvbError('Found multiple hash or hashtree descriptors '
+                     'matching the given partition image.')
+
+    # Replace the old partition descriptor with the new one.
+    descriptors[descriptor_indexes_to_replace[0]] = partition_descriptor
+
+    # If we're asked to calculate minimum required libavb version, we're done.
+    tmp_header = AvbVBMetaHeader()
+    tmp_header.required_libavb_version_major = header.required_libavb_version_major
+    if rollback_index_location > 0:
+      tmp_header.bump_required_libavb_version_minor(2)
+    if chain_partitions_do_not_use_ab:
+      tmp_header.bump_required_libavb_version_minor(3)
+
+    # Use the bump logic in AvbVBMetaHeader to calculate the max required
+    # version of all included descriptors.
+    tmp_header.bump_required_libavb_version_minor(
+        partition_image_header.required_libavb_version_minor)
+
+    if print_required_libavb_version:
+      print('1.{}'.format(tmp_header.required_libavb_version_minor))
+      return
+
+    if not flags:
+      flags = header.flags
+    ht_desc_to_setup = None
+    vbmeta_blob = self._generate_vbmeta_blob(
+        algorithm_name, key_path, public_key_metadata_path, descriptors,
+        chain_partitions_use_ab, chain_partitions_do_not_use_ab,
+        rollback_index, flags, rollback_index_location, props, props_from_file,
+        kernel_cmdlines, setup_rootfs_from_kernel, ht_desc_to_setup,
+        include_descriptors_from_image, signing_helper,
+        signing_helper_with_files, release_string,
+        append_to_release_string, tmp_header.required_libavb_version_minor)
+
+    # Write entire vbmeta blob (header, authentication, auxiliary).
+    output.seek(0)
+    output.write(vbmeta_blob)
 
 def calc_hash_level_offsets(image_size, block_size, digest_size):
   """Calculate the offsets of all the hash-levels in a Merkle-tree.
@@ -4830,6 +4947,26 @@ class AvbTool(object):
                             required=False)
     sub_parser.set_defaults(func=self.make_cert_unlock_credential)
 
+    sub_parser = subparsers.add_parser(
+        'update_partition_descriptor',
+        help='Update a partition\'s hash or hashtree descriptor in a VBMeta '
+             'image.')
+    sub_parser.add_argument('--image',
+                            type=argparse.FileType('rb'),
+                            help='The VBMeta image to update.',
+                            required=True)
+    sub_parser.add_argument('--partition_image',
+                            type=argparse.FileType('rb'),
+                            help='The partition image to get the hash or '
+                                 'hashtree descriptor from.',
+                            required=True)
+    sub_parser.add_argument('--output',
+                            type=argparse.FileType('wb'),
+                            help='Output file name.',
+                            required=True)
+    self._add_common_args(sub_parser)
+    sub_parser.set_defaults(func=self.update_partition_descriptor)
+
     args = parser.parse_args(argv[1:])
     try:
       args.func(args)
@@ -5041,6 +5178,27 @@ Please use '--hash_algorithm sha256'.
         args.unlock_key,
         args.signing_helper,
         args.signing_helper_with_files)
+
+  def update_partition_descriptor(self, args):
+    """Implements the 'update_partition_descriptor' sub-command."""
+    self.avb.update_partition_descriptor(
+        args.image,
+        args.partition_image,
+        args.output,
+        args.chain_partition,
+        args.chain_partition_do_not_use_ab,
+        args.algorithm, args.key,
+        args.public_key_metadata, args.rollback_index,
+        args.flags, args.rollback_index_location,
+        args.prop, args.prop_from_file,
+        args.kernel_cmdline,
+        args.setup_rootfs_from_kernel,
+        args.include_descriptors_from_image,
+        args.signing_helper,
+        args.signing_helper_with_files,
+        args.internal_release_string,
+        args.append_to_release_string,
+        args.print_required_libavb_version)
 
 
 if __name__ == '__main__':
