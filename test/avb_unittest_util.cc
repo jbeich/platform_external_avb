@@ -36,6 +36,10 @@ std::string mem_to_hexstring(const uint8_t* data, size_t len) {
   return ret;
 }
 
+std::string mem_to_hexstring(const std::vector<uint8_t>& data) {
+  return mem_to_hexstring(data.data(), data.size());
+}
+
 std::string string_trim(const std::string& str) {
   size_t first = str.find_first_not_of(" \t\n");
   if (first == std::string::npos) {
@@ -87,6 +91,26 @@ std::string BaseAvbToolTest::CalcVBMetaDigest(const std::string& vbmeta_image,
   EXPECT_TRUE(android::base::ReadFileToString(vbmeta_digest_path.string(),
                                               &vbmeta_digest_data));
   return string_trim(vbmeta_digest_data);
+}
+
+std::vector<uint8_t> BaseAvbToolTest::CalcVBMetaDigestRaw(
+    const std::string& vbmeta_image, const std::string& digest_alg) {
+  std::filesystem::path vbmeta_path = testdir_ / vbmeta_image;
+  std::filesystem::path vbmeta_digest_path = testdir_ / "vbmeta_digest_raw";
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py calculate_vbmeta_digest --image %s --hash_algorithm %s"
+      " --output %s --format raw",
+      vbmeta_path.c_str(),
+      digest_alg.c_str(),
+      vbmeta_digest_path.c_str());
+
+  std::string vbmeta_digest_data;
+  EXPECT_TRUE(android::base::ReadFileToString(vbmeta_digest_path.string(),
+                                              &vbmeta_digest_data));
+  std::vector<uint8_t> digest{vbmeta_digest_data.begin(),
+                              vbmeta_digest_data.end()};
+  return digest;
 }
 
 void BaseAvbToolTest::GenerateVBMetaImage(
