@@ -4493,7 +4493,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Output file name.',
                             type=argparse.FileType('wb'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.set_defaults(func=self.generate_test_image)
 
     sub_parser = subparsers.add_parser('version',
@@ -4718,7 +4718,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Write info to file',
                             type=argparse.FileType('wt'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.add_argument('--cert', '--atx',
                             help=('Show information about the avb_cert '
                                   'extension certificate.'),
@@ -4765,7 +4765,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Write info to file',
                             type=argparse.FileType('wt'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.add_argument('--json',
                             help=('Print output as JSON'),
                             action='store_true')
@@ -4784,7 +4784,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Write hex digest to file (default: stdout)',
                             type=argparse.FileType('wt'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.set_defaults(func=self.calculate_vbmeta_digest)
 
     sub_parser = subparsers.add_parser(
@@ -4800,7 +4800,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Write cmdline to file (default: stdout)',
                             type=argparse.FileType('wt'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.set_defaults(func=self.calculate_kernel_cmdline)
 
     sub_parser = subparsers.add_parser('set_ab_metadata',
@@ -4826,7 +4826,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Write certificate to file',
                             type=argparse.FileType('wb'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.add_argument('--subject',
                             help=('Path to subject file'),
                             type=argparse.FileType('rb'),
@@ -4880,7 +4880,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Write attributes to file',
                             type=argparse.FileType('wb'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.add_argument('--root_authority_key',
                             help='Path to authority RSA public key file',
                             type=argparse.FileType('rb'),
@@ -4898,7 +4898,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Write metadata to file',
                             type=argparse.FileType('wb'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.add_argument('--intermediate_key_certificate',
                             help='Path to intermediate key certificate file',
                             type=argparse.FileType('rb'),
@@ -4916,7 +4916,7 @@ class AvbTool(object):
     sub_parser.add_argument('--output',
                             help='Write credential to file',
                             type=argparse.FileType('wb'),
-                            default=sys.stdout)
+                            default='-')
     sub_parser.add_argument('--intermediate_key_certificate',
                             help='Path to intermediate key certificate file',
                             type=argparse.FileType('rb'),
