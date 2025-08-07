@@ -2674,13 +2674,14 @@ class Avb(object):
             chained_image_filename, output, json_partitions, image_dir,
             image_ext)
 
-  def calculate_vbmeta_digest(self, image_filename, hash_algorithm, output):
+  def calculate_vbmeta_digest(self, image_filename, hash_algorithm, output, fmt):
     """Implements the 'calculate_vbmeta_digest' command.
 
     Arguments:
       image_filename: Image file to get information from (file object).
       hash_algorithm: Hash algorithm used.
       output: Output file to write human-readable information to (file object).
+      fmt: Format of the output.
     """
 
     image_dir = os.path.dirname(image_filename)
@@ -2715,7 +2716,12 @@ class Avb(object):
         hasher.update(ch_vbmeta_blob)
 
     digest = hasher.digest()
-    output.write('{}\n'.format(digest.hex()))
+
+    if fmt == 'hex':
+      output.write('{}\n'.format(digest.hex()).encode())
+    else:
+      raise ValueError('Unexpected output format: {}'.format(fmt))
+
 
   def calculate_kernel_cmdline(self, image_filename, hashtree_disabled, output):
     """Implements the 'calculate_kernel_cmdline' command.
@@ -4782,9 +4788,13 @@ class AvbTool(object):
                             help='Hash algorithm to use (default: sha256)',
                             default='sha256')
     sub_parser.add_argument('--output',
-                            help='Write hex digest to file (default: stdout)',
-                            type=argparse.FileType('wt'),
+                            help='Write digest to file (default: stdout)',
+                            type=argparse.FileType('wb'),
                             default='-')
+    sub_parser.add_argument('--format',
+                            help='Output format (default: hex)',
+                            choices=['hex'],
+                            default='hex')
     sub_parser.set_defaults(func=self.calculate_vbmeta_digest)
 
     sub_parser = subparsers.add_parser(
@@ -5135,7 +5145,7 @@ Please use '--hash_algorithm sha256'.
   def calculate_vbmeta_digest(self, args):
     """Implements the 'calculate_vbmeta_digest' sub-command."""
     self.avb.calculate_vbmeta_digest(args.image.name, args.hash_algorithm,
-                                     args.output)
+                                     args.output, args.format)
 
   def calculate_kernel_cmdline(self, args):
     """Implements the 'calculate_kernel_cmdline' sub-command."""
