@@ -685,11 +685,7 @@ unsafe extern "C" fn read_rollback_index(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_read_rollback_index(
-            ops,
-            rollback_index_location,
-            out_rollback_index,
-        ))
+        result_to_io_enum(try_read_rollback_index(ops, rollback_index_location, out_rollback_index))
     }
 }
 
@@ -734,11 +730,7 @@ unsafe extern "C" fn write_rollback_index(
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
     unsafe {
-        result_to_io_enum(try_write_rollback_index(
-            ops,
-            rollback_index_location,
-            rollback_index,
-        ))
+        result_to_io_enum(try_write_rollback_index(ops, rollback_index_location, rollback_index))
     }
 }
 
@@ -906,13 +898,7 @@ unsafe extern "C" fn get_size_of_partition(
     out_size_num_bytes: *mut u64,
 ) -> AvbIOResult {
     // SAFETY: see corresponding `try_*` function safety documentation.
-    unsafe {
-        result_to_io_enum(try_get_size_of_partition(
-            ops,
-            partition,
-            out_size_num_bytes,
-        ))
-    }
+    unsafe { result_to_io_enum(try_get_size_of_partition(ops, partition, out_size_num_bytes)) }
 }
 
 /// Bounces the C callback into the user-provided Rust implementation.
@@ -1180,10 +1166,7 @@ unsafe fn try_validate_public_key_for_partition(
     // * libavb gives us a properly-allocated `out_*`.
     unsafe {
         ptr::write(out_is_trusted, key_info.trusted);
-        ptr::write(
-            out_rollback_index_location,
-            key_info.rollback_index_location,
-        );
+        ptr::write(out_rollback_index_location, key_info.rollback_index_location);
     }
     Ok(())
 }
@@ -1278,7 +1261,7 @@ unsafe extern "C" fn set_key_version(
     // Ignoring the error could be a security risk, as it would silently prevent the device from
     // updating key rollback versions, so instead we panic here.
     if let Err(e) = result {
-        panic!("Fatal error in set_key_version(): {:?}", e);
+        panic!("Fatal error in set_key_version(): {e:?}");
     }
 }
 
