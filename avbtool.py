@@ -2719,6 +2719,8 @@ class Avb(object):
 
     if fmt == 'hex':
       output.write('{}\n'.format(digest.hex()).encode())
+    elif fmt == 'raw':
+      output.write(digest)
     else:
       raise ValueError('Unexpected output format: {}'.format(fmt))
 
@@ -4793,7 +4795,7 @@ class AvbTool(object):
                             default='-')
     sub_parser.add_argument('--format',
                             help='Output format (default: hex)',
-                            choices=['hex'],
+                            choices=['hex', 'raw'],
                             default='hex')
     sub_parser.set_defaults(func=self.calculate_vbmeta_digest)
 
