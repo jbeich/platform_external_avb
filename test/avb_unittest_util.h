@@ -35,6 +35,9 @@
 // Encodes |len| bytes of |data| as a lower-case hex-string.
 std::string mem_to_hexstring(const uint8_t* data, size_t len);
 
+// Encodes the bytes contained in |data| as a lower-case hex-string.
+std::string mem_to_hexstring(const std::vector<uint8_t>& data);
+
 // Trims whitespace from start and end of |str|.
 std::string string_trim(const std::string& str);
 
@@ -68,6 +71,10 @@ class BaseAvbToolTest : public ::testing::Test {
   /* Calculates the vbmeta digest using 'avbtool calc_vbmeta_digest' command. */
   std::string CalcVBMetaDigest(const std::string& vbmeta_image,
                                const std::string& digest_alg);
+
+  /* Similar to CalcVBMetaDigest but uses '--format raw'. */
+  std::vector<uint8_t> CalcVBMetaDigestRaw(const std::string& vbmeta_image,
+                                           const std::string& digest_alg);
 
   /* Generates a vbmeta image, using avbtoool, with file name
    * |image_name|. The generated vbmeta image will written to disk,
