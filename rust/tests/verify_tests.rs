@@ -21,13 +21,13 @@ use crate::{
     verify_one_image_one_vbmeta,
 };
 use avb::{
-    slot_verify, ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor,
-    HashDescriptor, HashDescriptorFlags, HashtreeDescriptor, HashtreeDescriptorFlags,
-    HashtreeErrorMode, IoError, KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags,
-    PropertyDescriptor, SlotVerifyData, SlotVerifyError, SlotVerifyFlags, SlotVerifyResult,
+    ChainPartitionDescriptor, ChainPartitionDescriptorFlags, Descriptor, HashDescriptor,
+    HashDescriptorFlags, HashtreeDescriptor, HashtreeDescriptorFlags, HashtreeErrorMode, IoError,
+    KernelCommandlineDescriptor, KernelCommandlineDescriptorFlags, PropertyDescriptor,
+    SlotVerifyData, SlotVerifyError, SlotVerifyFlags, SlotVerifyResult, slot_verify,
 };
 use hex::decode;
-use std::{ffi::CString, fs};
+use std::{ffi::CString, fs, vec::Vec};
 #[cfg(feature = "uuid")]
 use uuid::uuid;
 
@@ -135,11 +135,12 @@ fn one_image_one_vbmeta_passes_verification_with_correct_data() {
     assert_eq!(data.ab_suffix().to_bytes(), b"");
     // We don't care about the exact commandline, just search for a substring we know will
     // exist to make sure the commandline is being provided to the caller correctly.
-    assert!(data
-        .cmdline()
-        .to_str()
-        .unwrap()
-        .contains("androidboot.vbmeta.device_state=locked"));
+    assert!(
+        data.cmdline()
+            .to_str()
+            .unwrap()
+            .contains("androidboot.vbmeta.device_state=locked")
+    );
     assert_eq!(data.rollback_indexes(), &[0; 32]);
     assert_eq!(
         data.resolved_hashtree_error_mode(),
@@ -368,9 +369,10 @@ fn persistent_digest_verification_updates_persistent_value() {
         assert_eq!(data.partition_data()[0].data(), image_contents);
     } // Drop `result` here so it releases `ops` and we can use it again.
 
-    assert!(ops
-        .persistent_values
-        .contains_key(&persistent_digest_value_name()));
+    assert!(
+        ops.persistent_values
+            .contains_key(&persistent_digest_value_name())
+    );
 }
 
 #[cfg(feature = "uuid")]
@@ -382,11 +384,12 @@ fn successful_verification_substitutes_partition_guid() {
     let result = verify_one_image_one_vbmeta(&mut ops);
 
     let data = result.unwrap();
-    assert!(data
-        .cmdline()
-        .to_str()
-        .unwrap()
-        .contains("androidboot.vbmeta.device=PARTUUID=01234567-89ab-cdef-0123-456789abcdef"));
+    assert!(
+        data.cmdline()
+            .to_str()
+            .unwrap()
+            .contains("androidboot.vbmeta.device=PARTUUID=01234567-89ab-cdef-0123-456789abcdef")
+    );
 }
 
 #[cfg(feature = "uuid")]
@@ -399,11 +402,12 @@ fn successful_verification_substitutes_boot_partition_guid() {
 
     let data = result.unwrap();
     // In this case libavb substitutes the `boot` partition GUID in for `vbmeta`.
-    assert!(data
-        .cmdline()
-        .to_str()
-        .unwrap()
-        .contains("androidboot.vbmeta.device=PARTUUID=01234567-89ab-cdef-0123-456789abcdef"));
+    assert!(
+        data.cmdline()
+            .to_str()
+            .unwrap()
+            .contains("androidboot.vbmeta.device=PARTUUID=01234567-89ab-cdef-0123-456789abcdef")
+    );
 }
 
 #[test]
@@ -747,11 +751,13 @@ fn verify_hash_descriptor() {
 
 #[test]
 fn verify_property_descriptor() {
+    let expected_value = [TEST_PROPERTY_VALUE, &[0]].concat();
     verify_and_find_descriptor(
         TEST_VBMETA_WITH_PROPERTY_PATH,
         &Descriptor::Property(PropertyDescriptor {
             key: TEST_PROPERTY_KEY,
-            value: TEST_PROPERTY_VALUE,
+            key_cstr: TEST_PROPERTY_KEY_CSTR,
+            value_with_nul: &expected_value,
         }),
     );
 }
@@ -838,10 +844,12 @@ fn verify_chain_partition_descriptor() {
         public_key: &fs::read(TEST_PUBLIC_KEY_RSA8192_PATH).unwrap(),
         flags: ChainPartitionDescriptorFlags(0),
     };
-    assert!(main_vbmeta
-        .descriptors()
-        .unwrap()
-        .contains(&Descriptor::ChainPartition(expected)));
+    assert!(
+        main_vbmeta
+            .descriptors()
+            .unwrap()
+            .contains(&Descriptor::ChainPartition(expected))
+    );
 }
 
 #[test]
@@ -854,6 +862,21 @@ fn verify_get_property_value() {
     assert_eq!(
         data.vbmeta_data()[0].get_property_value(TEST_PROPERTY_KEY),
         Some(TEST_PROPERTY_VALUE),
+        "Expected valid buffer for the given key"
+    );
+}
+
+#[test]
+fn verify_get_property_value_with_nul() {
+    let mut ops = build_test_ops_one_image_one_vbmeta();
+    ops.add_partition("vbmeta", fs::read(TEST_VBMETA_WITH_PROPERTY_PATH).unwrap());
+    let data = verify_one_image_one_vbmeta(&mut ops).unwrap();
+
+    let expected_value = [TEST_PROPERTY_VALUE, &[0]].concat();
+    // Check nul terminated property value.
+    assert_eq!(
+        data.vbmeta_data()[0].get_property_value_with_nul(TEST_PROPERTY_KEY),
+        Some(&expected_value[..]),
         "Expected valid buffer for the given key"
     );
 }

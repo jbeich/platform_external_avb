@@ -29,10 +29,10 @@ mod util;
 use crate::VbmetaData;
 use alloc::vec::Vec;
 use avb_bindgen::{
-    avb_descriptor_foreach, avb_descriptor_validate_and_byteswap, AvbDescriptor, AvbDescriptorTag,
+    AvbDescriptor, AvbDescriptorTag, avb_descriptor_foreach, avb_descriptor_validate_and_byteswap,
 };
 use core::{
-    ffi::{c_void, FromBytesUntilNulError},
+    ffi::{FromBytesUntilNulError, FromBytesWithNulError, c_void},
     mem::size_of,
     slice,
     str::Utf8Error,
@@ -79,6 +79,12 @@ pub enum DescriptorError {
 impl From<Utf8Error> for DescriptorError {
     fn from(_: Utf8Error) -> Self {
         Self::InvalidUtf8
+    }
+}
+
+impl From<FromBytesWithNulError> for DescriptorError {
+    fn from(_: FromBytesWithNulError) -> Self {
+        Self::InvalidContents
     }
 }
 
