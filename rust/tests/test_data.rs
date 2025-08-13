@@ -16,6 +16,8 @@
 //!
 //! These constants must match the values used to create the images in Android.bp.
 
+use core::ffi::CStr;
+
 pub const TEST_IMAGE_PATH: &str = "test_image.img";
 pub const TEST_IMAGE_SIZE: usize = 16 * 1024;
 pub const TEST_IMAGE_SALT_HEX: &str = "1000";
@@ -41,6 +43,7 @@ pub const TEST_PARTITION_PERSISTENT_DIGEST_NAME: &str = "test_part_persistent_di
 pub const TEST_PARTITION_HASH_TREE_NAME: &str = "test_part_hashtree";
 pub const TEST_VBMETA_ROLLBACK_LOCATION: usize = 0; // Default value, we don't explicitly set this.
 pub const TEST_PROPERTY_KEY: &str = "test_prop_key";
+pub const TEST_PROPERTY_KEY_CSTR: &CStr = c"test_prop_key";
 pub const TEST_PROPERTY_VALUE: &[u8] = b"test_prop_value";
 pub const TEST_KERNEL_COMMANDLINE: &str = "test_cmdline_key=test_cmdline_value";
 pub const TEST_CHAINED_PARTITION_ROLLBACK_LOCATION: usize = 4;

@@ -15,30 +15,22 @@
 //! Property descriptors.
 
 use super::{
-    util::{parse_descriptor, split_slice, ValidateAndByteswap, ValidationFunc},
     DescriptorError, DescriptorResult,
+    util::{ValidateAndByteswap, ValidationFunc, parse_descriptor, split_slice},
 };
-use avb_bindgen::{avb_property_descriptor_validate_and_byteswap, AvbPropertyDescriptor};
-use core::str::from_utf8;
-
-/// Checks that the first byte is nul and discards it.
-/// Returns the remainder of `bytes` on success, or `DescriptorError` if the byte wasn't nul.
-fn extract_nul(bytes: &[u8]) -> DescriptorResult<&[u8]> {
-    let (nul, remainder) = split_slice(bytes, 1)?;
-    match nul {
-        b"\0" => Ok(remainder),
-        _ => Err(DescriptorError::InvalidContents),
-    }
-}
+use avb_bindgen::{AvbPropertyDescriptor, avb_property_descriptor_validate_and_byteswap};
+use core::ffi::CStr;
 
 /// Wraps an `AvbPropertyDescriptor` stored in a vbmeta image.
 #[derive(Debug, PartialEq, Eq)]
 pub struct PropertyDescriptor<'a> {
     /// Key is always UTF-8.
     pub key: &'a str,
+    /// The same content as key, but nul terminated.
+    pub key_cstr: &'a CStr,
 
     /// Value can be arbitrary bytes.
-    pub value: &'a [u8],
+    pub value_with_nul: &'a [u8],
 }
 
 // SAFETY: `VALIDATE_AND_BYTESWAP_FUNC` is the correct libavb validator for this descriptor type.
@@ -59,14 +51,24 @@ impl<'a> PropertyDescriptor<'a> {
     pub(super) fn new(contents: &'a [u8]) -> DescriptorResult<Self> {
         // Descriptor contains: header + key + nul + value + nul.
         let descriptor = parse_descriptor::<AvbPropertyDescriptor>(contents)?;
-        let (key, remainder) = split_slice(descriptor.body, descriptor.header.key_num_bytes)?;
-        let remainder = extract_nul(remainder)?;
-        let (value, remainder) = split_slice(remainder, descriptor.header.value_num_bytes)?;
-        extract_nul(remainder)?;
+        // Guaranteed to be nul terminated by libavb.
+        let (key_bytes_with_nul, remainder) =
+            split_slice(descriptor.body, descriptor.header.key_num_bytes + 1)?;
+        // Note: UTF-8 keys containing null bytes will fail here, but such keys are unlikely
+        // from command line input.
+        let key_cstr = CStr::from_bytes_with_nul(key_bytes_with_nul)?;
+        let key = key_cstr.to_str()?;
+
+        // Guaranteed to be nul terminated by libavb.
+        let (value_with_nul, _) = split_slice(remainder, descriptor.header.value_num_bytes + 1)?;
+        if !value_with_nul.ends_with(&[0]) {
+            return Err(DescriptorError::InvalidContents);
+        }
 
         Ok(Self {
-            key: from_utf8(key)?,
-            value,
+            key,
+            key_cstr,
+            value_with_nul,
         })
     }
 }
