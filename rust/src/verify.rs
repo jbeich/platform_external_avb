@@ -20,25 +20,26 @@
 extern crate alloc;
 
 use crate::{
-    descriptor::{get_descriptors, Descriptor, DescriptorResult},
+    Ops,
+    descriptor::{Descriptor, DescriptorResult, get_descriptors},
     error::{
-        slot_verify_enum_to_result, vbmeta_verify_enum_to_result, SlotVerifyError,
-        SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
+        SlotVerifyError, SlotVerifyNoDataResult, SlotVerifyResult, VbmetaVerifyResult,
+        slot_verify_enum_to_result, vbmeta_verify_enum_to_result,
     },
-    ops, Ops,
+    ops,
 };
 use alloc::vec::Vec;
 use avb_bindgen::{
-    avb_slot_verify, avb_slot_verify_data_calculate_vbmeta_digest, avb_slot_verify_data_free,
-    AvbDigestType, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData,
-    AVB_SHA256_DIGEST_SIZE, AVB_SHA512_DIGEST_SIZE,
+    AVB_SHA256_DIGEST_SIZE, AVB_SHA512_DIGEST_SIZE, AvbDigestType, AvbPartitionData,
+    AvbSlotVerifyData, AvbVBMetaData, avb_slot_verify,
+    avb_slot_verify_data_calculate_vbmeta_digest, avb_slot_verify_data_free,
 };
 use core::{
-    ffi::{c_char, CStr},
+    ffi::{CStr, c_char},
     fmt,
     marker::PhantomData,
     pin::pin,
-    ptr::{self, null, null_mut, NonNull},
+    ptr::{self, NonNull, null, null_mut},
     slice,
 };
 
@@ -103,6 +104,7 @@ impl VbmetaData {
     /// Extracts the descriptors from the vbmeta image.
     ///
     /// Note that this function allocates memory to hold the `Descriptor` objects.
+    /// TODO(b/437999882): get rid of the allocation or provide allocation-free counterpart.
     ///
     /// # Returns
     /// A vector of descriptors, or `DescriptorError` on failure.
@@ -112,15 +114,32 @@ impl VbmetaData {
         unsafe { get_descriptors(self) }
     }
 
-    /// Gets a property from the vbmeta image for the given key
+    /// Gets a property value from the vbmeta image for the given key
     ///
     /// This function re-implements the libavb avb_property_lookup logic.
+    ///
+    /// Note that this function allocates memory to hold all the `Descriptor` objects.
+    /// TODO(b/437999882): get rid of the allocation or provide allocation-free counterpart.
     ///
     /// # Returns
     /// Byte array with property data or None in case property not found or failure.
     pub fn get_property_value(&self, key: &str) -> Option<&[u8]> {
+        self.get_property_value_with_nul(key)
+            .map(|v| &v[..v.len() - 1])
+    }
+
+    /// Gets a nul terminated property value from the vbmeta image for the given key
+    ///
+    /// This function re-implements the libavb avb_property_lookup logic.
+    ///
+    /// Note that this function allocates memory to hold all the `Descriptor` objects.
+    /// TODO(b/437999882): get rid of the allocation or provide allocation-free counterpart.
+    ///
+    /// # Returns
+    /// Byte array with nul terminated property data or None in case property not found or failure.
+    pub fn get_property_value_with_nul(&self, key: &str) -> Option<&[u8]> {
         self.descriptors().ok()?.iter().find_map(|d| match d {
-            Descriptor::Property(p) if p.key == key => Some(p.value),
+            Descriptor::Property(p) if p.key == key => Some(p.value_with_nul),
             _ => None,
         })
     }
