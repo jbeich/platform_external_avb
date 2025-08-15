@@ -4172,6 +4172,235 @@ class Avb(object):
     output.seek(0)
     output.write(vbmeta_blob)
 
+  def _write_resigned_image(self, image, footer, vbmeta_blob,
+                            auto_resize):
+    """Writes the resigned vbmeta blob back to the image.
+
+    This helper encapsulates the logic for writing the new vbmeta data,
+    handling cases with and without footers, and resizing.
+
+    Args:
+      image: An ImageHandler object for the image being modified.
+      footer: The AvbFooter object if one exists, otherwise None.
+      vbmeta_blob: The newly created and signed vbmeta data.
+      auto_resize: Boolean indicating if resizing is allowed.
+    """
+
+    original_image_size = image.image_size
+    if not footer:
+        if auto_resize:
+            with open(image.filename, 'wb') as f:
+                f.write(vbmeta_blob)
+        else:
+            if len(vbmeta_blob) > original_image_size:
+                raise AvbError('New vbmeta blob is larger than the original '
+                               'image. Use --auto_resize to enlarge the image.')
+            with open(image.filename, 'wb') as f:
+                f.write(vbmeta_blob)
+                padding_needed = original_image_size - len(vbmeta_blob)
+                if padding_needed > 0:
+                    f.write(b'\0' * padding_needed)
+        return
+
+
+    vbmeta_blob_with_padding = vbmeta_blob + b'\0' * (
+        round_to_multiple(len(vbmeta_blob), image.block_size) -
+        len(vbmeta_blob))
+
+    footer_blob_with_padding = (
+        b'\0' * (image.block_size - AvbFooter.SIZE) + footer.encode())
+
+    min_image_size = (
+        footer.vbmeta_offset +
+        len(vbmeta_blob_with_padding) +
+        len(footer_blob_with_padding))
+
+    extra_padding = 0
+    if not auto_resize:
+        if min_image_size > original_image_size:
+            raise AvbError('VbMeta has grown and there is not enough padding. '
+                           'Use --auto_resize or `avbtool resize_image` to grow '
+                           'the image.')
+        extra_padding = original_image_size - min_image_size
+
+    image.truncate(footer.vbmeta_offset)
+    image.append_raw(vbmeta_blob_with_padding)
+    if extra_padding > 0:
+        image.append_dont_care(extra_padding)
+    image.append_raw(footer_blob_with_padding)
+
+  def _create_new_auth_blob(self, header, aux_blob, new_key, algorithm_name,
+                            signing_helper, signing_helper_with_files):
+    """Creates a new authentication block with a new signature.
+
+    This involves hashing the new header and auxiliary data block, and then
+    signing that hash with the new key.
+
+    Args:
+      header: The new AvbVBMetaHeader.
+      aux_blob: The new auxiliary data block.
+      new_key: The new RSAPublicKey object.
+      algorithm_name: The name of the new signing algorithm.
+      signing_helper: Path to an external program for signing.
+      signing_helper_with_files: Path to an external program for signing
+          that uses files for communication.
+
+    Returns:
+      The new authentication block as bytes.
+    """
+    header_data_blob = header.encode()
+    data_to_sign = header_data_blob + aux_blob
+    signature = new_key.sign(algorithm_name, data_to_sign,
+                             signing_helper, signing_helper_with_files)
+
+    new_alg = ALGORITHMS[algorithm_name]
+    hasher = hashlib.new(new_alg.hash_name)
+    hasher.update(header_data_blob)
+    hasher.update(aux_blob)
+    binary_hash = hasher.digest()
+
+    auth_data_blob = bytearray()
+    auth_data_blob.extend(binary_hash)
+    auth_data_blob.extend(signature)
+    padding_bytes = header.authentication_data_block_size - len(auth_data_blob)
+    auth_data_blob.extend(b'\0' * padding_bytes)
+    return auth_data_blob
+
+  def _extract_aux_blob(self, header, vbmeta_blob):
+    """Extracts the auxiliary data block from the full vbmeta data.
+
+    Args:
+      header: The AvbVBMetaHeader of the image.
+      vbmeta_blob: The entire vbmeta data as bytes.
+
+    Returns:
+      A bytearray containing the auxiliary data block.
+    """
+    aux_offset = AvbVBMetaHeader.SIZE + header.authentication_data_block_size
+    return bytearray(
+        vbmeta_blob[aux_offset:aux_offset + header.auxiliary_data_block_size])
+
+  def _replace_public_key_in_aux_blob(self, aux_blob, header, new_key):
+    """Replaces the public key within an auxiliary data block.
+
+    This function rebuilds the auxiliary data block with the new public key,
+    preserving the descriptors and public key metadata.
+
+    Args:
+      aux_blob: The original auxiliary data block.
+      header: The original AvbVBMetaHeader.
+      new_key: The new RSAPublicKey to embed.
+
+    Returns:
+      A tuple containing the new auxiliary data block (with padding) and
+      the size of the new public key.
+    """
+    encoded_new_key = new_key.encode()
+    # Extract original components from the old aux_blob.
+    descriptors_blob = aux_blob[0:header.descriptors_size]
+    pkmd_offset = header.public_key_offset + header.public_key_size
+    pkmd_blob = aux_blob[pkmd_offset:pkmd_offset +
+                       header.public_key_metadata_size]
+
+    # Build the new aux_blob without padding.
+    new_aux_blob_unpadded = bytearray()
+    new_aux_blob_unpadded.extend(descriptors_blob)
+    new_aux_blob_unpadded.extend(encoded_new_key)
+    new_aux_blob_unpadded.extend(pkmd_blob)
+
+    # Calculate new sizes and add padding.
+    new_public_key_size = len(encoded_new_key)
+    new_aux_size = round_to_multiple(len(new_aux_blob_unpadded), 64)
+
+    padding_needed = new_aux_size - len(new_aux_blob_unpadded)
+    new_aux_blob_padded = new_aux_blob_unpadded + (b'\0' * padding_needed)
+
+    return new_aux_blob_padded, new_public_key_size
+
+  def _prepare_resigned_header(self, header, new_alg, new_pk_size,
+                               new_aux_blob_size):
+    """Creates a new VBMeta header for the resigned image.
+
+    This function updates the header with the new algorithm and block sizes.
+
+    Args:
+      header: The original AvbVBMetaHeader.
+      new_alg: The new Algorithm object.
+      new_pk_size: The size of the new public key.
+      new_aux_blob_size: The size of the new auxiliary data block.
+
+    Returns:
+      A new AvbVBMetaHeader object with updated values.
+    """
+    new_header = AvbVBMetaHeader(header.encode())
+    new_header.algorithm_type = new_alg.algorithm_type
+    new_header.authentication_data_block_size = round_to_multiple(
+        new_alg.hash_num_bytes + new_alg.signature_num_bytes, 64)
+    new_header.hash_size = new_alg.hash_num_bytes
+    new_header.signature_size = new_alg.signature_num_bytes
+    new_header.signature_offset = new_alg.hash_num_bytes
+    new_header.public_key_size = new_pk_size
+    new_header.auxiliary_data_block_size = new_aux_blob_size
+    return new_header
+
+  def resign_image(self, image_filename, key_path, algorithm_name,
+                   signing_helper, signing_helper_with_files, auto_resize):
+    """Resigns an image with a new key and algorithm.
+
+    This method handles both images with a VBMeta footer and standalone
+    vbmeta.img files. It verifies the existing signature before proceeding.
+
+    The method supports keys of different sizes. If the new key is larger
+    and there isn't enough padding in the image, it will fail unless
+    '--auto_resize' is specified.
+
+    Args:
+      image_filename: The path to the image to resign.
+      key_path: The path to the new private key (.pem file).
+      algorithm_name: The name of the new signing algorithm.
+      signing_helper: Path to an external program for signing.
+      signing_helper_with_files: Path to an external program for signing
+          that uses files for communication.
+      auto_resize: If True, allows the image to be resized if the new key
+          requires more space than is available.
+
+    Raises:
+      AvbError: If the original signature cannot be verified, if resizing is
+          required but not permitted, or if any other error occurs during
+          the resigning process.
+    """
+    image = ImageHandler(image_filename)
+    footer, header, _descriptors, original_image_size = self._parse_image(image)
+
+    vbmeta_blob = self._load_vbmeta_blob(image)
+    if not verify_vbmeta_signature(header, vbmeta_blob):
+      raise AvbError('VBMeta signature verification failed. Refusing to '
+                     'resign image.')
+
+    new_key = RSAPublicKey(key_path)
+    new_alg = ALGORITHMS[algorithm_name]
+
+    aux_blob = self._extract_aux_blob(header, vbmeta_blob)
+    new_aux_blob, new_pk_size = self._replace_public_key_in_aux_blob(
+        aux_blob, header, new_key)
+
+    new_header = self._prepare_resigned_header(header, new_alg, new_pk_size,
+                                               len(new_aux_blob))
+
+    new_auth_blob = self._create_new_auth_blob(
+        new_header, new_aux_blob, new_key, algorithm_name, signing_helper,
+        signing_helper_with_files)
+
+    new_vbmeta_blob = new_header.encode() + new_auth_blob + new_aux_blob
+
+    if footer:
+        new_footer = AvbFooter(footer.encode())
+        new_footer.vbmeta_size = len(new_vbmeta_blob)
+    else:
+        new_footer = None
+
+    self._write_resigned_image(image, new_footer, new_vbmeta_blob, auto_resize)
+
 def calc_hash_level_offsets(image_size, block_size, digest_size):
   """Calculate the offsets of all the hash-levels in a Merkle-tree.
 
@@ -4979,6 +5208,33 @@ class AvbTool(object):
     self._add_common_args(sub_parser)
     sub_parser.set_defaults(func=self.update_partition_descriptor)
 
+    sub_parser = subparsers.add_parser(
+        'resign_image',
+        help='Resigns an image with a new key and algorithm.')
+    sub_parser.add_argument('--image',
+                            help='Image to resign',
+                            required=True)
+    sub_parser.add_argument('--key',
+                            help='Path to RSA private key file',
+                            required=True)
+    sub_parser.add_argument('--algorithm',
+                            help='Algorithm to use',
+                            required=True)
+    sub_parser.add_argument(
+        '--signing_helper',
+        help='Program that signs a hash and returns a signature.',
+        default=None)
+    sub_parser.add_argument(
+        '--signing_helper_with_files',
+        help='Same as signing_helper but uses files for communication.',
+        default=None)
+    sub_parser.add_argument(
+        '--auto_resize',
+        help='Automatically resize the image if the new key is larger.',
+        action='store_true')
+
+    sub_parser.set_defaults(func=self.resign_image)
+
     args = parser.parse_args(argv[1:])
     try:
       args.func(args)
@@ -5211,6 +5467,13 @@ Please use '--hash_algorithm sha256'.
         args.internal_release_string,
         args.append_to_release_string,
         args.print_required_libavb_version)
+
+
+  def resign_image(self, args):
+    """Implements the 'resign_image' sub-command."""
+    self.avb.resign_image(args.image, args.key, args.algorithm,
+                          args.signing_helper,
+                          args.signing_helper_with_files, args.auto_resize)
 
 
 if __name__ == '__main__':
