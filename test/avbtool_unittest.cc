@@ -38,6 +38,10 @@
 #include "avb_unittest_util.h"
 #include "fake_avb_ops.h"
 
+#define TESTKEY_RSA2048_SHA "cdbb77177f731920bbe0a0f94f84d9038ae0617d"
+#define TESTKEY_RSA2048_SHA_2 "6474a3f23259eaee2a5d885fa0869b0baba63712"
+#define TESTKEY_RSA4096_SHA "2597c218aae470a130f61162feaae70afd97f011"
+
 namespace avb {
 
 class AvbToolTest : public BaseAvbToolTest {
@@ -3943,6 +3947,624 @@ TEST_F(AvbToolTest_UpdatePartitionDescriptor, FoundDescriptorOfTheWrongKind) {
       "./avbtool.py: Given image does not contain a hash or hashtree descriptor"
       " matching the given partition image.\n",
       out);
+}
+
+class AvbToolResignImageTest : public AvbToolTest {
+ public:
+  AvbToolResignImageTest() {}
+
+  void GeneratePartitionWithFooter(const std::string& image_name,
+                                   const std::string& algorithm,
+                                   const std::string& key_path,
+                                   size_t partition_size,
+                                   size_t image_size,
+                                   const std::string& extra_args = "") {
+    std::string image_path = GenerateImage(image_name, image_size);
+    EXPECT_GT(partition_size, 0u);
+    EXPECT_COMMAND(0,
+                   "./avbtool.py add_hash_footer"
+                   " --image %s"
+                   " --partition_name test"
+                   " --partition_size %zd"
+                   " --algorithm %s"
+                   " --key %s"
+                   " %s"
+                   " --internal_release_string \"\"",
+                   image_path.c_str(),
+                   partition_size,
+                   algorithm.c_str(),
+                   key_path.c_str(),
+                   extra_args.c_str());
+  }
+
+  void GenerateLooseImageWithFooter(const std::string& image_name,
+                                    const std::string& algorithm,
+                                    const std::string& key_path,
+                                    size_t image_size) {
+    std::string image_path = GenerateImage(image_name, image_size);
+    EXPECT_COMMAND(0,
+                   "./avbtool.py add_hash_footer"
+                   " --image %s"
+                   " --partition_name test"
+                   " --dynamic_partition_size"
+                   " --algorithm %s"
+                   " --key %s"
+                   " --internal_release_string \"\"",
+                   image_path.c_str(),
+                   algorithm.c_str(),
+                   key_path.c_str());
+  }
+
+  void GenerateLooseImageWithMinimalPadding(const std::string& image_name,
+                                            const std::string& algorithm,
+                                            const std::string& key,
+                                            size_t image_size) {
+    // First, generate an image with a proper footer and vbmeta, but with
+    // excess padding that we will remove.
+    GenerateLooseImageWithFooter(image_name, algorithm, key, image_size);
+    std::string image_path = (testdir_ / image_name).string();
+
+    // Now, read the generated image, save the footer, truncate
+    // the file, and append it back to create a minimally-padded image.
+    std::string content;
+    ASSERT_TRUE(android::base::ReadFileToString(image_path, &content));
+
+    AvbFooter footer;
+    ASSERT_TRUE(avb_footer_validate_and_byteswap(
+        reinterpret_cast<const AvbFooter*>(content.data() + content.size() -
+                                           AVB_FOOTER_SIZE),
+        &footer));
+
+    std::string footer_blob =
+        content.substr(content.size() - AVB_FOOTER_SIZE, AVB_FOOTER_SIZE);
+
+    // Truncate the file to the end of the vbmeta data.
+    base::File image_file(base::FilePath(image_path),
+                          base::File::FLAG_OPEN | base::File::FLAG_WRITE);
+    ASSERT_TRUE(image_file.IsValid());
+    image_file.SetLength(footer.vbmeta_offset + footer.vbmeta_size);
+    image_file.Close();
+
+    // Append the footer to the now-truncated file.
+    ASSERT_TRUE(base::AppendToFile(
+        base::FilePath(image_path), footer_blob.data(), footer_blob.size()));
+  }
+};
+
+// Partition WithFooter Tests
+
+TEST_F(AvbToolResignImageTest,
+       Partition_WithFooter_ResignSameKeySize_Succeeds) {
+  const size_t partition_size = 1024 * 1024;
+  const size_t image_size = 512 * 1024;
+  GeneratePartitionWithFooter("test.img",
+                              "SHA256_RSA2048",
+                              "test/data/testkey_rsa2048.pem",
+                              partition_size,
+                              image_size);
+  std::string original_info = InfoImage((testdir_ / "test.img").c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image --image %s --key %s --algorithm %s",
+                 (testdir_ / "test.img").c_str(),
+                 "test/data/testkey_rsa2048_2.pem",
+                 "SHA256_RSA2048");
+
+  // Verify the image.
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa2048_2.pem",
+                 (testdir_ / "test.img").c_str());
+
+  std::string new_info = InfoImage((testdir_ / "test.img").c_str());
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -8,7 +8,7 @@\n"
+      " Header Block:             256 bytes\n"
+      " Authentication Block:     320 bytes\n"
+      " Auxiliary Block:          768 bytes\n"
+      "-Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      "+Public key (sha1):        " TESTKEY_RSA2048_SHA_2
+      "\n"
+      " Algorithm:                SHA256_RSA2048\n"
+      " Rollback Index:           0\n"
+      " Flags:                    0\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+}
+
+TEST_F(AvbToolResignImageTest,
+       Partition_WithHashtreeFooter_ResignSameKeySize_Succeeds) {
+  const size_t partition_size = 1024 * 1024;
+  const size_t image_size = 512 * 1024;
+  std::string image_path = GenerateImage("test.img", image_size);
+  EXPECT_COMMAND(0,
+                 "./avbtool.py add_hashtree_footer"
+                 " --image %s"
+                 " --partition_name test"
+                 " --partition_size %zd"
+                 " --salt d00df00d"
+                 " --hash_algorithm sha256"
+                 " --algorithm SHA256_RSA2048"
+                 " --key test/data/testkey_rsa2048.pem"
+                 " --internal_release_string \"\"",
+                 image_path.c_str(),
+                 partition_size);
+  std::string original_info = InfoImage(image_path);
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image --image %s --key %s --algorithm %s",
+                 image_path.c_str(),
+                 "test/data/testkey_rsa2048_2.pem",
+                 "SHA256_RSA2048");
+
+  std::string new_info = InfoImage(image_path);
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -8,7 +8,7 @@\n"
+      " Header Block:             256 bytes\n"
+      " Authentication Block:     320 bytes\n"
+      " Auxiliary Block:          768 bytes\n"
+      "-Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      "+Public key (sha1):        " TESTKEY_RSA2048_SHA_2
+      "\n"
+      " Algorithm:                SHA256_RSA2048\n"
+      " Rollback Index:           0\n"
+      " Flags:                    0\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+}
+
+TEST_F(AvbToolResignImageTest, Partition_WithFooter_ResignSmallerKey_Succeeds) {
+  const size_t partition_size = 1024 * 1024;
+  const size_t image_size = 512 * 1024;
+  GeneratePartitionWithFooter("test.img",
+                              "SHA256_RSA4096",
+                              "test/data/testkey_rsa4096.pem",
+                              partition_size,
+                              image_size);
+  std::string original_info = InfoImage((testdir_ / "test.img").c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa2048.pem"
+                 " --algorithm SHA256_RSA2048",
+                 (testdir_ / "test.img").c_str());
+
+  // Verify the image.
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa2048.pem",
+                 (testdir_ / "test.img").c_str());
+
+  std::string new_info = InfoImage((testdir_ / "test.img").c_str());
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -2,14 +2,14 @@\n"
+      " Image size:               1048576 bytes\n"
+      " Original image size:      524288 bytes\n"
+      " VBMeta offset:            524288\n"
+      "-VBMeta size:              2112 bytes\n"
+      "+VBMeta size:              1344 bytes\n"
+      " --\n"
+      " Minimum libavb version:   1.0\n"
+      " Header Block:             256 bytes\n"
+      "-Authentication Block:     576 bytes\n"
+      "-Auxiliary Block:          1280 bytes\n"
+      "-Public key (sha1):        " TESTKEY_RSA4096_SHA
+      "\n"
+      "-Algorithm:                SHA256_RSA4096\n"
+      "+Authentication Block:     320 bytes\n"
+      "+Auxiliary Block:          768 bytes\n"
+      "+Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      "+Algorithm:                SHA256_RSA2048\n"
+      " Rollback Index:           0\n"
+      " Flags:                    0\n"
+      " Rollback Index Location:  0\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+
+  // Check that the padding is all zeros.
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFileToString((testdir_ / "test.img").string(),
+                                              &content));
+  AvbFooter footer;
+  ASSERT_TRUE(avb_footer_validate_and_byteswap(
+      reinterpret_cast<const AvbFooter*>(content.data() + content.size() -
+                                         AVB_FOOTER_SIZE),
+      &footer));
+  size_t vbmeta_end = footer.vbmeta_offset + footer.vbmeta_size;
+  size_t padding_start =
+      (vbmeta_end + 4095) & ~4095;  // round up to next multiple of 4096
+  for (size_t i = padding_start; i < content.size() - AVB_FOOTER_SIZE; ++i) {
+    EXPECT_EQ(content[i], 0);
+  }
+}
+
+TEST_F(AvbToolResignImageTest, Partition_WithFooter_ResignLargerKey_Succeeds) {
+  const size_t partition_size = 1024 * 1024;
+  const size_t image_size = 512 * 1024;
+  GeneratePartitionWithFooter("test.img",
+                              "SHA256_RSA2048",
+                              "test/data/testkey_rsa2048.pem",
+                              partition_size,
+                              image_size);
+  std::string original_info = InfoImage((testdir_ / "test.img").c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --algorithm SHA256_RSA4096",
+                 (testdir_ / "test.img").c_str());
+
+  // Verify the image.
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem",
+                 (testdir_ / "test.img").c_str());
+
+  std::string new_info = InfoImage((testdir_ / "test.img").c_str());
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -2,14 +2,14 @@\n"
+      " Image size:               1048576 bytes\n"
+      " Original image size:      524288 bytes\n"
+      " VBMeta offset:            524288\n"
+      "-VBMeta size:              1344 bytes\n"
+      "+VBMeta size:              2112 bytes\n"
+      " --\n"
+      " Minimum libavb version:   1.0\n"
+      " Header Block:             256 bytes\n"
+      "-Authentication Block:     320 bytes\n"
+      "-Auxiliary Block:          768 bytes\n"
+      "-Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      "-Algorithm:                SHA256_RSA2048\n"
+      "+Authentication Block:     576 bytes\n"
+      "+Auxiliary Block:          1280 bytes\n"
+      "+Public key (sha1):        " TESTKEY_RSA4096_SHA
+      "\n"
+      "+Algorithm:                SHA256_RSA4096\n"
+      " Rollback Index:           0\n"
+      " Flags:                    0\n"
+      " Rollback Index Location:  0\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+
+  // Check that the padding is all zeros.
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFileToString((testdir_ / "test.img").string(),
+                                              &content));
+  AvbFooter footer;
+  ASSERT_TRUE(avb_footer_validate_and_byteswap(
+      reinterpret_cast<const AvbFooter*>(content.data() + content.size() -
+                                         AVB_FOOTER_SIZE),
+      &footer));
+  size_t vbmeta_end = footer.vbmeta_offset + footer.vbmeta_size;
+  size_t padding_start =
+      (vbmeta_end + 4095) & ~4095;  // round up to next multiple of 4096
+  for (size_t i = padding_start; i < content.size() - AVB_FOOTER_SIZE; ++i) {
+    EXPECT_EQ(content[i], 0);
+  }
+}
+
+// LooseImage WithFooter Tests
+
+TEST_F(AvbToolResignImageTest,
+       LooseImage_WithFooter_ResignLargerKey_SucceedsWithEnoughPadding) {
+  const size_t image_size = 512 * 1024;
+  GenerateLooseImageWithFooter("test.img",
+                               "SHA256_RSA2048",
+                               "test/data/testkey_rsa2048.pem",
+                               image_size);
+
+  std::string original_info = InfoImage((testdir_ / "test.img").c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --algorithm SHA256_RSA4096",
+                 (testdir_ / "test.img").c_str());
+
+  // Verify the image.
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem",
+                 (testdir_ / "test.img").c_str());
+
+  std::string new_info = InfoImage((testdir_ / "test.img").c_str());
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -2,14 +2,14 @@\n"
+      " Image size:               593920 bytes\n"
+      " Original image size:      524288 bytes\n"
+      " VBMeta offset:            524288\n"
+      "-VBMeta size:              1344 bytes\n"
+      "+VBMeta size:              2112 bytes\n"
+      " --\n"
+      " Minimum libavb version:   1.0\n"
+      " Header Block:             256 bytes\n"
+      "-Authentication Block:     320 bytes\n"
+      "-Auxiliary Block:          768 bytes\n"
+      "-Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      "-Algorithm:                SHA256_RSA2048\n"
+      "+Authentication Block:     576 bytes\n"
+      "+Auxiliary Block:          1280 bytes\n"
+      "+Public key (sha1):        " TESTKEY_RSA4096_SHA
+      "\n"
+      "+Algorithm:                SHA256_RSA4096\n"
+      " Rollback Index:           0\n"
+      " Flags:                    0\n"
+      " Rollback Index Location:  0\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+}
+
+TEST_F(AvbToolResignImageTest,
+       LooseImage_WithFooter_ResignSameKeySize_PreservesPrecedingData) {
+  const size_t image_size = 512 * 1024;
+  GenerateLooseImageWithFooter("test.img",
+                               "SHA256_RSA2048",
+                               "test/data/testkey_rsa2048.pem",
+                               image_size);
+
+  std::string original_image_content;
+  ASSERT_TRUE(android::base::ReadFileToString((testdir_ / "test.img").string(),
+                                              &original_image_content));
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image --image %s --key %s --algorithm %s",
+                 (testdir_ / "test.img").c_str(),
+                 "test/data/testkey_rsa2048_2.pem",
+                 "SHA256_RSA2048");
+
+  std::string new_image_content;
+  ASSERT_TRUE(android::base::ReadFileToString((testdir_ / "test.img").string(),
+                                              &new_image_content));
+
+  // The data before the vbmeta block should be identical.
+  EXPECT_EQ(original_image_content.substr(0, image_size),
+            new_image_content.substr(0, image_size));
+}
+
+TEST_F(
+    AvbToolResignImageTest,
+    LooseImage_WithMinimallyPaddedFooter_ResignLargerKey_FailsWithoutAutoResize) {
+  const size_t image_size = 512 * 1024;
+  GenerateLooseImageWithMinimalPadding("test.img",
+                                       "SHA256_RSA2048",
+                                       "test/data/testkey_rsa2048.pem",
+                                       image_size);
+
+  // Resign with a larger key. This should fail because there is not enough
+  // padding.
+  EXPECT_COMMAND(1,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --algorithm SHA256_RSA4096",
+                 (testdir_ / "test.img").c_str());
+}
+
+TEST_F(
+    AvbToolResignImageTest,
+    LooseImage_WithMinimallyPaddedFooter_ResignLargerKey_SucceedsWithAutoResize) {
+  const size_t image_size = 512 * 1024;
+  GenerateLooseImageWithMinimalPadding("test.img",
+                                       "SHA256_RSA2048",
+                                       "test/data/testkey_rsa2048.pem",
+                                       image_size);
+
+  std::string original_info = InfoImage((testdir_ / "test.img").c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --algorithm SHA256_RSA4096"
+                 " --auto_resize",
+                 (testdir_ / "test.img").c_str());
+
+  // Verify the image.
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem",
+                 (testdir_ / "test.img").c_str());
+
+  std::string new_info = InfoImage((testdir_ / "test.img").c_str());
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -1,15 +1,15 @@\n"
+      " Footer version:           1.0\n"
+      "-Image size:               525696 bytes\n"
+      "+Image size:               532480 bytes\n"
+      " Original image size:      524288 bytes\n"
+      " VBMeta offset:            524288\n"
+      "-VBMeta size:              1344 bytes\n"
+      "+VBMeta size:              2112 bytes\n"
+      " --\n"
+      " Minimum libavb version:   1.0\n"
+      " Header Block:             256 bytes\n"
+      "-Authentication Block:     320 bytes\n"
+      "-Auxiliary Block:          768 bytes\n"
+      "-Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      "-Algorithm:                SHA256_RSA2048\n"
+      "+Authentication Block:     576 bytes\n"
+      "+Auxiliary Block:          1280 bytes\n"
+      "+Public key (sha1):        " TESTKEY_RSA4096_SHA
+      "\n"
+      "+Algorithm:                SHA256_RSA4096\n"
+      " Rollback Index:           0\n"
+      " Flags:                    0\n"
+      " Rollback Index Location:  0\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+}
+
+// LooseImage WithHeader Tests
+
+TEST_F(AvbToolResignImageTest,
+       LooseImage_WithHeader_ResignLargerKey_FailsWithoutAutoResize) {
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
+
+  EXPECT_COMMAND(1,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --algorithm SHA256_RSA4096",
+                 vbmeta_image_path_.c_str());
+}
+
+TEST_F(AvbToolResignImageTest,
+       LooseImage_WithHeader_ResignLargerKey_SucceedsWithAutoResize) {
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
+  std::string original_info = InfoImage(vbmeta_image_path_.c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem"
+                 " --algorithm SHA256_RSA4096"
+                 " --auto_resize",
+                 vbmeta_image_path_.c_str());
+
+  // Verify the image.
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa4096.pem",
+                 vbmeta_image_path_.c_str());
+
+  std::string new_info = InfoImage(vbmeta_image_path_.c_str());
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -1,9 +1,9 @@\n"
+      " Minimum libavb version:   1.0\n"
+      " Header Block:             256 bytes\n"
+      "-Authentication Block:     320 bytes\n"
+      "-Auxiliary Block:          576 bytes\n"
+      "-Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      "-Algorithm:                SHA256_RSA2048\n"
+      "+Authentication Block:     576 bytes\n"
+      "+Auxiliary Block:          1088 bytes\n"
+      "+Public key (sha1):        " TESTKEY_RSA4096_SHA
+      "\n"
+      "+Algorithm:                SHA256_RSA4096\n"
+      " Rollback Index:           0\n"
+      " Flags:                    0\n"
+      " Rollback Index Location:  0\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+}
+
+TEST_F(AvbToolResignImageTest,
+       LooseImage_WithHeader_AndChainPartition_ResignSameKeySize_Succeeds) {
+  std::filesystem::path pk_path = testdir_ / "testkey_rsa4096.avbpubkey";
+  EXPECT_COMMAND(
+      0,
+      "./avbtool.py extract_public_key --key test/data/testkey_rsa4096.pem"
+      " --output %s",
+      pk_path.c_str());
+  GenerateVBMetaImage("vbmeta.img",
+                      "SHA256_RSA2048",
+                      0,
+                      "test/data/testkey_rsa2048.pem",
+                      android::base::StringPrintf(
+                          "--chain_partition system:1:%s", pk_path.c_str()));
+  std::string original_info = InfoImage(vbmeta_image_path_.string());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image --image %s --key %s --algorithm %s",
+                 vbmeta_image_path_.c_str(),
+                 "test/data/testkey_rsa2048_2.pem",
+                 "SHA256_RSA2048");
+
+  std::string new_info = InfoImage(vbmeta_image_path_.string());
+
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -2,7 +2,7 @@\n"
+      " Header Block:             256 bytes\n"
+      " Authentication Block:     320 bytes\n"
+      " Auxiliary Block:          1664 bytes\n"
+      "-Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      "+Public key (sha1):        " TESTKEY_RSA2048_SHA_2
+      "\n"
+      " Algorithm:                SHA256_RSA2048\n"
+      " Rollback Index:           0\n"
+      " Flags:                    0\n";
+
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+}
+
+// Precondition Tests
+
+TEST_F(AvbToolResignImageTest, ResignUnsignedImage) {
+  GenerateVBMetaImage(
+      "vbmeta.img", "", 0, "", "--internal_release_string \"\"");
+
+  EXPECT_COMMAND(1,
+                 "./avbtool.py resign_image --image %s --key %s --algorithm %s",
+                 vbmeta_image_path_.c_str(),
+                 "test/data/testkey_rsa2048_2.pem",
+                 "SHA256_RSA2048");
+}
+
+TEST_F(AvbToolResignImageTest, ResignCorruptedImage) {
+  const size_t partition_size = 1024 * 1024;
+  const size_t image_size = 512 * 1024;
+  GeneratePartitionWithFooter("test.img",
+                              "SHA256_RSA2048",
+                              "test/data/testkey_rsa2048.pem",
+                              partition_size,
+                              image_size);
+  // Corrupt the signature.
+  std::string image_path = (testdir_ / "test.img").string();
+  std::string content;
+  ASSERT_TRUE(android::base::ReadFileToString(image_path, &content));
+
+  AvbFooter footer;
+  ASSERT_TRUE(avb_footer_validate_and_byteswap(
+      reinterpret_cast<const AvbFooter*>(content.data() + content.size() -
+                                         AVB_FOOTER_SIZE),
+      &footer));
+
+  AvbVBMetaImageHeader header;
+  avb_vbmeta_image_header_to_host_byte_order(
+      reinterpret_cast<const AvbVBMetaImageHeader*>(content.data() +
+                                                    footer.vbmeta_offset),
+      &header);
+
+  size_t signature_offset_in_file = footer.vbmeta_offset +
+                                    sizeof(AvbVBMetaImageHeader) +
+                                    header.signature_offset;
+  content[signature_offset_in_file] ^= 0x01;
+
+  ASSERT_TRUE(android::base::WriteStringToFile(content, image_path));
+
+  EXPECT_COMMAND(1,
+                 "./avbtool.py resign_image --image %s --key %s --algorithm %s",
+                 image_path.c_str(),
+                 "test/data/testkey_rsa2048_2.pem",
+                 "SHA256_RSA2048");
 }
 
 }  // namespace avb

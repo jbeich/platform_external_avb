@@ -201,4 +201,42 @@ std::string BaseAvbToolTest::PublicKeyAVBDigest(const std::string& key_path) {
   return digest_data;
 }
 
+void BaseAvbToolTest::EXPECT_DIFF(const std::string& text1,
+                                  const std::string& text2,
+                                  const std::string& expected_diff) {
+  std::filesystem::path file1_path = testdir_ / "diff_file1.txt";
+  std::filesystem::path file2_path = testdir_ / "diff_file2.txt";
+  ASSERT_TRUE(android::base::WriteStringToFile(text1, file1_path.string()));
+  ASSERT_TRUE(android::base::WriteStringToFile(text2, file2_path.string()));
+
+  std::string cmd =
+      android::base::StringPrintf("diff -u --label original --label new %s %s",
+                                  file1_path.c_str(),
+                                  file2_path.c_str());
+
+  std::string actual_diff;
+  FILE* pipe = popen(cmd.c_str(), "r");
+  if (!pipe) {
+    FAIL() << "popen() failed for command: " << cmd;
+  }
+  char buffer[256];
+  while (fgets(buffer, sizeof(buffer), pipe) != nullptr) {
+    actual_diff += buffer;
+  }
+  int status = pclose(pipe);
+  int exit_code = WEXITSTATUS(status);
+
+  if (expected_diff.empty()) {
+    EXPECT_EQ(0, exit_code) << "Expected no difference, but diff found one.";
+    EXPECT_EQ("", actual_diff);
+  } else {
+    EXPECT_EQ(1, exit_code)
+        << "Expected a difference, but diff found none or an error occurred.";
+    EXPECT_EQ(expected_diff, actual_diff)
+        << "The diff output did not match.\n"
+        << "---BEGIN ACTUAL DIFF---\n"
+        << actual_diff << "---END ACTUAL DIFF---";
+  }
+}
+
 }  // namespace avb
