@@ -105,6 +105,11 @@ class BaseAvbToolTest : public ::testing::Test {
    */
   std::string PublicKeyAVBDigest(const std::string& key_path);
 
+  /* Runs diff -u on two strings and compares to expected output. */
+  void EXPECT_DIFF(const std::string& text1,
+                   const std::string& text2,
+                   const std::string& expected_diff);
+
   void SetUp() override;
   void TearDown() override;
 
