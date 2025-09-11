@@ -137,11 +137,6 @@ python_binary_host {
     srcs: ["avbtool.py"],
     main: "avbtool.py",
     required: ["fec"],
-    version: {
-        py3: {
-            embedded_launcher: true,
-        },
-    },
     compile_multilib: "first",
 }
 
