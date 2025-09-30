@@ -34,9 +34,6 @@
 #include "avb_vbmeta_image.h"
 #include "avb_version.h"
 
-/* Maximum number of partitions that can be loaded with avb_slot_verify(). */
-#define MAX_NUMBER_OF_LOADED_PARTITIONS 32
-
 /* Maximum number of vbmeta images that can be loaded with avb_slot_verify(). */
 #define MAX_NUMBER_OF_VBMETA_IMAGES 32
 
@@ -456,7 +453,8 @@ out:
   if ((ret == AVB_SLOT_VERIFY_RESULT_OK || result_should_continue(ret)) &&
       image_buf != NULL) {
     AvbPartitionData* loaded_partition;
-    if (slot_data->num_loaded_partitions == MAX_NUMBER_OF_LOADED_PARTITIONS) {
+    if (slot_data->num_loaded_partitions ==
+        AVB_MAX_NUMBER_OF_LOADED_PARTITIONS) {
       avb_error(part_name, ": Too many loaded partitions.\n");
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
       goto fail;
@@ -531,7 +529,8 @@ static AvbSlotVerifyResult load_requested_partitions(
     }
 
     /* Move to slot_data. */
-    if (slot_data->num_loaded_partitions == MAX_NUMBER_OF_LOADED_PARTITIONS) {
+    if (slot_data->num_loaded_partitions ==
+        AVB_MAX_NUMBER_OF_LOADED_PARTITIONS) {
       avb_error(part_name, ": Too many loaded partitions.\n");
       ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
       goto out;
@@ -1494,8 +1493,8 @@ AvbSlotVerifyResult avb_slot_verify(AvbOps* ops,
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
     goto fail;
   }
-  slot_data->loaded_partitions =
-      avb_calloc(sizeof(AvbPartitionData) * MAX_NUMBER_OF_LOADED_PARTITIONS);
+  slot_data->loaded_partitions = avb_calloc(
+      sizeof(AvbPartitionData) * AVB_MAX_NUMBER_OF_LOADED_PARTITIONS);
   if (slot_data->loaded_partitions == NULL) {
     ret = AVB_SLOT_VERIFY_RESULT_ERROR_OOM;
     goto fail;
