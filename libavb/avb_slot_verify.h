@@ -36,6 +36,9 @@
 extern "C" {
 #endif
 
+/* Maximum number of partitions that can be loaded with avb_slot_verify(). */
+#define AVB_MAX_NUMBER_OF_LOADED_PARTITIONS 32
+
 /* Return codes used in avb_slot_verify(), see that function for
  * documentation for each field.
  *
