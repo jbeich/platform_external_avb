@@ -30,8 +30,8 @@ use crate::{
 };
 use alloc::vec::Vec;
 use avb_bindgen::{
-    AVB_SHA256_DIGEST_SIZE, AVB_SHA512_DIGEST_SIZE, AvbDigestType, AvbPartitionData,
-    AvbSlotVerifyData, AvbVBMetaData, avb_slot_verify,
+    AVB_MAX_NUMBER_OF_LOADED_PARTITIONS, AVB_SHA256_DIGEST_SIZE, AVB_SHA512_DIGEST_SIZE,
+    AvbDigestType, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData, avb_slot_verify,
     avb_slot_verify_data_calculate_vbmeta_digest, avb_slot_verify_data_free,
 };
 use core::{
@@ -469,11 +469,14 @@ pub fn slot_verify<'a>(
     flags: SlotVerifyFlags,
     hashtree_error_mode: HashtreeErrorMode,
 ) -> SlotVerifyResult<'a, SlotVerifyData<'a>> {
-    // libavb detects the size of the `requested_partitions` array by NULL termination. Expecting
-    // the Rust caller to do this would make the API much more awkward, so we populate a
-    // NULL-terminated array of c-string pointers ourselves. For now we use a fixed-sized array
-    // rather than dynamically allocating, 8 should be more than enough.
-    const MAX_PARTITION_ARRAY_SIZE: usize = 8 + 1; // Max 8 partition names + 1 for NULL terminator.
+    // libavb detects the size of the `requested_partitions` array by NULL termination
+    // (maximum number is `AVB_MAX_NUMBER_OF_LOADED_PARTITIONS`). Expecting the Rust caller
+    // to do this would make the API much more awkward, so we populate a NULL-terminated
+    // array of c-string pointers ourselves. For now we use a fixed-sized array rather than
+    // dynamically allocating.
+
+    // +1 for NULL terminator.
+    const MAX_PARTITION_ARRAY_SIZE: usize = AVB_MAX_NUMBER_OF_LOADED_PARTITIONS as usize + 1;
     if requested_partitions.len() >= MAX_PARTITION_ARRAY_SIZE {
         return Err(SlotVerifyError::Internal);
     }
