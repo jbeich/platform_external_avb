@@ -348,6 +348,10 @@ fn vbmeta_with_boot_partition_passes_verification() {
     let vbmeta_data = &data.vbmeta_data()[0];
     assert_eq!(vbmeta_data.partition_name().to_str().unwrap(), "boot");
 
+    let header = vbmeta_data.header_verified().unwrap();
+    assert_eq!(header.public_key(), fs::read(TEST_PUBLIC_KEY_PATH).unwrap());
+    assert_eq!(header.rollback_index_location(), 0);
+
     // Partition should indicate that it came from `boot`, but only contain the image contents.
     assert_eq!(data.partition_data().len(), 1);
     let partition_data = &data.partition_data()[0];

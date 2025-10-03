@@ -31,8 +31,9 @@ use crate::{
 use alloc::vec::Vec;
 use avb_bindgen::{
     AVB_MAX_NUMBER_OF_LOADED_PARTITIONS, AVB_SHA256_DIGEST_SIZE, AVB_SHA512_DIGEST_SIZE,
-    AvbDigestType, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData, avb_slot_verify,
-    avb_slot_verify_data_calculate_vbmeta_digest, avb_slot_verify_data_free,
+    AvbDigestType, AvbPartitionData, AvbSlotVerifyData, AvbVBMetaData, AvbVBMetaImageHeader,
+    avb_slot_verify, avb_slot_verify_data_calculate_vbmeta_digest, avb_slot_verify_data_free,
+    avb_vbmeta_image_header_to_host_byte_order, avb_vbmeta_image_verify,
 };
 use core::{
     ffi::{CStr, c_char},
@@ -143,6 +144,11 @@ impl VbmetaData {
             _ => None,
         })
     }
+
+    /// Parses vbmeta header and returns a `VbmetaHeader` instance.
+    pub fn header_verified(&self) -> VbmetaVerifyResult<VbmetaHeader> {
+        VbmetaHeader::verify_from_vbmeta_data(self)
+    }
 }
 
 impl fmt::Display for VbmetaData {
@@ -156,6 +162,66 @@ impl fmt::Display for VbmetaData {
 impl fmt::Debug for VbmetaData {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         fmt::Display::fmt(self, f)
+    }
+}
+
+/// Wrapper for `AvbVBMetaImageHeader` C struct.
+pub struct VbmetaHeader<'a> {
+    /// The rollback index location from the vbmeta header.
+    rollback_index_location: u32,
+    /// Vbmeta image public key
+    extracted_public_key: &'a [u8],
+}
+
+impl<'a> VbmetaHeader<'a> {
+    /// Verifies vbmeta image, parses the header and returns a `VbmetaHeader` instance
+    fn verify_from_vbmeta_data(data: &'a VbmetaData) -> VbmetaVerifyResult<Self> {
+        let extracted_public_key = Self::verify(data)?;
+        let mut header = AvbVBMetaImageHeader::default();
+        // SAFETY: `data.0.vbmeta_data` contains a valid pointer to the raw VBMeta partition data,
+        // verified by an earlier call to `avb_vbmeta_image_verify`. `&mut header` provides a valid,
+        // aligned, and mutable pointer to a stack-allocated `AvbVBMetaImageHeader` structure where
+        // the result will be written. The C function is responsible for converting all multi-byte
+        // fields in the header from little-endian to native byte order.
+        unsafe {
+            avb_vbmeta_image_header_to_host_byte_order(data.0.vbmeta_data as _, &mut header);
+        }
+        Ok(Self {
+            rollback_index_location: header.rollback_index_location,
+            extracted_public_key,
+        })
+    }
+
+    /// Verifies vbmeta image and returns public key.
+    fn verify(data: &VbmetaData) -> VbmetaVerifyResult<&[u8]> {
+        let mut pkey_ptr: *const u8 = ptr::null();
+        let mut pkey_len: usize = 0;
+        // SAFETY: The `vbmeta_data` pointer and `vbmeta_size` length point to a valid, initialized
+        // VBMeta image in memory. `&pkey_ptr` and `&pkey_len` are valid, mutable pointers to local
+        // stack variables, which the C function will write its output into. The underlying C
+        // function does not read past the provided size.
+        vbmeta_verify_enum_to_result(unsafe {
+            avb_vbmeta_image_verify(
+                data.0.vbmeta_data,
+                data.0.vbmeta_size,
+                &mut pkey_ptr,
+                &mut pkey_len,
+            )
+        })?;
+        // SAFETY: `avb_vbmeta_image_verify` returned Ok, so `pkey_ptr` is non-null, is correctly
+        // aligned, and is valid for reads of `pkey_len`. It points to an address within
+        // `data.0.vbmeta_data`, which is valid for the lifetime of `VbmetaData`.
+        unsafe { Ok(slice::from_raw_parts(pkey_ptr, pkey_len)) }
+    }
+
+    /// Returns the extracted vbmeta image public key.
+    pub fn public_key(&self) -> &'a [u8] {
+        self.extracted_public_key
+    }
+
+    /// Returns the location of the rollback index defined in this header.
+    pub fn rollback_index_location(&self) -> u32 {
+        self.rollback_index_location
     }
 }
 
