@@ -127,6 +127,30 @@ cc_defaults {
     ],
 }
 
+cc_defaults {
+    name: "avb_crypto_ops_impl_sha_arm",
+    srcs: [
+        "libavb/sha/sha256_impl_hw_accelerator.c",
+        "libavb/sha/sha256_impl_arm.c",
+        "libavb/sha/sha512_impl_hw_accelerator.c",
+    ],
+    local_include_dirs: [
+        "libavb/sha",
+    ],
+}
+
+cc_defaults {
+    name: "avb_crypto_ops_impl_sha_x86",
+    srcs: [
+        "libavb/sha/sha256_impl_hw_accelerator.c",
+        "libavb/sha/sha256_impl_x86.c",
+        "libavb/sha/sha512_impl_hw_accelerator.c",
+    ],
+    local_include_dirs: [
+        "libavb/sha",
+    ],
+}
+
 python_library_host {
     name: "libavbtool",
     srcs: ["avbtool.py"],
