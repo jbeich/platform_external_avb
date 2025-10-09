@@ -68,6 +68,24 @@
       "message": "Can\u0027t we use the compiler intrinsics `_mm_sha256rnds2_epu32`, etc to avoid using raw ASM?",
       "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "6ff47170_ca0d5af5",
+        "filename": "libavb/sha/sha256_impl_hw_accelerator.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-10-09T13:39:06Z",
+      "side": 1,
+      "message": "why would you even do that --- why not just use boringssl\u0027s existing optimized sha256? (that also means riscv64 isn\u0027t your problem.)\n\ni think the bar is pretty high for \"let\u0027s introduce _another_ sha256 implementation\"...",
+      "parentUuid": "97959a45_f8a2d786",
+      "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
