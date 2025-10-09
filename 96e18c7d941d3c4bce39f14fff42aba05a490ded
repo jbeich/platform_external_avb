@@ -16,6 +16,23 @@
       "message": "Dear Reviewers, Can I get some attention in the code review if you are the maintainer for AVB implementation.\n\nThis HW based SHA256 implementation for X86 and ARM are required to save the boot time for our Android platform.",
       "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f005ef29_a691312c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1080813
+      },
+      "writtenOn": "2025-10-09T10:35:19Z",
+      "side": 1,
+      "message": "Btw, should we move this to internal gerrit?",
+      "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
