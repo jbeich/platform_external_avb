@@ -33,6 +33,24 @@
       "message": "Btw, should we move this to internal gerrit?",
       "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "56c0be96_e50b9532",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4387834
+      },
+      "writtenOn": "2025-10-09T10:41:13Z",
+      "side": 1,
+      "message": "\u003e Btw, should we move this to internal gerrit?\n\n\ncan you please share a link for me to understand how can I sync the avb project internally",
+      "parentUuid": "f005ef29_a691312c",
+      "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
