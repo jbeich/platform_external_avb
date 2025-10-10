@@ -104,6 +104,24 @@
       "parentUuid": "6ff47170_ca0d5af5",
       "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b1df2d2c_d1f38c38",
+        "filename": "libavb/sha/sha256_impl_hw_accelerator.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1003224
+      },
+      "writtenOn": "2025-10-10T16:21:03Z",
+      "side": 1,
+      "message": "you should be able to copy \u0026 paste your way from the toybox code i wrote. (on android toybox already uses the boringssl sha implementation rather than its own portable c one. there are numerous other examples around the tree, that just happens to be one i wrote.)",
+      "parentUuid": "f86c69cd_835a352e",
+      "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
