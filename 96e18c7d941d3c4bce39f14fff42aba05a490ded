@@ -86,6 +86,24 @@
       "parentUuid": "97959a45_f8a2d786",
       "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
       "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    },
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "f86c69cd_835a352e",
+        "filename": "libavb/sha/sha256_impl_hw_accelerator.c",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 4387834
+      },
+      "writtenOn": "2025-10-10T15:44:31Z",
+      "side": 1,
+      "message": "\u003e why would you even do that --- why not just use boringssl\u0027s existing optimized sha256? (that also means riscv64 isn\u0027t your problem.)\n\u003e \n\u003e i think the bar is pretty high for \"let\u0027s introduce _another_ sha256 implementation\"...\n\nI have tried using boringssl based sha256/sha512 implementation but looks like the implementation itself is not clean because of multiple reasons\n\n1. Missing header files\n```\ngit diff \ndiff --git a/libavb/boringssl/avb_crypto_ops_impl.h b/libavb/boringssl/avb_crypto_ops_impl.h\nindex abfbcad..205942a 100644\n--- a/libavb/boringssl/avb_crypto_ops_impl.h\n+++ b/libavb/boringssl/avb_crypto_ops_impl.h\n@@ -33,6 +33,7 @@\n #ifndef AVB_CRYPTO_OPS_IMPL_H_\n #define AVB_CRYPTO_OPS_IMPL_H_\n \n+#include \u003copenssl/base.h\u003e\n #include \u003copenssl/is_boringssl.h\u003e\n #include \u003copenssl/sha.h\u003e\n```\n\n2. SHA256_Init/SHA512_Init implementation relies on boringssl implementation which eventually resulted into missing header files\n\n```\nIn file included from /build/fatcat/tmp/portage/sys-boot/libpayload-9999/work/libpayload-9999/libavb/libavb/boringssl/crypto/fipsmodule/sha/sha256.c:63:\n/build/fatcat/tmp/portage/sys-boot/libpayload-9999/work/libpayload-9999/libavb/libavb/boringssl/crypto/fipsmodule/sha/../../internal.h:136:10: fatal error: stdalign.h: No such file or directory\n  136 | #include \u003cstdalign.h\u003e\n      |          ^~~~~~~~~~~~\ncompilation terminated.\nmake[1]: *** [firmware/avb/Makefile:49: /build/fatcat/tmp/portage/sys-boot/libpayload-9999/temp/fatcat/external/vboot/libavb/boringssl/crypto/fipsmodule/sha/sha256.o] Error 1\nmake[1]: *** Waiting for unfinished jobs....\nIn file included from /build/fatcat/tmp/portage/sys-boot/libpayload-9999/work/libpayload-9999/libavb/libavb/boringssl/crypto/fipsmodule/sha/sha512.c:63:\n/build/fatcat/tmp/portage/sys-boot/libpayload-9999/work/libpayload-9999/libavb/libavb/boringssl/crypto/fipsmodule/sha/../../internal.h:136:10: fatal error: stdalign.h: No such file or directory\n  136 | #include \u003cstdalign.h\u003e\n      |     \n```",
+      "parentUuid": "6ff47170_ca0d5af5",
+      "revId": "96e18c7d941d3c4bce39f14fff42aba05a490ded",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
     }
   ]
 }
