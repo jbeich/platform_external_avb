@@ -351,15 +351,40 @@ class RSAPublicKey(object):
   """Data structure used for a RSA public key.
 
   Attributes:
-    exponent: The key exponent.
     modulus: The key modulus.
     num_bits: The key size.
     key_path: The path to a key file.
+    delete_key: Whether to delete the key file when exiting the context.
   """
+  # The exponent is assumed to always be 65537 and the number of
+  # bits can be derived from the modulus by rounding up to the
+  # nearest power of 2.
+  EXPONENT = 65537
 
   MODULUS_PREFIX = b'modulus='
 
-  def __init__(self, key_path):
+  def __init__(self, key_path, modulus, num_bits, delete_key=False):
+    """Initializes a new RSA public key.
+
+    Arguments:
+      key_path: The path to a key file.
+      modulus: The key modulus.
+      num_bits: The key size.
+      delete_key: Whether to delete the key file when exiting the context.
+    """
+    self.key_path = key_path
+    self.modulus = modulus
+    self.num_bits = num_bits
+    self.delete_key = delete_key
+
+  def __enter__(self):
+    return self
+
+  def __exit__(self, exc_type, exc_val, exc_tb):
+    if self.delete_key:
+      os.remove(self.key_path)
+
+  def load(key_path):
     """Loads and parses an RSA key from either a private or public key file.
 
     Arguments:
@@ -395,18 +420,65 @@ class RSAPublicKey(object):
       if p.wait() != 0:
         raise AvbError('Error getting public key: {}'.format(perr))
 
-    if not pout.lower().startswith(self.MODULUS_PREFIX):
+    if not pout.lower().startswith(RSAPublicKey.MODULUS_PREFIX):
       raise AvbError('Unexpected modulus output')
 
-    modulus_hexstr = pout[len(self.MODULUS_PREFIX):]
+    modulus_hexstr = pout[len(RSAPublicKey.MODULUS_PREFIX):]
+    modulus = int(modulus_hexstr, 16)
+    num_bits = round_to_pow2(int(math.ceil(math.log(modulus, 2))))
+    return RSAPublicKey(key_path, modulus, num_bits)
 
-    # The exponent is assumed to always be 65537 and the number of
-    # bits can be derived from the modulus by rounding up to the
-    # nearest power of 2.
-    self.key_path = key_path
-    self.modulus = int(modulus_hexstr, 16)
-    self.num_bits = round_to_pow2(int(math.ceil(math.log(self.modulus, 2))))
-    self.exponent = 65537
+  def decode(pubkey_blob):
+    """Decodes the public RSA key in |AvbRSAPublicKeyHeader| format.
+
+    Arguments:
+      pubkey_blob: The encoded public key blob.
+
+    Raises:
+      AvbError: If RSA key parameters could not be read from file.
+    """
+    (num_bits,) = struct.unpack('!I', pubkey_blob[0:4])
+    modulus_blob = pubkey_blob[8:8 + num_bits//8]
+    modulus = decode_long(modulus_blob)
+
+    # We used to have this:
+    #
+    #  import Crypto.PublicKey.RSA
+    #  key = Crypto.PublicKey.RSA.construct((modulus, long(exponent)))
+    #  if not key.verify(decode_long(padding_and_digest),
+    #                    (decode_long(sig_blob), None)):
+    #    return False
+    #  return True
+    #
+    # but since 'avbtool verify_image' is used on the builders we don't want
+    # to rely on Crypto.PublicKey.RSA. Instead just use openssl(1) to verify.
+    asn1_str = ('asn1=SEQUENCE:pubkeyinfo\n'
+                '\n'
+                '[pubkeyinfo]\n'
+                'algorithm=SEQUENCE:rsa_alg\n'
+                'pubkey=BITWRAP,SEQUENCE:rsapubkey\n'
+                '\n'
+                '[rsa_alg]\n'
+                'algorithm=OID:rsaEncryption\n'
+                'parameter=NULL\n'
+                '\n'
+                '[rsapubkey]\n'
+                'n=INTEGER:{}\n'
+                'e=INTEGER:{}\n').format(hex(modulus).rstrip('L'),
+                                        hex(RSAPublicKey.EXPONENT).rstrip('L'))
+    with tempfile.NamedTemporaryFile() as asn1_tmpfile:
+      asn1_tmpfile.write(asn1_str.encode('ascii'))
+      asn1_tmpfile.flush()
+
+      with tempfile.NamedTemporaryFile(delete=False) as der_tmpfile:
+        p = subprocess.Popen(
+            ['openssl', 'asn1parse', '-genconf', asn1_tmpfile.name, '-out',
+            der_tmpfile.name, '-noout'])
+        retcode = p.wait()
+        if retcode != 0:
+          os.remove(der_tmpfile.name)
+          raise AvbError('Error generating DER file')
+    return RSAPublicKey(der_tmpfile.name, modulus, num_bits, delete_key=True)
 
   def encode(self):
     """Encodes the public RSA key in |AvbRSAPublicKeyHeader| format.
@@ -416,12 +488,7 @@ class RSAPublicKey(object):
 
     Returns:
       The |AvbRSAPublicKeyHeader| followed by two large numbers as bytes.
-
-    Raises:
-      AvbError: If given RSA key exponent is not 65537.
     """
-    if self.exponent != 65537:
-      raise AvbError('Only RSA keys with exponent 65537 are supported.')
     ret = bytearray()
     # Calculate n0inv = -1/n[0] (mod 2^32)
     b = 2 ** 32
@@ -506,6 +573,56 @@ class RSAPublicKey(object):
       raise AvbError('Error signing: Invalid length of signature')
     return signature
 
+  def verify(self, algorithm_name, signature_to_verify, data):
+    """Verifies the given signature using openssl.
+
+    Checks that |signature_to_verify| is a valid signature of |data|.
+
+    Arguments:
+      algorithm_name: The algorithm name as per the ALGORITHMS dict.
+      signature_to_verify: The signature to verify.
+      data: The data to verify the signature of.
+
+    Returns:
+      True if verification succeeded, False otherwise.
+
+    Raises:
+      AvbError: If an error occurred during signing.
+    """
+    # Checks requested algorithm for validity.
+    algorithm = ALGORITHMS.get(algorithm_name)
+    if not algorithm:
+      raise AvbError('Algorithm with name {} is not supported.'
+                     .format(algorithm_name))
+
+    if self.num_bits != (algorithm.signature_num_bytes * 8):
+      raise AvbError('Key size of key ({} bits) does not match key size '
+                     '({} bits) of given algorithm {}.'
+                     .format(self.num_bits, algorithm.signature_num_bytes * 8,
+                             algorithm_name))
+
+    # Hashes the data.
+    hasher = hashlib.new(algorithm.hash_name)
+    hasher.update(data)
+    digest = hasher.digest()
+
+    # Verifies the signature.
+    padding_and_digest = algorithm.padding + digest
+    p = subprocess.Popen(
+          ['openssl', 'rsautl', '-verify', '-pubin', '-inkey', self.key_path,
+           '-keyform', 'DER', '-raw'],
+          stdin=subprocess.PIPE,
+          stdout=subprocess.PIPE,
+          stderr=subprocess.PIPE)
+    (pout, perr) = p.communicate(signature_to_verify)
+    retcode = p.wait()
+    if retcode != 0:
+      raise AvbError('Error verifying data: {}'.format(perr))
+    if pout != padding_and_digest:
+      sys.stderr.write('Signature not correct\n')
+      return False
+    return True
+
 
 def lookup_algorithm_by_type(alg_type):
   """Looks up algorithm by type.
@@ -561,8 +678,8 @@ def verify_vbmeta_signature(vbmeta_header, vbmeta_blob):
     AvbError: If there errors calling out to openssl command during
         signature verification.
   """
-  (_, alg) = lookup_algorithm_by_type(vbmeta_header.algorithm_type)
-  if not alg.hash_name:
+  (alg_name, alg) = lookup_algorithm_by_type(vbmeta_header.algorithm_type)
+  if alg_name == 'NONE':
     return True
   header_blob = vbmeta_blob[0:256]
   auth_offset = 256
@@ -594,65 +711,12 @@ def verify_vbmeta_signature(vbmeta_header, vbmeta_blob):
   if computed_digest != digest_blob:
     return False
 
-  padding_and_digest = alg.padding + computed_digest
-
-  (num_bits,) = struct.unpack('!I', pubkey_blob[0:4])
-  modulus_blob = pubkey_blob[8:8 + num_bits//8]
-  modulus = decode_long(modulus_blob)
-  exponent = 65537
-
-  # We used to have this:
-  #
-  #  import Crypto.PublicKey.RSA
-  #  key = Crypto.PublicKey.RSA.construct((modulus, long(exponent)))
-  #  if not key.verify(decode_long(padding_and_digest),
-  #                    (decode_long(sig_blob), None)):
-  #    return False
-  #  return True
-  #
-  # but since 'avbtool verify_image' is used on the builders we don't want
-  # to rely on Crypto.PublicKey.RSA. Instead just use openssl(1) to verify.
-  asn1_str = ('asn1=SEQUENCE:pubkeyinfo\n'
-              '\n'
-              '[pubkeyinfo]\n'
-              'algorithm=SEQUENCE:rsa_alg\n'
-              'pubkey=BITWRAP,SEQUENCE:rsapubkey\n'
-              '\n'
-              '[rsa_alg]\n'
-              'algorithm=OID:rsaEncryption\n'
-              'parameter=NULL\n'
-              '\n'
-              '[rsapubkey]\n'
-              'n=INTEGER:{}\n'
-              'e=INTEGER:{}\n').format(hex(modulus).rstrip('L'),
-                                       hex(exponent).rstrip('L'))
-
-  with tempfile.NamedTemporaryFile() as asn1_tmpfile:
-    asn1_tmpfile.write(asn1_str.encode('ascii'))
-    asn1_tmpfile.flush()
-
-    with tempfile.NamedTemporaryFile() as der_tmpfile:
-      p = subprocess.Popen(
-          ['openssl', 'asn1parse', '-genconf', asn1_tmpfile.name, '-out',
-           der_tmpfile.name, '-noout'])
-      retcode = p.wait()
-      if retcode != 0:
-        raise AvbError('Error generating DER file')
-
-      p = subprocess.Popen(
-          ['openssl', 'rsautl', '-verify', '-pubin', '-inkey', der_tmpfile.name,
-           '-keyform', 'DER', '-raw'],
-          stdin=subprocess.PIPE,
-          stdout=subprocess.PIPE,
-          stderr=subprocess.PIPE)
-      (pout, perr) = p.communicate(sig_blob)
-      retcode = p.wait()
-      if retcode != 0:
-        raise AvbError('Error verifying data: {}'.format(perr))
-      if pout != padding_and_digest:
-        sys.stderr.write('Signature not correct\n')
-        return False
-  return True
+  with RSAPublicKey.decode(pubkey_blob) as pubkey:
+    return pubkey.verify(
+        alg_name,
+        sig_blob,
+        header_blob + aux_blob,
+    )
 
 
 def create_avb_hashtree_hasher(algorithm, salt):
@@ -2551,7 +2615,8 @@ class Avb(object):
     if key_path:
       print('Verifying image {} using key at {}'.format(image_filename,
                                                         key_path))
-      key_blob = RSAPublicKey(key_path).encode()
+      with RSAPublicKey.load(key_path) as key:
+        key_blob = key.encode()
     else:
       print('Verifying image {} using embedded public key'.format(
           image_filename))
@@ -3207,7 +3272,8 @@ class Avb(object):
       if not key_path:
         raise AvbError('Key is required for algorithm {}'.format(
             algorithm_name))
-      encoded_key = RSAPublicKey(key_path).encode()
+      with RSAPublicKey.load(key_path) as key:
+        encoded_key = key.encode()
       if len(encoded_key) != alg.public_key_num_bytes:
         raise AvbError('Key is wrong size for algorithm {}'.format(
             algorithm_name))
@@ -3268,10 +3334,14 @@ class Avb(object):
       binary_hash = ha.digest()
 
       # Calculate the signature.
-      rsa_key = RSAPublicKey(key_path)
       data_to_sign = header_data_blob + bytes(aux_data_blob)
-      binary_signature = rsa_key.sign(algorithm_name, data_to_sign,
-                                      signing_helper, signing_helper_with_files)
+      with RSAPublicKey.load(key_path) as key:
+        binary_signature = key.sign(
+            algorithm_name,
+            data_to_sign,
+            signing_helper,
+            signing_helper_with_files,
+        )
 
     # Generate Authentication data block.
     auth_data_blob = bytearray()
@@ -3292,7 +3362,8 @@ class Avb(object):
     Raises:
       AvbError: If the public key could not be extracted.
     """
-    output.write(RSAPublicKey(key_path).encode())
+    with RSAPublicKey.load(key_path) as key:
+      output.write(key.encode())
 
   def extract_public_key_digest(self, key_path, output):
     """Implements the 'extract_public_key_digest' command.
@@ -3305,7 +3376,8 @@ class Avb(object):
       AvbError: If the public key could not be extracted.
     """
     hasher = hashlib.sha256()
-    hasher.update(RSAPublicKey(key_path).encode())
+    with RSAPublicKey.load(key_path) as key:
+      hasher.update(key.encode())
     output.write(hasher.hexdigest())
 
   def append_vbmeta_image(self, image_filename, vbmeta_image_filename,
@@ -3931,7 +4003,8 @@ class Avb(object):
     """
     signed_data = bytearray()
     signed_data.extend(struct.pack('<I', 1))  # Format Version
-    signed_data.extend(RSAPublicKey(subject_key_path).encode())
+    with RSAPublicKey.load(subject_key_path) as subject_key:
+      signed_data.extend(subject_key.encode())
     hasher = hashlib.sha256()
     hasher.update(subject)
     signed_data.extend(hasher.digest())
@@ -3943,10 +4016,11 @@ class Avb(object):
     signed_data.extend(struct.pack('<Q', subject_key_version))
     signature = b''
     if authority_key_path:
-      rsa_key = RSAPublicKey(authority_key_path)
       algorithm_name = 'SHA512_RSA4096'
-      signature = rsa_key.sign(algorithm_name, signed_data, signing_helper,
-                               signing_helper_with_files)
+      with RSAPublicKey.load(authority_key_path) as authority_key:
+        signature = authority_key.sign(algorithm_name, signed_data,
+                                       signing_helper,
+                                       signing_helper_with_files)
     output.write(signed_data)
     output.write(signature)
 
@@ -3971,7 +4045,8 @@ class Avb(object):
     if len(product_id) != EXPECTED_PRODUCT_ID_SIZE:
       raise AvbError('Invalid Product ID length.')
     output.write(struct.pack('<I', 1))  # Format Version
-    output.write(RSAPublicKey(root_authority_key_path).encode())
+    with RSAPublicKey.load(root_authority_key_path) as root_authority_key:
+      output.write(root_authority_key.encode())
     output.write(product_id)
 
   def make_cert_metadata(self, output, intermediate_key_certificate,
@@ -4048,10 +4123,10 @@ class Avb(object):
     output.write(intermediate_key_certificate)
     output.write(unlock_key_certificate)
     if challenge_path and unlock_key_path:
-      rsa_key = RSAPublicKey(unlock_key_path)
       algorithm_name = 'SHA512_RSA4096'
-      signature = rsa_key.sign(algorithm_name, challenge, signing_helper,
-                               signing_helper_with_files)
+      with RSAPublicKey.load(unlock_key_path) as unlock_key:
+        signature = unlock_key.sign(algorithm_name, challenge, signing_helper,
+                                signing_helper_with_files)
       output.write(signature)
 
   def update_partition_descriptor(self, image, partition_image, output,
@@ -4377,19 +4452,19 @@ class Avb(object):
       raise AvbError('VBMeta signature verification failed. Refusing to '
                      'resign image.')
 
-    new_key = RSAPublicKey(key_path)
-    new_alg = ALGORITHMS[algorithm_name]
+    with RSAPublicKey.load(key_path) as new_key:
+      new_alg = ALGORITHMS[algorithm_name]
 
-    aux_blob = self._extract_aux_blob(header, vbmeta_blob)
-    new_aux_blob, new_pk_size = self._replace_public_key_in_aux_blob(
-        aux_blob, header, new_key)
+      aux_blob = self._extract_aux_blob(header, vbmeta_blob)
+      new_aux_blob, new_pk_size = self._replace_public_key_in_aux_blob(
+          aux_blob, header, new_key)
 
-    new_header = self._prepare_resigned_header(header, new_alg, new_pk_size,
-                                               len(new_aux_blob))
+      new_header = self._prepare_resigned_header(header, new_alg, new_pk_size,
+                                                len(new_aux_blob))
 
-    new_auth_blob = self._create_new_auth_blob(
-        new_header, new_aux_blob, new_key, algorithm_name, signing_helper,
-        signing_helper_with_files)
+      new_auth_blob = self._create_new_auth_blob(
+          new_header, new_aux_blob, new_key, algorithm_name, signing_helper,
+          signing_helper_with_files)
 
     new_vbmeta_blob = new_header.encode() + new_auth_blob + new_aux_blob
 
