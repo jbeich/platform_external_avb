@@ -116,7 +116,7 @@ func parseCheckpoint(ckpt string) (Root, error) {
 	} else if strings.HasPrefix(ckpt, originIDG1P) {
 		body = ckpt[len(originIDG1P):]
 	} else {
-		return Root{}, errors.New(fmt.Sprintf("invalid checkpoint - unknown origin, must be either %s or %s", originIDPixel, originIDG1P))
+		return Root{}, fmt.Errorf("invalid checkpoint - unknown origin, must be either %s or %s", originIDPixel, originIDG1P)
 	}
 
 	// body must contain exactly 2 lines, size and the root hash.
