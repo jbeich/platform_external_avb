@@ -81,19 +81,20 @@ func main() {
 	var logBaseURL string
 	var keyNameForVerifier string
 	var binaryInfoFilename string
-	if *logType == "" {
+	switch *logType {
+	case "":
 		log.Fatal("must specify which log to verify against: 'pixel' or 'google_system_apk'")
-	} else if *logType == "pixel" {
+	case "pixel":
 		logPubKey = pixelLogPubKey
 		logBaseURL = LogBaseURLPixel
 		keyNameForVerifier = KeyNameForVerifierPixel
 		binaryInfoFilename = ImageInfoFilename
-	} else if *logType == "google_system_apk" {
+	case "google_system_apk":
 		logPubKey = googleSystemAppLogPubKey
 		logBaseURL = LogBaseURLG1P
 		keyNameForVerifier = KeyNameForVerifierG1P
 		binaryInfoFilename = PackageInfoFilename
-	} else {
+	default:
 		log.Fatal("unsupported log type")
 	}
 

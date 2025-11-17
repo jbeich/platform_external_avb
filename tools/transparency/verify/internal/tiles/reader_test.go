@@ -167,7 +167,7 @@ func TestParseImageInfosIndex(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			got, err := parseBinaryInfosIndex(tc.imageInfos, "image_info.txt")
 			if err != nil && !tc.wantErr {
-				t.Fatalf("parseBinaryInfosIndex(%s) received unexpected err %q", tc.imageInfos, err)
+				t.Fatalf("parseBinaryInfosIndex(%s) returned unexpected err %q", tc.imageInfos, err)
 			}
 
 			if err == nil && tc.wantErr {
@@ -206,7 +206,7 @@ func TestParsePackageInfosIndex(t *testing.T) {
 		t.Run(tc.desc, func(t *testing.T) {
 			got, err := parseBinaryInfosIndex(tc.packageInfos, "package_info.txt")
 			if err != nil && !tc.wantErr {
-				t.Fatalf("parseBinaryInfosIndex(%s) received unexpected err %q", tc.packageInfos, err)
+				t.Fatalf("parseBinaryInfosIndex(%s) returned unexpected err %q", tc.packageInfos, err)
 			}
 
 			if err == nil && tc.wantErr {
