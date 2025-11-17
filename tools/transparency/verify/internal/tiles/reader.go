@@ -73,19 +73,19 @@ func parseBinaryInfosIndex(binaryInfos string, binaryInfoFilename string) (map[s
 
 	infosStr := strings.Split(binaryInfos, "\n\n")
 	for _, infoStr := range infosStr {
-		pieces := strings.SplitN(infoStr, "\n", 2)
-		if len(pieces) != 2 {
+		idxStr, info, ok := strings.Cut(infoStr, "\n")
+		if !ok {
 			return nil, fmt.Errorf("missing newline, malformed %s", binaryInfoFilename)
 		}
 
-		idx, err := strconv.ParseInt(pieces[0], 10, 64)
+		idx, err := strconv.ParseInt(idxStr, 10, 64)
 		if err != nil {
-			return nil, fmt.Errorf("failed to convert %q to int64", pieces[0])
+			return nil, fmt.Errorf("failed to convert %q to int64", idxStr)
 		}
 
 		// Ensure that each log entry does not have extraneous whitespace, but
 		// also terminates with a newline.
-		logEntry := strings.TrimSpace(pieces[1]) + "\n"
+		logEntry := strings.TrimSpace(info) + "\n"
 		m[logEntry] = idx
 	}
 
