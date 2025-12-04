@@ -165,7 +165,7 @@ impl Descriptor<'_> {
 ///
 /// # Safety
 /// `vbmeta` must have been validated by `slot_verify()`.
-pub(crate) unsafe fn get_descriptors(vbmeta: &VbmetaData) -> DescriptorResult<Vec<Descriptor>> {
+pub(crate) unsafe fn get_descriptors(vbmeta: &VbmetaData) -> DescriptorResult<Vec<Descriptor<'_>>> {
     let mut result = Ok(Vec::new());
 
     // Use `avb_descriptor_foreach()` to grab all the descriptor pointers in `vmbeta.data()`.

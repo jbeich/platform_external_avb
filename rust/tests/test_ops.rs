@@ -14,6 +14,8 @@
 
 //! Provides `avb::Ops` test fixtures.
 
+#![deny(mismatched_lifetime_syntaxes)]
+
 use avb::{
     cert_validate_vbmeta_public_key, CertOps, CertPermanentAttributes, IoError, IoResult, Ops,
     PublicKeyForPartitionInfo, SHA256_DIGEST_SIZE,
