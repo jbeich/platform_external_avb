@@ -80,7 +80,7 @@ pub(super) struct ParsedDescriptor<'a, T> {
 /// # Returns
 /// A `ParsedDescriptor` on success, `DescriptorError` if `data` was too small or the header looks
 /// invalid.
-pub(super) fn parse_descriptor<T>(data: &[u8]) -> DescriptorResult<ParsedDescriptor<T>>
+pub(super) fn parse_descriptor<T>(data: &[u8]) -> DescriptorResult<ParsedDescriptor<'_, T>>
 where
     T: Default + FromBytes + Immutable + KnownLayout + ValidateAndByteswap,
 {

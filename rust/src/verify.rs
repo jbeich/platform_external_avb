@@ -109,7 +109,7 @@ impl VbmetaData {
     ///
     /// # Returns
     /// A vector of descriptors, or `DescriptorError` on failure.
-    pub fn descriptors(&self) -> DescriptorResult<Vec<Descriptor>> {
+    pub fn descriptors(&self) -> DescriptorResult<Vec<Descriptor<'_>>> {
         // SAFETY: the only way to get a `VbmetaData` object is via the return value of
         // `slot_verify()`, so we know we have been properly validated.
         unsafe { get_descriptors(self) }
@@ -146,7 +146,7 @@ impl VbmetaData {
     }
 
     /// Parses vbmeta header and returns a `VbmetaHeader` instance.
-    pub fn header_verified(&self) -> VbmetaVerifyResult<VbmetaHeader> {
+    pub fn header_verified(&self) -> VbmetaVerifyResult<VbmetaHeader<'_>> {
         VbmetaHeader::verify_from_vbmeta_data(self)
     }
 }
