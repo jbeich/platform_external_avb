@@ -26,6 +26,10 @@
 // panic_handler and eh_personality conditional on actually building a dylib.
 #![cfg_attr(not(any(test, android_dylib)), no_std)]
 
+// Enforce matched lifetime syntax manually, as it isn't currently part of the
+// standard Android lints.
+#![deny(mismatched_lifetime_syntaxes)]
+
 mod cert;
 mod descriptor;
 mod error;
