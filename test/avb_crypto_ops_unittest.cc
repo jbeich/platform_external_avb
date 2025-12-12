@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-#include <string.h>
-
 #include <gtest/gtest.h>
-
+#include <libavb/avb_mldsa.h>
 #include <libavb/avb_sha.h>
+#include <libavb/avb_sysdeps.h>
+#include <libavb/avb_util.h>
+#include <string.h>
 
 #include "avb_unittest_util.h"
 
@@ -113,6 +114,140 @@ TEST(CryptoOpsTest, DISABLED_Sha512Large) {
       "91fb3ffc4ee8a1b459c798d9fb9b50b7845e2871c4b1402470aaf4c0",
       mem_to_hexstring(avb_sha512_final(&ctx), AVB_SHA512_DIGEST_SIZE));
   delete[] megabuf;
+}
+
+// Helper to create a key blob with a specific header key_num_bytes
+static std::vector<uint8_t> CreateMLDSAKeyBlob(uint32_t header_key_num_bytes,
+                                               size_t actual_key_data_size) {
+  std::vector<uint8_t> key_blob(sizeof(AvbMLDSAPublicKeyHeader) +
+                                actual_key_data_size);
+  AvbMLDSAPublicKeyHeader* header =
+      reinterpret_cast<AvbMLDSAPublicKeyHeader*>(key_blob.data());
+  header->key_num_bytes = avb_htobe32(header_key_num_bytes);
+  for (size_t i = 0; i < actual_key_data_size; ++i) {
+    key_blob[sizeof(AvbMLDSAPublicKeyHeader) + i] = (uint8_t)i;
+  }
+  return key_blob;
+}
+
+TEST(MLDSAVerifyTest, NullInputs) {
+  uint8_t dummy_key[10];
+  uint8_t dummy_sig[10];
+  uint8_t dummy_msg_rep[AVB_MLDSA_MU_BYTES];
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA65,
+                                              NULL,
+                                              0,
+                                              dummy_sig,
+                                              sizeof(dummy_sig),
+                                              dummy_msg_rep));
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA65,
+                                              dummy_key,
+                                              sizeof(dummy_key),
+                                              NULL,
+                                              0,
+                                              dummy_msg_rep));
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA65,
+                                              dummy_key,
+                                              sizeof(dummy_key),
+                                              dummy_sig,
+                                              sizeof(dummy_sig),
+                                              NULL));
+}
+
+TEST(MLDSAVerifyTest, InvalidAlgorithm) {
+  uint8_t dummy_msg_rep[AVB_MLDSA_MU_BYTES];
+  std::vector<uint8_t> key = CreateMLDSAKeyBlob(1952, 1952);
+  uint8_t dummy_sig[3309];
+  EXPECT_FALSE(avb_mldsa_verify_message_representative(
+      AVB_ALGORITHM_TYPE_SHA256_RSA2048,  // Invalid type
+      key.data(),
+      key.size(),
+      dummy_sig,
+      sizeof(dummy_sig),
+      dummy_msg_rep));
+}
+
+TEST(MLDSAVerifyTest, MLDSA65_WrongHeaderKeyNumBytes) {
+  uint8_t dummy_msg_rep[AVB_MLDSA_MU_BYTES];
+  std::vector<uint8_t> key =
+      CreateMLDSAKeyBlob(100, 1952);  // Wrong header size
+  uint8_t dummy_sig[3309];
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA65,
+                                              key.data(),
+                                              key.size(),
+                                              dummy_sig,
+                                              sizeof(dummy_sig),
+                                              dummy_msg_rep));
+}
+
+TEST(MLDSAVerifyTest, MLDSA87_WrongHeaderKeyNumBytes) {
+  uint8_t dummy_msg_rep[AVB_MLDSA_MU_BYTES];
+  std::vector<uint8_t> key =
+      CreateMLDSAKeyBlob(100, 2592);  // Wrong header size
+  uint8_t dummy_sig[4627];
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA87,
+                                              key.data(),
+                                              key.size(),
+                                              dummy_sig,
+                                              sizeof(dummy_sig),
+                                              dummy_msg_rep));
+}
+
+TEST(MLDSAVerifyTest, MLDSA65_WrongTotalKeyNumBytes) {
+  uint8_t dummy_msg_rep[AVB_MLDSA_MU_BYTES];
+  std::vector<uint8_t> key = CreateMLDSAKeyBlob(1952, 100);  // Wrong data size
+  uint8_t dummy_sig[3309];
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA65,
+                                              key.data(),
+                                              key.size(),
+                                              dummy_sig,
+                                              sizeof(dummy_sig),
+                                              dummy_msg_rep));
+}
+
+TEST(MLDSAVerifyTest, MLDSA87_WrongTotalKeyNumBytes) {
+  uint8_t dummy_msg_rep[AVB_MLDSA_MU_BYTES];
+  std::vector<uint8_t> key = CreateMLDSAKeyBlob(2592, 100);  // Wrong data size
+  uint8_t dummy_sig[4627];
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA87,
+                                              key.data(),
+                                              key.size(),
+                                              dummy_sig,
+                                              sizeof(dummy_sig),
+                                              dummy_msg_rep));
+}
+
+TEST(MLDSAVerifyTest, MLDSA65_WrongSigNumBytes) {
+  uint8_t dummy_msg_rep[AVB_MLDSA_MU_BYTES];
+  std::vector<uint8_t> key = CreateMLDSAKeyBlob(1952, 1952);
+  uint8_t dummy_sig[100];  // Wrong signature size
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA65,
+                                              key.data(),
+                                              key.size(),
+                                              dummy_sig,
+                                              sizeof(dummy_sig),
+                                              dummy_msg_rep));
+}
+
+TEST(MLDSAVerifyTest, MLDSA87_WrongSigNumBytes) {
+  uint8_t dummy_msg_rep[AVB_MLDSA_MU_BYTES];
+  std::vector<uint8_t> key = CreateMLDSAKeyBlob(2592, 2592);
+  uint8_t dummy_sig[100];  // Wrong signature size
+  EXPECT_FALSE(
+      avb_mldsa_verify_message_representative(AVB_ALGORITHM_TYPE_MLDSA87,
+                                              key.data(),
+                                              key.size(),
+                                              dummy_sig,
+                                              sizeof(dummy_sig),
+                                              dummy_msg_rep));
 }
 
 }  // namespace avb

@@ -1158,6 +1158,14 @@ part of the boot process to remind the user that the custom key is in use.
 
 # Version History
 
+### Version 1.4
+Version 1.4 adds support for the following:
+* ML-DSA-65 and ML-DSA-87 signed VBMeta structs.
+
+**Note:** ML-DSA signature verification in `libavb` is currently only
+supported when built with the BoringSSL backend. The default `libavb/crypto`
+backend provides a stub implementation that will return an error.
+
 ### Version 1.3
 Version 1.3 adds support for the following:
 * A 32-bit `flags` element is added to a chain descriptor.
