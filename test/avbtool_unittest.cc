@@ -139,6 +139,73 @@ TEST_F(AvbToolTest, ReleaseStringAppendTruncated) {
   EXPECT_EQ(expected_str, std::string((const char*)h.release_string));
 }
 
+TEST_F(AvbToolTest, BasicMldsa) {
+  if (!MldsaSupported()) {
+    GTEST_SKIP() << "ML-DSA not supported by system openssl";
+  }
+  GenerateVBMetaImage(
+      "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
+  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
+            avb_vbmeta_image_verify(
+                vbmeta_image_.data(), vbmeta_image_.size(), nullptr, nullptr));
+}
+
+TEST_F(AvbToolTest, BasicMldsa87) {
+  if (!MldsaSupported()) {
+    GTEST_SKIP() << "ML-DSA not supported by system openssl";
+  }
+  GenerateVBMetaImage(
+      "vbmeta.img", "MLDSA87", 0, "test/data/testkey_mldsa87.pem");
+  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
+            avb_vbmeta_image_verify(
+                vbmeta_image_.data(), vbmeta_image_.size(), nullptr, nullptr));
+}
+
+TEST_F(AvbToolTest, MldsaWrongKey) {
+  if (!MldsaSupported()) {
+    GTEST_SKIP() << "ML-DSA not supported by system openssl";
+  }
+  GenerateVBMetaImage(
+      "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
+  // Attempt to verify with a different key type.
+  EXPECT_COMMAND(1,
+                 "./avbtool.py verify_image --image %s --key %s",
+                 vbmeta_image_path_.c_str(),
+                 "test/data/testkey_rsa2048.pem");
+  // Attempt to verify with a different MLDSA key.
+  EXPECT_COMMAND(1,
+                 "./avbtool.py verify_image --image %s --key %s",
+                 vbmeta_image_path_.c_str(),
+                 "test/data/testkey_mldsa87.pem");
+}
+
+TEST_F(AvbToolTest, MldsaTamperedSignature) {
+  if (!MldsaSupported()) {
+    GTEST_SKIP() << "ML-DSA not supported by system openssl";
+  }
+  GenerateVBMetaImage(
+      "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
+  // Corrupt the signature block.
+  vbmeta_image_[512]++;
+  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH,
+            avb_vbmeta_image_verify(
+                vbmeta_image_.data(), vbmeta_image_.size(), nullptr, nullptr));
+}
+
+TEST_F(AvbToolTest, MldsaTamperedVBMeta) {
+  if (!MldsaSupported()) {
+    GTEST_SKIP() << "ML-DSA not supported by system openssl";
+  }
+  GenerateVBMetaImage(
+      "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
+  // Corrupt a byte in the release string.
+  AvbVBMetaImageHeader* header = (AvbVBMetaImageHeader*)vbmeta_image_.data();
+  header->release_string[0]++;
+  EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH,
+            avb_vbmeta_image_verify(
+                vbmeta_image_.data(), vbmeta_image_.size(), nullptr, nullptr));
+}
+
 TEST_F(AvbToolTest, ExtractPublicKey) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
@@ -2697,7 +2764,7 @@ TEST_F(AvbToolTest, AppendVBMetaImage) {
       "Rollback Index:           0\n"
       "Flags:                    0\n"
       "Rollback Index Location:  0\n"
-      "Release String:           'avbtool 1.3.0 '\n"
+      "Release String:           'avbtool 1.4.0 '\n"
       "Descriptors:\n"
       "    Kernel Cmdline descriptor:\n"
       "      Flags:                 0\n"
@@ -3695,7 +3762,7 @@ TEST_F(AvbToolTest_UpdatePartitionDescriptor, HashDescriptor) {
       "Rollback Index:           0\n"
       "Flags:                    0\n"
       "Rollback Index Location:  0\n"
-      "Release String:           'avbtool 1.3.0'\n"
+      "Release String:           'avbtool 1.4.0'\n"
       "Descriptors:\n"
       "    Hash descriptor:\n"
       "      Image Size:            1024 bytes\n"
@@ -3734,7 +3801,7 @@ TEST_F(AvbToolTest_UpdatePartitionDescriptor, HashDescriptor) {
       "Rollback Index:           0\n"
       "Flags:                    0\n"
       "Rollback Index Location:  0\n"
-      "Release String:           'avbtool 1.3.0'\n"
+      "Release String:           'avbtool 1.4.0'\n"
       "Descriptors:\n"
       "    Hash descriptor:\n"
       "      Image Size:            2048 bytes\n"
@@ -3804,7 +3871,7 @@ TEST_F(AvbToolTest_UpdatePartitionDescriptor, HashtreeDescriptor) {
       "Rollback Index:           0\n"
       "Flags:                    0\n"
       "Rollback Index Location:  0\n"
-      "Release String:           'avbtool 1.3.0'\n"
+      "Release String:           'avbtool 1.4.0'\n"
       "Descriptors:\n"
       "    Hash descriptor:\n"
       "      Image Size:            1024 bytes\n"
@@ -3843,7 +3910,7 @@ TEST_F(AvbToolTest_UpdatePartitionDescriptor, HashtreeDescriptor) {
       "Rollback Index:           0\n"
       "Flags:                    0\n"
       "Rollback Index Location:  0\n"
-      "Release String:           'avbtool 1.3.0'\n"
+      "Release String:           'avbtool 1.4.0'\n"
       "Descriptors:\n"
       "    Hash descriptor:\n"
       "      Image Size:            1024 bytes\n"

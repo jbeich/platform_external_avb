@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -60,6 +60,14 @@ typedef struct {
   size_t len;
   uint8_t block[2 * AVB_SHA512_BLOCK_SIZE];
 } AvbSHA512ImplCtx;
+
+/* Dummy structs for the stub implementation */
+typedef struct {
+  int dummy;
+} AvbMLDSA65PrehashImplCtx;
+typedef struct {
+  int dummy;
+} AvbMLDSA87PrehashImplCtx;
 
 #ifdef __cplusplus
 }

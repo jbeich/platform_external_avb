@@ -23,11 +23,83 @@
  */
 
 #include "avb_vbmeta_image.h"
+
 #include "avb_crypto.h"
+#include "avb_mldsa.h"
 #include "avb_rsa.h"
 #include "avb_sha.h"
 #include "avb_util.h"
 #include "avb_version.h"
+
+static AvbVBMetaVerifyResult image_verify_rsa(
+    const AvbVBMetaImageHeader* h,
+    const uint8_t* authentication_block,
+    const uint8_t* auxiliary_block,
+    const uint8_t* computed_hash) {
+  int verification_result;
+
+  if (avb_safe_memcmp(authentication_block + h->hash_offset,
+                      computed_hash,
+                      h->hash_size) != 0) {
+    avb_error("Hash does not match!\n");
+    return AVB_VBMETA_VERIFY_RESULT_HASH_MISMATCH;
+  }
+
+  verification_result =
+      avb_rsa_verify(h->algorithm_type,
+                     auxiliary_block + h->public_key_offset,
+                     h->public_key_size,
+                     authentication_block + h->signature_offset,
+                     h->signature_size,
+                     authentication_block + h->hash_offset,
+                     h->hash_size);
+
+  if (verification_result == 0) {
+    return AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH;
+  }
+
+  return AVB_VBMETA_VERIFY_RESULT_OK;
+}
+
+static AvbVBMetaVerifyResult image_verify_mldsa(
+    const AvbVBMetaImageHeader* h,
+    const uint8_t* header_block,
+    const uint8_t* authentication_block,
+    const uint8_t* auxiliary_block) {
+  AvbMLDSAPrehashCtx ctx;
+
+  if (!avb_mldsa_prehash_init(&ctx,
+                              h->algorithm_type,
+                              auxiliary_block + h->public_key_offset,
+                              h->public_key_size,
+                              NULL,
+                              0)) {
+    return AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH;
+  }
+
+  avb_mldsa_prehash_update(&ctx, header_block, sizeof(AvbVBMetaImageHeader));
+  if (h->auxiliary_data_block_size > 0) {
+    avb_mldsa_prehash_update(
+        &ctx, auxiliary_block, h->auxiliary_data_block_size);
+  }
+
+  uint8_t message_representative[AVB_MLDSA_MU_BYTES];
+  if (!avb_mldsa_prehash_finalize(&ctx, message_representative)) {
+    return AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH;
+  }
+
+  if (!avb_mldsa_verify_message_representative(
+          h->algorithm_type,
+          auxiliary_block + h->public_key_offset,
+          h->public_key_size,
+          authentication_block + h->signature_offset,
+          h->signature_size,
+          message_representative)) {
+    return AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH;
+  }
+
+  return AVB_VBMETA_VERIFY_RESULT_OK;
+}
 
 AvbVBMetaVerifyResult avb_vbmeta_image_verify(
     const uint8_t* data,
@@ -43,7 +115,6 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
   const uint8_t* header_block;
   const uint8_t* authentication_block;
   const uint8_t* auxiliary_block;
-  int verification_result;
 
   ret = AVB_VBMETA_VERIFY_RESULT_INVALID_VBMETA_HEADER;
 
@@ -184,6 +255,8 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
       avb_sha256_update(
           &sha256_ctx, auxiliary_block, h.auxiliary_data_block_size);
       computed_hash = avb_sha256_final(&sha256_ctx);
+      ret = image_verify_rsa(
+          &h, authentication_block, auxiliary_block, computed_hash);
       break;
     /* Explicit fall-through: */
     case AVB_ALGORITHM_TYPE_SHA512_RSA2048:
@@ -195,35 +268,21 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
       avb_sha512_update(
           &sha512_ctx, auxiliary_block, h.auxiliary_data_block_size);
       computed_hash = avb_sha512_final(&sha512_ctx);
+      ret = image_verify_rsa(
+          &h, authentication_block, auxiliary_block, computed_hash);
+      break;
+    /* Explicit fall-through: */
+    case AVB_ALGORITHM_TYPE_MLDSA65:
+    case AVB_ALGORITHM_TYPE_MLDSA87:
+      ret = image_verify_mldsa(
+          &h, header_block, authentication_block, auxiliary_block);
       break;
     default:
       avb_error("Unknown algorithm.\n");
       goto out;
   }
 
-  if (avb_safe_memcmp(authentication_block + h.hash_offset,
-                      computed_hash,
-                      h.hash_size) != 0) {
-    avb_error("Hash does not match!\n");
-    ret = AVB_VBMETA_VERIFY_RESULT_HASH_MISMATCH;
-    goto out;
-  }
-
-  verification_result =
-      avb_rsa_verify(h.algorithm_type,
-                     auxiliary_block + h.public_key_offset,
-                     h.public_key_size,
-                     authentication_block + h.signature_offset,
-                     h.signature_size,
-                     authentication_block + h.hash_offset,
-                     h.hash_size);
-
-  if (verification_result == 0) {
-    ret = AVB_VBMETA_VERIFY_RESULT_SIGNATURE_MISMATCH;
-    goto out;
-  }
-
-  if (h.public_key_size > 0) {
+  if (ret == AVB_VBMETA_VERIFY_RESULT_OK && h.public_key_size > 0) {
     if (out_public_key_data != NULL) {
       *out_public_key_data = auxiliary_block + h.public_key_offset;
     }
@@ -231,8 +290,6 @@ AvbVBMetaVerifyResult avb_vbmeta_image_verify(
       *out_public_key_length = h.public_key_size;
     }
   }
-
-  ret = AVB_VBMETA_VERIFY_RESULT_OK;
 
 out:
   return ret;
