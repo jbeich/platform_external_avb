@@ -26,12 +26,12 @@
 #include "../avb_sysdeps.h"
 #include "../avb_util.h"
 
-bool avb_mldsa_prehash_init(AvbMLDSAPrehashCtx* ctx,
-                            AvbAlgorithmType algorithm,
-                            const uint8_t* key,
-                            size_t key_num_bytes,
-                            const uint8_t* context,
-                            size_t context_len) {
+bool avb_mldsa_prehash_init_impl(AvbMLDSAPrehashCtx* ctx,
+                                 AvbAlgorithmType algorithm,
+                                 const uint8_t* key,
+                                 size_t key_num_bytes,
+                                 const uint8_t* context,
+                                 size_t context_len) {
   (void)ctx;
   (void)algorithm;
   (void)key;
