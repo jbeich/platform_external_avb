@@ -149,6 +149,13 @@ bool avb_mldsa_verify_message_representative_impl(
     size_t sig_num_bytes,
     const uint8_t msg_rep[AVB_MLDSA_MU_BYTES]);
 
+bool avb_mldsa_prehash_init_impl(AvbMLDSAPrehashCtx* ctx,
+                                 AvbAlgorithmType algorithm,
+                                 const uint8_t* key,
+                                 size_t key_num_bytes,
+                                 const uint8_t* context,
+                                 size_t context_len);
+
 #ifdef __cplusplus
 }
 #endif
