@@ -29,21 +29,19 @@
 #include "../avb_sysdeps.h"
 #include "../avb_util.h"
 
-bool avb_mldsa_prehash_init(AvbMLDSAPrehashCtx* ctx,
-                            AvbAlgorithmType algorithm,
-                            const uint8_t* key,
-                            size_t key_num_bytes,
-                            const uint8_t* context,
-                            size_t context_len) {
+bool avb_mldsa_prehash_init_impl(AvbMLDSAPrehashCtx* ctx,
+                                 AvbAlgorithmType algorithm,
+                                 const uint8_t* key,
+                                 size_t key_num_bytes,
+                                 const uint8_t* context,
+                                 size_t context_len) {
   if (ctx == NULL) {
     return false;
   }
   avb_memset(ctx, 0, sizeof(AvbMLDSAPrehashCtx));
   ctx->algorithm = algorithm;
   CBS cbs;
-  CBS_init(&cbs,
-           key + sizeof(AvbMLDSAPublicKeyHeader),
-           key_num_bytes - sizeof(AvbMLDSAPublicKeyHeader));
+  CBS_init(&cbs, key, key_num_bytes);
 
   switch (algorithm) {
     case AVB_ALGORITHM_TYPE_MLDSA65: {
