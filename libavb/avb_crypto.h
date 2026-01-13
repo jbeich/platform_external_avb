@@ -100,6 +100,14 @@ typedef enum {
  *
  * AVB_ALGORITHM_TYPE_SHA512_RSA8192: Like above, but only with
  * a 8192-bit RSA key and |signature_size| set to 1024.
+ *
+ * AVB_ALGORITHM_TYPE_MLDSA65: A ML-DSA-65 key is used to sign the
+ * data. ML-DSA has an internal hash function and there is no external
+ * hash function. The field |hash_size| must be 0, |signature_size|
+ * must be 3309.
+ *
+ * AVB_ALGORITHM_TYPE_MLDSA87: Like above, but only with a ML-DSA-87
+ * key and |signature_size| set to 4627.
  */
 typedef enum {
   AVB_ALGORITHM_TYPE_NONE,
@@ -109,6 +117,8 @@ typedef enum {
   AVB_ALGORITHM_TYPE_SHA512_RSA2048,
   AVB_ALGORITHM_TYPE_SHA512_RSA4096,
   AVB_ALGORITHM_TYPE_SHA512_RSA8192,
+  AVB_ALGORITHM_TYPE_MLDSA65,
+  AVB_ALGORITHM_TYPE_MLDSA87,
   _AVB_ALGORITHM_NUM_TYPES
 } AvbAlgorithmType;
 

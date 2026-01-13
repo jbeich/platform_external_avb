@@ -331,7 +331,9 @@ AvbSlotVerifyResult avb_append_options(
     /* Explicit fallthrough. */
     case AVB_ALGORITHM_TYPE_SHA512_RSA2048:
     case AVB_ALGORITHM_TYPE_SHA512_RSA4096:
-    case AVB_ALGORITHM_TYPE_SHA512_RSA8192: {
+    case AVB_ALGORITHM_TYPE_SHA512_RSA8192:
+    case AVB_ALGORITHM_TYPE_MLDSA65:
+    case AVB_ALGORITHM_TYPE_MLDSA87: {
       size_t n, total_size = 0;
       uint8_t vbmeta_digest[AVB_SHA512_DIGEST_SIZE];
       avb_slot_verify_data_calculate_vbmeta_digest(

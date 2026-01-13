@@ -97,6 +97,7 @@ cc_defaults {
         "libavb/avb_hash_descriptor.c",
         "libavb/avb_hashtree_descriptor.c",
         "libavb/avb_kernel_cmdline_descriptor.c",
+        "libavb/avb_mldsa.c",
         "libavb/avb_property_descriptor.c",
         "libavb/avb_rsa.c",
         "libavb/avb_slot_verify.c",
@@ -109,6 +110,7 @@ cc_defaults {
 cc_defaults {
     name: "avb_crypto_ops_impl_boringssl",
     srcs: [
+        "libavb/boringssl/mldsa.c",
         "libavb/boringssl/sha.c",
     ],
     local_include_dirs: [
@@ -119,6 +121,7 @@ cc_defaults {
 cc_defaults {
     name: "avb_crypto_ops_impl_crypto",
     srcs: [
+        "libavb/crypto/mldsa_impl.c",
         "libavb/crypto/sha256_impl.c",
         "libavb/crypto/sha512_impl.c",
     ],
