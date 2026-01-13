@@ -39,6 +39,9 @@ size_t avb_get_algorithm_hash_size(AvbAlgorithmType algorithm) {
     case AVB_ALGORITHM_TYPE_SHA512_RSA4096:
     case AVB_ALGORITHM_TYPE_SHA512_RSA8192:
       return AVB_SHA512_DIGEST_SIZE;
+    case AVB_ALGORITHM_TYPE_MLDSA65:
+    case AVB_ALGORITHM_TYPE_MLDSA87:
+      return 0;
     default:
       return SIZE_MAX;
   }
