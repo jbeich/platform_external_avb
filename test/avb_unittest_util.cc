@@ -201,6 +201,10 @@ std::string BaseAvbToolTest::PublicKeyAVBDigest(const std::string& key_path) {
   return digest_data;
 }
 
+bool BaseAvbToolTest::MldsaSupported() {
+  return system("./avbtool.py check_mldsa_support") == 0;
+}
+
 void BaseAvbToolTest::EXPECT_DIFF(const std::string& text1,
                                   const std::string& text2,
                                   const std::string& expected_diff) {

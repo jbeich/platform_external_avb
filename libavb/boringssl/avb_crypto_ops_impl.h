@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 The Android Open Source Project
+ * Copyright (C) 2025 The Android Open Source Project
  *
  * Permission is hereby granted, free of charge, to any person
  * obtaining a copy of this software and associated documentation
@@ -34,6 +34,7 @@
 #define AVB_CRYPTO_OPS_IMPL_H_
 
 #include <openssl/is_boringssl.h>
+#include <openssl/mldsa.h>
 #include <openssl/sha.h>
 
 #ifdef __cplusplus
@@ -42,6 +43,8 @@ extern "C" {
 
 typedef SHA256_CTX AvbSHA256ImplCtx;
 typedef SHA512_CTX AvbSHA512ImplCtx;
+typedef struct MLDSA65_prehash AvbMLDSA65PrehashImplCtx;
+typedef struct MLDSA87_prehash AvbMLDSA87PrehashImplCtx;
 
 #ifdef __cplusplus
 }
