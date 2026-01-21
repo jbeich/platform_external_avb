@@ -4567,4 +4567,51 @@ TEST_F(AvbToolResignImageTest, ResignCorruptedImage) {
                  "SHA256_RSA2048");
 }
 
+TEST_F(AvbToolResignImageTest, MismatchPubkey) {
+  const size_t partition_size = 1024 * 1024;
+  const size_t image_size = 512 * 1024;
+  GeneratePartitionWithFooter("test.img",
+                              "SHA256_RSA2048",
+                              "test/data/testkey_rsa2048.pem",
+                              partition_size,
+                              image_size);
+  std::filesystem::path pk_path = testdir_ / "testkey_rsa2048.avbpubkey";
+  ASSERT_COMMAND(
+      0,
+      "./avbtool.py extract_public_key --key test/data/testkey_rsa2048.pem"
+      " --output %s",
+      pk_path.c_str());
+
+  std::string image_path = (testdir_ / "test.img").string();
+  std::filesystem::path vbmeta_path = testdir_ / "vbmeta_test.img";
+  ASSERT_COMMAND(0,
+                 "./avbtool.py make_vbmeta_image "
+                 "--output %s "
+                 "--algorithm SHA256_RSA2048 "
+                 "--key test/data/testkey_rsa2048.pem "
+                 "--chain_partition test:1:%s",
+                 vbmeta_path.c_str(),
+                 pk_path.c_str());
+  ASSERT_COMMAND(0,
+                 "./avbtool.py verify_image "
+                 " --image %s"
+                 " --follow_chain_partitions",
+                 vbmeta_path.c_str());
+  // Sign test partition with a different key
+  ASSERT_COMMAND(0,
+                 "./avbtool.py add_hash_footer "
+                 " --image %s"
+                 " --partition_size %zu"
+                 " --key test/data/testkey_rsa2048_2.pem"
+                 " --partition_name test",
+                 image_path.c_str(),
+                 partition_size);
+  // Now public key in vbmeta_test mismtaches public key in test.img
+  ASSERT_COMMAND(1,
+                 "./avbtool.py verify_image "
+                 " --image %s"
+                 " --follow_chain_partitions",
+                 vbmeta_path.c_str());
+}
+
 }  // namespace avb

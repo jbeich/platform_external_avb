@@ -53,6 +53,14 @@ std::string string_trim(const std::string& str);
     EXPECT_EQ(WEXITSTATUS(rc), expected_exit_status);                        \
   } while (0);
 
+#define ASSERT_COMMAND(expected_exit_status, command_format, ...)            \
+  do {                                                                       \
+    int rc = system(                                                         \
+        android::base::StringPrintf(command_format, ##__VA_ARGS__).c_str()); \
+    ASSERT_TRUE(WIFEXITED(rc));                                              \
+    ASSERT_EQ(WEXITSTATUS(rc), expected_exit_status);                        \
+  } while (0);
+
 namespace avb {
 
 // These two functions are in avb_sysdeps_posix_testing.cc and is

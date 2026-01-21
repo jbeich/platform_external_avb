@@ -2577,7 +2577,7 @@ class Avb(object):
       print_certificate(psk)
 
   def verify_image(self, image_filename, key_path, expected_chain_partitions,
-                   follow_chain_partitions, accept_zeroed_hashtree):
+                   follow_chain_partitions, accept_zeroed_hashtree, expected_key = None):
     """Implements the 'verify_image' command.
 
     Arguments:
@@ -2590,6 +2590,8 @@ class Avb(object):
           the --expected_chain_partition option
       accept_zeroed_hashtree: If True, don't fail if hashtree or FEC data is
           zeroed out.
+      expected_key: Key specified in chained descriptor, if not None will check
+        that embedded public key matches this key blob
 
     Raises:
       AvbError: If verification of the image fails.
@@ -2637,15 +2639,19 @@ class Avb(object):
       raise AvbError('Signature check failed for {} vbmeta struct {}'
                      .format(alg_name, image_filename))
 
-    if key_blob:
-      # The embedded public key is in the auxiliary block at an offset.
-      key_offset = AvbVBMetaHeader.SIZE
-      key_offset += header.authentication_data_block_size
-      key_offset += header.public_key_offset
-      key_blob_in_vbmeta = vbmeta_blob[key_offset:key_offset
+    # The embedded public key is in the auxiliary block at an offset.
+    key_offset = AvbVBMetaHeader.SIZE
+    key_offset += header.authentication_data_block_size
+    key_offset += header.public_key_offset
+    key_blob_in_vbmeta = vbmeta_blob[key_offset:key_offset
                                        + header.public_key_size]
+    if key_blob:
       if key_blob != key_blob_in_vbmeta:
         raise AvbError('Embedded public key does not match given key.')
+
+    if expected_key:
+      if expected_key != key_blob_in_vbmeta:
+        raise AvbError('Embedded public key in {} does not match key in chained descriptor \'{}\' vs \'{}\' '.format(image_filename, hashlib.sha1(expected_key).hexdigest(), hashlib.sha1(key_blob_in_vbmeta).hexdigest()))
 
     if footer:
       print('vbmeta: Successfully verified footer and {} vbmeta struct in {}'
@@ -2676,7 +2682,7 @@ class Avb(object):
         chained_image_filename = os.path.join(image_dir,
                                               desc.partition_name + image_ext)
         self.verify_image(chained_image_filename, key_path, None, False,
-                          accept_zeroed_hashtree)
+                          accept_zeroed_hashtree, desc.public_key)
 
   def print_partition_digests(self, image_filename, output, as_json):
     """Implements the 'print_partition_digests' command.
