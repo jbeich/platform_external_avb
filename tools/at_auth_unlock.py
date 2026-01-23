@@ -14,7 +14,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""Helper tool for performing an authenticated AVB unlock of an Android Things device.
+r"""Helper tool for performing an authenticated AVB unlock of an Android Things device.
 
 This tool communicates with an Android Things device over fastboot to perform an
 authenticated AVB unlock. The user provides unlock credentials valid for the
@@ -139,7 +139,7 @@ class UnlockCredentials(object):
 
   @classmethod
   def from_credential_archive(cls, archive):
-    """Create UnlockCredentials from an unlock credential zip archive.
+    r"""Create UnlockCredentials from an unlock credential zip archive.
 
     The zip archive must contain the following three credential files, named as
     follows:
