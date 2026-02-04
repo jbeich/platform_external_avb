@@ -4749,7 +4749,8 @@ class Avb(object):
     return new_header
 
   def resign_image(self, image_filename, key_path, algorithm_name,
-                   signing_helper, signing_helper_with_files, auto_resize):
+                   signing_helper, signing_helper_with_files, auto_resize,
+                   rollback_index):
     """Resigns an image with a new key and algorithm.
 
     This method handles both images with a VBMeta footer and standalone
@@ -4768,6 +4769,7 @@ class Avb(object):
           that uses files for communication.
       auto_resize: If True, allows the image to be resized if the new key
           requires more space than is available.
+      rollback_index: If not None, the rollback index to use in the new header.
 
     Raises:
       AvbError: If the original signature cannot be verified, if resizing is
@@ -4791,6 +4793,8 @@ class Avb(object):
 
       new_header = self._prepare_resigned_header(header, new_alg, new_pk_size,
                                                 len(new_aux_blob))
+      if rollback_index is not None:
+        new_header.rollback_index = rollback_index
 
       new_auth_blob = self._create_new_auth_blob(
           new_header, new_aux_blob, new_key, algorithm_name, signing_helper,
@@ -5641,6 +5645,10 @@ class AvbTool(object):
         '--auto_resize',
         help='Automatically resize the image if the new key is larger.',
         action='store_true')
+    sub_parser.add_argument('--rollback_index',
+                            help='Rollback Index',
+                            type=parse_number,
+                            default=None)
 
     sub_parser.set_defaults(func=self.resign_image)
 
@@ -5890,7 +5898,8 @@ Please use '--hash_algorithm sha256'.
     """Implements the 'resign_image' sub-command."""
     self.avb.resign_image(args.image, args.key, args.algorithm,
                           args.signing_helper,
-                          args.signing_helper_with_files, args.auto_resize)
+                          args.signing_helper_with_files, args.auto_resize,
+                          args.rollback_index)
 
 
 if __name__ == '__main__':
