@@ -4681,4 +4681,70 @@ TEST_F(AvbToolResignImageTest, MismatchPubkey) {
                  vbmeta_path.c_str());
 }
 
+TEST_F(AvbToolResignImageTest,
+       Partition_WithFooter_ResignChangeRollbackIndex_Succeeds) {
+  const size_t partition_size = 1024 * 1024;
+  const size_t image_size = 512 * 1024;
+  GeneratePartitionWithFooter("test.img",
+                              "SHA256_RSA2048",
+                              "test/data/testkey_rsa2048.pem",
+                              partition_size,
+                              image_size);
+  std::string original_info = InfoImage((testdir_ / "test.img").c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa2048.pem"
+                 " --algorithm SHA256_RSA2048"
+                 " --rollback_index 1",
+                 (testdir_ / "test.img").c_str());
+
+  std::string new_info = InfoImage((testdir_ / "test.img").c_str());
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -10,7 +10,7 @@\n"
+      " Auxiliary Block:          768 bytes\n"
+      " Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      " Algorithm:                SHA256_RSA2048\n"
+      "-Rollback Index:           0\n"
+      "+Rollback Index:           1\n"
+      " Flags:                    0\n"
+      " Rollback Index Location:  0\n"
+      " Release String:           ''\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+}
+
+TEST_F(AvbToolResignImageTest,
+       LooseImage_WithHeader_ResignChangeRollbackIndex_Succeeds) {
+  GenerateVBMetaImage(
+      "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
+  std::string original_info = InfoImage(vbmeta_image_path_.c_str());
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py resign_image"
+                 " --image %s"
+                 " --key test/data/testkey_rsa2048.pem"
+                 " --algorithm SHA256_RSA2048"
+                 " --rollback_index 2",
+                 vbmeta_image_path_.c_str());
+
+  std::string new_info = InfoImage(vbmeta_image_path_.c_str());
+  const std::string expected_diff =
+      "--- original\n"
+      "+++ new\n"
+      "@@ -4,7 +4,7 @@\n"
+      " Auxiliary Block:          576 bytes\n"
+      " Public key (sha1):        " TESTKEY_RSA2048_SHA
+      "\n"
+      " Algorithm:                SHA256_RSA2048\n"
+      "-Rollback Index:           0\n"
+      "+Rollback Index:           2\n"
+      " Flags:                    0\n"
+      " Rollback Index Location:  0\n"
+      " Release String:           'avbtool 1.4.0'\n";
+  EXPECT_DIFF(original_info, new_info, expected_diff);
+}
 }  // namespace avb
