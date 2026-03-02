@@ -139,7 +139,10 @@ python_binary_host {
     name: "avbtool",
     srcs: ["avbtool.py"],
     main: "avbtool.py",
-    required: ["fec"],
+    required: [
+        "avb_openssl",
+        "fec",
+    ],
     compile_multilib: "first",
 }
 
@@ -391,6 +394,7 @@ cc_test_host {
         ":img2simg",
         ":simg2img",
         ":fec",
+        ":avb_openssl",
     ],
 }
 
@@ -404,6 +408,7 @@ cc_test_host {
         ":img2simg",
         ":simg2img",
         ":fec",
+        ":avb_openssl",
     ],
 }
 
