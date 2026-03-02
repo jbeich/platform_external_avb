@@ -140,9 +140,6 @@ TEST_F(AvbToolTest, ReleaseStringAppendTruncated) {
 }
 
 TEST_F(AvbToolTest, BasicMldsa) {
-  if (!MldsaSupported()) {
-    GTEST_SKIP() << "ML-DSA not supported by system openssl";
-  }
   GenerateVBMetaImage(
       "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
@@ -151,9 +148,6 @@ TEST_F(AvbToolTest, BasicMldsa) {
 }
 
 TEST_F(AvbToolTest, BasicMldsa87) {
-  if (!MldsaSupported()) {
-    GTEST_SKIP() << "ML-DSA not supported by system openssl";
-  }
   GenerateVBMetaImage(
       "vbmeta.img", "MLDSA87", 0, "test/data/testkey_mldsa87.pem");
   EXPECT_EQ(AVB_VBMETA_VERIFY_RESULT_OK,
@@ -162,9 +156,6 @@ TEST_F(AvbToolTest, BasicMldsa87) {
 }
 
 TEST_F(AvbToolTest, MldsaWrongKey) {
-  if (!MldsaSupported()) {
-    GTEST_SKIP() << "ML-DSA not supported by system openssl";
-  }
   GenerateVBMetaImage(
       "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
   // Attempt to verify with a different key type.
@@ -180,9 +171,6 @@ TEST_F(AvbToolTest, MldsaWrongKey) {
 }
 
 TEST_F(AvbToolTest, MldsaTamperedSignature) {
-  if (!MldsaSupported()) {
-    GTEST_SKIP() << "ML-DSA not supported by system openssl";
-  }
   GenerateVBMetaImage(
       "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
   // Corrupt the signature block.
@@ -193,9 +181,6 @@ TEST_F(AvbToolTest, MldsaTamperedSignature) {
 }
 
 TEST_F(AvbToolTest, MldsaTamperedVBMeta) {
-  if (!MldsaSupported()) {
-    GTEST_SKIP() << "ML-DSA not supported by system openssl";
-  }
   GenerateVBMetaImage(
       "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
   // Corrupt a byte in the release string.
