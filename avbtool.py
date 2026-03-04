@@ -52,6 +52,23 @@ AVB_VBMETA_IMAGE_FLAGS_VERIFICATION_DISABLED = 2
 # Configuration for enabling logging of calls to avbtool.
 AVB_INVOCATION_LOGFILE = os.environ.get('AVB_INVOCATION_LOGFILE')
 
+
+def _get_openssl_binary():
+  """Returns the path to the OpenSSL binary to use.
+
+  If available, use the 'avb_openssl' binary located in the same directory as
+  this tool. Otherwise, fall back to 'openssl' from the system's PATH.
+  """
+  executable_dir = os.path.dirname(os.path.realpath(sys.argv[0]))
+  hermetic_openssl = os.path.join(executable_dir, 'avb_openssl')
+  if os.path.exists(hermetic_openssl):
+    return hermetic_openssl
+
+  return 'openssl'
+
+
+AVB_OPENSSL = _get_openssl_binary()
+
 # Known values for certificate "usage" field. These values must match the
 # libavb_cert implementation.
 #
@@ -417,7 +434,7 @@ class RSAPublicKey(object):
     # but unfortunately PyCrypto is not available in the builder. So
     # instead just parse openssl(1) output to get this
     # information. It's ugly but...
-    args = ['openssl', 'rsa', '-in', key_path, '-modulus', '-noout']
+    args = [AVB_OPENSSL, 'rsa', '-in', key_path, '-modulus', '-noout']
     p = subprocess.Popen(args,
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE,
@@ -486,7 +503,7 @@ class RSAPublicKey(object):
 
       with tempfile.NamedTemporaryFile(delete=False) as der_tmpfile:
         p = subprocess.Popen(
-            ['openssl', 'asn1parse', '-genconf', asn1_tmpfile.name, '-out',
+            [AVB_OPENSSL, 'asn1parse', '-genconf', asn1_tmpfile.name, '-out',
             der_tmpfile.name, '-noout'])
         retcode = p.wait()
         if retcode != 0:
@@ -574,7 +591,7 @@ class RSAPublicKey(object):
             stderr=subprocess.PIPE)
       else:
         p = subprocess.Popen(
-            ['openssl', 'rsautl', '-sign', '-inkey', self.key_path, '-raw'],
+            [AVB_OPENSSL, 'rsautl', '-sign', '-inkey', self.key_path, '-raw'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE)
@@ -623,7 +640,7 @@ class RSAPublicKey(object):
     # Verifies the signature.
     padding_and_digest = algorithm.padding + digest
     p = subprocess.Popen(
-          ['openssl', 'rsautl', '-verify', '-pubin', '-inkey', self.key_path,
+          [AVB_OPENSSL, 'rsautl', '-verify', '-pubin', '-inkey', self.key_path,
            '-keyform', 'DER', '-raw'],
           stdin=subprocess.PIPE,
           stdout=subprocess.PIPE,
@@ -657,7 +674,7 @@ class MLDSAPublicKey(object):
     if MLDSAPublicKey._IS_SUPPORTED is None:
       try:
         # Use -public-key-algorithms to list supported algorithms
-        p = subprocess.Popen(['openssl', 'list', '-public-key-algorithms'],
+        p = subprocess.Popen([AVB_OPENSSL, 'list', '-public-key-algorithms'],
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
         pout, _ = p.communicate()
@@ -705,7 +722,7 @@ class MLDSAPublicKey(object):
     if not MLDSAPublicKey.is_supported():
       raise AvbError('ML-DSA is not supported by the system openssl.')
 
-    args = ['openssl', 'pkey', '-in', key_path, '-pubin', '-text', '-noout']
+    args = [AVB_OPENSSL, 'pkey', '-in', key_path, '-pubin', '-text', '-noout']
     p = subprocess.Popen(args,
                          stdin=subprocess.PIPE,
                          stdout=subprocess.PIPE,
@@ -752,7 +769,7 @@ class MLDSAPublicKey(object):
 
       with tempfile.NamedTemporaryFile(delete=False) as der_tmpfile:
         p = subprocess.Popen(
-            ['openssl', 'asn1parse', '-genconf', asn1_tmpfile.name, '-out',
+            [AVB_OPENSSL, 'asn1parse', '-genconf', asn1_tmpfile.name, '-out',
             der_tmpfile.name, '-noout'])
         retcode = p.wait()
         if retcode != 0:
@@ -834,7 +851,7 @@ class MLDSAPublicKey(object):
         else:
           p = subprocess.Popen(
               [
-                  'openssl',
+                  AVB_OPENSSL,
                   'pkeyutl',
                   '-sign',
                   '-inkey',
@@ -879,7 +896,7 @@ class MLDSAPublicKey(object):
         data_tmpfile.flush()
 
         p = subprocess.Popen(
-            ['openssl', 'pkeyutl', '-verify', '-pubin', '-inkey', self.key_path,
+            [AVB_OPENSSL, 'pkeyutl', '-verify', '-pubin', '-inkey', self.key_path,
             '-sigfile', sig_tmpfile.name, '-in', data_tmpfile.name],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
@@ -905,7 +922,7 @@ def load_public_key(key_path):
   """
 
   # Attempt 1: Check if it's an RSA key (private key format)
-  args = ['openssl', 'rsa', '-in', key_path, '-noout']
+  args = [AVB_OPENSSL, 'rsa', '-in', key_path, '-noout']
   p1 = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
   p1.communicate()
   if p1.wait() == 0:

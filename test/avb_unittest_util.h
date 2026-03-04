@@ -113,9 +113,6 @@ class BaseAvbToolTest : public ::testing::Test {
    */
   std::string PublicKeyAVBDigest(const std::string& key_path);
 
-  /* Checks if the system openssl supports ML-DSA by attempting to extract a public key. */
-  bool MldsaSupported();
-
   /* Runs diff -u on two strings and compares to expected output. */
   void EXPECT_DIFF(const std::string& text1,
                    const std::string& text2,
