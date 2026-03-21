@@ -353,6 +353,11 @@ static IAvbKey* iavb_parse_key_data(AvbAlgorithmType algorithm,
   const uint8_t* n;
   const uint8_t* rr;
 
+  if (length < sizeof(AvbRSAPublicKeyHeader)) {
+    avb_error("Invalid key length.\n");
+    goto fail;
+  }
+
   if (!avb_rsa_public_key_header_validate_and_byteswap(
           (const AvbRSAPublicKeyHeader*)data, &h)) {
     avb_error("Invalid key.\n");
