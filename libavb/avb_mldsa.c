@@ -47,11 +47,6 @@ static bool avb_mldsa_validate_public_key(const uint8_t* key,
     return false;
   }
 
-  if (key_num_bytes < sizeof(AvbMLDSAPublicKeyHeader)) {
-    avb_error("Invalid key length.\n");
-    return false;
-  }
-
   if (!avb_mldsa_public_key_header_validate_and_byteswap(
           (const AvbMLDSAPublicKeyHeader*)key, out_header)) {
     avb_error("Invalid key.\n");
