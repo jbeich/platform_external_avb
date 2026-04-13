@@ -762,7 +762,7 @@ class MLDSAPublicKey(object):
                 'pubkey=FORMAT:HEX,BITSTRING:{}\n'
                 '\n'
                 '[mldsa_alg]\n'
-                'algorithm=OID:{}\n').format(hex(pub), oid)
+                'algorithm=OID:{}\n').format(pub.hex(), oid)
     with tempfile.NamedTemporaryFile() as asn1_tmpfile:
       asn1_tmpfile.write(asn1_str.encode('ascii'))
       asn1_tmpfile.flush()
