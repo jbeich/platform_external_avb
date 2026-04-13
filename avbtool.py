@@ -879,11 +879,11 @@ class MLDSAPublicKey(object):
       raise AvbError('Algorithm with name {} is not supported.'
                      .format(algorithm_name))
 
-    if len(self.pub) != algorithm.public_key_num_bytes:
+    if len(self.pub) != algorithm.public_key_num_bytes - 4:
       raise AvbError('Key size of key ({} bytes) does not match key size '
                      '({} bytes) of given algorithm {}.'
                      .format(len(self.pub),
-                             algorithm.signature_num_bytes,
+                             algorithm.public_key_num_bytes - 4,
                              algorithm_name))
 
     # Verifies the signature.
