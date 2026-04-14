@@ -213,6 +213,50 @@ TEST_F(AvbToolTest, ExtractPublicKey) {
                    key_data.size()));
 }
 
+TEST_F(AvbToolTest, ExtractPublicKeyMldsa) {
+  GenerateVBMetaImage("vbmeta.img",
+                      "MLDSA65",
+                      0,
+                      "test/data/testkey_mldsa65.pem",
+                      "--internal_release_string \"\"");
+
+  std::string key_data = PublicKeyAVB("test/data/testkey_mldsa65.pem");
+
+  AvbVBMetaImageHeader h;
+  avb_vbmeta_image_header_to_host_byte_order(
+      reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data()), &h);
+  uint8_t* d = reinterpret_cast<uint8_t*>(vbmeta_image_.data());
+  size_t auxiliary_data_block_offset =
+      sizeof(AvbVBMetaImageHeader) + h.authentication_data_block_size;
+  EXPECT_GT(h.auxiliary_data_block_size, key_data.size());
+  EXPECT_EQ(0,
+            memcmp(key_data.data(),
+                   d + auxiliary_data_block_offset + h.public_key_offset,
+                   key_data.size()));
+}
+
+TEST_F(AvbToolTest, ExtractPublicKeyMldsa87) {
+  GenerateVBMetaImage("vbmeta.img",
+                      "MLDSA87",
+                      0,
+                      "test/data/testkey_mldsa87.pem",
+                      "--internal_release_string \"\"");
+
+  std::string key_data = PublicKeyAVB("test/data/testkey_mldsa87.pem");
+
+  AvbVBMetaImageHeader h;
+  avb_vbmeta_image_header_to_host_byte_order(
+      reinterpret_cast<AvbVBMetaImageHeader*>(vbmeta_image_.data()), &h);
+  uint8_t* d = reinterpret_cast<uint8_t*>(vbmeta_image_.data());
+  size_t auxiliary_data_block_offset =
+      sizeof(AvbVBMetaImageHeader) + h.authentication_data_block_size;
+  EXPECT_GT(h.auxiliary_data_block_size, key_data.size());
+  EXPECT_EQ(0,
+            memcmp(key_data.data(),
+                   d + auxiliary_data_block_offset + h.public_key_offset,
+                   key_data.size()));
+}
+
 TEST_F(AvbToolTest, CheckDescriptors) {
   GenerateVBMetaImage("vbmeta.img",
                       "SHA256_RSA2048",
@@ -2859,6 +2903,26 @@ TEST_F(AvbToolTest, VerifyImageNoSignature) {
 TEST_F(AvbToolTest, VerifyImageValidSignature) {
   GenerateVBMetaImage(
       "vbmeta.img", "SHA256_RSA2048", 0, "test/data/testkey_rsa2048.pem");
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image "
+                 "--image %s ",
+                 vbmeta_image_path_.c_str());
+}
+
+TEST_F(AvbToolTest, VerifyImageValidSignatureMldsa) {
+  GenerateVBMetaImage(
+      "vbmeta.img", "MLDSA65", 0, "test/data/testkey_mldsa65.pem");
+
+  EXPECT_COMMAND(0,
+                 "./avbtool.py verify_image "
+                 "--image %s ",
+                 vbmeta_image_path_.c_str());
+}
+
+TEST_F(AvbToolTest, VerifyImageValidSignatureMldsa87) {
+  GenerateVBMetaImage(
+      "vbmeta.img", "MLDSA87", 0, "test/data/testkey_mldsa87.pem");
 
   EXPECT_COMMAND(0,
                  "./avbtool.py verify_image "
