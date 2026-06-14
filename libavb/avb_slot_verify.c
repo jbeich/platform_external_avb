@@ -1088,7 +1088,7 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
                                    use_ab_suffix);
         if (sub_ret != AVB_SLOT_VERIFY_RESULT_OK) {
           ret = sub_ret;
-          if (!result_should_continue(ret)) {
+          if (!allow_verification_error || !result_should_continue(ret)) {
             goto out;
           }
         }
@@ -1233,22 +1233,25 @@ static AvbSlotVerifyResult load_and_verify_vbmeta(
             goto out;
           }
 
-          ret = read_persistent_digest(ops,
-                                       part_name,
-                                       digest_len,
-                                       NULL /* initial_digest */,
-                                       digest_buf);
-          if (ret != AVB_SLOT_VERIFY_RESULT_OK) {
+          AvbSlotVerifyResult sub_ret =
+              read_persistent_digest(ops,
+                                     part_name,
+                                     digest_len,
+                                     NULL /* initial_digest */,
+                                     digest_buf);
+          if (sub_ret != AVB_SLOT_VERIFY_RESULT_OK) {
+            ret = sub_ret;
             goto out;
           }
 
           if (out_additional_cmdline_subst) {
-            ret =
+            sub_ret =
                 avb_add_root_digest_substitution(part_name,
                                                  digest_buf,
                                                  digest_len,
                                                  out_additional_cmdline_subst);
-            if (ret != AVB_SLOT_VERIFY_RESULT_OK) {
+            if (sub_ret != AVB_SLOT_VERIFY_RESULT_OK) {
+              ret = sub_ret;
               goto out;
             }
           }
