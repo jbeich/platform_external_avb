@@ -1,9 +1,7 @@
-bowgotsai@google.com
-samitolvanen@google.com
-zeuthen@google.com
-dkrahn@google.com
-tweek@google.com
-billylau@google.com
 aluykx@google.com
-ascull@google.com
+billylau@google.com
+samitolvanen@google.com
+
+tweek@google.com #{LAST_RESORT_SUGGESTION}
+zeuthen@google.com #{LAST_RESORT_SUGGESTION}
 include platform/system/core:/janitors/OWNERS #{LAST_RESORT_SUGGESTION}
