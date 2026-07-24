@@ -495,10 +495,11 @@ static void montMul(const IAvbKey* key, uint32_t* c, uint32_t* a, uint32_t* b) {
 /* In-place public exponentiation. (65537}
  * Input and output big-endian byte array in inout.
  */
-static void modpowF4(const IAvbKey* key, uint8_t* inout) {
+static bool modpowF4(const IAvbKey* key, uint8_t* inout) {
   uint32_t* a = (uint32_t*)avb_malloc(key->len * sizeof(uint32_t));
   uint32_t* aR = (uint32_t*)avb_malloc(key->len * sizeof(uint32_t));
   uint32_t* aaR = (uint32_t*)avb_malloc(key->len * sizeof(uint32_t));
+  bool success = false;
   if (a == NULL || aR == NULL || aaR == NULL) {
     goto out;
   }
@@ -536,6 +537,8 @@ static void modpowF4(const IAvbKey* key, uint8_t* inout) {
     *inout++ = (uint8_t)(tmp >> 0);
   }
 
+  success = true;
+
 out:
   if (a != NULL) {
     avb_free(a);
@@ -546,6 +549,7 @@ out:
   if (aaR != NULL) {
     avb_free(aaR);
   }
+  return success;
 }
 
 static const uint8_t* get_padding(AvbAlgorithmType algorithm,
@@ -637,7 +641,10 @@ bool avb_rsa_verify(AvbAlgorithmType algorithm,
   }
   avb_memcpy(buf, sig, sig_num_bytes);
 
-  modpowF4(parsed_key, buf);
+  if (!modpowF4(parsed_key, buf)) {
+    avb_error("RSA modulus computation failed.\n");
+    goto out;
+  }
 
   /* Check padding bytes.
    *
