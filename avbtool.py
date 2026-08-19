@@ -858,6 +858,8 @@ class MLDSAPublicKey(object):
                   self.key_path,
                   '-in',
                   signing_file.name,
+                  '-pkeyopt',
+                  'deterministic:1',
               ],
               stdin=subprocess.PIPE,
               stdout=subprocess.PIPE,
