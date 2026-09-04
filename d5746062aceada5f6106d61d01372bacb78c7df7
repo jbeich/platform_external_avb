@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "80bdc5dd_c0c6eebb",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 4
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 5031731
+      },
+      "writtenOn": "2026-09-04T23:39:11Z",
+      "side": 1,
+      "message": "sh \"/storage/emulated/0/Android/data/vegabobo.dsusideloader/files/install\"",
+      "revId": "d5746062aceada5f6106d61d01372bacb78c7df7",
+      "serverId": "85c56323-6fa9-3386-8a01-6480fb634889"
+    }
+  ]
+}
