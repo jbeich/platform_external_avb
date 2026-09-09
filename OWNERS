@@ -5,3 +5,7 @@ dkrahn@google.com
 tweek@google.com
 billylau@google.com
 include platform/system/core:/janitors/OWNERS #{LAST_RESORT_SUGGESTION}
+
+# Scoped Android Build Approvers
+per-file Android.bp,Android.mk,CleanSpec.mk,BUILD,BUILD.bazel,*.bp,*.bzl,cargo_embargo.json = mdb/android-build-approvers #{LAST_RESORT_SUGGESTION}
+per-file **/*.go = mdb/android-build-approvers #{LAST_RESORT_SUGGESTION}
